@@ -1,0 +1,20 @@
+[
+{
+  "modid": "yabba",
+  "name": "YABBA",
+  "description": "Yet Another Better Barrel Attempt",
+  "version": "${version}",
+  "url": "https://minecraft.curseforge.com/projects/yabba",
+  "updateUrl": "",
+  "authorList": [
+    "LatvianModder"
+  ],
+  "credits": "",
+  "logoFile": "assets/yabba/textures/logo.png",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
