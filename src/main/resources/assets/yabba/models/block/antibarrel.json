@@ -1,0 +1,47 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"base": "minecraft:blocks/nether_brick",
+		"center": "minecraft:blocks/obsidian",
+		"top": "minecraft:blocks/quartz_block_chiseled_top",
+		"particle": "minecraft:blocks/nether_brick"
+	},
+	"elements": [
+		{
+			"from": [0, 3, 0],
+			"to": [16, 13, 16],
+			"faces": {
+				"north": {"texture": "#base", "uv": [0, 3, 16, 13]},
+				"east": {"texture": "#base", "uv": [0, 3, 16, 13]},
+				"south": {"texture": "#base", "uv": [0, 3, 16, 13]},
+				"west": {"texture": "#base", "uv": [0, 3, 16, 13]},
+				"up": {"texture": "#base", "uv": [3, 3, 13, 13]},
+				"down": {"texture": "#base", "uv": [3, 3, 13, 13]}
+			}
+		},
+		{
+			"from": [1, 1, 1],
+			"to": [15, 15, 15],
+			"faces": {
+				"north": {"texture": "#center", "uv": [1, 1, 15, 15]},
+				"east": {"texture": "#center", "uv": [1, 1, 15, 15]},
+				"south": {"texture": "#center", "uv": [1, 1, 15, 15]},
+				"west": {"texture": "#center", "uv": [1, 1, 15, 15]},
+				"up": {"texture": "#center", "uv": [1, 1, 15, 15]},
+				"down": {"texture": "#center", "uv": [1, 1, 15, 15]}
+			}
+		},
+		{
+			"from": [2, 0, 2],
+			"to": [14, 16, 14],
+			"faces": {
+				"north": {"texture": "#top", "uv": [0, 0, 16, 16]},
+				"east": {"texture": "#top", "uv": [0, 0, 16, 16]},
+				"south": {"texture": "#top", "uv": [0, 0, 16, 16]},
+				"west": {"texture": "#top", "uv": [0, 0, 16, 16]},
+				"up": {"texture": "#top", "uv": [0, 0, 16, 16]},
+				"down": {"texture": "#top", "uv": [0, 0, 16, 16]}
+			}
+		}
+	]
+}
