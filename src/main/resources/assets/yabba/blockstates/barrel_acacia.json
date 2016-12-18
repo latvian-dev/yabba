@@ -4,6 +4,7 @@
 		"model": "yabba:barrel_acacia"
 	},
 	"variants": {
+		"inventory": [{}],
 		"facing": {
 			"north": {},
 			"south": {"y": 180},

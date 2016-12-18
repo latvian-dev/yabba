@@ -2,6 +2,7 @@ package com.latmod.yabba.net;
 
 import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -11,19 +12,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Created by LatvianModder on 15.12.2016.
  */
-public class MessageRequestBarrelUpdate implements IMessage, IMessageHandler<MessageRequestBarrelUpdate, IMessage>
+public class MessageUpdateBarrelItemCount implements IMessage, IMessageHandler<MessageUpdateBarrelItemCount, IMessage>
 {
-    private int posX, posY, posZ;
+    private int posX, posY, posZ, itemCount;
 
-    public MessageRequestBarrelUpdate()
+    public MessageUpdateBarrelItemCount()
     {
     }
 
-    public MessageRequestBarrelUpdate(TileBarrel tile)
+    public MessageUpdateBarrelItemCount(TileBarrel tile)
     {
         posX = tile.getPos().getX();
         posY = tile.getPos().getY();
         posZ = tile.getPos().getZ();
+        itemCount = tile.barrel.getItemCount();
     }
 
     @Override
@@ -32,6 +34,7 @@ public class MessageRequestBarrelUpdate implements IMessage, IMessageHandler<Mes
         posX = buf.readInt();
         posY = buf.readInt();
         posZ = buf.readInt();
+        itemCount = buf.readInt();
     }
 
     @Override
@@ -40,16 +43,19 @@ public class MessageRequestBarrelUpdate implements IMessage, IMessageHandler<Mes
         buf.writeInt(posX);
         buf.writeInt(posY);
         buf.writeInt(posZ);
+        buf.writeInt(itemCount);
     }
 
     @Override
-    public IMessage onMessage(MessageRequestBarrelUpdate message, MessageContext ctx)
+    public IMessage onMessage(MessageUpdateBarrelItemCount message, MessageContext ctx)
     {
-        TileEntity tile = ctx.getServerHandler().playerEntity.worldObj.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
+        TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
 
         if(tile instanceof TileBarrel)
         {
-            return new MessageUpdateBarrelFull((TileBarrel) tile);
+            TileBarrel barrel = (TileBarrel) tile;
+            barrel.barrel.setItemCount(message.itemCount);
+            barrel.clearCachedData();
         }
 
         return null;

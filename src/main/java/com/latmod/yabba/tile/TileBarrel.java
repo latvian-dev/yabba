@@ -1,16 +1,20 @@
 package com.latmod.yabba.tile;
 
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.BarrelTier;
 import com.latmod.yabba.block.Barrel;
-import com.latmod.yabba.block.EnumTier;
-import com.latmod.yabba.net.MessageRequestBarrelUpdate;
-import com.latmod.yabba.net.MessageUpdateBarrel;
+import com.latmod.yabba.net.MessageUpdateBarrelFull;
+import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.net.YabbaNetHandler;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -32,13 +36,13 @@ public class TileBarrel extends TileEntity implements ITickable
     public final BarrelTile barrel;
     private String cachedItemName, cachedItemCount;
     private float cachedRotation;
-    private boolean isDirty = true;
-    private boolean requestClientUpdate = true;
+    private boolean isDirty = true, updateNumber = false;
+    public boolean requestClientUpdate = true;
 
     public static class BarrelTile extends Barrel implements INBTSerializable<NBTTagCompound>
     {
         private final TileBarrel tile;
-        private ITier tier;
+        private BarrelTier tier;
         private ItemStack storedItem;
         private int itemCount;
         private NBTTagCompound upgrades;
@@ -52,7 +56,7 @@ public class TileBarrel extends TileEntity implements ITickable
         public NBTTagCompound serializeNBT()
         {
             NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setByte("Tier", getTier().getTierID());
+            nbt.setString("Tier", getTier().getTierID());
 
             if(storedItem != null)
             {
@@ -71,20 +75,20 @@ public class TileBarrel extends TileEntity implements ITickable
         @Override
         public void deserializeNBT(NBTTagCompound nbt)
         {
-            tier = EnumTier.VALUES[nbt.getByte("Tier")];
+            tier = YabbaRegistry.INSTANCE.getTier(nbt.getString("Tier"));
             storedItem = nbt.hasKey("Item") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("Item")) : null;
             itemCount = storedItem == null ? 0 : nbt.getInteger("Count");
             upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
         }
 
         @Override
-        public ITier getTier()
+        public BarrelTier getTier()
         {
-            return tier == null ? EnumTier.TIER_0 : tier;
+            return tier == null ? BarrelTier.NONE : tier;
         }
 
         @Override
-        public void setTier(ITier t)
+        public void setTier(BarrelTier t)
         {
             tier = t;
         }
@@ -127,9 +131,16 @@ public class TileBarrel extends TileEntity implements ITickable
         }
 
         @Override
-        public void updateCounter()
+        public void updateCounter(boolean full)
         {
-            tile.markDirty();
+            if(full)
+            {
+                tile.markDirty();
+            }
+            else
+            {
+                tile.updateNumber = true;
+            }
         }
     }
 
@@ -172,16 +183,21 @@ public class TileBarrel extends TileEntity implements ITickable
             if(!worldObj.isRemote)
             {
                 NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 300);
-                YabbaNetHandler.NET.sendToAllAround(new MessageUpdateBarrel(this), targetPoint);
+                YabbaNetHandler.NET.sendToAllAround(new MessageUpdateBarrelFull(this), targetPoint);
             }
 
             isDirty = false;
         }
 
-        if(requestClientUpdate && worldObj.isRemote)
+        if(updateNumber)
         {
-            YabbaNetHandler.NET.sendToServer(new MessageRequestBarrelUpdate(this));
-            requestClientUpdate = false;
+            if(!worldObj.isRemote)
+            {
+                NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 300);
+                YabbaNetHandler.NET.sendToAllAround(new MessageUpdateBarrelItemCount(this), targetPoint);
+            }
+
+            updateNumber = false;
         }
     }
 
@@ -201,13 +217,13 @@ public class TileBarrel extends TileEntity implements ITickable
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == YabbaCommon.BARREL_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if(capability == YabbaCommon.BARREL_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
             return (T) barrel;
         }
@@ -229,6 +245,12 @@ public class TileBarrel extends TileEntity implements ITickable
     {
         if(cachedItemCount == null)
         {
+            if(barrel.getTier().equals(YabbaCommon.TIER_CREATIVE))
+            {
+                cachedItemCount = "\u221E";
+                return cachedItemCount;
+            }
+
             int max = barrel.storedItem == null ? 64 : barrel.storedItem.getMaxStackSize();
             int c = barrel.getItemCount();
 
@@ -278,6 +300,17 @@ public class TileBarrel extends TileEntity implements ITickable
     {
         if(heldItem == null)
         {
+            if(playerIn.isSneaking())
+            {
+                if(barrel.getUpgradeData("Lockable") != null)
+                {
+                    NBTBase nbt = barrel.getUpgradeData("Locked");
+                    barrel.setUpgradeData("Locked", new NBTTagByte(((byte) (nbt == null || ((NBTPrimitive) nbt).getByte() == 0 ? 1 : 0))));
+                }
+
+                return;
+            }
+
             if(barrel.storedItem != null)
             {
                 for(int i = 0; i < playerIn.inventory.mainInventory.length; i++)
@@ -345,6 +378,7 @@ public class TileBarrel extends TileEntity implements ITickable
                 }
             }
 
+            playerIn.swingProgress = 0;
             markDirty();
             return true;
         }

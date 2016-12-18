@@ -1,6 +1,10 @@
 {
 	"forge_marker": 1,
+	"defaults": {
+		"model": "yabba:antibarrel"
+	},
 	"variants": {
-		"normal": {"model": "yabba:antibarrel"}
+		"inventory": [{}],
+		"normal": [{}]
 	}
 }

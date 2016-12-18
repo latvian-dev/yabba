@@ -1,14 +1,14 @@
 package com.latmod.yabba.item;
 
+import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.BarrelTier;
 import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.block.EnumTier;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.List;
 
@@ -20,14 +20,6 @@ public class ItemBlockBarrel extends ItemBlock
     public ItemBlockBarrel(Block block)
     {
         super(block);
-        setHasSubtypes(true);
-        setMaxDamage(0);
-    }
-
-    @Override
-    public int getItemStackLimit(ItemStack stack)
-    {
-        return 64;
     }
 
     @Override
@@ -39,19 +31,31 @@ public class ItemBlockBarrel extends ItemBlock
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
-        IBarrel data = (IBarrel) stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IBarrel data = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
-        EnumTier tier = EnumTier.VALUES[stack.getMetadata() & 3];
+        BarrelTier tier = data.getTier();
         ItemStack stack1 = data.getStackInSlot(0);
 
         if(stack1 != null)
         {
             list.add(stack1.getDisplayName());
-            list.add(data.getItemCount() + " / " + tier.getCapacity());
+            list.add(data.getItemCount() + " / " + (stack1.getMaxStackSize() * tier.getMaxStacks()));
         }
         else
         {
-            list.add("0 / " + tier.getCapacity());
+            list.add("Max " + tier.getMaxStacks() + " stacks");
+        }
+
+        NBTTagCompound upgrades = data.getUpgradeNBT();
+
+        if(upgrades != null && !upgrades.hasNoTags())
+        {
+            list.add("Upgrades:");
+
+            for(String key : upgrades.getKeySet())
+            {
+                list.add("> " + key);
+            }
         }
     }
 }

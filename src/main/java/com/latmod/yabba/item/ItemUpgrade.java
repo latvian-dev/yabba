@@ -1,10 +1,15 @@
 package com.latmod.yabba.item;
 
+import com.latmod.yabba.YabbaCommon;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -16,10 +21,38 @@ import java.util.List;
  */
 public class ItemUpgrade extends Item
 {
+    private static class UpgradeCapProvider implements ICapabilityProvider
+    {
+        private final ItemStack itemStack;
+
+        private UpgradeCapProvider(ItemStack is)
+        {
+            itemStack = is;
+        }
+
+        @Override
+        public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+        {
+            return capability == YabbaCommon.UPGRADE_CAPABILITY;
+        }
+
+        @Override
+        public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+        {
+            return capability == YabbaCommon.UPGRADE_CAPABILITY ? (T) EnumUpgrade.getFromMeta(itemStack.getMetadata()) : null;
+        }
+    }
+
     public ItemUpgrade()
     {
         setHasSubtypes(true);
         setMaxDamage(0);
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+    {
+        return new UpgradeCapProvider(stack);
     }
 
     @Override
@@ -36,6 +69,6 @@ public class ItemUpgrade extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
-        list.add(I18n.format(EnumUpgrade.getFromMeta(stack.getMetadata()).getUnlocalizedName()));
+        list.add(I18n.format(EnumUpgrade.getFromMeta(stack.getMetadata()).uname));
     }
 }

@@ -1,11 +1,13 @@
 package com.latmod.yabba.item;
 
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.BarrelTier;
 import com.latmod.yabba.block.Barrel;
-import com.latmod.yabba.block.EnumTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -21,6 +23,7 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     private static final String TAG_BARREL_ITEM = "BarrelItem";
     private static final String TAG_BARREL_ITEM_COUNT = "BarrelItemCount";
     private static final String TAG_BARREL_UPGRADES = "BarrelUpgrades";
+    private static final String TAG_BARREL_TIER = "BarrelTier";
 
     public final ItemStack itemStack;
 
@@ -32,7 +35,7 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        return capability == YabbaCommon.BARREL_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
 
     @Override
@@ -80,15 +83,15 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public ITier getTier()
+    public BarrelTier getTier()
     {
-        return EnumTier.VALUES[itemStack.getMetadata()];
+        return itemStack.hasTagCompound() ? YabbaRegistry.INSTANCE.getTier(itemStack.getTagCompound().getString(TAG_BARREL_TIER)) : BarrelTier.NONE;
     }
 
     @Override
-    public void setTier(ITier tier)
+    public void setTier(BarrelTier tier)
     {
-        itemStack.setItemDamage(tier.getTierID());
+        itemStack.setTagInfo(TAG_BARREL_TIER, new NBTTagString(tier.getTierID()));
     }
 
     @Override
@@ -117,7 +120,7 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public void updateCounter()
+    public void updateCounter(boolean full)
     {
     }
 }

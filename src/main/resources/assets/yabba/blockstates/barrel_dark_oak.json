@@ -4,6 +4,7 @@
 		"model": "yabba:barrel_dark_oak"
 	},
 	"variants": {
+		"inventory": [{}],
 		"facing": {
 			"north": {},
 			"south": {"y": 180},

@@ -1,5 +1,7 @@
 package com.latmod.yabba.client;
 
+import com.latmod.yabba.net.MessageRequestBarrelUpdate;
+import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,6 +25,12 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         if(te.isInvalid())
         {
             return;
+        }
+
+        if(te.requestClientUpdate)
+        {
+            YabbaNetHandler.NET.sendToServer(new MessageRequestBarrelUpdate(te));
+            te.requestClientUpdate = false;
         }
 
         ItemStack stack = te.barrel.getStackInSlot(0);

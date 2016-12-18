@@ -4,6 +4,7 @@
 		"model": "yabba:barrel_jungle"
 	},
 	"variants": {
+		"inventory": [{}],
 		"facing": {
 			"north": {},
 			"south": {"y": 180},

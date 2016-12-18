@@ -1,23 +1,50 @@
 package com.latmod.yabba;
 
-import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.IYabbaRegistry;
+import com.latmod.yabba.api.YabbaRegistryEvent;
 import com.latmod.yabba.block.BlockBarrel;
-import com.latmod.yabba.item.ItemBlockBarrel;
+import com.latmod.yabba.item.EnumUpgrade;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 /**
  * Created by LatvianModder on 14.12.2016.
  */
 public class YabbaEventHandler
 {
+    @SubscribeEvent
+    public void onRegistryEvent(YabbaRegistryEvent event)
+    {
+        IYabbaRegistry reg = event.getRegistry();
+
+        for(BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
+        {
+            reg.addBarrel(type.getName(), new ItemStack(Blocks.PLANKS, 1, type.getMetadata()), Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, type));
+        }
+
+        reg.addBarrel("dirt", "dirt", Blocks.DIRT.getDefaultState());
+
+        reg.addTier(YabbaCommon.TIER_DIRT);
+        reg.addTier(YabbaCommon.TIER_WOOD);
+        reg.addTier(YabbaCommon.TIER_IRON);
+        reg.addTier(YabbaCommon.TIER_GOLD);
+        reg.addTier(YabbaCommon.TIER_DMD);
+        reg.addTier(YabbaCommon.TIER_INF);
+        reg.addTier(YabbaCommon.TIER_CREATIVE);
+
+        for(EnumUpgrade upgrade : EnumUpgrade.VALUES)
+        {
+            reg.addUpgrade(upgrade);
+        }
+    }
+
     @SubscribeEvent
     public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
     {
@@ -34,30 +61,6 @@ public class YabbaEventHandler
                     if(((TileBarrel) tile).onLeftClick(event.getEntityPlayer(), event.getItemStack()))
                     {
                         event.setCanceled(true);
-                    }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onCrafted(PlayerEvent.ItemCraftedEvent event)
-    {
-        if(event.crafting.getItem() instanceof ItemBlockBarrel)
-        {
-            for(int i = 0; i < event.craftMatrix.getSizeInventory(); i++)
-            {
-                ItemStack is = event.craftMatrix.getStackInSlot(i);
-
-                if(is != null && is.getItem() instanceof ItemBlockBarrel)
-                {
-                    IBarrel barrel0 = (IBarrel) is.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-                    IBarrel barrel1 = (IBarrel) event.crafting.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-                    if(barrel0 != null && barrel1 != null)
-                    {
-                        barrel1.setStackInSlot(0, barrel0.getStackInSlot(0));
-                        barrel1.setItemCount(barrel0.getItemCount());
                     }
                 }
             }

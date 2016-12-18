@@ -4,6 +4,7 @@
 		"model": "yabba:barrel_birch"
 	},
 	"variants": {
+		"inventory": [{}],
 		"facing": {
 			"north": {},
 			"south": {"y": 180},
