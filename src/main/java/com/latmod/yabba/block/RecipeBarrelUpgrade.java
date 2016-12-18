@@ -63,7 +63,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             return false;
         }
 
-        return upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) barrelStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, true);
+        return upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) barrelStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, true);
     }
 
     @Nullable
@@ -71,7 +71,7 @@ public class RecipeBarrelUpgrade implements IRecipe
     public ItemStack getCraftingResult(InventoryCrafting inv)
     {
         ItemStack output = ItemHandlerHelper.copyStackWithSize(barrelStack, 1);
-        upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) output.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, false);
+        upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) output.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, false);
         return output;
     }
 
