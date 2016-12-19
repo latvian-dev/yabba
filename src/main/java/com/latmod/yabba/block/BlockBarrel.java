@@ -1,16 +1,22 @@
 package com.latmod.yabba.block;
 
+import com.latmod.yabba.BarrelTier;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.BarrelTier;
+import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -19,10 +25,14 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,14 +42,12 @@ import java.util.UUID;
 public class BlockBarrel extends BlockBarrelBase
 {
     public static final Map<UUID, Long> LAST_RIGHT_CLICK_MAP = new HashMap<>();
+    public static final PropertyBarrelVariant VARIANT = PropertyBarrelVariant.create("variant");
 
-    public final IBlockState parentState;
-
-    public BlockBarrel(IBlockState state)
+    public BlockBarrel()
     {
-        super(state.getMaterial(), state.getMapColor());
-        parentState = state;
-        setDefaultState(blockState.getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+        super(Material.WOOD, MapColor.WOOD);
+        setDefaultState(blockState.getBaseState().withProperty(VARIANT, YabbaRegistry.DEFAULT_VARIANT).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
     }
 
     @Override
@@ -61,11 +69,23 @@ public class BlockBarrel extends BlockBarrelBase
         }
     }
 
-    public ItemStack createStackWithTier(BarrelTier tier)
+    public ItemStack createStack(IBarrelVariant variant, BarrelTier tier)
     {
         ItemStack stack = new ItemStack(this);
-        ((IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).setTier(tier);
+        IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+        barrel.setVariant(variant);
+        barrel.setTier(tier);
         return stack;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
+        for(IBarrelVariant variant : YabbaRegistry.BARRELS_VALUES)
+        {
+            list.add(createStack(variant, YabbaCommon.TIER_WOOD));
+        }
     }
 
     @Override
@@ -77,7 +97,7 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, BlockHorizontal.FACING);
+        return new BlockStateContainer(this, VARIANT, BlockHorizontal.FACING);
     }
 
     @Override
@@ -91,6 +111,20 @@ public class BlockBarrel extends BlockBarrelBase
     public int getMetaFromState(IBlockState state)
     {
         return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+    }
+
+    @Override
+    @Deprecated
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    {
+        TileEntity tile = worldIn.getTileEntity(pos);
+
+        if(tile instanceof TileBarrel)
+        {
+            return state.withProperty(VARIANT, ((TileBarrel) tile).barrel.getVariant());
+        }
+
+        return state;
     }
 
     @Override
@@ -109,9 +143,9 @@ public class BlockBarrel extends BlockBarrelBase
 
     @Override
     @Deprecated
-    public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
+    public float getBlockHardness(IBlockState state, World worldIn, BlockPos pos)
     {
-        return parentState.getBlockHardness(worldIn, pos);
+        return state.getValue(VARIANT).getParentState().getBlockHardness(worldIn, pos);
     }
 
     @Override
@@ -127,13 +161,13 @@ public class BlockBarrel extends BlockBarrelBase
             }
         }
 
-        return parentState.getBlock().getExplosionResistance(world, pos, exploder, explosion);
+        return world.getBlockState(pos).getValue(VARIANT).getParentState().getBlock().getExplosionResistance(world, pos, exploder, explosion);
     }
 
     @Override
     public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity)
     {
-        return parentState.getBlock().getSoundType(state, world, pos, entity);
+        return state.getValue(VARIANT).getParentState().getBlock().getSoundType(state, world, pos, entity);
     }
 
     @Override

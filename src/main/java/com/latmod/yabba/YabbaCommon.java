@@ -1,11 +1,10 @@
 package com.latmod.yabba;
 
-import com.latmod.yabba.api.BarrelTier;
 import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.YabbaRegistryEvent;
 import com.latmod.yabba.block.RecipeBarrelUpgrade;
-import com.latmod.yabba.item.BarrelItemData;
 import com.latmod.yabba.item.EnumUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
@@ -87,6 +86,8 @@ public class YabbaCommon
     public void preInit()
     {
         MinecraftForge.EVENT_BUS.post(new YabbaRegistryEvent(YabbaRegistry.INSTANCE));
+        YabbaRegistry.DEFAULT_VARIANT = YabbaRegistry.BARRELS.get("planks_oak");
+        YabbaRegistry.BARRELS_VALUES.addAll(YabbaRegistry.BARRELS.values());
 
         CapabilityManager.INSTANCE.register(IUpgrade.class, new Capability.IStorage<IUpgrade>()
         {
@@ -114,15 +115,11 @@ public class YabbaCommon
             public void readNBT(Capability<IBarrel> capability, IBarrel instance, EnumFacing side, NBTBase nbt)
             {
             }
-        }, () -> new BarrelItemData(new ItemStack(YabbaRegistry.BARRELS.get("oak").block)));
+        }, () -> null);
 
         register("upgrade", YabbaItems.UPGRADE);
-
-        for(YabbaRegistry.BarrelInstance instance : YabbaRegistry.BARRELS.values())
-        {
-            register("barrel_" + instance.ID, instance.block, new ItemBlockBarrel(instance.block));
-        }
-
+        register("barrel", YabbaItems.BARREL, new ItemBlockBarrel(YabbaItems.BARREL));
+        register("crate", YabbaItems.CRATE, new ItemBlockBarrel(YabbaItems.CRATE));
         register("antibarrel", YabbaItems.ANTIBARREL, new ItemBlock(YabbaItems.ANTIBARREL));
 
         GameRegistry.registerTileEntity(TileBarrel.class, Yabba.MOD_ID + ".barrel");
@@ -142,14 +139,25 @@ public class YabbaCommon
                 'C', "chestWood",
                 'S', "slabWood"));
 
-        for(YabbaRegistry.BarrelInstance instance : YabbaRegistry.BARRELS.values())
+        for(IBarrelVariant variant : YabbaRegistry.BARRELS.values())
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(instance.block.createStackWithTier(TIER_WOOD),
-                    " U ", "IGI", " C ",
-                    'U', blankUpgrade,
-                    'I', instance.craftItem,
-                    'G', "paneGlassColorless",
-                    'C', "chestWood"));
+            Object craftingItem = variant.getCraftingItem();
+
+            if(craftingItem != null)
+            {
+                GameRegistry.addRecipe(new ShapedOreRecipe(YabbaItems.BARREL.createStack(variant, TIER_WOOD),
+                        " U ", "IGI", " C ",
+                        'U', blankUpgrade,
+                        'I', craftingItem,
+                        'G', "paneGlassColorless",
+                        'C', "chestWood"));
+
+                GameRegistry.addRecipe(new ShapedOreRecipe(YabbaItems.CRATE.createStack(variant, TIER_WOOD),
+                        " U ", "ICI", " I ",
+                        'U', blankUpgrade,
+                        'I', craftingItem,
+                        'C', "chestWood"));
+            }
         }
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.IRON_UPGRADE.metadata),

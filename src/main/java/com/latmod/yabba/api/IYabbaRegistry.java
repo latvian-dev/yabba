@@ -2,14 +2,16 @@ package com.latmod.yabba.api;
 
 import net.minecraft.block.state.IBlockState;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 18.12.2016.
  */
 public interface IYabbaRegistry
 {
-    void addBarrel(String id, Object craftItem, IBlockState parentState);
+    IBarrelVariant addVariant(String id, IBlockState parentState, @Nullable Object craftItem, IconSet icons);
 
-    void addTier(BarrelTier tier);
+    void addTier(IBarrelTier tier);
 
     void addUpgrade(IUpgrade upgrade);
 }

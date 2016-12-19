@@ -1,7 +1,9 @@
 package com.latmod.yabba.net;
 
+import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +22,7 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     private int posX, posY, posZ, itemCount;
     private ItemStack storedItem;
     private NBTTagCompound upgrades;
+    private String variant;
 
     public MessageUpdateBarrelFull()
     {
@@ -33,6 +36,7 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         storedItem = tile.barrel.getStackInSlot(0);
         itemCount = tile.barrel.getItemCount();
         upgrades = tile.barrel.getUpgradeNBT();
+        variant = tile.barrel.getVariant().getName();
     }
 
     @Override
@@ -44,6 +48,7 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         storedItem = ByteBufUtils.readItemStack(buf);
         itemCount = buf.readInt();
         upgrades = ByteBufUtils.readTag(buf);
+        variant = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -55,6 +60,7 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         ByteBufUtils.writeItemStack(buf, storedItem);
         buf.writeInt(itemCount);
         ByteBufUtils.writeTag(buf, upgrades);
+        ByteBufUtils.writeUTF8String(buf, variant);
     }
 
     @Override
@@ -65,10 +71,18 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         if(tile instanceof TileBarrel)
         {
             TileBarrel barrel = (TileBarrel) tile;
+            boolean updateVariant = !barrel.barrel.getVariant().getName().equals(message.variant);
             barrel.barrel.setStackInSlot(0, message.storedItem);
             barrel.barrel.setItemCount(message.itemCount);
             barrel.barrel.setUpgradeNBT(message.upgrades);
+            barrel.barrel.setVariant(YabbaRegistry.INSTANCE.getVariant(message.variant));
             barrel.clearCachedData();
+
+            if(updateVariant)
+            {
+                IBlockState state = tile.getWorld().getBlockState(tile.getPos());
+                tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 8);
+            }
         }
 
         return null;

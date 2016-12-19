@@ -13,11 +13,6 @@ item.yabba.upgrade.redstone_out=Redstone Output
 item.yabba.upgrade.hopper=Hopper
 item.yabba.upgrade.ender_link=Ender Link
 
-tile.yabba.barrel_oak.name=Oak Barrel
-tile.yabba.barrel_spruce.name=Spruce Barrel
-tile.yabba.barrel_birch.name=Birch Barrel
-tile.yabba.barrel_jungle.name=Jungle Barrel
-tile.yabba.barrel_acacia.name=Acacia Barrel
-tile.yabba.barrel_dark_oak.name=Dark Oak Barrel
+tile.yabba.barrel.name=Barrel
+tile.yabba.crate.name=Crate
 tile.yabba.antibarrel.name=AntiBarrel
-tile.yabba.barrel_dirt.name=Dirt Barrel

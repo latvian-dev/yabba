@@ -80,8 +80,9 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         }
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0.5F, 0.5F, 0.04F);
-        GlStateManager.scale(0.4F, -0.4F, -0.036F);
+        GlStateManager.translate(0.5F, 0.5F, te.cachedItemZ);
+
+        GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
         RenderItem itemRender = mc.getRenderItem();
         mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

@@ -1,11 +1,15 @@
 package com.latmod.yabba;
 
-import com.latmod.yabba.api.BarrelTier;
+import com.latmod.yabba.api.IBarrelTier;
+import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.IYabbaRegistry;
-import com.latmod.yabba.block.BlockBarrel;
+import com.latmod.yabba.api.IconSet;
 import net.minecraft.block.state.IBlockState;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,34 +20,24 @@ public enum YabbaRegistry implements IYabbaRegistry
 {
     INSTANCE;
 
-    public static class BarrelInstance
-    {
-        public final String ID;
-        public final Object craftItem;
-        public final BlockBarrel block;
-
-        public BarrelInstance(String id, Object item, IBlockState parentState)
-        {
-            ID = id;
-            craftItem = item;
-            block = new BlockBarrel(parentState);
-        }
-    }
-
-    public static final Map<String, BarrelInstance> BARRELS = new HashMap<>();
-    private static final Map<String, BarrelTier> TIERS = new HashMap<>();
+    public static final Map<String, IBarrelVariant> BARRELS = new HashMap<>();
+    public static final Collection<IBarrelVariant> BARRELS_VALUES = new ArrayList<>();
+    private static final Map<String, IBarrelTier> TIERS = new HashMap<>();
     public static final Map<String, IUpgrade> UPGRADES = new HashMap<>();
+    public static IBarrelVariant DEFAULT_VARIANT;
 
     @Override
-    public void addBarrel(String id, Object craftItem, IBlockState parentState)
+    public IBarrelVariant addVariant(String id, IBlockState parentState, @Nullable Object craftItem, IconSet icons)
     {
-        BARRELS.put(id, new BarrelInstance(id, craftItem, parentState));
+        IBarrelVariant c = new BarrelVariant(id, parentState, craftItem, icons);
+        BARRELS.put(id, c);
+        return c;
     }
 
     @Override
-    public void addTier(BarrelTier tier)
+    public void addTier(IBarrelTier tier)
     {
-        TIERS.put(tier.getTierID(), tier);
+        TIERS.put(tier.getName(), tier);
     }
 
     @Override
@@ -52,9 +46,15 @@ public enum YabbaRegistry implements IYabbaRegistry
         UPGRADES.put(upgrade.getUpgradeName(), upgrade);
     }
 
-    public BarrelTier getTier(String id)
+    public IBarrelTier getTier(String id)
     {
-        BarrelTier tier = TIERS.get(id);
+        IBarrelTier tier = TIERS.get(id);
         return tier == null ? BarrelTier.NONE : tier;
+    }
+
+    public IBarrelVariant getVariant(String id)
+    {
+        IBarrelVariant v = BARRELS.get(id);
+        return v == null ? DEFAULT_VARIANT : v;
     }
 }

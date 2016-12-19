@@ -1,9 +1,9 @@
 package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.BarrelTier;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.api.IBarrelTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -89,7 +89,7 @@ public abstract class Barrel implements IBarrelModifiable
             return null;
         }
 
-        BarrelTier tier = getTier();
+        IBarrelTier tier = getTier();
 
         if(tier.equals(YabbaCommon.TIER_CREATIVE))
         {
@@ -224,5 +224,6 @@ public abstract class Barrel implements IBarrelModifiable
         setItemCount(barrel.getItemCount());
         setTier(barrel.getTier());
         setUpgradeNBT(barrel.getUpgradeNBT());
+        setVariant(barrel.getVariant());
     }
 }

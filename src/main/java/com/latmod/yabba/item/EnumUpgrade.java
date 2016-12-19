@@ -1,7 +1,7 @@
 package com.latmod.yabba.item;
 
+import com.latmod.yabba.BarrelTier;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.BarrelTier;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.item.ItemStack;

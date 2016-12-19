@@ -15,8 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -63,10 +61,9 @@ public abstract class BlockBarrelBase extends Block
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
     {
-        return BlockRenderLayer.CUTOUT;
+        return layer == BlockRenderLayer.CUTOUT;
     }
 
     @Override

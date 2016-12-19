@@ -1,9 +1,7 @@
 package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.BarrelTier;
-import com.latmod.yabba.block.Barrel;
+import com.latmod.yabba.block.BlockCrate;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.net.YabbaNetHandler;
@@ -22,7 +20,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -33,120 +30,17 @@ import javax.annotation.Nullable;
  */
 public class TileBarrel extends TileEntity implements ITickable
 {
-    public final BarrelTile barrel;
+    public final BarrelTileContainer barrel;
     private String cachedItemName, cachedItemCount;
     private float cachedRotation;
-    private boolean isDirty = true, updateNumber = false;
+    public float cachedItemZ;
+    private boolean isDirty = true;
+    boolean updateNumber = false;
     public boolean requestClientUpdate = true;
-
-    public static class BarrelTile extends Barrel implements INBTSerializable<NBTTagCompound>
-    {
-        private final TileBarrel tile;
-        private BarrelTier tier;
-        private ItemStack storedItem;
-        private int itemCount;
-        private NBTTagCompound upgrades;
-
-        public BarrelTile(TileBarrel t)
-        {
-            tile = t;
-        }
-
-        @Override
-        public NBTTagCompound serializeNBT()
-        {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setString("Tier", getTier().getTierID());
-
-            if(storedItem != null)
-            {
-                nbt.setTag("Item", storedItem.serializeNBT());
-                nbt.setInteger("Count", getItemCount());
-            }
-
-            if(upgrades != null)
-            {
-                nbt.setTag("Upgrades", upgrades);
-            }
-
-            return nbt;
-        }
-
-        @Override
-        public void deserializeNBT(NBTTagCompound nbt)
-        {
-            tier = YabbaRegistry.INSTANCE.getTier(nbt.getString("Tier"));
-            storedItem = nbt.hasKey("Item") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("Item")) : null;
-            itemCount = storedItem == null ? 0 : nbt.getInteger("Count");
-            upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
-        }
-
-        @Override
-        public BarrelTier getTier()
-        {
-            return tier == null ? BarrelTier.NONE : tier;
-        }
-
-        @Override
-        public void setTier(BarrelTier t)
-        {
-            tier = t;
-        }
-
-        @Override
-        public int getItemCount()
-        {
-            return itemCount;
-        }
-
-        @Override
-        public void setItemCount(int v)
-        {
-            itemCount = v;
-        }
-
-        @Override
-        public NBTTagCompound getUpgradeNBT()
-        {
-            return upgrades;
-        }
-
-        @Override
-        public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
-        {
-            upgrades = nbt;
-        }
-
-        @Override
-        public void setStackInSlot(int slot, @Nullable ItemStack stack)
-        {
-            storedItem = stack;
-        }
-
-        @Override
-        @Nullable
-        public ItemStack getStackInSlot(int slot)
-        {
-            return storedItem;
-        }
-
-        @Override
-        public void updateCounter(boolean full)
-        {
-            if(full)
-            {
-                tile.markDirty();
-            }
-            else
-            {
-                tile.updateNumber = true;
-            }
-        }
-    }
 
     public TileBarrel()
     {
-        barrel = new BarrelTile(this);
+        barrel = new BarrelTileContainer(this);
         clearCachedData();
     }
 
@@ -276,7 +170,10 @@ public class TileBarrel extends TileEntity implements ITickable
     {
         if(cachedRotation == -1F)
         {
-            EnumFacing facing = worldObj.getBlockState(getPos()).getValue(BlockHorizontal.FACING);
+            IBlockState state = worldObj.getBlockState(getPos());
+            cachedItemZ = (state.getBlock() instanceof BlockCrate) ? -0.01F : 0.04F;
+
+            EnumFacing facing = state.getValue(BlockHorizontal.FACING);
             cachedRotation = 0F;
 
             switch(facing)
@@ -380,7 +277,7 @@ public class TileBarrel extends TileEntity implements ITickable
 
             playerIn.swingProgress = 0;
             markDirty();
-            return true;
+            return !playerIn.isSneaking();
         }
 
         return barrel.getItemCount() > 0;

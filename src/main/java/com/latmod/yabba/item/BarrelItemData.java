@@ -2,12 +2,11 @@ package com.latmod.yabba.item;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.BarrelTier;
+import com.latmod.yabba.api.IBarrelTier;
+import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.block.Barrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -20,11 +19,6 @@ import javax.annotation.Nullable;
  */
 public class BarrelItemData extends Barrel implements ICapabilityProvider
 {
-    private static final String TAG_BARREL_ITEM = "BarrelItem";
-    private static final String TAG_BARREL_ITEM_COUNT = "BarrelItemCount";
-    private static final String TAG_BARREL_UPGRADES = "BarrelUpgrades";
-    private static final String TAG_BARREL_TIER = "BarrelTier";
-
     public final ItemStack itemStack;
 
     public BarrelItemData(ItemStack is)
@@ -45,77 +39,98 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
         return hasCapability(capability, facing) ? (T) this : null;
     }
 
+    private NBTTagCompound getBarrelNBT()
+    {
+        NBTTagCompound nbt = null;
+
+        if(itemStack.hasTagCompound())
+        {
+            nbt = (NBTTagCompound) itemStack.getTagCompound().getTag("Barrel");
+        }
+
+        if(nbt == null)
+        {
+            nbt = new NBTTagCompound();
+            itemStack.setTagInfo("Barrel", nbt);
+        }
+
+        return nbt;
+    }
+
     @Override
     public int getItemCount()
     {
-        return itemStack.hasTagCompound() ? itemStack.getTagCompound().getInteger(TAG_BARREL_ITEM_COUNT) : 0;
+        return getBarrelNBT().getInteger("Count");
     }
 
     @Override
     public void setItemCount(int c)
     {
-        itemStack.setTagInfo(TAG_BARREL_ITEM_COUNT, new NBTTagInt(c));
+        getBarrelNBT().setInteger("Count", c);
     }
 
     @Override
     @Nullable
     public NBTTagCompound getUpgradeNBT()
     {
-        return itemStack.hasTagCompound() ? (NBTTagCompound) itemStack.getTagCompound().getTag(TAG_BARREL_UPGRADES) : null;
+        return (NBTTagCompound) getBarrelNBT().getTag("Upgrades");
     }
 
     @Override
     public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
     {
-        if(nbt != null)
+        if(nbt == null || nbt.hasNoTags())
         {
-            itemStack.setTagInfo(TAG_BARREL_UPGRADES, nbt);
+            getBarrelNBT().removeTag("Upgrades");
         }
-        else if(itemStack.hasTagCompound())
+        else
         {
-            itemStack.getTagCompound().removeTag(TAG_BARREL_UPGRADES);
-
-            if(itemStack.getTagCompound().hasNoTags())
-            {
-                itemStack.setTagCompound(null);
-            }
+            getBarrelNBT().setTag("Upgrades", nbt);
         }
     }
 
     @Override
-    public BarrelTier getTier()
+    public IBarrelVariant getVariant()
     {
-        return itemStack.hasTagCompound() ? YabbaRegistry.INSTANCE.getTier(itemStack.getTagCompound().getString(TAG_BARREL_TIER)) : BarrelTier.NONE;
+        return YabbaRegistry.INSTANCE.getVariant(getBarrelNBT().getString("Variant"));
     }
 
     @Override
-    public void setTier(BarrelTier tier)
+    public void setVariant(IBarrelVariant variant)
     {
-        itemStack.setTagInfo(TAG_BARREL_TIER, new NBTTagString(tier.getTierID()));
+        getBarrelNBT().setString("Variant", variant.getName());
+    }
+
+    @Override
+    public IBarrelTier getTier()
+    {
+        return YabbaRegistry.INSTANCE.getTier(getBarrelNBT().getString("Tier"));
+    }
+
+    @Override
+    public void setTier(IBarrelTier tier)
+    {
+        getBarrelNBT().setString("Tier", tier.getName());
     }
 
     @Override
     @Nullable
     public ItemStack getStackInSlot(int slot)
     {
-        return (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(TAG_BARREL_ITEM)) ? ItemStack.loadItemStackFromNBT(itemStack.getTagCompound().getCompoundTag(TAG_BARREL_ITEM)) : null;
+        NBTTagCompound nbt = (NBTTagCompound) getBarrelNBT().getTag("Item");
+        return nbt == null ? null : ItemStack.loadItemStackFromNBT(nbt);
     }
 
     @Override
     public void setStackInSlot(int slot, ItemStack stack)
     {
-        if(stack != null)
+        if(stack == null)
         {
-            itemStack.setTagInfo(TAG_BARREL_ITEM, stack.serializeNBT());
+            getBarrelNBT().removeTag("Item");
         }
-        else if(itemStack.hasTagCompound())
+        else
         {
-            itemStack.getTagCompound().removeTag(TAG_BARREL_ITEM);
-
-            if(itemStack.getTagCompound().hasNoTags())
-            {
-                itemStack.setTagCompound(null);
-            }
+            getBarrelNBT().setTag("Item", stack.serializeNBT());
         }
     }
 

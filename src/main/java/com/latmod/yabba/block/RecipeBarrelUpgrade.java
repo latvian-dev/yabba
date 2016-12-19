@@ -62,6 +62,18 @@ public class RecipeBarrelUpgrade implements IRecipe
         {
             return false;
         }
+        else
+        {
+            for(int i = 0; i < inv.getSizeInventory(); i++)
+            {
+                ItemStack is = inv.getStackInSlot(i);
+
+                if(is != null && is != barrelStack && is != upgradeStack)
+                {
+                    return false;
+                }
+            }
+        }
 
         return upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) barrelStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, true);
     }

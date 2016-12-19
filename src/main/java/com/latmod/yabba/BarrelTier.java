@@ -1,26 +1,30 @@
-package com.latmod.yabba.api;
+package com.latmod.yabba;
+
+import com.latmod.yabba.api.IBarrelTier;
 
 /**
  * Created by LatvianModder on 17.12.2016.
  */
-public class BarrelTier
+public class BarrelTier implements IBarrelTier
 {
     public static final BarrelTier NONE = new BarrelTier("none", 0);
 
-    private final String tierId;
+    private final String name;
     private final int maxStacks;
 
     public BarrelTier(String id, int max)
     {
-        tierId = id;
+        name = id;
         maxStacks = max;
     }
 
-    public String getTierID()
+    @Override
+    public String getName()
     {
-        return tierId;
+        return name;
     }
 
+    @Override
     public int getMaxStacks()
     {
         return maxStacks;
@@ -28,16 +32,16 @@ public class BarrelTier
 
     public String toString()
     {
-        return tierId;
+        return name;
     }
 
     public boolean equals(Object o)
     {
-        return o == this || o != null && o.toString().equals(tierId);
+        return o == this || o != null && o.toString().equals(name);
     }
 
     public int hashCode()
     {
-        return tierId.hashCode();
+        return name.hashCode();
     }
 }

@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  */
 public interface IBarrel extends IItemHandler
 {
-    BarrelTier getTier();
+    IBarrelTier getTier();
 
     int getItemCount();
 
@@ -20,4 +20,6 @@ public interface IBarrel extends IItemHandler
 
     @Nullable
     NBTBase getUpgradeData(String upgrade);
+
+    IBarrelVariant getVariant();
 }
