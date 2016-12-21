@@ -1,10 +1,10 @@
 package com.latmod.yabba.tile;
 
-import com.latmod.yabba.BarrelTier;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelTier;
 import com.latmod.yabba.api.IBarrelVariant;
-import com.latmod.yabba.block.Barrel;
+import com.latmod.yabba.util.Barrel;
+import com.latmod.yabba.util.BarrelTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;

@@ -1,4 +1,4 @@
-package com.latmod.yabba;
+package com.latmod.yabba.util;
 
 import com.latmod.yabba.api.IBarrelTier;
 

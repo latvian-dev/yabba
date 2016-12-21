@@ -1,6 +1,5 @@
-package com.latmod.yabba.item;
+package com.latmod.yabba.util;
 
-import com.latmod.yabba.BarrelTier;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;

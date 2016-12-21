@@ -5,10 +5,11 @@ import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.YabbaRegistryEvent;
 import com.latmod.yabba.block.RecipeBarrelUpgrade;
-import com.latmod.yabba.item.EnumUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileBarrel;
+import com.latmod.yabba.util.BarrelTier;
+import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -86,8 +87,7 @@ public class YabbaCommon
     public void preInit()
     {
         MinecraftForge.EVENT_BUS.post(new YabbaRegistryEvent(YabbaRegistry.INSTANCE));
-        YabbaRegistry.DEFAULT_VARIANT = YabbaRegistry.BARRELS.get("planks_oak");
-        YabbaRegistry.BARRELS_VALUES.addAll(YabbaRegistry.BARRELS.values());
+        YabbaRegistry.ALL_BARRELS.addAll(YabbaRegistry.BARRELS.values());
 
         CapabilityManager.INSTANCE.register(IUpgrade.class, new Capability.IStorage<IUpgrade>()
         {
@@ -146,14 +146,7 @@ public class YabbaCommon
             if(craftingItem != null)
             {
                 GameRegistry.addRecipe(new ShapedOreRecipe(YabbaItems.BARREL.createStack(variant, TIER_WOOD),
-                        " U ", "IGI", " C ",
-                        'U', blankUpgrade,
-                        'I', craftingItem,
-                        'G', "paneGlassColorless",
-                        'C', "chestWood"));
-
-                GameRegistry.addRecipe(new ShapedOreRecipe(YabbaItems.CRATE.createStack(variant, TIER_WOOD),
-                        " U ", "ICI", " I ",
+                        "U", "I", "C",
                         'U', blankUpgrade,
                         'I', craftingItem,
                         'C', "chestWood"));

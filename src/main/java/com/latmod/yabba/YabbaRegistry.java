@@ -4,13 +4,18 @@ import com.latmod.yabba.api.IBarrelTier;
 import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.IYabbaRegistry;
-import com.latmod.yabba.api.IconSet;
+import com.latmod.yabba.util.BarrelTier;
+import com.latmod.yabba.util.BarrelVariant;
+import com.latmod.yabba.util.IconSet;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,15 +26,15 @@ public enum YabbaRegistry implements IYabbaRegistry
     INSTANCE;
 
     public static final Map<String, IBarrelVariant> BARRELS = new HashMap<>();
-    public static final Collection<IBarrelVariant> BARRELS_VALUES = new ArrayList<>();
+    public static final List<IBarrelVariant> ALL_BARRELS = new ArrayList<>();
     private static final Map<String, IBarrelTier> TIERS = new HashMap<>();
     public static final Map<String, IUpgrade> UPGRADES = new HashMap<>();
-    public static IBarrelVariant DEFAULT_VARIANT;
+    public static final IBarrelVariant DEFAULT_VARIANT = INSTANCE.addVariant("planks_oak", Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.OAK), new ItemStack(Blocks.PLANKS, 1, BlockPlanks.EnumType.OAK.getMetadata()), "all=blocks/planks_oak");
 
     @Override
-    public IBarrelVariant addVariant(String id, IBlockState parentState, @Nullable Object craftItem, IconSet icons)
+    public IBarrelVariant addVariant(String id, IBlockState parentState, @Nullable Object craftItem, String icons)
     {
-        IBarrelVariant c = new BarrelVariant(id, parentState, craftItem, icons);
+        IBarrelVariant c = new BarrelVariant(id, parentState, craftItem, new IconSet(icons));
         BARRELS.put(id, c);
         return c;
     }

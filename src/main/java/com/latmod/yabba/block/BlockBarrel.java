@@ -1,11 +1,12 @@
 package com.latmod.yabba.block;
 
-import com.latmod.yabba.BarrelTier;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.tile.TileBarrel;
+import com.latmod.yabba.util.BarrelTier;
+import com.latmod.yabba.util.PropertyBarrelVariant;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -82,7 +84,7 @@ public class BlockBarrel extends BlockBarrelBase
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        for(IBarrelVariant variant : YabbaRegistry.BARRELS_VALUES)
+        for(IBarrelVariant variant : YabbaRegistry.ALL_BARRELS)
         {
             list.add(createStack(variant, YabbaCommon.TIER_WOOD));
         }
@@ -167,7 +169,16 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity)
     {
-        return state.getValue(VARIANT).getParentState().getBlock().getSoundType(state, world, pos, entity);
+        IBlockState parent = state.getValue(VARIANT).getParentState();
+        return parent.getBlock().getSoundType(parent, world, pos, entity);
+    }
+
+    @Override
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
+    {
+        //IBlockState parent = state.getValue(VARIANT).getParentState();
+        //return parent.getBlock().canRenderInLayer(parent, layer);
+        return layer == BlockRenderLayer.CUTOUT;
     }
 
     @Override

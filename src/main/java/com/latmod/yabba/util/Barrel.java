@@ -1,4 +1,4 @@
-package com.latmod.yabba.block;
+package com.latmod.yabba.util;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;

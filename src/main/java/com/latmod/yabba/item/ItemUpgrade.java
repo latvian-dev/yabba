@@ -1,6 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

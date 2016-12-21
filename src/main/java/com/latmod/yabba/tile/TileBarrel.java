@@ -1,7 +1,6 @@
 package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.block.BlockCrate;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.net.YabbaNetHandler;
@@ -33,7 +32,6 @@ public class TileBarrel extends TileEntity implements ITickable
     public final BarrelTileContainer barrel;
     private String cachedItemName, cachedItemCount;
     private float cachedRotation;
-    public float cachedItemZ;
     private boolean isDirty = true;
     boolean updateNumber = false;
     public boolean requestClientUpdate = true;
@@ -171,7 +169,6 @@ public class TileBarrel extends TileEntity implements ITickable
         if(cachedRotation == -1F)
         {
             IBlockState state = worldObj.getBlockState(getPos());
-            cachedItemZ = (state.getBlock() instanceof BlockCrate) ? -0.01F : 0.04F;
 
             EnumFacing facing = state.getValue(BlockHorizontal.FACING);
             cachedRotation = 0F;

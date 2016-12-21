@@ -1,4 +1,4 @@
-package com.latmod.yabba.block;
+package com.latmod.yabba.util;
 
 import com.google.common.base.Optional;
 import com.latmod.yabba.YabbaRegistry;
@@ -25,7 +25,7 @@ public class PropertyBarrelVariant extends PropertyHelper<IBarrelVariant>
     @Override
     public Collection<IBarrelVariant> getAllowedValues()
     {
-        return YabbaRegistry.BARRELS_VALUES;
+        return YabbaRegistry.ALL_BARRELS;
     }
 
     @Override

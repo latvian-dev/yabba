@@ -16,5 +16,5 @@ public interface IBarrelVariant extends Comparable<IBarrelVariant>
     @Nullable
     Object getCraftingItem();
 
-    IconSet getTextures();
+    IIconSet getTextures();
 }

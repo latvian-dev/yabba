@@ -4,7 +4,7 @@ import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelTier;
 import com.latmod.yabba.api.IBarrelVariant;
-import com.latmod.yabba.block.Barrel;
+import com.latmod.yabba.util.Barrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

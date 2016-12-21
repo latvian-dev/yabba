@@ -1,7 +1,7 @@
-package com.latmod.yabba;
+package com.latmod.yabba.util;
 
 import com.latmod.yabba.api.IBarrelVariant;
-import com.latmod.yabba.api.IconSet;
+import com.latmod.yabba.api.IIconSet;
 import net.minecraft.block.state.IBlockState;
 
 import javax.annotation.Nullable;
@@ -12,14 +12,12 @@ import java.util.Locale;
  */
 public class BarrelVariant implements IBarrelVariant
 {
-    private static final IconSet DEFAULT_TEXTURES = IconSet.all("blocks/planks_oak");
-
     private final String name;
     private final IBlockState parentState;
-    private Object craftItem;
-    private IconSet iconSet;
+    private final Object craftItem;
+    private final IIconSet iconSet;
 
-    public BarrelVariant(String id, IBlockState state, @Nullable Object item, IconSet is)
+    public BarrelVariant(String id, IBlockState state, @Nullable Object item, IIconSet is)
     {
         name = id.toLowerCase(Locale.ENGLISH);
         parentState = state;
@@ -47,7 +45,7 @@ public class BarrelVariant implements IBarrelVariant
     }
 
     @Override
-    public IconSet getTextures()
+    public IIconSet getTextures()
     {
         return iconSet;
     }
@@ -58,9 +56,18 @@ public class BarrelVariant implements IBarrelVariant
         return getName().compareTo(o.getName());
     }
 
-    @Override
+    public String toString()
+    {
+        return name;
+    }
+
     public boolean equals(Object o)
     {
-        return o == this || (o instanceof IBarrelVariant && getName().equals(((IBarrelVariant) o).getName()));
+        return o == this || o != null && name.equals(o);
+    }
+
+    public int hashCode()
+    {
+        return name.hashCode();
     }
 }

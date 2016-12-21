@@ -80,7 +80,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         }
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0.5F, 0.5F, te.cachedItemZ);
+        GlStateManager.translate(0.5F, 0.5F, 0.04F);
 
         GlStateManager.scale(0.4F, -0.4F, -0.015F);
 

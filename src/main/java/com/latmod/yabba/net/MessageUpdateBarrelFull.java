@@ -1,6 +1,7 @@
 package com.latmod.yabba.net;
 
 import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
@@ -81,6 +82,8 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
             if(updateVariant)
             {
                 IBlockState state = tile.getWorld().getBlockState(tile.getPos());
+                state = state.withProperty(BlockBarrel.VARIANT, barrel.barrel.getVariant());
+                tile.getWorld().setBlockState(tile.getPos(), state);
                 tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 8);
             }
         }
