@@ -23,7 +23,7 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     private int posX, posY, posZ, itemCount;
     private ItemStack storedItem;
     private NBTTagCompound upgrades;
-    private String variant;
+    private String model, skin;
 
     public MessageUpdateBarrelFull()
     {
@@ -37,7 +37,8 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         storedItem = tile.barrel.getStackInSlot(0);
         itemCount = tile.barrel.getItemCount();
         upgrades = tile.barrel.getUpgradeNBT();
-        variant = tile.barrel.getVariant().getName();
+        model = tile.barrel.getModel().getName();
+        skin = tile.barrel.getSkin().getName();
     }
 
     @Override
@@ -49,7 +50,8 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         storedItem = ByteBufUtils.readItemStack(buf);
         itemCount = buf.readInt();
         upgrades = ByteBufUtils.readTag(buf);
-        variant = ByteBufUtils.readUTF8String(buf);
+        model = ByteBufUtils.readUTF8String(buf);
+        skin = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -61,7 +63,8 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         ByteBufUtils.writeItemStack(buf, storedItem);
         buf.writeInt(itemCount);
         ByteBufUtils.writeTag(buf, upgrades);
-        ByteBufUtils.writeUTF8String(buf, variant);
+        ByteBufUtils.writeUTF8String(buf, model);
+        ByteBufUtils.writeUTF8String(buf, skin);
     }
 
     @Override
@@ -72,17 +75,19 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         if(tile instanceof TileBarrel)
         {
             TileBarrel barrel = (TileBarrel) tile;
-            boolean updateVariant = !barrel.barrel.getVariant().getName().equals(message.variant);
+            boolean updateVariant = !barrel.barrel.getSkin().getName().equals(message.skin);
             barrel.barrel.setStackInSlot(0, message.storedItem);
             barrel.barrel.setItemCount(message.itemCount);
             barrel.barrel.setUpgradeNBT(message.upgrades);
-            barrel.barrel.setVariant(YabbaRegistry.INSTANCE.getVariant(message.variant));
+            barrel.barrel.setModel(YabbaRegistry.INSTANCE.getModel(message.model));
+            barrel.barrel.setSkin(YabbaRegistry.INSTANCE.getSkin(message.skin));
             barrel.clearCachedData();
 
             if(updateVariant)
             {
                 IBlockState state = tile.getWorld().getBlockState(tile.getPos());
-                state = state.withProperty(BlockBarrel.VARIANT, barrel.barrel.getVariant());
+                state = state.withProperty(BlockBarrel.SKIN, barrel.barrel.getSkin());
+                state = state.withProperty(BlockBarrel.MODEL, barrel.barrel.getModel());
                 tile.getWorld().setBlockState(tile.getPos(), state);
                 tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 8);
             }

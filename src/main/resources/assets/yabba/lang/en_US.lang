@@ -1,4 +1,5 @@
 itemGroup.yabba=YABBA
+itemGroup.yabba.all_models=All YABBA Barrels
 
 item.yabba.upgrade.name=Barrel Upgrade
 item.yabba.upgrade.blank=Blank
@@ -13,6 +14,7 @@ item.yabba.upgrade.redstone_out=Redstone Output
 item.yabba.upgrade.hopper=Hopper
 item.yabba.upgrade.ender_link=Ender Link
 
+item.yabba.painter.name=Barrel Painter
+
 tile.yabba.barrel.name=Barrel
-tile.yabba.crate.name=Crate
 tile.yabba.antibarrel.name=AntiBarrel

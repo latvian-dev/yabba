@@ -1,6 +1,7 @@
 package com.latmod.yabba.util;
 
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.item.ItemStack;
@@ -20,11 +21,12 @@ public enum EnumUpgrade implements IUpgrade
     DIAMOND_UPGRADE(3),
     NETHER_STAR_UPGRADE(4),
     CREATIVE(9),
-    LOCKED(10),
+    //LOCKED(10),
     OBSIDIAN_SHELL(11),
     REDSTONE_OUT(12),
     HOPPER(13),
-    ENDER_LINK(14);
+    ENDER_LINK(14),
+    VOID(15);
 
     public static final EnumUpgrade[] VALUES = values();
 
@@ -37,6 +39,11 @@ public enum EnumUpgrade implements IUpgrade
         name = name().toLowerCase(Locale.ENGLISH);
         uname = "item.yabba.upgrade." + name;
         metadata = meta;
+    }
+
+    public ItemStack item()
+    {
+        return new ItemStack(YabbaItems.UPGRADE, 1, metadata);
     }
 
     public static EnumUpgrade getFromMeta(int meta)
@@ -65,7 +72,7 @@ public enum EnumUpgrade implements IUpgrade
         {
             case BLANK:
             {
-                if(barrel.getTier().equals(BarrelTier.NONE))
+                if(barrel.getTier().equals(Tier.NONE))
                 {
                     if(!simulate)
                     {
@@ -131,18 +138,6 @@ public enum EnumUpgrade implements IUpgrade
                     {
                         barrel.setItemCount(barrel.getStackInSlot(0).getMaxStackSize());
                         barrel.setTier(YabbaCommon.TIER_CREATIVE);
-                    }
-                    return true;
-                }
-                break;
-            }
-            case LOCKED:
-            {
-                if(barrel.getUpgradeData("Locked") == null)
-                {
-                    if(!simulate)
-                    {
-                        barrel.setUpgradeData("Locked", new NBTTagByte((byte) 1));
                     }
                     return true;
                 }

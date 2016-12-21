@@ -21,7 +21,7 @@ public class IconSet implements IIconSet
     {
         textures = new ResourceLocation[6];
 
-        Map<String, String> map = MapParser.parse(MapParser.TEMP_MAP, v);
+        Map<String, String> map = YabbaUtils.parse(YabbaUtils.TEMP_MAP, v);
 
         String s = map.get("all");
 

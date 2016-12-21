@@ -2,9 +2,8 @@ package com.latmod.yabba.item;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.api.IBarrelTier;
+import com.latmod.yabba.api.ITier;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -34,10 +33,9 @@ public class ItemBlockBarrel extends ItemBlock
     {
         IBarrel data = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
-        IBlockState state = data.getVariant().getParentState();
-        list.add("Skin: " + new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state)).getDisplayName());
+        list.add("Skin: " + data.getSkin().getDisplayName());
 
-        IBarrelTier tier = data.getTier();
+        ITier tier = data.getTier();
         ItemStack stack1 = data.getStackInSlot(0);
 
         if(stack1 != null)

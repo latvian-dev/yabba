@@ -1,17 +1,15 @@
 package com.latmod.yabba;
 
 import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.api.IBarrelVariant;
 import com.latmod.yabba.api.IUpgrade;
-import com.latmod.yabba.api.YabbaRegistryEvent;
 import com.latmod.yabba.block.RecipeBarrelUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
+import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileBarrel;
-import com.latmod.yabba.util.BarrelTier;
 import com.latmod.yabba.util.EnumUpgrade;
+import com.latmod.yabba.util.Tier;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -20,52 +18,36 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 /**
  * Created by LatvianModder on 06.12.2016.
  */
 public class YabbaCommon
 {
-    private static final CreativeTabs TAB = new CreativeTabs(Yabba.MOD_ID)
-    {
-        @Override
-        @SideOnly(Side.CLIENT)
-        public Item getTabIconItem()
-        {
-            return YabbaItems.UPGRADE;
-        }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public int getIconItemDamage()
-        {
-            return EnumUpgrade.BLANK.metadata;
-        }
-    };
-
     @CapabilityInject(IBarrel.class)
     public static Capability<IBarrel> BARREL_CAPABILITY;
 
     @CapabilityInject(IUpgrade.class)
     public static Capability<IUpgrade> UPGRADE_CAPABILITY;
 
-    public static final BarrelTier TIER_DIRT = new BarrelTier("dirt", 1);
-    public static final BarrelTier TIER_WOOD = new BarrelTier("wood", 64);
-    public static final BarrelTier TIER_IRON = new BarrelTier("iron", 256);
-    public static final BarrelTier TIER_GOLD = new BarrelTier("gold", 1024);
-    public static final BarrelTier TIER_DMD = new BarrelTier("dmd", 4096);
-    public static final BarrelTier TIER_INF = new BarrelTier("inf", 32000000);
-    public static final BarrelTier TIER_CREATIVE = new BarrelTier("creative", 1);
+    public static final Tier TIER_DIRT = new Tier("dirt", 1);
+    public static final Tier TIER_WOOD = new Tier("wood", 64);
+    public static final Tier TIER_IRON = new Tier("iron", 256);
+    public static final Tier TIER_GOLD = new Tier("gold", 1024);
+    public static final Tier TIER_DMD = new Tier("dmd", 4096);
+    public static final Tier TIER_INF = new Tier("inf", 32000000);
+    public static final Tier TIER_CREATIVE = new Tier("creative", 1);
+
+    public static final YabbaCreativeTab TAB = new YabbaCreativeTab();
+    public static final YabbaCreativeTabAllModels TAB_ALL_MODELS = new YabbaCreativeTabAllModels();
 
     private static void register(String id, Item item)
     {
@@ -86,8 +68,7 @@ public class YabbaCommon
 
     public void preInit()
     {
-        MinecraftForge.EVENT_BUS.post(new YabbaRegistryEvent(YabbaRegistry.INSTANCE));
-        YabbaRegistry.ALL_BARRELS.addAll(YabbaRegistry.BARRELS.values());
+        YabbaRegistry.INSTANCE.sendEvent();
 
         CapabilityManager.INSTANCE.register(IUpgrade.class, new Capability.IStorage<IUpgrade>()
         {
@@ -118,8 +99,8 @@ public class YabbaCommon
         }, () -> null);
 
         register("upgrade", YabbaItems.UPGRADE);
+        register("painter", YabbaItems.PAINTER);
         register("barrel", YabbaItems.BARREL, new ItemBlockBarrel(YabbaItems.BARREL));
-        register("crate", YabbaItems.CRATE, new ItemBlockBarrel(YabbaItems.CRATE));
         register("antibarrel", YabbaItems.ANTIBARREL, new ItemBlock(YabbaItems.ANTIBARREL));
 
         GameRegistry.registerTileEntity(TileBarrel.class, Yabba.MOD_ID + ".barrel");
@@ -131,7 +112,7 @@ public class YabbaCommon
 
     public void postInit()
     {
-        ItemStack blankUpgrade = new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
+        ItemStack blankUpgrade = EnumUpgrade.BLANK.item();
 
         GameRegistry.addRecipe(new ShapedOreRecipe(ItemHandlerHelper.copyStackWithSize(blankUpgrade, 16),
                 "SSS", "ICI", "SSS",
@@ -139,37 +120,36 @@ public class YabbaCommon
                 'C', "chestWood",
                 'S', "slabWood"));
 
-        for(IBarrelVariant variant : YabbaRegistry.BARRELS.values())
-        {
-            Object craftingItem = variant.getCraftingItem();
+        GameRegistry.addRecipe(new ShapedOreRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, TIER_WOOD),
+                " U ", "SCS", " P ",
+                'U', blankUpgrade,
+                'C', "chestWood",
+                'S', "slabWood",
+                'P', "plankWood"));
 
-            if(craftingItem != null)
-            {
-                GameRegistry.addRecipe(new ShapedOreRecipe(YabbaItems.BARREL.createStack(variant, TIER_WOOD),
-                        "U", "I", "C",
-                        'U', blankUpgrade,
-                        'I', craftingItem,
-                        'C', "chestWood"));
-            }
-        }
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.PAINTER),
+                "WWU", " I ", " I ",
+                'U', blankUpgrade,
+                'I', "ingotIron",
+                'W', Blocks.WOOL));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.IRON_UPGRADE.metadata),
+        GameRegistry.addRecipe(new ShapedOreRecipe(EnumUpgrade.IRON_UPGRADE.item(),
                 "III", "IUI", "III",
                 'U', blankUpgrade,
                 'I', "ingotIron"));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.GOLD_UPGRADE.metadata),
+        GameRegistry.addRecipe(new ShapedOreRecipe(EnumUpgrade.GOLD_UPGRADE.item(),
                 "III", "IUI", "III",
                 'U', blankUpgrade,
                 'I', "ingotGold"));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.DIAMOND_UPGRADE.metadata),
+        GameRegistry.addRecipe(new ShapedOreRecipe(EnumUpgrade.DIAMOND_UPGRADE.item(),
                 "IUI",
                 'U', blankUpgrade,
                 'I', "gemDiamond"));
 
-        GameRegistry.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.NETHER_STAR_UPGRADE.metadata), blankUpgrade, Items.NETHER_STAR);
-        GameRegistry.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.LOCKED.metadata), blankUpgrade, Items.NAME_TAG);
+        GameRegistry.addRecipe(new ShapelessOreRecipe(EnumUpgrade.VOID.item(), blankUpgrade, "obsidian"));
+        GameRegistry.addShapelessRecipe(EnumUpgrade.NETHER_STAR_UPGRADE.item(), EnumUpgrade.VOID.item(), Items.NETHER_STAR);
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.OBSIDIAN_SHELL.metadata),
                 " I ", "IUI", " I ",

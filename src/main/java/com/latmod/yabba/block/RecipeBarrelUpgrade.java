@@ -6,6 +6,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -103,6 +104,13 @@ public class RecipeBarrelUpgrade implements IRecipe
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inv)
     {
-        return new ItemStack[inv.getSizeInventory()];
+        ItemStack[] stacks = new ItemStack[inv.getSizeInventory()];
+
+        for(int i = 0; i < stacks.length; ++i)
+        {
+            stacks[i] = ForgeHooks.getContainerItem(inv.getStackInSlot(i));
+        }
+
+        return stacks;
     }
 }

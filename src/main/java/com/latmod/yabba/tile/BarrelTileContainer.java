@@ -1,11 +1,14 @@
 package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.IBarrelTier;
-import com.latmod.yabba.api.IBarrelVariant;
+import com.latmod.yabba.api.IBarrelModel;
+import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.Barrel;
-import com.latmod.yabba.util.BarrelTier;
+import com.latmod.yabba.util.Tier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -17,11 +20,12 @@ import javax.annotation.Nullable;
 public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
 {
     private final TileBarrel tile;
-    private IBarrelTier tier;
+    private ITier tier;
     ItemStack storedItem;
     int itemCount;
     private NBTTagCompound upgrades;
-    private IBarrelVariant variant;
+    private IBarrelSkin skin;
+    private IBarrelModel model;
 
     public BarrelTileContainer(TileBarrel t)
     {
@@ -45,7 +49,7 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
             nbt.setTag("Upgrades", upgrades);
         }
 
-        nbt.setString("Variant", getVariant().getName());
+        nbt.setString("Skin", getSkin().getName());
         return nbt;
     }
 
@@ -56,66 +60,7 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
         storedItem = nbt.hasKey("Item") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("Item")) : null;
         itemCount = storedItem == null ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
-        variant = YabbaRegistry.INSTANCE.getVariant(nbt.getString("Variant"));
-    }
-
-    @Override
-    public IBarrelTier getTier()
-    {
-        return tier == null ? BarrelTier.NONE : tier;
-    }
-
-    @Override
-    public void setTier(IBarrelTier t)
-    {
-        tier = t;
-    }
-
-    @Override
-    public int getItemCount()
-    {
-        return itemCount;
-    }
-
-    @Override
-    public void setItemCount(int v)
-    {
-        itemCount = v;
-    }
-
-    @Override
-    public NBTTagCompound getUpgradeNBT()
-    {
-        return upgrades;
-    }
-
-    @Override
-    public IBarrelVariant getVariant()
-    {
-        if(variant == null)
-        {
-            variant = YabbaRegistry.DEFAULT_VARIANT;
-        }
-
-        return variant;
-    }
-
-    @Override
-    public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
-    {
-        upgrades = nbt;
-    }
-
-    @Override
-    public void setVariant(IBarrelVariant v)
-    {
-        variant = v;
-    }
-
-    @Override
-    public void setStackInSlot(int slot, @Nullable ItemStack stack)
-    {
-        storedItem = stack;
+        skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));
     }
 
     @Override
@@ -126,15 +71,96 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
     }
 
     @Override
-    public void updateCounter(boolean full)
+    public ITier getTier()
     {
-        if(full)
+        return tier == null ? Tier.NONE : tier;
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return itemCount;
+    }
+
+    @Override
+    public NBTTagCompound getUpgradeNBT()
+    {
+        return upgrades;
+    }
+
+    @Override
+    public IBarrelSkin getSkin()
+    {
+        if(skin == null)
         {
-            tile.markDirty();
+            skin = YabbaRegistry.DEFAULT_SKIN;
         }
-        else
+
+        return skin;
+    }
+
+    @Override
+    public IBarrelModel getModel()
+    {
+        if(model == null)
         {
-            tile.updateNumber = true;
+            model = ModelBarrel.INSTANCE;
         }
+
+        return model;
+    }
+
+    @Override
+    public boolean isLocked()
+    {
+        return getUpgradeData("Locked") != null;
+    }
+
+    @Override
+    public void setStackInSlot(int slot, @Nullable ItemStack stack)
+    {
+        storedItem = stack;
+    }
+
+    @Override
+    public void setTier(ITier t)
+    {
+        tier = t;
+    }
+
+    @Override
+    public void setItemCount(int v)
+    {
+        itemCount = v;
+    }
+
+    @Override
+    public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
+    {
+        upgrades = nbt;
+    }
+
+    @Override
+    public void setSkin(IBarrelSkin v)
+    {
+        skin = v;
+    }
+
+    @Override
+    public void setModel(IBarrelModel m)
+    {
+        model = m;
+    }
+
+    @Override
+    public void setLocked(boolean locked)
+    {
+        setUpgradeData("Locked", locked ? new NBTTagByte((byte) 1) : null);
+    }
+
+    @Override
+    public void markBarrelDirty(boolean full)
+    {
+        tile.sendUpdate = full ? 2 : 1;
     }
 }

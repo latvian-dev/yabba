@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  */
 public interface IBarrel extends IItemHandler
 {
-    IBarrelTier getTier();
+    ITier getTier();
 
     int getItemCount();
 
@@ -21,5 +21,9 @@ public interface IBarrel extends IItemHandler
     @Nullable
     NBTBase getUpgradeData(String upgrade);
 
-    IBarrelVariant getVariant();
+    IBarrelSkin getSkin();
+
+    IBarrelModel getModel();
+
+    boolean isLocked();
 }

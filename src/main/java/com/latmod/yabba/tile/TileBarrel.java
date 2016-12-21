@@ -9,9 +9,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -32,8 +29,7 @@ public class TileBarrel extends TileEntity implements ITickable
     public final BarrelTileContainer barrel;
     private String cachedItemName, cachedItemCount;
     private float cachedRotation;
-    private boolean isDirty = true;
-    boolean updateNumber = false;
+    int sendUpdate = 2;
     public boolean requestClientUpdate = true;
 
     public TileBarrel()
@@ -68,28 +64,20 @@ public class TileBarrel extends TileEntity implements ITickable
     @Override
     public void update()
     {
-        if(isDirty)
+        if(sendUpdate > 0)
         {
-            super.markDirty();
+            if(sendUpdate > 1)
+            {
+                super.markDirty();
+            }
 
             if(!worldObj.isRemote)
             {
                 NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 300);
-                YabbaNetHandler.NET.sendToAllAround(new MessageUpdateBarrelFull(this), targetPoint);
+                YabbaNetHandler.NET.sendToAllAround(sendUpdate > 1 ? new MessageUpdateBarrelFull(this) : new MessageUpdateBarrelItemCount(this), targetPoint);
             }
 
-            isDirty = false;
-        }
-
-        if(updateNumber)
-        {
-            if(!worldObj.isRemote)
-            {
-                NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 300);
-                YabbaNetHandler.NET.sendToAllAround(new MessageUpdateBarrelItemCount(this), targetPoint);
-            }
-
-            updateNumber = false;
+            sendUpdate = 0;
         }
     }
 
@@ -103,7 +91,7 @@ public class TileBarrel extends TileEntity implements ITickable
     @Override
     public void markDirty()
     {
-        isDirty = true;
+        sendUpdate = 2;
     }
 
     @Override
@@ -196,12 +184,14 @@ public class TileBarrel extends TileEntity implements ITickable
         {
             if(playerIn.isSneaking())
             {
-                if(barrel.getUpgradeData("Lockable") != null)
+                barrel.setLocked(!barrel.isLocked());
+
+                if(barrel.storedItem != null && barrel.itemCount == 0 && !barrel.isLocked())
                 {
-                    NBTBase nbt = barrel.getUpgradeData("Locked");
-                    barrel.setUpgradeData("Locked", new NBTTagByte(((byte) (nbt == null || ((NBTPrimitive) nbt).getByte() == 0 ? 1 : 0))));
+                    barrel.storedItem = null;
                 }
 
+                markDirty();
                 return;
             }
 
@@ -232,8 +222,23 @@ public class TileBarrel extends TileEntity implements ITickable
         }
         else
         {
-            ItemStack is = barrel.insertItem(0, heldItem, false);
-            heldItem.stackSize = is == null ? 0 : is.stackSize;
+            if(heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+            {
+                if(heldItem.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn(barrel, worldObj, heldItem, false))
+                {
+                    if(!heldItem.getItem().hasContainerItem(heldItem))
+                    {
+                        heldItem.stackSize--;
+                    }
+
+                    markDirty();
+                }
+            }
+            else
+            {
+                ItemStack is = barrel.insertItem(0, heldItem, false);
+                heldItem.stackSize = is == null ? 0 : is.stackSize;
+            }
         }
 
         markDirty();
@@ -241,6 +246,13 @@ public class TileBarrel extends TileEntity implements ITickable
 
     public boolean onLeftClick(EntityPlayer playerIn, @Nullable ItemStack heldItem)
     {
+        if(barrel.storedItem != null && barrel.itemCount == 0 && !barrel.isLocked())
+        {
+            barrel.storedItem = null;
+            markDirty();
+            return true;
+        }
+
         if(barrel.storedItem != null && barrel.itemCount > 0)
         {
             int size = 1;

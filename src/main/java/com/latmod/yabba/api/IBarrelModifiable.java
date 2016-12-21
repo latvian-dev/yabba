@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  */
 public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 {
-    void setTier(IBarrelTier tier);
+    void setTier(ITier tier);
 
     void setItemCount(int v);
 
@@ -19,7 +19,13 @@ public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 
     void setUpgradeData(String upgrade, @Nullable NBTBase v);
 
-    void setVariant(IBarrelVariant variant);
+    void setSkin(IBarrelSkin variant);
+
+    void setModel(IBarrelModel model);
+
+    void setLocked(boolean locked);
+
+    void markBarrelDirty(boolean fullUpdate);
 
     void copyFrom(IBarrel barrel);
 }

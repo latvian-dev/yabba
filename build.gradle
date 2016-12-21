@@ -55,6 +55,16 @@ sourceSets {
     }
 }
 
+task apiJar(type: Jar) {
+    from sourceSets.main.java
+    include "com/latmod/yabba/api/**"
+    from sourceSets.main.output
+    include "com/latmod/yabba/api/**"
+    classifier = 'api'
+}
+
+build.dependsOn apiJar
+
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version

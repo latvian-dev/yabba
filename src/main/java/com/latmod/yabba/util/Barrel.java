@@ -3,7 +3,7 @@ package com.latmod.yabba.util;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.IBarrelTier;
+import com.latmod.yabba.api.ITier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,8 +43,6 @@ public abstract class Barrel implements IBarrelModifiable
 
         return b;
     }
-
-    public abstract void updateCounter(boolean fullUpdate);
 
     @Override
     public int getSlots()
@@ -89,7 +87,7 @@ public abstract class Barrel implements IBarrelModifiable
             return null;
         }
 
-        IBarrelTier tier = getTier();
+        ITier tier = getTier();
 
         if(tier.equals(YabbaCommon.TIER_CREATIVE))
         {
@@ -131,7 +129,7 @@ public abstract class Barrel implements IBarrelModifiable
                     }
 
                     setItemCount(itemCount + size);
-                    updateCounter(full);
+                    markBarrelDirty(full);
                 }
             }
 
@@ -171,13 +169,13 @@ public abstract class Barrel implements IBarrelModifiable
             setItemCount(itemCount - stack.stackSize);
             boolean full = false;
 
-            if(itemCount - stack.stackSize <= 0 && getUpgradeData("Locked") == null)
+            if(itemCount - stack.stackSize <= 0 && !isLocked())
             {
                 setStackInSlot(0, null);
                 full = true;
             }
 
-            updateCounter(full);
+            markBarrelDirty(full);
         }
 
         return stack;
@@ -220,10 +218,11 @@ public abstract class Barrel implements IBarrelModifiable
     @Override
     public void copyFrom(IBarrel barrel)
     {
-        setStackInSlot(0, barrel.getStackInSlot(0));
-        setItemCount(barrel.getItemCount());
+        setModel(barrel.getModel());
+        setSkin(barrel.getSkin());
         setTier(barrel.getTier());
+        setItemCount(barrel.getItemCount());
         setUpgradeNBT(barrel.getUpgradeNBT());
-        setVariant(barrel.getVariant());
+        setStackInSlot(0, barrel.getStackInSlot(0));
     }
 }

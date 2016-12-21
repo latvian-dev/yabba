@@ -1,18 +1,18 @@
 package com.latmod.yabba.util;
 
-import com.latmod.yabba.api.IBarrelTier;
+import com.latmod.yabba.api.ITier;
 
 /**
  * Created by LatvianModder on 17.12.2016.
  */
-public class BarrelTier implements IBarrelTier
+public class Tier implements ITier
 {
-    public static final BarrelTier NONE = new BarrelTier("none", 0);
+    public static final Tier NONE = new Tier("none", 0);
 
     private final String name;
     private final int maxStacks;
 
-    public BarrelTier(String id, int max)
+    public Tier(String id, int max)
     {
         name = id;
         maxStacks = max;

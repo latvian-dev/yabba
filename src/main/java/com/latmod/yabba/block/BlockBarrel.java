@@ -2,11 +2,15 @@ package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.IBarrelVariant;
+import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileBarrel;
-import com.latmod.yabba.util.BarrelTier;
-import com.latmod.yabba.util.PropertyBarrelVariant;
+import com.latmod.yabba.util.Barrel;
+import com.latmod.yabba.util.PropertyBarrelModel;
+import com.latmod.yabba.util.PropertyBarrelSkin;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -44,12 +48,17 @@ import java.util.UUID;
 public class BlockBarrel extends BlockBarrelBase
 {
     public static final Map<UUID, Long> LAST_RIGHT_CLICK_MAP = new HashMap<>();
-    public static final PropertyBarrelVariant VARIANT = PropertyBarrelVariant.create("variant");
+    public static final PropertyBarrelSkin SKIN = PropertyBarrelSkin.create("skin");
+    public static final PropertyBarrelModel MODEL = PropertyBarrelModel.create("model");
 
     public BlockBarrel()
     {
         super(Material.WOOD, MapColor.WOOD);
-        setDefaultState(blockState.getBaseState().withProperty(VARIANT, YabbaRegistry.DEFAULT_VARIANT).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+        setDefaultState(blockState.getBaseState()
+                .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN)
+                .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH)
+                .withProperty(MODEL, ModelBarrel.INSTANCE));
+        setHardness(2F);
     }
 
     @Override
@@ -71,12 +80,14 @@ public class BlockBarrel extends BlockBarrelBase
         }
     }
 
-    public ItemStack createStack(IBarrelVariant variant, BarrelTier tier)
+    public ItemStack createStack(IBarrelModel model, IBarrelSkin variant, ITier tier)
     {
         ItemStack stack = new ItemStack(this);
         IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-        barrel.setVariant(variant);
+        barrel.setModel(model);
+        barrel.setSkin(variant);
         barrel.setTier(tier);
+        barrel.setItemCount(0);
         return stack;
     }
 
@@ -84,10 +95,7 @@ public class BlockBarrel extends BlockBarrelBase
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        for(IBarrelVariant variant : YabbaRegistry.ALL_BARRELS)
-        {
-            list.add(createStack(variant, YabbaCommon.TIER_WOOD));
-        }
+        list.add(createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, YabbaCommon.TIER_WOOD));
     }
 
     @Override
@@ -99,7 +107,7 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, VARIANT, BlockHorizontal.FACING);
+        return new BlockStateContainer(this, SKIN, BlockHorizontal.FACING, MODEL);
     }
 
     @Override
@@ -123,7 +131,8 @@ public class BlockBarrel extends BlockBarrelBase
 
         if(tile instanceof TileBarrel)
         {
-            return state.withProperty(VARIANT, ((TileBarrel) tile).barrel.getVariant());
+            Barrel barrel = ((TileBarrel) tile).barrel;
+            return state.withProperty(SKIN, barrel.getSkin()).withProperty(MODEL, barrel.getModel());
         }
 
         return state;
@@ -144,13 +153,6 @@ public class BlockBarrel extends BlockBarrelBase
     }
 
     @Override
-    @Deprecated
-    public float getBlockHardness(IBlockState state, World worldIn, BlockPos pos)
-    {
-        return state.getValue(VARIANT).getParentState().getBlockHardness(worldIn, pos);
-    }
-
-    @Override
     public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
     {
         if(!world.isRemote)
@@ -163,20 +165,20 @@ public class BlockBarrel extends BlockBarrelBase
             }
         }
 
-        return world.getBlockState(pos).getValue(VARIANT).getParentState().getBlock().getExplosionResistance(world, pos, exploder, explosion);
+        return 8F;
     }
 
     @Override
     public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity)
     {
-        IBlockState parent = state.getValue(VARIANT).getParentState();
+        IBlockState parent = state.getValue(SKIN).getState();
         return parent.getBlock().getSoundType(parent, world, pos, entity);
     }
 
     @Override
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
     {
-        //IBlockState parent = state.getValue(VARIANT).getParentState();
+        //IBlockState parent = state.getValue(SKIN).getParentState();
         //return parent.getBlock().canRenderInLayer(parent, layer);
         return layer == BlockRenderLayer.CUTOUT;
     }

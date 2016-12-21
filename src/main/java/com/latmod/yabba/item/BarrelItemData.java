@@ -2,10 +2,12 @@ package com.latmod.yabba.item;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.IBarrelTier;
-import com.latmod.yabba.api.IBarrelVariant;
+import com.latmod.yabba.api.IBarrelModel;
+import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.api.ITier;
 import com.latmod.yabba.util.Barrel;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -90,25 +92,49 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public IBarrelVariant getVariant()
+    public IBarrelSkin getSkin()
     {
-        return YabbaRegistry.INSTANCE.getVariant(getBarrelNBT().getString("Variant"));
+        return YabbaRegistry.INSTANCE.getSkin(getBarrelNBT().getString("Skin"));
     }
 
     @Override
-    public void setVariant(IBarrelVariant variant)
+    public IBarrelModel getModel()
     {
-        getBarrelNBT().setString("Variant", variant.getName());
+        return YabbaRegistry.INSTANCE.getModel(getBarrelNBT().getString("Model"));
     }
 
     @Override
-    public IBarrelTier getTier()
+    public boolean isLocked()
+    {
+        return getUpgradeData("Locked") != null;
+    }
+
+    @Override
+    public void setSkin(IBarrelSkin skin)
+    {
+        getBarrelNBT().setString("Skin", skin.getName());
+    }
+
+    @Override
+    public void setModel(IBarrelModel model)
+    {
+        getBarrelNBT().setString("Model", model.getName());
+    }
+
+    @Override
+    public void setLocked(boolean locked)
+    {
+        setUpgradeData("Locked", locked ? new NBTTagByte((byte) 1) : null);
+    }
+
+    @Override
+    public ITier getTier()
     {
         return YabbaRegistry.INSTANCE.getTier(getBarrelNBT().getString("Tier"));
     }
 
     @Override
-    public void setTier(IBarrelTier tier)
+    public void setTier(ITier tier)
     {
         getBarrelNBT().setString("Tier", tier.getName());
     }
@@ -135,7 +161,7 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public void updateCounter(boolean full)
+    public void markBarrelDirty(boolean full)
     {
     }
 }

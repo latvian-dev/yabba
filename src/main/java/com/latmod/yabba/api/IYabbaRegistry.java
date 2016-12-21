@@ -9,9 +9,11 @@ import javax.annotation.Nullable;
  */
 public interface IYabbaRegistry
 {
-    IBarrelVariant addVariant(String id, IBlockState parentState, @Nullable Object craftItem, String icons);
+    IBarrelSkin addSkin(IBlockState parentState, @Nullable Object craftItem, String icons);
 
-    void addTier(IBarrelTier tier);
+    void addTier(ITier tier);
 
     void addUpgrade(IUpgrade upgrade);
+
+    void addModel(IBarrelModel model);
 }
