@@ -1,6 +1,8 @@
 package com.latmod.yabba.net;
 
 import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.IBarrelModel;
+import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
@@ -75,19 +77,23 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         if(tile instanceof TileBarrel)
         {
             TileBarrel barrel = (TileBarrel) tile;
-            boolean updateVariant = !barrel.barrel.getSkin().getName().equals(message.skin);
+
+            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(message.model);
+            IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(message.skin);
+
+            boolean updateVariant = !barrel.barrel.getModel().equals(model) || !barrel.barrel.getSkin().equals(skin);
             barrel.barrel.setStackInSlot(0, message.storedItem);
             barrel.barrel.setItemCount(message.itemCount);
             barrel.barrel.setUpgradeNBT(message.upgrades);
-            barrel.barrel.setModel(YabbaRegistry.INSTANCE.getModel(message.model));
+            barrel.barrel.setModel(model);
             barrel.barrel.setSkin(YabbaRegistry.INSTANCE.getSkin(message.skin));
             barrel.clearCachedData();
 
             if(updateVariant)
             {
                 IBlockState state = tile.getWorld().getBlockState(tile.getPos());
-                state = state.withProperty(BlockBarrel.SKIN, barrel.barrel.getSkin());
-                state = state.withProperty(BlockBarrel.MODEL, barrel.barrel.getModel());
+                state = state.withProperty(BlockBarrel.MODEL, model);
+                state = state.withProperty(BlockBarrel.SKIN, skin);
                 tile.getWorld().setBlockState(tile.getPos(), state);
                 tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 8);
             }

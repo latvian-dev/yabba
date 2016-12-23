@@ -200,7 +200,7 @@ public class BlockBarrel extends BlockBarrelBase
 
                 if(tile instanceof TileBarrel)
                 {
-                    ((TileBarrel) tile).onRightClick(playerIn, heldItem);
+                    ((TileBarrel) tile).onRightClick(playerIn, heldItem, (side == EnumFacing.EAST || side == EnumFacing.WEST) ? hitZ : hitX, hitY);
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.latmod.yabba.client;
 
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.net.MessageRequestBarrelUpdate;
 import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.tile.TileBarrel;
@@ -11,6 +12,8 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.opengl.GL11;
 
@@ -19,6 +22,8 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 {
+    private static final ResourceLocation TEXTURE_SETTINGS = new ResourceLocation(Yabba.MOD_ID, "textures/blocks/barrel_settings.png");
+
     @Override
     public void renderTileEntityAt(TileBarrel te, double x, double y, double z, float partialTicks, int destroyStage)
     {
@@ -76,6 +81,19 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             f = 1F / (float) Math.max((sw + 10), 64);
             GlStateManager.scale(f, f, f);
             getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
+            GlStateManager.popMatrix();
+
+            if(mc.thePlayer.isSneaking() && mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND) == null)
+            {
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0.06F, 0.5F - 0.06F, -0.005F);
+                s1 = te.getItemDisplayName();
+                sw = getFontRenderer().getStringWidth(s1);
+                f = 1F / (float) Math.max((sw + 10), 64);
+                GlStateManager.scale(f, f, f);
+                getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
+            }
+
             GlStateManager.popMatrix();
         }
 

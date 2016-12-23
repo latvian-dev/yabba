@@ -91,7 +91,7 @@ public class TileBarrel extends TileEntity implements ITickable
     @Override
     public void markDirty()
     {
-        sendUpdate = 2;
+        barrel.markBarrelDirty(true);
     }
 
     @Override
@@ -178,7 +178,7 @@ public class TileBarrel extends TileEntity implements ITickable
         return cachedRotation;
     }
 
-    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem)
+    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem, float x, float y)
     {
         if(heldItem == null)
         {
