@@ -1,5 +1,6 @@
-package com.latmod.yabba.api;
+package com.latmod.yabba.api.events;
 
+import com.latmod.yabba.api.IYabbaRegistry;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**

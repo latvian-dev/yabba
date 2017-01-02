@@ -14,6 +14,7 @@ public class YabbaNetHandler
     public static void init()
     {
         int id = 0;
+        NET.registerMessage(MessageSyncData.class, MessageSyncData.class, ++id, Side.CLIENT);
         NET.registerMessage(MessageUpdateBarrelItemCount.class, MessageUpdateBarrelItemCount.class, ++id, Side.CLIENT);
         NET.registerMessage(MessageUpdateBarrelFull.class, MessageUpdateBarrelFull.class, ++id, Side.CLIENT);
         NET.registerMessage(MessageRequestBarrelUpdate.class, MessageRequestBarrelUpdate.class, ++id, Side.SERVER);

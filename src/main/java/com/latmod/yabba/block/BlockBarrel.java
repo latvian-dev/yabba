@@ -2,13 +2,13 @@ package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileBarrel;
-import com.latmod.yabba.util.Barrel;
 import com.latmod.yabba.util.PropertyBarrelModel;
 import com.latmod.yabba.util.PropertyBarrelSkin;
 import net.minecraft.block.BlockHorizontal;
@@ -66,7 +66,8 @@ public class BlockBarrel extends BlockBarrelBase
     {
         if(tile instanceof TileBarrel)
         {
-            ((IBarrelModifiable) itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(((TileBarrel) tile).barrel);
+            IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+            ((IBarrelModifiable) itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
         }
     }
 
@@ -75,7 +76,8 @@ public class BlockBarrel extends BlockBarrelBase
     {
         if(tile instanceof TileBarrel && stack.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
-            ((TileBarrel) tile).barrel.copyFrom(stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null));
+            IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+            barrel.copyFrom(stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null));
             tile.markDirty();
         }
     }
@@ -84,9 +86,10 @@ public class BlockBarrel extends BlockBarrelBase
     {
         ItemStack stack = new ItemStack(this);
         IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+        barrel.setTier(tier);
+        barrel.setFlags(0);
         barrel.setModel(model);
         barrel.setSkin(variant);
-        barrel.setTier(tier);
         barrel.setItemCount(0);
         return stack;
     }
@@ -131,7 +134,7 @@ public class BlockBarrel extends BlockBarrelBase
 
         if(tile instanceof TileBarrel)
         {
-            Barrel barrel = ((TileBarrel) tile).barrel;
+            IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
             return state.withProperty(SKIN, barrel.getSkin()).withProperty(MODEL, barrel.getModel());
         }
 
@@ -200,7 +203,7 @@ public class BlockBarrel extends BlockBarrelBase
 
                 if(tile instanceof TileBarrel)
                 {
-                    ((TileBarrel) tile).onRightClick(playerIn, heldItem, (side == EnumFacing.EAST || side == EnumFacing.WEST) ? hitZ : hitX, hitY);
+                    ((TileBarrel) tile).onRightClick(playerIn, heldItem, hitX, hitY, hitZ, side);
                 }
             }
 

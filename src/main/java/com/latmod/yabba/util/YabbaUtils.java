@@ -1,6 +1,5 @@
 package com.latmod.yabba.util;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 
@@ -34,16 +33,14 @@ public class YabbaUtils
         return map;
     }
 
-    public static IBlockState getState(String name)
+    public static <T> T castTo(Object o)
     {
-        String[] s = name.split("__");
-        Block block = Block.getBlockFromName(s[0] + ':' + s[1]);
-        return block.getStateFromMeta(Integer.parseInt(s[2]));
+        return (T) o;
     }
 
     public static String getName(IBlockState state)
     {
         ResourceLocation id = state.getBlock().getRegistryName();
-        return id.getResourceDomain() + "__" + id.getResourcePath() + "__" + state.getBlock().getMetaFromState(state);
+        return id.getResourceDomain() + '_' + id.getResourcePath().replace('.', '_') + '_' + state.getBlock().getMetaFromState(state);
     }
 }

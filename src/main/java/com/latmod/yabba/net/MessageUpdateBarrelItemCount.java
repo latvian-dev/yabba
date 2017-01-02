@@ -1,6 +1,8 @@
 package com.latmod.yabba.net;
 
-import com.latmod.yabba.tile.TileBarrel;
+import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.IBarrelModifiable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -20,12 +22,14 @@ public class MessageUpdateBarrelItemCount implements IMessage, IMessageHandler<M
     {
     }
 
-    public MessageUpdateBarrelItemCount(TileBarrel tile)
+    public MessageUpdateBarrelItemCount(TileEntity tile)
     {
         posX = tile.getPos().getX();
         posY = tile.getPos().getY();
         posZ = tile.getPos().getZ();
-        itemCount = tile.barrel.getItemCount();
+
+        IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+        itemCount = barrel.getItemCount();
     }
 
     @Override
@@ -51,10 +55,10 @@ public class MessageUpdateBarrelItemCount implements IMessage, IMessageHandler<M
     {
         TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
 
-        if(tile instanceof TileBarrel)
+        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
-            TileBarrel barrel = (TileBarrel) tile;
-            barrel.barrel.setItemCount(message.itemCount);
+            IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+            barrel.setItemCount(message.itemCount);
             barrel.clearCachedData();
         }
 

@@ -9,6 +9,8 @@ import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
@@ -32,6 +34,21 @@ public abstract class ModelBase implements IBarrelModel
         return name;
     }
 
+    public String toString()
+    {
+        return name;
+    }
+
+    public int hashCode()
+    {
+        return name.hashCode();
+    }
+
+    public boolean equals(Object o)
+    {
+        return o == this || o != null && o.toString().equals(name);
+    }
+
     @Override
     public int compareTo(IBarrelModel o)
     {
@@ -40,6 +57,7 @@ public abstract class ModelBase implements IBarrelModel
 
     // Static //
 
+    @SideOnly(Side.CLIENT)
     private static final FaceBakery BAKERY = new FaceBakery();
 
     public static ModelRotation getRotation(EnumFacing facing)

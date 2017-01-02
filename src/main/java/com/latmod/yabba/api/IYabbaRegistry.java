@@ -13,7 +13,17 @@ public interface IYabbaRegistry
 
     void addTier(ITier tier);
 
-    void addUpgrade(IUpgrade upgrade);
-
     void addModel(IBarrelModel model);
+
+    IBarrelSkin getSkin(String id);
+
+    IBarrelSkin getSkin(IBlockState id);
+
+    ITier getTier(String id);
+
+    boolean hasSkin(String id);
+
+    boolean hasModel(String id);
+
+    IBarrelModel getModel(String id);
 }

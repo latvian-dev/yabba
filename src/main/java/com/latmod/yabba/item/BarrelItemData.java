@@ -7,8 +7,8 @@ import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;
 import com.latmod.yabba.util.Barrel;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -60,59 +60,9 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public int getItemCount()
-    {
-        return getBarrelNBT().getInteger("Count");
-    }
-
-    @Override
-    public void setItemCount(int c)
-    {
-        getBarrelNBT().setInteger("Count", c);
-    }
-
-    @Override
-    @Nullable
-    public NBTTagCompound getUpgradeNBT()
-    {
-        return (NBTTagCompound) getBarrelNBT().getTag("Upgrades");
-    }
-
-    @Override
-    public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
-    {
-        if(nbt == null || nbt.hasNoTags())
-        {
-            getBarrelNBT().removeTag("Upgrades");
-        }
-        else
-        {
-            getBarrelNBT().setTag("Upgrades", nbt);
-        }
-    }
-
-    @Override
-    public IBarrelSkin getSkin()
-    {
-        return YabbaRegistry.INSTANCE.getSkin(getBarrelNBT().getString("Skin"));
-    }
-
-    @Override
     public IBarrelModel getModel()
     {
         return YabbaRegistry.INSTANCE.getModel(getBarrelNBT().getString("Model"));
-    }
-
-    @Override
-    public boolean isLocked()
-    {
-        return getUpgradeData("Locked") != null;
-    }
-
-    @Override
-    public void setSkin(IBarrelSkin skin)
-    {
-        getBarrelNBT().setString("Skin", skin.getName());
     }
 
     @Override
@@ -122,9 +72,15 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public void setLocked(boolean locked)
+    public IBarrelSkin getSkin()
     {
-        setUpgradeData("Locked", locked ? new NBTTagByte((byte) 1) : null);
+        return YabbaRegistry.INSTANCE.getSkin(getBarrelNBT().getString("Skin"));
+    }
+
+    @Override
+    public void setSkin(IBarrelSkin skin)
+    {
+        getBarrelNBT().setString("Skin", skin.getName());
     }
 
     @Override
@@ -137,6 +93,30 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     public void setTier(ITier tier)
     {
         getBarrelNBT().setString("Tier", tier.getName());
+    }
+
+    @Override
+    public int getFlags()
+    {
+        return getBarrelNBT().getInteger("Flags");
+    }
+
+    @Override
+    public void setFlags(int f)
+    {
+        getBarrelNBT().setInteger("Flags", f);
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return getBarrelNBT().getInteger("Count");
+    }
+
+    @Override
+    public void setItemCount(int c)
+    {
+        getBarrelNBT().setInteger("Count", c);
     }
 
     @Override
@@ -161,7 +141,52 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
+    @Nullable
+    public NBTTagCompound getUpgradeNBT()
+    {
+        return (NBTTagCompound) getBarrelNBT().getTag("Upgrades");
+    }
+
+    @Override
+    public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
+    {
+        if(nbt == null || nbt.hasNoTags())
+        {
+            getBarrelNBT().removeTag("Upgrades");
+        }
+        else
+        {
+            getBarrelNBT().setTag("Upgrades", nbt);
+        }
+    }
+
+    @Nullable
+    @Override
+    public NBTTagList getUpgradeNames()
+    {
+        return (NBTTagList) getBarrelNBT().getTag("UpgradeNames");
+    }
+
+    @Override
+    public void setUpgradeNames(@Nullable NBTTagList nbt)
+    {
+        if(nbt == null || nbt.hasNoTags())
+        {
+            getBarrelNBT().removeTag("UpgradeNames");
+        }
+        else
+        {
+            getBarrelNBT().setTag("UpgradeNames", nbt);
+        }
+    }
+
+    @Override
     public void markBarrelDirty(boolean full)
+    {
+    }
+
+    @Override
+    public void clearCachedData()
     {
     }
 }

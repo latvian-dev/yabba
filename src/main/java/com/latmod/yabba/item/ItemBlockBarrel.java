@@ -4,11 +4,15 @@ import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.ITier;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -29,34 +33,43 @@ public class ItemBlockBarrel extends ItemBlock
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
-        IBarrel data = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+        IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
-        list.add("Skin: " + data.getSkin().getDisplayName());
+        list.add("Model: " + barrel.getModel().getName());
+        list.add("Skin: " + barrel.getSkin().getDisplayName());
 
-        ITier tier = data.getTier();
-        ItemStack stack1 = data.getStackInSlot(0);
+        ITier tier = barrel.getTier();
+        ItemStack stack1 = barrel.getStackInSlot(0);
 
         if(stack1 != null)
         {
-            list.add(stack1.getDisplayName());
-            list.add(data.getItemCount() + " / " + (stack1.getMaxStackSize() * tier.getMaxStacks()));
-        }
-        else
-        {
-            list.add("Max " + tier.getMaxStacks() + " stacks");
+            list.add("Item: " + stack1.getDisplayName());
         }
 
-        NBTTagCompound upgrades = data.getUpgradeNBT();
+        if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+        {
+            if(stack1 != null)
+            {
+                list.add(barrel.getItemCount() + " / " + tier.getMaxItems(stack1));
+            }
+            else
+            {
+                list.add("Max " + tier.getMaxStacks() + " stacks");
+            }
+        }
+
+        NBTTagList upgrades = barrel.getUpgradeNames();
 
         if(upgrades != null && !upgrades.hasNoTags())
         {
             list.add("Upgrades:");
 
-            for(String key : upgrades.getKeySet())
+            for(int i = 0; i < upgrades.tagCount(); i++)
             {
-                list.add("> " + key);
+                list.add("> " + I18n.format(upgrades.getStringTagAt(i)));
             }
         }
     }

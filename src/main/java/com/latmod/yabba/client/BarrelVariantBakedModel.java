@@ -53,7 +53,7 @@ public class BarrelVariantBakedModel implements IPerspectiveAwareModel
     @Override
     public boolean isGui3d()
     {
-        return true;
+        return false;
     }
 
     @Override

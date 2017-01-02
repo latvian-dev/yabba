@@ -1,12 +1,12 @@
 package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.net.YabbaNetHandler;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,35 +14,55 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 13.12.2016.
  */
-public class TileBarrel extends TileEntity implements ITickable
+public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUnit
 {
-    public final BarrelTileContainer barrel;
+    public static final double BUTTON_SIZE = 0.24D;
+
+    private BarrelTileContainer barrel;
     private String cachedItemName, cachedItemCount;
     private float cachedRotation;
-    int sendUpdate = 2;
+    private int sendUpdate = 2;
     public boolean requestClientUpdate = true;
 
     public TileBarrel()
     {
-        barrel = new BarrelTileContainer(this);
-        clearCachedData();
-    }
+        barrel = new BarrelTileContainer()
+        {
+            @Override
+            public void markBarrelDirty(boolean full)
+            {
+                if(full)
+                {
+                    sendUpdate = 2;
+                }
+                else if(sendUpdate == 0)
+                {
+                    sendUpdate = 1;
+                }
+            }
 
-    public void clearCachedData()
-    {
-        cachedItemName = null;
-        cachedItemCount = null;
-        cachedRotation = -1F;
+            @Override
+            public void clearCachedData()
+            {
+                cachedItemName = null;
+                cachedItemCount = null;
+                cachedRotation = -1F;
+            }
+        };
+
+        barrel.clearCachedData();
     }
 
     @Override
@@ -50,7 +70,7 @@ public class TileBarrel extends TileEntity implements ITickable
     {
         super.readFromNBT(nbt);
         barrel.deserializeNBT(nbt.getCompoundTag("Barrel"));
-        clearCachedData();
+        barrel.clearCachedData();
     }
 
     @Override
@@ -84,7 +104,7 @@ public class TileBarrel extends TileEntity implements ITickable
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-        clearCachedData();
+        barrel.clearCachedData();
         return oldState.getBlock() != newSate.getBlock();
     }
 
@@ -125,9 +145,9 @@ public class TileBarrel extends TileEntity implements ITickable
     {
         if(cachedItemCount == null)
         {
-            if(barrel.getTier().equals(YabbaCommon.TIER_CREATIVE))
+            if(barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
             {
-                cachedItemCount = "\u221E";
+                cachedItemCount = "INF";
                 return cachedItemCount;
             }
 
@@ -178,17 +198,42 @@ public class TileBarrel extends TileEntity implements ITickable
         return cachedRotation;
     }
 
-    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem, float x, float y)
+    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem, float hitX, float y, float hitZ, EnumFacing facing)
     {
         if(heldItem == null)
         {
             if(playerIn.isSneaking())
             {
-                barrel.setLocked(!barrel.isLocked());
+                float x = 0.5F;
 
-                if(barrel.storedItem != null && barrel.itemCount == 0 && !barrel.isLocked())
+                switch(facing)
                 {
-                    barrel.storedItem = null;
+                    case EAST:
+                        x = 1F - hitZ;
+                        break;
+                    case WEST:
+                        x = hitZ;
+                        break;
+                    case NORTH:
+                        x = 1F - hitX;
+                        break;
+                    case SOUTH:
+                        x = hitX;
+                        break;
+                }
+
+                if(x < BUTTON_SIZE)
+                {
+                    playerIn.addChatMessage(new TextComponentString("Not implemented yet!"));
+                }
+                else if(x > 1D - BUTTON_SIZE && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+                {
+                    barrel.setFlag(IBarrel.FLAG_LOCKED, !barrel.getFlag(IBarrel.FLAG_LOCKED));
+
+                    if(barrel.storedItem != null && barrel.itemCount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
+                    {
+                        barrel.storedItem = null;
+                    }
                 }
 
                 markDirty();
@@ -244,51 +289,53 @@ public class TileBarrel extends TileEntity implements ITickable
         markDirty();
     }
 
-    public boolean onLeftClick(EntityPlayer playerIn, @Nullable ItemStack heldItem)
+    @Override
+    public ItemStack getStoredItemType()
     {
-        if(barrel.storedItem != null && barrel.itemCount == 0 && !barrel.isLocked())
-        {
-            barrel.storedItem = null;
-            markDirty();
-            return true;
-        }
+        return barrel.getStackInSlot(0);
+    }
 
-        if(barrel.storedItem != null && barrel.itemCount > 0)
+    @Override
+    public void setStoredItemCount(int amount)
+    {
+        if(amount != barrel.getItemCount() && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
         {
-            int size = 1;
+            boolean wasEmpty = barrel.getItemCount() == 0;
+            barrel.setItemCount(amount);
 
-            if(playerIn.isSneaking())
+            if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
             {
-                size = barrel.storedItem.getMaxStackSize();
+                barrel.setStackInSlot(0, null);
             }
 
-            ItemStack stack = barrel.extractItem(0, size, false);
-
-            if(stack != null)
-            {
-                if(playerIn.inventory.addItemStackToInventory(stack))
-                {
-                    playerIn.inventory.markDirty();
-
-                    if(playerIn.openContainer != null)
-                    {
-                        playerIn.openContainer.detectAndSendChanges();
-                    }
-                }
-                else
-                {
-                    EntityItem ei = new EntityItem(playerIn.worldObj, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
-                    ei.motionX = ei.motionY = ei.motionZ = 0D;
-                    ei.setPickupDelay(0);
-                    playerIn.worldObj.spawnEntityInWorld(ei);
-                }
-            }
-
-            playerIn.swingProgress = 0;
-            markDirty();
-            return !playerIn.isSneaking();
+            barrel.markBarrelDirty(wasEmpty != (amount == 0));
         }
+    }
 
-        return barrel.getItemCount() > 0;
+    @Override
+    public void setStoredItemType(ItemStack type, int amount)
+    {
+        if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+        {
+            if(amount != barrel.getItemCount())
+            {
+                boolean wasEmpty = barrel.getItemCount() == 0;
+                barrel.setItemCount(amount);
+
+                if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
+                {
+                    type = null;
+                }
+
+                barrel.setStackInSlot(0, type);
+                barrel.markBarrelDirty(wasEmpty != (amount == 0));
+            }
+        }
+    }
+
+    @Override
+    public int getMaxStoredCount()
+    {
+        return barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY) ? 2000000000 : barrel.getTier().getMaxItems(barrel.getStackInSlot(0));
     }
 }

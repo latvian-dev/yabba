@@ -17,5 +17,5 @@ item.yabba.upgrade.void=Void Items
 
 item.yabba.painter.name=Barrel Painter
 
-tile.yabba.barrel.name=Barrel
+tile.yabba.barrel.name=Item Barrel
 tile.yabba.antibarrel.name=AntiBarrel

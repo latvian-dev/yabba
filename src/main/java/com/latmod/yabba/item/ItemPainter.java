@@ -10,8 +10,9 @@ import com.latmod.yabba.util.YabbaUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -33,6 +34,26 @@ import java.util.List;
  */
 public class ItemPainter extends Item
 {
+    private static IBarrelModel getModel(ItemStack stack, boolean client)
+    {
+        return YabbaRegistry.INSTANCE.getModel(stack.hasTagCompound() ? stack.getTagCompound().getByte("BarrelModel") : 0, client);
+    }
+
+    private static IBarrelSkin getSkin(ItemStack stack, boolean client)
+    {
+        return YabbaRegistry.INSTANCE.getSkin(stack.hasTagCompound() ? stack.getTagCompound().getInteger("BarrelSkin") : 0, client);
+    }
+
+    private static void setModel(ItemStack stack, String modelId)
+    {
+        stack.setTagInfo("BarrelModel", new NBTTagByte(YabbaRegistry.INSTANCE.getModelId(modelId)));
+    }
+
+    private static void setSkin(ItemStack stack, String skinId)
+    {
+        stack.setTagInfo("BarrelSkin", new NBTTagInt(YabbaRegistry.INSTANCE.getSkinId(skinId)));
+    }
+
     public enum CapUpgrade implements ICapabilityProvider, IUpgrade
     {
         INSTANCE;
@@ -58,8 +79,8 @@ public class ItemPainter extends Item
         @Override
         public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
         {
-            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(upgradeItem.hasTagCompound() ? upgradeItem.getTagCompound().getString("BarrelModel") : "");
-            IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(upgradeItem.hasTagCompound() ? upgradeItem.getTagCompound().getString("BarrelSkin") : "");
+            IBarrelModel model = getModel(upgradeItem, worldIn.isRemote);
+            IBarrelSkin skin = getSkin(upgradeItem, worldIn.isRemote);
 
             if(barrel.getModel().equals(model) && barrel.getSkin().equals(skin))
             {
@@ -111,8 +132,7 @@ public class ItemPainter extends Item
 
         if(playerIn.isSneaking())
         {
-            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(itemStackIn.hasTagCompound() ? itemStackIn.getTagCompound().getString("BarrelModel") : "");
-            itemStackIn.setTagInfo("BarrelModel", new NBTTagString(YabbaRegistry.ALL_MODELS.get((YabbaRegistry.ALL_MODELS.indexOf(model) + 1) % YabbaRegistry.ALL_MODELS.size()).getName()));
+            setModel(itemStackIn, YabbaRegistry.ALL_MODELS.get((YabbaRegistry.ALL_MODELS.indexOf(getModel(itemStackIn, false)) + 1) % YabbaRegistry.ALL_MODELS.size()).getName());
         }
         else
         {
@@ -126,9 +146,9 @@ public class ItemPainter extends Item
                 {
                     IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(id);
 
-                    if(!skin.equals(YabbaRegistry.INSTANCE.getSkin(itemStackIn.hasTagCompound() ? itemStackIn.getTagCompound().getString("BarrelSkin") : "")))
+                    if(!skin.equals(getSkin(itemStackIn, false)))
                     {
-                        itemStackIn.setTagInfo("BarrelSkin", new NBTTagString(skin.getName()));
+                        setSkin(itemStackIn, skin.getName());
                         playerIn.addChatMessage(new TextComponentString("Selected " + skin.getDisplayName()));
                     }
                 }
@@ -142,7 +162,7 @@ public class ItemPainter extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Model: " + YabbaRegistry.INSTANCE.getModel(stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelModel") : "").getName());
-        tooltip.add("Skin: " + YabbaRegistry.INSTANCE.getSkin(stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelSkin") : "").getDisplayName());
+        tooltip.add("Model: " + getModel(stack, playerIn.worldObj.isRemote).getName());
+        tooltip.add("Skin: " + getSkin(stack, playerIn.worldObj.isRemote).getDisplayName());
     }
 }

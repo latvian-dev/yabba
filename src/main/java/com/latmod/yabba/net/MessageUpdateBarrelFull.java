@@ -1,10 +1,12 @@
 package com.latmod.yabba.net;
 
+import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModel;
+import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.block.BlockBarrel;
-import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -22,25 +24,28 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<MessageUpdateBarrelFull, IMessage>
 {
-    private int posX, posY, posZ, itemCount;
+    private byte model;
+    private int posX, posY, posZ, itemCount, flags, skin;
     private ItemStack storedItem;
     private NBTTagCompound upgrades;
-    private String model, skin;
 
     public MessageUpdateBarrelFull()
     {
     }
 
-    public MessageUpdateBarrelFull(TileBarrel tile)
+    public MessageUpdateBarrelFull(TileEntity tile)
     {
         posX = tile.getPos().getX();
         posY = tile.getPos().getY();
         posZ = tile.getPos().getZ();
-        storedItem = tile.barrel.getStackInSlot(0);
-        itemCount = tile.barrel.getItemCount();
-        upgrades = tile.barrel.getUpgradeNBT();
-        model = tile.barrel.getModel().getName();
-        skin = tile.barrel.getSkin().getName();
+
+        IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+        storedItem = barrel.getStackInSlot(0);
+        itemCount = barrel.getItemCount();
+        flags = barrel.getFlags();
+        upgrades = barrel.getUpgradeNBT();
+        model = YabbaRegistry.INSTANCE.getModelId(barrel.getModel().getName());
+        skin = YabbaRegistry.INSTANCE.getSkinId(barrel.getSkin().getName());
     }
 
     @Override
@@ -51,9 +56,10 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         posZ = buf.readInt();
         storedItem = ByteBufUtils.readItemStack(buf);
         itemCount = buf.readInt();
+        flags = buf.readInt();
         upgrades = ByteBufUtils.readTag(buf);
-        model = ByteBufUtils.readUTF8String(buf);
-        skin = ByteBufUtils.readUTF8String(buf);
+        model = buf.readByte();
+        skin = buf.readInt();
     }
 
     @Override
@@ -64,9 +70,10 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
         buf.writeInt(posZ);
         ByteBufUtils.writeItemStack(buf, storedItem);
         buf.writeInt(itemCount);
+        buf.writeInt(flags);
         ByteBufUtils.writeTag(buf, upgrades);
-        ByteBufUtils.writeUTF8String(buf, model);
-        ByteBufUtils.writeUTF8String(buf, skin);
+        buf.writeByte(model);
+        buf.writeInt(skin);
     }
 
     @Override
@@ -74,19 +81,19 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     {
         TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
 
-        if(tile instanceof TileBarrel)
+        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
-            TileBarrel barrel = (TileBarrel) tile;
+            IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(message.model, true);
+            IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(message.skin, true);
+            boolean updateVariant = !barrel.getModel().equals(model) || !barrel.getSkin().equals(skin);
 
-            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(message.model);
-            IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(message.skin);
-
-            boolean updateVariant = !barrel.barrel.getModel().equals(model) || !barrel.barrel.getSkin().equals(skin);
-            barrel.barrel.setStackInSlot(0, message.storedItem);
-            barrel.barrel.setItemCount(message.itemCount);
-            barrel.barrel.setUpgradeNBT(message.upgrades);
-            barrel.barrel.setModel(model);
-            barrel.barrel.setSkin(YabbaRegistry.INSTANCE.getSkin(message.skin));
+            barrel.setFlags(message.flags);
+            barrel.setStackInSlot(0, message.storedItem);
+            barrel.setItemCount(message.itemCount);
+            barrel.setUpgradeNBT(message.upgrades);
+            barrel.setModel(model);
+            barrel.setSkin(skin);
             barrel.clearCachedData();
 
             if(updateVariant)

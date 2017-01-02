@@ -43,8 +43,6 @@ public class YabbaCommon
     public static final Tier TIER_IRON = new Tier("iron", 256);
     public static final Tier TIER_GOLD = new Tier("gold", 1024);
     public static final Tier TIER_DMD = new Tier("dmd", 4096);
-    public static final Tier TIER_INF = new Tier("inf", 32000000);
-    public static final Tier TIER_CREATIVE = new Tier("creative", 1);
 
     public static final YabbaCreativeTab TAB = new YabbaCreativeTab();
     public static final YabbaCreativeTabAllModels TAB_ALL_MODELS = new YabbaCreativeTabAllModels();
@@ -162,12 +160,6 @@ public class YabbaCommon
                 'I', "dustRedstone"));
 
         GameRegistry.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.HOPPER.metadata), blankUpgrade, Blocks.HOPPER);
-
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.ENDER_LINK.metadata),
-                " G ", "IUI", " G ",
-                'U', blankUpgrade,
-                'I', "enderpearl",
-                'G', "dustGlowstone"));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.ANTIBARREL),
                 "NQN", "NON", "NCN",

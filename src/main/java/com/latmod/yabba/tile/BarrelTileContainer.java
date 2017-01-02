@@ -8,8 +8,9 @@ import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.Barrel;
 import com.latmod.yabba.util.Tier;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -17,26 +18,23 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 19.12.2016.
  */
-public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
+public abstract class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
 {
-    private final TileBarrel tile;
     private ITier tier;
+    private int flags;
     ItemStack storedItem;
     int itemCount;
     private NBTTagCompound upgrades;
+    private NBTTagList upgradeNames;
     private IBarrelSkin skin;
     private IBarrelModel model;
-
-    public BarrelTileContainer(TileBarrel t)
-    {
-        tile = t;
-    }
 
     @Override
     public NBTTagCompound serializeNBT()
     {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("Tier", getTier().getName());
+        nbt.setInteger("Flags", flags);
 
         if(storedItem != null)
         {
@@ -44,29 +42,60 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
             nbt.setInteger("Count", getItemCount());
         }
 
-        if(upgrades != null)
+        if(upgrades != null && !upgrades.hasNoTags())
         {
             nbt.setTag("Upgrades", upgrades);
         }
 
-        nbt.setString("Skin", getSkin().getName());
+        nbt.setByte("Model", YabbaRegistry.INSTANCE.getModelId(getModel().getName()));
+        nbt.setInteger("Skin", YabbaRegistry.INSTANCE.getSkinId(getSkin().getName()));
+
+        if(upgradeNames != null && !upgradeNames.hasNoTags())
+        {
+            nbt.setTag("UpgradeNames", upgradeNames);
+        }
+
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        tier = YabbaRegistry.INSTANCE.getTier(nbt.getString("Tier"));
+        String tierID = nbt.getString("Tier");
+        tier = YabbaRegistry.INSTANCE.getTier(tierID);
+        flags = nbt.getInteger("Flags");
         storedItem = nbt.hasKey("Item") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("Item")) : null;
         itemCount = storedItem == null ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
-        skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));
+        model = YabbaRegistry.INSTANCE.getModel(nbt.getByte("Model"), false);
+        skin = YabbaRegistry.INSTANCE.getSkin(nbt.getInteger("Skin"), false);
+        upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
+
+        if(getUpgradeData("Locked") != null)
+        {
+            setFlag(FLAG_LOCKED, true);
+        }
+
+        if(tierID.equals("creative"))
+        {
+            setFlag(FLAG_INFINITE_CAPACITY, true);
+            setFlag(FLAG_IS_CREATIVE, true);
+        }
+        else if(tierID.equals("inf"))
+        {
+            setFlag(FLAG_INFINITE_CAPACITY, true);
+        }
     }
 
     @Override
     @Nullable
     public ItemStack getStackInSlot(int slot)
     {
+        if(storedItem != null)
+        {
+            storedItem.stackSize = itemCount;
+        }
+
         return storedItem;
     }
 
@@ -74,6 +103,12 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
     public ITier getTier()
     {
         return tier == null ? Tier.NONE : tier;
+    }
+
+    @Override
+    public int getFlags()
+    {
+        return flags;
     }
 
     @Override
@@ -110,10 +145,11 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
         return model;
     }
 
+    @Nullable
     @Override
-    public boolean isLocked()
+    public NBTTagList getUpgradeNames()
     {
-        return getUpgradeData("Locked") != null;
+        return upgradeNames;
     }
 
     @Override
@@ -126,6 +162,12 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
     public void setTier(ITier t)
     {
         tier = t;
+    }
+
+    @Override
+    public void setFlags(int f)
+    {
+        flags = f;
     }
 
     @Override
@@ -153,14 +195,8 @@ public class BarrelTileContainer extends Barrel implements INBTSerializable<NBTT
     }
 
     @Override
-    public void setLocked(boolean locked)
+    public void setUpgradeNames(@Nullable NBTTagList nbt)
     {
-        setUpgradeData("Locked", locked ? new NBTTagByte((byte) 1) : null);
-    }
-
-    @Override
-    public void markBarrelDirty(boolean full)
-    {
-        tile.sendUpdate = full ? 2 : 1;
+        upgradeNames = nbt;
     }
 }

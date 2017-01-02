@@ -1,16 +1,21 @@
 package com.latmod.yabba.client;
 
 import com.latmod.yabba.Yabba;
+import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.net.MessageRequestBarrelUpdate;
 import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +43,9 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             te.requestClientUpdate = false;
         }
 
-        ItemStack stack = te.barrel.getStackInSlot(0);
+        IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+
+        ItemStack stack = barrel.getStackInSlot(0);
 
         if(stack == null)
         {
@@ -55,7 +62,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.rotate(te.getRotationAngle(), 0F, 1F, 0F);
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        func_190053_a(true);
+        setLightmapDisabled(true);
         GlStateManager.disableLighting();
         GlStateManager.depthMask(false);
         GlStateManager.enableBlend();
@@ -64,13 +71,15 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 
         if(mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos()))
         {
+            boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
+
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.5F, 0.075F, -0.005F);
 
             String s1 = te.getItemDisplayCount();
             int sw = getFontRenderer().getStringWidth(s1);
             float f = 1F / (float) Math.max((sw + 10), 64);
-            GlStateManager.scale(f, f, f);
+            GlStateManager.scale(f, f, 1F);
             getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
             GlStateManager.popMatrix();
 
@@ -79,27 +88,51 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             s1 = te.getItemDisplayName();
             sw = getFontRenderer().getStringWidth(s1);
             f = 1F / (float) Math.max((sw + 10), 64);
-            GlStateManager.scale(f, f, f);
+            GlStateManager.scale(f, f, 1F);
             getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
             GlStateManager.popMatrix();
 
             if(mc.thePlayer.isSneaking() && mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND) == null)
             {
                 GlStateManager.pushMatrix();
-                GlStateManager.translate(0.06F, 0.5F - 0.06F, -0.005F);
-                s1 = te.getItemDisplayName();
-                sw = getFontRenderer().getStringWidth(s1);
-                f = 1F / (float) Math.max((sw + 10), 64);
-                GlStateManager.scale(f, f, f);
-                getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
-            }
+                GlStateManager.translate(0D, 0D, -0.005F);
+                mc.getTextureManager().bindTexture(TEXTURE_SETTINGS);
+                GlStateManager.enableTexture2D();
+                GlStateManager.color(1F, 1F, 1F, 1F);
 
-            GlStateManager.popMatrix();
+                Tessellator tessellator = Tessellator.getInstance();
+                VertexBuffer buffer = tessellator.getBuffer();
+
+                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+                int a = 255;
+
+                double is = TileBarrel.BUTTON_SIZE;
+                double ix = 1F - is;
+                double iy = 0.5D - is / 2D;
+                double u = isCreative ? 0.5D : (barrel.getFlag(IBarrel.FLAG_LOCKED) ? 0D : 0.5D);
+                double v = isCreative ? 0.5D : 0D;
+
+                buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(255, 255, 255, a).endVertex();
+                buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(255, 255, 255, a).endVertex();
+                buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(255, 255, 255, a).endVertex();
+                buffer.pos(ix, iy, 0D).tex(u, v).color(255, 255, 255, a).endVertex();
+
+                ix = 0D;
+                u = 0D;
+                v = 0.5D;
+                buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(255, 255, 255, a).endVertex();
+                buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(255, 255, 255, a).endVertex();
+                buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(255, 255, 255, a).endVertex();
+                buffer.pos(ix, iy, 0D).tex(u, v).color(255, 255, 255, a).endVertex();
+
+                tessellator.draw();
+
+                GlStateManager.popMatrix();
+            }
         }
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0.5F, 0.5F, 0.04F);
-
         GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
         RenderItem itemRender = mc.getRenderItem();
@@ -127,6 +160,6 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.popMatrix();
 
-        func_190053_a(false);
+        setLightmapDisabled(false);
     }
 }

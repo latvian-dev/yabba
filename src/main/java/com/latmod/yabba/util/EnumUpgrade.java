@@ -2,6 +2,7 @@ package com.latmod.yabba.util;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
+import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.item.ItemStack;
@@ -21,11 +22,11 @@ public enum EnumUpgrade implements IUpgrade
     DIAMOND_UPGRADE(3),
     NETHER_STAR_UPGRADE(4),
     CREATIVE(9),
-    //LOCKED(10),
+    //10
     OBSIDIAN_SHELL(11),
     REDSTONE_OUT(12),
     HOPPER(13),
-    ENDER_LINK(14),
+    //14
     VOID(15);
 
     public static final EnumUpgrade[] VALUES = values();
@@ -120,11 +121,11 @@ public enum EnumUpgrade implements IUpgrade
             }
             case NETHER_STAR_UPGRADE:
             {
-                if(barrel.getTier().equals(YabbaCommon.TIER_DMD))
+                if(!barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
                 {
                     if(!simulate)
                     {
-                        barrel.setTier(YabbaCommon.TIER_INF);
+                        barrel.setFlag(IBarrel.FLAG_INFINITE_CAPACITY, true);
                     }
                     return true;
                 }
@@ -132,12 +133,15 @@ public enum EnumUpgrade implements IUpgrade
             }
             case CREATIVE:
             {
-                if(!barrel.getTier().equals(YabbaCommon.TIER_CREATIVE) && barrel.getStackInSlot(0) != null)
+                if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE) && barrel.getStackInSlot(0) != null)
                 {
                     if(!simulate)
                     {
-                        barrel.setItemCount(barrel.getStackInSlot(0).getMaxStackSize());
-                        barrel.setTier(YabbaCommon.TIER_CREATIVE);
+                        barrel.setItemCount(1000000000);
+                        barrel.setFlag(IBarrel.FLAG_IS_CREATIVE, true);
+                        barrel.setFlag(IBarrel.FLAG_INFINITE_CAPACITY, true);
+                        barrel.setFlag(IBarrel.FLAG_LOCKED, false);
+                        barrel.addUpgradeName(CREATIVE.uname);
                     }
                     return true;
                 }
@@ -145,11 +149,52 @@ public enum EnumUpgrade implements IUpgrade
             }
             case OBSIDIAN_SHELL:
             {
-                if(barrel.getUpgradeData("ObsidianShell") == null)
+                if(!barrel.getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
                 {
                     if(!simulate)
                     {
-                        barrel.setUpgradeData("ObsidianShell", new NBTTagByte((byte) 1));
+                        barrel.setFlag(IBarrel.FLAG_OBSIDIAN_SHELL, true);
+                        barrel.addUpgradeName(OBSIDIAN_SHELL.uname);
+                    }
+                    return true;
+                }
+                break;
+            }
+            case REDSTONE_OUT:
+            {
+                if(!barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+                {
+                    if(!simulate)
+                    {
+                        barrel.setFlag(IBarrel.FLAG_REDSTONE_OUT, true);
+                        barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) 0));
+                        barrel.addUpgradeName(REDSTONE_OUT.uname);
+                    }
+                    return true;
+                }
+                break;
+            }
+            case HOPPER:
+            {
+                if(!barrel.getFlag(IBarrel.FLAG_HOPPER))
+                {
+                    if(!simulate)
+                    {
+                        barrel.setFlag(IBarrel.FLAG_HOPPER, true);
+                        barrel.addUpgradeName(HOPPER.uname);
+                    }
+                    return true;
+                }
+                break;
+            }
+            case VOID:
+            {
+                if(!barrel.getFlag(IBarrel.FLAG_VOID_ITEMS))
+                {
+                    if(!simulate)
+                    {
+                        barrel.setFlag(IBarrel.FLAG_VOID_ITEMS, true);
+                        barrel.addUpgradeName(VOID.uname);
                     }
                     return true;
                 }

@@ -1,16 +1,18 @@
 package com.latmod.yabba.util;
 
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.ITier;
+import gnu.trove.map.hash.TIntByteHashMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -18,64 +20,86 @@ import java.util.Objects;
  */
 public abstract class Barrel implements IBarrelModifiable
 {
-    private static String[] ALLOWED_ORE_NAMES = {"ingot", "block", "nugget", "ore", "dust", "gem"};
-    private static HashMap<String, Boolean> ALLOWED_ORE_NAME_CACHE = new HashMap<>();
+    private static final String[] ALLOWED_ORE_NAMES = {"ingot", "block", "nugget", "ore", "dust", "gem"};
+    private static final TIntByteHashMap ALLOWED_ORE_NAME_CACHE = new TIntByteHashMap();
 
-    private static boolean isOreNameAllowed(String name)
+    private static boolean isOreNameAllowed(int id)
     {
-        Boolean b = ALLOWED_ORE_NAME_CACHE.get(name);
+        byte b = ALLOWED_ORE_NAME_CACHE.get(id);
 
-        if(b == null)
+        if(b == 0)
         {
-            b = false;
+            b = 2;
+
+            String name = OreDictionary.getOreName(id);
 
             for(String s : ALLOWED_ORE_NAMES)
             {
                 if(name.startsWith(s))
                 {
-                    b = true;
+                    b = 1;
                     break;
                 }
             }
 
-            ALLOWED_ORE_NAME_CACHE.put(name, b);
+            ALLOWED_ORE_NAME_CACHE.put(id, b);
         }
 
-        return b;
+        return b == 1;
+    }
+
+    private static boolean canInsertItem(ItemStack stored, ItemStack stack, boolean checkOreNames)
+    {
+        if(checkOreNames)
+        {
+            int[] storedIDs = OreDictionary.getOreIDs(stored);
+
+            if(storedIDs.length != -1)
+            {
+                return false;
+            }
+
+            int[] stackIDs = OreDictionary.getOreIDs(stack);
+
+            if(stackIDs.length != 1 || storedIDs[0] != stackIDs[0] || !isOreNameAllowed(stackIDs[0]))
+            {
+                return false;
+            }
+        }
+
+        if(stored.getItem() != stack.getItem() || stored.getMetadata() != stack.getMetadata() || stored.getItemDamage() != stack.getItemDamage())
+        {
+            return false;
+        }
+
+        NBTTagCompound tag1 = stored.getTagCompound();
+        NBTTagCompound tag2 = stack.getTagCompound();
+        return Objects.equals((tag1 == null || tag1.hasNoTags()) ? null : tag1, (tag2 == null || tag2.hasNoTags()) ? null : tag2) && stored.areCapsCompatible(stack);
+    }
+
+    @Override
+    public boolean getFlag(int flag)
+    {
+        return (getFlags() & flag) != 0;
+    }
+
+    @Override
+    public void setFlag(int flag, boolean v)
+    {
+        if(v)
+        {
+            setFlags(getFlags() | flag);
+        }
+        else
+        {
+            setFlags(getFlags() & ~flag);
+        }
     }
 
     @Override
     public int getSlots()
     {
         return 1;
-    }
-
-    private static boolean areItemsEqual(ItemStack is1, ItemStack is2, boolean checkOreNames)
-    {
-        if(checkOreNames)
-        {
-            //TODO
-        }
-
-        if(is1.getItem() != is2.getItem() || is1.getMetadata() != is2.getMetadata() || is1.getItemDamage() != is2.getItemDamage())
-        {
-            return false;
-        }
-
-        NBTTagCompound tag1 = is1.getTagCompound();
-        NBTTagCompound tag2 = is2.getTagCompound();
-
-        if(tag1 != null && tag1.hasNoTags())
-        {
-            tag1 = null;
-        }
-
-        if(tag2 != null && tag2.hasNoTags())
-        {
-            tag2 = null;
-        }
-
-        return Objects.equals(tag1, tag2) && is1.areCapsCompatible(is2);
     }
 
     @Override
@@ -87,20 +111,20 @@ public abstract class Barrel implements IBarrelModifiable
             return null;
         }
 
-        ITier tier = getTier();
-
-        if(tier.equals(YabbaCommon.TIER_CREATIVE))
+        if(getFlag(FLAG_IS_CREATIVE))
         {
-            return stack;
+            return getFlag(FLAG_VOID_ITEMS) ? null : stack;
         }
 
+        ITier tier = getTier();
         int itemCount = getItemCount();
         ItemStack storedItem = getStackInSlot(0);
         int capacity;
 
+        //TODO: FLAG_VOID_ITEMS
         if(itemCount > 0)
         {
-            capacity = storedItem.getMaxStackSize() * tier.getMaxStacks();
+            capacity = tier.getMaxItems(storedItem);
 
             if(itemCount >= capacity)
             {
@@ -109,10 +133,10 @@ public abstract class Barrel implements IBarrelModifiable
         }
         else
         {
-            capacity = stack.getMaxStackSize() * tier.getMaxStacks();
+            capacity = tier.getMaxItems(stack);
         }
 
-        if(storedItem == null || areItemsEqual(storedItem, stack, getUpgradeData("OreConverter") != null))
+        if(storedItem == null || canInsertItem(storedItem, stack, getFlag(FLAG_CHECK_ORE_NAMES)))
         {
             int size = Math.min(stack.stackSize, capacity - itemCount);
 
@@ -157,7 +181,7 @@ public abstract class Barrel implements IBarrelModifiable
             return null;
         }
 
-        if(getTier().equals(YabbaCommon.TIER_CREATIVE))
+        if(getFlag(FLAG_IS_CREATIVE))
         {
             return ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(amount, itemCount));
         }
@@ -169,7 +193,7 @@ public abstract class Barrel implements IBarrelModifiable
             setItemCount(itemCount - stack.stackSize);
             boolean full = false;
 
-            if(itemCount - stack.stackSize <= 0 && !isLocked())
+            if(itemCount - stack.stackSize <= 0 && !getFlag(FLAG_LOCKED))
             {
                 setStackInSlot(0, null);
                 full = true;
@@ -216,13 +240,32 @@ public abstract class Barrel implements IBarrelModifiable
     }
 
     @Override
+    public void addUpgradeName(String name)
+    {
+        NBTTagList list = getUpgradeNames();
+
+        if(list == null)
+        {
+            list = new NBTTagList();
+        }
+
+        list.appendTag(new NBTTagString(name));
+
+        setUpgradeNames(list);
+    }
+
+    @Override
     public void copyFrom(IBarrel barrel)
     {
+        setTier(barrel.getTier());
+        setFlags(barrel.getFlags());
+        setItemCount(barrel.getItemCount());
+        setStackInSlot(0, barrel.getStackInSlot(0));
         setModel(barrel.getModel());
         setSkin(barrel.getSkin());
-        setTier(barrel.getTier());
-        setItemCount(barrel.getItemCount());
-        setUpgradeNBT(barrel.getUpgradeNBT());
-        setStackInSlot(0, barrel.getStackInSlot(0));
+        NBTTagCompound upgradeNBT = barrel.getUpgradeNBT();
+        setUpgradeNBT(upgradeNBT == null ? null : upgradeNBT.copy());
+        NBTTagList upgradeNames = barrel.getUpgradeNames();
+        setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
     }
 }
