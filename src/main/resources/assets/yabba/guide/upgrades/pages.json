@@ -1,0 +1,12 @@
+[
+	{"id": "blank", "icon_item": "yabba:upgrade 1 0", "lang": "item.yabba.upgrade.blank"},
+	{"id": "iron_upgrade", "icon_item": "yabba:upgrade 1 1", "lang": "item.yabba.upgrade.iron_upgrade"},
+	{"id": "gold_upgrade", "icon_item": "yabba:upgrade 1 2", "lang": "item.yabba.upgrade.gold_upgrade"},
+	{"id": "diamond_upgrade", "icon_item": "yabba:upgrade 1 3", "lang": "item.yabba.upgrade.diamond_upgrade"},
+	{"id": "nether_star_upgrade", "icon_item": "yabba:upgrade 1 4", "lang": "item.yabba.upgrade.nether_star_upgrade"},
+	{"id": "creative", "icon_item": "yabba:upgrade 1 9", "lang": "item.yabba.upgrade.creative"},
+	{"id": "obsidian_shell", "icon_item": "yabba:upgrade 1 11", "lang": "item.yabba.upgrade.obsidian_shell"},
+	{"id": "redstone_out", "icon_item": "yabba:upgrade 1 12", "lang": "item.yabba.upgrade.redstone_out"},
+	{"id": "hopper", "icon_item": "yabba:upgrade 1 13", "lang": "item.yabba.upgrade.hopper"},
+	{"id": "void", "icon_item": "yabba:upgrade 1 15", "lang": "item.yabba.upgrade.void"}
+]

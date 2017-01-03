@@ -22,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,9 @@ public enum YabbaRegistry implements IYabbaRegistry
         MinecraftForge.EVENT_BUS.post(new YabbaRegistryEvent(this));
         ALL_MODELS.addAll(MODELS.values());
         ALL_SKINS.addAll(SKINS.values());
+
+        Collections.sort(ALL_MODELS);
+        Collections.sort(ALL_SKINS);
 
         System.out.println("YABBA Models: " + ALL_MODELS);
         System.out.println("YABBA Skins: " + ALL_SKINS);

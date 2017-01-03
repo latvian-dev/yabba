@@ -154,11 +154,7 @@ public class YabbaCommon
                 'U', blankUpgrade,
                 'I', "obsidian"));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.REDSTONE_OUT.metadata),
-                " I ", "IUI", " I ",
-                'U', blankUpgrade,
-                'I', "dustRedstone"));
-
+        GameRegistry.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.REDSTONE_OUT.metadata), blankUpgrade, Items.COMPARATOR);
         GameRegistry.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.HOPPER.metadata), blankUpgrade, Blocks.HOPPER);
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.ANTIBARREL),

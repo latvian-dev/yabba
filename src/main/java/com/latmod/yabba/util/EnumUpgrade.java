@@ -6,7 +6,6 @@ import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.world.World;
 
 import java.util.Locale;
@@ -160,6 +159,7 @@ public enum EnumUpgrade implements IUpgrade
                 }
                 break;
             }
+            /*
             case REDSTONE_OUT:
             {
                 if(!barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
@@ -187,6 +187,7 @@ public enum EnumUpgrade implements IUpgrade
                 }
                 break;
             }
+            */
             case VOID:
             {
                 if(!barrel.getFlag(IBarrel.FLAG_VOID_ITEMS))

@@ -1,0 +1,6 @@
+[
+	{"id": "barrel", "icon_item": "yabba:barrel", "lang": "tile.yabba.barrel.name"},
+	{"id": "painter", "icon_item": "yabba:painter", "lang": "item.yabba.painter.name"},
+	{"id": "upgrades", "icon_item": "yabba:upgrade", "lang": "item.yabba.upgrade.name"},
+	{"id": "antibarrel", "icon_item": "yabba:antibarrel", "lang": "tile.yabba.antibarrel.name"}
+]

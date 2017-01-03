@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Locale;
 
 /**
  * Created by LatvianModder on 14.12.2016.
@@ -63,9 +64,14 @@ public class YabbaEventHandler
             }
         }
 
+        reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), new ItemStack(Blocks.STONE, 1, BlockStone.EnumType.STONE.getMetadata()), "all=blocks/stone");
+
         for(BlockStone.EnumType type : BlockStone.EnumType.values())
         {
-            reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, type), "dirt", "all=blocks/dirt");
+            if(type != BlockStone.EnumType.STONE)
+            {
+                reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, type), new ItemStack(Blocks.STONE, 1, type.getMetadata()), "all=blocks/stone_" + type.name().toLowerCase(Locale.ENGLISH));
+            }
         }
 
         reg.addSkin(Blocks.DIRT.getDefaultState(), "dirt", "all=blocks/dirt");
@@ -97,6 +103,7 @@ public class YabbaEventHandler
         reg.addSkin(Blocks.COAL_BLOCK.getDefaultState(), "blockCoal", "all=blocks/coal_block");
         reg.addSkin(Blocks.BONE_BLOCK.getDefaultState(), Blocks.BONE_BLOCK, "up&down=blocks/bone_block_top,all=blocks/bone_block_side");
         reg.addSkin(Blocks.HAY_BLOCK.getDefaultState(), Blocks.HAY_BLOCK, "up&down=blocks/hay_block_top,all=blocks/hay_block_side");
+        reg.addSkin(Blocks.BOOKSHELF.getDefaultState(), Blocks.BOOKSHELF, "up&down=blocks/planks_oak,all=blocks/bookshelf");
 
         for(EnumDyeColor dye : EnumDyeColor.values())
         {

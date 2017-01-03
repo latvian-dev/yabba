@@ -111,24 +111,26 @@ public abstract class Barrel implements IBarrelModifiable
             return null;
         }
 
-        if(getFlag(FLAG_IS_CREATIVE))
+        ItemStack storedItem = getStackInSlot(0);
+
+        boolean canInsert = storedItem == null || canInsertItem(storedItem, stack, getFlag(FLAG_CHECK_ORE_NAMES));
+
+        if(storedItem != null && getFlag(FLAG_IS_CREATIVE))
         {
-            return getFlag(FLAG_VOID_ITEMS) ? null : stack;
+            return canInsert ? null : stack;
         }
 
         ITier tier = getTier();
         int itemCount = getItemCount();
-        ItemStack storedItem = getStackInSlot(0);
         int capacity;
 
-        //TODO: FLAG_VOID_ITEMS
         if(itemCount > 0)
         {
             capacity = tier.getMaxItems(storedItem);
 
             if(itemCount >= capacity)
             {
-                return stack;
+                return (canInsert && getFlag(FLAG_VOID_ITEMS)) ? null : stack;
             }
         }
         else
@@ -136,7 +138,7 @@ public abstract class Barrel implements IBarrelModifiable
             capacity = tier.getMaxItems(stack);
         }
 
-        if(storedItem == null || canInsertItem(storedItem, stack, getFlag(FLAG_CHECK_ORE_NAMES)))
+        if(canInsert)
         {
             int size = Math.min(stack.stackSize, capacity - itemCount);
 
