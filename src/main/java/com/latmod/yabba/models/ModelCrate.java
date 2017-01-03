@@ -2,16 +2,15 @@ package com.latmod.yabba.models;
 
 import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModelData;
+import com.latmod.yabba.util.ModelBuilder;
 import com.latmod.yabba.util.SpriteSet;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -38,25 +37,24 @@ public class ModelCrate extends ModelBase
     @SideOnly(Side.CLIENT)
     public List<BakedQuad> buildModel(SpriteSet spriteSet, IBarrelModelData data, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
-        List<BakedQuad> quads = new ArrayList<>(62);
-        ModelRotation rotation = getRotation(data.getFacing());
+        ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(data.getFacing()));
 
-        addCube(quads, 1F, 1F, 1F, 15F, 15F, 15F, spriteSet, rotation);
+        model.addCube(1F, 1F, 1F, 15F, 15F, 15F, spriteSet);
 
-        addCube(quads, 0F, 0F, 0F, 1F, 16F, 1F, spriteSet, rotation);
-        addCube(quads, 15F, 0F, 0F, 16F, 16F, 1F, spriteSet, rotation);
-        addCube(quads, 0F, 0F, 15F, 1F, 16F, 16F, spriteSet, rotation);
-        addCube(quads, 15F, 0F, 15F, 16F, 16F, 16F, spriteSet, rotation);
+        model.addCube(0F, 0F, 0F, 1F, 16F, 1F, spriteSet);
+        model.addCube(15F, 0F, 0F, 16F, 16F, 1F, spriteSet);
+        model.addCube(0F, 0F, 15F, 1F, 16F, 16F, spriteSet);
+        model.addCube(15F, 0F, 15F, 16F, 16F, 16F, spriteSet);
 
-        addCube(quads, 1F, 0F, 0F, 15F, 1F, 1F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST), rotation);
-        addCube(quads, 1F, 0F, 15F, 15F, 1F, 16F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST), rotation);
-        addCube(quads, 0F, 0F, 1F, 1F, 1F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH), rotation);
-        addCube(quads, 15F, 0F, 1F, 16F, 1F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH), rotation);
+        model.addCube(1F, 0F, 0F, 15F, 1F, 1F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST));
+        model.addCube(1F, 0F, 15F, 15F, 1F, 16F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST));
+        model.addCube(0F, 0F, 1F, 1F, 1F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH));
+        model.addCube(15F, 0F, 1F, 16F, 1F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH));
 
-        addCube(quads, 1F, 15F, 0F, 15F, 16F, 1F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST), rotation);
-        addCube(quads, 1F, 15F, 15F, 15F, 16F, 16F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST), rotation);
-        addCube(quads, 0F, 15F, 1F, 1F, 16F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH), rotation);
-        addCube(quads, 15F, 15F, 1F, 16F, 16F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH), rotation);
-        return quads;
+        model.addCube(1F, 15F, 0F, 15F, 16F, 1F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST));
+        model.addCube(1F, 15F, 15F, 15F, 16F, 16F, spriteSet.exclude(EnumFacing.WEST, EnumFacing.EAST));
+        model.addCube(0F, 15F, 1F, 1F, 16F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH));
+        model.addCube(15F, 15F, 1F, 16F, 16F, 15F, spriteSet.exclude(EnumFacing.NORTH, EnumFacing.SOUTH));
+        return model.getQuads();
     }
 }

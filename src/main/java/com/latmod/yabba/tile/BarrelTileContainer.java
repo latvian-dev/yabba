@@ -38,6 +38,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
 
         if(storedItem != null)
         {
+            storedItem.stackSize = 1;
             nbt.setTag("Item", storedItem.serializeNBT());
             nbt.setInteger("Count", getItemCount());
         }

@@ -9,21 +9,11 @@ import javax.annotation.Nullable;
  */
 public interface IYabbaRegistry
 {
+    void addSkin(IBarrelSkin skin);
+
     IBarrelSkin addSkin(IBlockState parentState, @Nullable Object craftItem, String icons);
 
     void addTier(ITier tier);
 
     void addModel(IBarrelModel model);
-
-    IBarrelSkin getSkin(String id);
-
-    IBarrelSkin getSkin(IBlockState id);
-
-    ITier getTier(String id);
-
-    boolean hasSkin(String id);
-
-    boolean hasModel(String id);
-
-    IBarrelModel getModel(String id);
 }

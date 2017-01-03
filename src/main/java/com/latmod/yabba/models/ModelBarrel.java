@@ -4,16 +4,15 @@ import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModelData;
 import com.latmod.yabba.api.IIconSet;
 import com.latmod.yabba.util.IconSet;
+import com.latmod.yabba.util.ModelBuilder;
 import com.latmod.yabba.util.SpriteSet;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,48 +39,47 @@ public class ModelBarrel extends ModelBase
     @SideOnly(Side.CLIENT)
     public List<BakedQuad> buildModel(SpriteSet spriteSet, IBarrelModelData data, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
-        List<BakedQuad> quads = new ArrayList<>(52);
-        ModelRotation rotation = getRotation(data.getFacing());
+        ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(data.getFacing()));
 
         TextureAtlasSprite topSprite = spriteSet.get(EnumFacing.UP);
         TextureAtlasSprite bottomSprite = spriteSet.get(EnumFacing.DOWN);
         TextureAtlasSprite frontSprite = spriteSet.get(EnumFacing.NORTH);
 
         // Band
-        addCube(quads, 0F, 0F, 0F, 16F, 16F, 16F, new SpriteSet(TEXTURES_BAND, textureAtlas), rotation);
+        model.addCube(0F, 0F, 0F, 16F, 16F, 16F, new SpriteSet(TEXTURES_BAND, textureAtlas));
 
         /// Top H
-        addCube(quads, 2F, 15F, 2F, 14F, 16F, 14F, spriteSet.exclude(EnumFacing.DOWN), rotation);
-        addCube(quads, 1F, 13F, 1F, 15F, 15F, 15F, spriteSet.exclude(EnumFacing.DOWN), rotation);
-        addCube(quads, 0F, 12F, 0F, 16F, 13F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP), rotation);
+        model.addCube(2F, 15F, 2F, 14F, 16F, 14F, spriteSet.exclude(EnumFacing.DOWN));
+        model.addCube(1F, 13F, 1F, 15F, 15F, 15F, spriteSet.exclude(EnumFacing.DOWN));
+        model.addCube(0F, 12F, 0F, 16F, 13F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP));
 
         // Top V
-        addQuad(quads, 0F, 13F, 0F, 16F, 13F, 1F, EnumFacing.UP, topSprite, rotation);
-        addQuad(quads, 0F, 13F, 15F, 16F, 13F, 16F, EnumFacing.UP, topSprite, rotation);
-        addQuad(quads, 0F, 13F, 1F, 1F, 13F, 15F, EnumFacing.UP, topSprite, rotation);
-        addQuad(quads, 15F, 13F, 1F, 16F, 13F, 15F, EnumFacing.UP, topSprite, rotation);
+        model.addQuad(0F, 13F, 0F, 16F, 13F, 1F, EnumFacing.UP, topSprite);
+        model.addQuad(0F, 13F, 15F, 16F, 13F, 16F, EnumFacing.UP, topSprite);
+        model.addQuad(0F, 13F, 1F, 1F, 13F, 15F, EnumFacing.UP, topSprite);
+        model.addQuad(15F, 13F, 1F, 16F, 13F, 15F, EnumFacing.UP, topSprite);
 
         // Center block
-        addCube(quads, 0F, 6F, 0F, 16F, 10F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH), rotation);
+        model.addCube(0F, 6F, 0F, 16F, 10F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH));
 
         // Inside borders
         //TODO
 
         // Front
-        addQuad(quads, 4F, 4F, 1F, 12F, 12F, 1F, EnumFacing.NORTH, frontSprite, rotation);
-        addQuad(quads, 0F, 6F, 0F, 4F, 10F, 0F, EnumFacing.NORTH, frontSprite, rotation);
-        addQuad(quads, 12F, 6F, 0F, 16F, 10F, 0F, EnumFacing.NORTH, frontSprite, rotation);
+        model.addQuad(4F, 4F, 1F, 12F, 12F, 1F, EnumFacing.NORTH, frontSprite);
+        model.addQuad(0F, 6F, 0F, 4F, 10F, 0F, EnumFacing.NORTH, frontSprite);
+        model.addQuad(12F, 6F, 0F, 16F, 10F, 0F, EnumFacing.NORTH, frontSprite);
 
         // Bottom V
-        addQuad(quads, 0F, 3F, 0F, 16F, 3F, 1F, EnumFacing.DOWN, bottomSprite, rotation);
-        addQuad(quads, 0F, 3F, 15F, 16F, 3F, 16F, EnumFacing.DOWN, bottomSprite, rotation);
-        addQuad(quads, 0F, 3F, 1F, 1F, 3F, 15F, EnumFacing.DOWN, bottomSprite, rotation);
-        addQuad(quads, 15F, 3F, 1F, 16F, 3F, 15F, EnumFacing.DOWN, bottomSprite, rotation);
+        model.addQuad(0F, 3F, 0F, 16F, 3F, 1F, EnumFacing.DOWN, bottomSprite);
+        model.addQuad(0F, 3F, 15F, 16F, 3F, 16F, EnumFacing.DOWN, bottomSprite);
+        model.addQuad(0F, 3F, 1F, 1F, 3F, 15F, EnumFacing.DOWN, bottomSprite);
+        model.addQuad(15F, 3F, 1F, 16F, 3F, 15F, EnumFacing.DOWN, bottomSprite);
 
         // Bottom H
-        addCube(quads, 0F, 3F, 0F, 16F, 4F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP), rotation);
-        addCube(quads, 1F, 1F, 1F, 15F, 3F, 15F, spriteSet.exclude(EnumFacing.UP), rotation);
-        addCube(quads, 2F, 0F, 2F, 14F, 1F, 14F, spriteSet.exclude(EnumFacing.UP), rotation);
-        return quads;
+        model.addCube(0F, 3F, 0F, 16F, 4F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP));
+        model.addCube(1F, 1F, 1F, 15F, 3F, 15F, spriteSet.exclude(EnumFacing.UP));
+        model.addCube(2F, 0F, 2F, 14F, 1F, 14F, spriteSet.exclude(EnumFacing.UP));
+        return model.getQuads();
     }
 }

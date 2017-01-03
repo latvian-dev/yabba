@@ -55,6 +55,9 @@ public enum YabbaRegistry implements IYabbaRegistry
 
     public void sendEvent()
     {
+        addTier(Tier.NONE);
+        addModel(ModelBarrel.INSTANCE);
+
         MinecraftForge.EVENT_BUS.post(new YabbaRegistryEvent(this));
         ALL_MODELS.addAll(MODELS.values());
         ALL_SKINS.addAll(SKINS.values());
@@ -139,12 +142,18 @@ public enum YabbaRegistry implements IYabbaRegistry
     }
 
     @Override
+    public void addSkin(IBarrelSkin skin)
+    {
+        SKINS.put(skin.getName(), skin);
+        SKINS_STATE_MAP.put(skin.getState(), skin);
+    }
+
+    @Override
     public IBarrelSkin addSkin(IBlockState parentState, @Nullable Object craftItem, String icons)
     {
-        IBarrelSkin c = new BarrelSkin(parentState, craftItem, new IconSet(icons));
-        SKINS.put(c.getName(), c);
-        SKINS_STATE_MAP.put(c.getState(), c);
-        return c;
+        IBarrelSkin skin = new BarrelSkin(parentState, craftItem, new IconSet(icons));
+        addSkin(skin);
+        return skin;
     }
 
     @Override
@@ -159,14 +168,12 @@ public enum YabbaRegistry implements IYabbaRegistry
         MODELS.put(model.getName(), model);
     }
 
-    @Override
     public IBarrelSkin getSkin(String id)
     {
         IBarrelSkin skin = SKINS.get(id);
         return skin == null ? DEFAULT_SKIN : skin;
     }
 
-    @Override
     public IBarrelSkin getSkin(IBlockState id)
     {
         IBarrelSkin skin = SKINS_STATE_MAP.get(id);
@@ -193,26 +200,17 @@ public enum YabbaRegistry implements IYabbaRegistry
         return id;
     }
 
-    @Override
     public ITier getTier(String id)
     {
         ITier tier = TIERS.get(id);
         return tier == null ? Tier.NONE : tier;
     }
 
-    @Override
     public boolean hasSkin(String id)
     {
         return SKINS.containsKey(id);
     }
 
-    @Override
-    public boolean hasModel(String id)
-    {
-        return MODELS.containsKey(id);
-    }
-
-    @Override
     public IBarrelModel getModel(String id)
     {
         IBarrelModel model = MODELS.get(id);

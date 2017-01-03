@@ -4,7 +4,6 @@ import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
-import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.net.MessageSyncData;
 import com.latmod.yabba.net.YabbaNetHandler;
@@ -122,8 +121,9 @@ public class YabbaEventHandler
         reg.addTier(YabbaCommon.TIER_GOLD);
         reg.addTier(YabbaCommon.TIER_DMD);
 
-        reg.addModel(ModelBarrel.INSTANCE);
         reg.addModel(ModelCrate.INSTANCE);
+        //reg.addModel(ModelSolid.INSTANCE);
+        //reg.addModel(ModelSolidBorders.INSTANCE);
     }
 
     @SubscribeEvent
