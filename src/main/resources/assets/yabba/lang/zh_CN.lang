@@ -1,0 +1,25 @@
+# Creative Tabs
+itemGroup.yabba=YABBA
+itemGroup.yabba.all_models=所有YABBA的桶
+
+# Items
+item.yabba.upgrade.name=桶升级
+item.yabba.upgrade.blank=空白
+item.yabba.upgrade.iron_upgrade=木>铁
+item.yabba.upgrade.gold_upgrade=铁>金
+item.yabba.upgrade.diamond_upgrade=金>钻石
+item.yabba.upgrade.nether_star_upgrade=钻石>下界之星
+item.yabba.upgrade.creative=创造模式专用桶
+item.yabba.upgrade.obsidian_shell=黑曜石外壳
+item.yabba.upgrade.redstone_out=红石信号输出
+item.yabba.upgrade.hopper=漏斗
+item.yabba.upgrade.void=虚空
+
+item.yabba.painter.name=桶刷
+
+# Blocks
+tile.yabba.barrel.name=桶
+tile.yabba.antibarrel.name=奇异桶
+
+# Guide
+yabba.guide=YABBA
