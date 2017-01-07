@@ -30,6 +30,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -82,16 +83,32 @@ public class BlockBarrel extends BlockBarrelBase
         }
     }
 
-    public ItemStack createStack(IBarrelModel model, IBarrelSkin variant, ITier tier)
+    public ItemStack createStack(IBarrelModel model, IBarrelSkin skin, ITier tier)
     {
         ItemStack stack = new ItemStack(this);
         IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
         barrel.setTier(tier);
         barrel.setFlags(0);
         barrel.setModel(model);
-        barrel.setSkin(variant);
+        barrel.setSkin(skin);
         barrel.setItemCount(0);
         return stack;
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+    {
+        TileEntity te = world.getTileEntity(pos);
+
+        if(te != null && te.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+        {
+            IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+            ItemStack stack = createStack(barrel.getModel(), barrel.getSkin(), barrel.getTier());
+            ((IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
+            return stack;
+        }
+
+        return super.getPickBlock(state, target, world, pos, player);
     }
 
     @Override

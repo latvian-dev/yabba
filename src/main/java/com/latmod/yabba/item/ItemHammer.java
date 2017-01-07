@@ -3,14 +3,14 @@ package com.latmod.yabba.item;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -28,16 +28,16 @@ import java.util.List;
 /**
  * Created by LatvianModder on 21.12.2016.
  */
-public class ItemPainter extends Item
+public class ItemHammer extends Item
 {
-    private static IBarrelSkin getSkin(ItemStack stack, boolean client)
+    private static IBarrelModel getModel(ItemStack stack, boolean client)
     {
-        return YabbaRegistry.INSTANCE.getSkin(stack.hasTagCompound() ? stack.getTagCompound().getInteger("BarrelSkin") : 0, client);
+        return YabbaRegistry.INSTANCE.getModel(stack.hasTagCompound() ? stack.getTagCompound().getByte("BarrelModel") : 0, client);
     }
 
-    public static void setSkin(ItemStack stack, int skinId)
+    public static void setModel(ItemStack stack, byte modelId)
     {
-        stack.setTagInfo("BarrelSkin", new NBTTagInt(skinId));
+        stack.setTagInfo("BarrelModel", new NBTTagByte(modelId));
     }
 
     private enum CapUpgrade implements ICapabilityProvider, IUpgrade
@@ -59,16 +59,16 @@ public class ItemPainter extends Item
         @Override
         public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
         {
-            IBarrelSkin skin = getSkin(upgradeItem, worldIn.isRemote);
+            IBarrelModel model = getModel(upgradeItem, worldIn.isRemote);
 
-            if(barrel.getSkin().equals(skin))
+            if(barrel.getModel().equals(model))
             {
                 return false;
             }
 
             if(!simulate)
             {
-                barrel.setSkin(skin);
+                barrel.setModel(model);
                 barrel.markBarrelDirty(true);
             }
 
@@ -76,7 +76,7 @@ public class ItemPainter extends Item
         }
     }
 
-    public ItemPainter()
+    public ItemHammer()
     {
         setMaxStackSize(1);
         setMaxDamage(0);
@@ -107,7 +107,7 @@ public class ItemPainter extends Item
         {
             if(worldIn.isRemote)
             {
-                Yabba.PROXY.openSkinGui();
+                Yabba.PROXY.openModelGui();
             }
 
             return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
@@ -120,6 +120,6 @@ public class ItemPainter extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Skin: " + getSkin(stack, playerIn.worldObj.isRemote).getDisplayName());
+        tooltip.add("Model: " + getModel(stack, playerIn.worldObj.isRemote).getName());
     }
 }

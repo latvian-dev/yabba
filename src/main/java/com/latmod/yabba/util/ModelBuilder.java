@@ -62,39 +62,38 @@ public class ModelBuilder
         }
     }
 
-    public void addQuad(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face, @Nullable TextureAtlasSprite sprite)
+    public void addInvertedCube(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, SpriteSet sprites)
     {
-        if(sprite == null)
+        for(EnumFacing facing : EnumFacing.VALUES)
         {
-            return;
+            addQuad(toX, toY, toZ, fromX, fromY, fromZ, facing, sprites.get(facing));
         }
+    }
 
-        float[] uv = new float[4];
+    public float[] getUV(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face)
+    {
         switch(face)
         {
             case DOWN:
             case UP:
-                uv[0] = fromX;
-                uv[1] = fromZ;
-                uv[2] = toX;
-                uv[3] = toZ;
-                break;
+                return new float[] {fromX, fromZ, toX, toZ};
             case NORTH:
             case SOUTH:
-                uv[0] = fromX;
-                uv[1] = fromY;
-                uv[2] = toX;
-                uv[3] = toY;
-                break;
+                return new float[] {fromX, fromY, toX, toY};
             case EAST:
             case WEST:
-                uv[0] = fromZ;
-                uv[1] = fromY;
-                uv[2] = toZ;
-                uv[3] = toY;
-                break;
+                return new float[] {fromZ, fromY, toZ, toY};
         }
 
-        quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, false, true));
+        return new float[] {0F, 0F, 1F, 1F};
+    }
+
+    public void addQuad(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face, @Nullable TextureAtlasSprite sprite)
+    {
+        if(sprite != null)
+        {
+            float[] uv = getUV(fromX, fromY, fromZ, toX, toY, toZ, face);
+            quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, true, true));
+        }
     }
 }

@@ -18,5 +18,7 @@ public class YabbaNetHandler
         NET.registerMessage(MessageUpdateBarrelItemCount.class, MessageUpdateBarrelItemCount.class, ++id, Side.CLIENT);
         NET.registerMessage(MessageUpdateBarrelFull.class, MessageUpdateBarrelFull.class, ++id, Side.CLIENT);
         NET.registerMessage(MessageRequestBarrelUpdate.class, MessageRequestBarrelUpdate.class, ++id, Side.SERVER);
+        NET.registerMessage(MessageSelectModel.class, MessageSelectModel.class, ++id, Side.SERVER);
+        NET.registerMessage(MessageSelectSkin.class, MessageSelectSkin.class, ++id, Side.SERVER);
     }
 }

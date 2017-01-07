@@ -5,6 +5,8 @@ import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
 import com.latmod.yabba.models.ModelCrate;
+import com.latmod.yabba.models.ModelSolid;
+import com.latmod.yabba.models.ModelSolidBorders;
 import com.latmod.yabba.net.MessageSyncData;
 import com.latmod.yabba.net.YabbaNetHandler;
 import net.minecraft.block.BlockColored;
@@ -18,7 +20,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -46,73 +47,66 @@ public class YabbaEventHandler
         {
             if(type != BlockPlanks.EnumType.OAK)
             {
-                reg.addSkin(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, type),
-                        new ItemStack(Blocks.PLANKS, 1, type.getMetadata()),
-                        "all=blocks/planks_" + type.getUnlocalizedName());
+                reg.addSkin(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, type), "all=blocks/planks_" + type.getUnlocalizedName());
             }
 
             String woodTex = "blocks/log_" + type.getUnlocalizedName();
 
             if(type.getMetadata() < 4)
             {
-                reg.addSkin(Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, type), new ItemStack(Blocks.LOG, 1, type.getMetadata()), "up&down=" + woodTex + "_top,all=" + woodTex);
+                reg.addSkin(Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, type), "up&down=" + woodTex + "_top,all=" + woodTex);
             }
             else
             {
-                reg.addSkin(Blocks.LOG2.getDefaultState().withProperty(BlockNewLog.VARIANT, type), new ItemStack(Blocks.LOG2, 1, type.getMetadata() - 4), "up&down=" + woodTex + "_top,all=" + woodTex);
+                reg.addSkin(Blocks.LOG2.getDefaultState().withProperty(BlockNewLog.VARIANT, type), "up&down=" + woodTex + "_top,all=" + woodTex);
             }
         }
 
-        reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), new ItemStack(Blocks.STONE, 1, BlockStone.EnumType.STONE.getMetadata()), "all=blocks/stone");
+        reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), "all=blocks/stone");
 
         for(BlockStone.EnumType type : BlockStone.EnumType.values())
         {
             if(type != BlockStone.EnumType.STONE)
             {
-                reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, type), new ItemStack(Blocks.STONE, 1, type.getMetadata()), "all=blocks/stone_" + type.name().toLowerCase(Locale.ENGLISH));
+                reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, type), "all=blocks/stone_" + type.name().toLowerCase(Locale.ENGLISH));
             }
         }
 
-        reg.addSkin(Blocks.DIRT.getDefaultState(), "dirt", "all=blocks/dirt");
-        reg.addSkin(Blocks.STONEBRICK.getDefaultState(), Blocks.STONEBRICK, "all=blocks/stonebrick");
-        reg.addSkin(Blocks.BRICK_BLOCK.getDefaultState(), Blocks.BRICK_BLOCK, "all=blocks/brick");
-        reg.addSkin(Blocks.OBSIDIAN.getDefaultState(), "obsidian", "all=blocks/obsidian");
-        reg.addSkin(Blocks.END_BRICKS.getDefaultState(), Blocks.END_BRICKS, "all=blocks/end_bricks");
-        reg.addSkin(Blocks.NETHER_BRICK.getDefaultState(), Blocks.NETHER_BRICK, "all=blocks/nether_brick");
-        reg.addSkin(Blocks.RED_NETHER_BRICK.getDefaultState(), Blocks.RED_NETHER_BRICK, "all=blocks/red_nether_brick");
-        reg.addSkin(Blocks.PRISMARINE.getDefaultState(), "blockPrismarineBrick", "all=blocks/prismarine_bricks");
-        reg.addSkin(Blocks.DRAGON_EGG.getDefaultState(), Blocks.DRAGON_EGG, "all=blocks/dragon_egg");
-        reg.addSkin(Blocks.MELON_BLOCK.getDefaultState(), Blocks.MELON_BLOCK, "up&down=minecraft:blocks/melon_top,all=minecraft:blocks/melon_side");
-        reg.addSkin(Blocks.PUMPKIN.getDefaultState(), Blocks.PUMPKIN, "up&down=blocks/pumpkin_top,all=blocks/pumpkin_side");
-        reg.addSkin(Blocks.ICE.getDefaultState(), Blocks.ICE, "all=blocks/ice");
-        reg.addSkin(Blocks.GLASS.getDefaultState(), Blocks.GLASS, "all=blocks/glass");
-        reg.addSkin(Blocks.GLOWSTONE.getDefaultState(), Blocks.GLOWSTONE, "all=blocks/glowstone");
-        reg.addSkin(Blocks.MAGMA.getDefaultState(), Blocks.MAGMA, "all=blocks/magma");
-        reg.addSkin(Blocks.NOTEBLOCK.getDefaultState(), Blocks.NOTEBLOCK, "all=blocks/jukebox_side");
-        reg.addSkin(Blocks.WATER.getDefaultState(), Items.WATER_BUCKET, "all=blocks/water_still");
-        reg.addSkin(Blocks.LAVA.getDefaultState(), Items.LAVA_BUCKET, "all=blocks/lava_still");
-        reg.addSkin(Blocks.PORTAL.getDefaultState(), null, "all=blocks/portal");
-        reg.addSkin(Blocks.GOLD_BLOCK.getDefaultState(), "blockGold", "all=blocks/gold_block");
-        reg.addSkin(Blocks.IRON_BLOCK.getDefaultState(), "blockIron", "all=blocks/iron_block");
-        reg.addSkin(Blocks.LAPIS_BLOCK.getDefaultState(), "blockLapis", "all=blocks/lapis_block");
-        reg.addSkin(Blocks.DIAMOND_BLOCK.getDefaultState(), "blockDiamond", "all=blocks/diamond_block");
-        reg.addSkin(Blocks.REDSTONE_BLOCK.getDefaultState(), "blockRedstone", "all=blocks/redstone_block");
-        reg.addSkin(Blocks.EMERALD_BLOCK.getDefaultState(), "blockEmerald", "all=blocks/emerald_block");
-        reg.addSkin(Blocks.QUARTZ_BLOCK.getDefaultState(), "blockQuartz", "all=blocks/quartz_block_lines_top");
-        reg.addSkin(Blocks.COAL_BLOCK.getDefaultState(), "blockCoal", "all=blocks/coal_block");
-        reg.addSkin(Blocks.BONE_BLOCK.getDefaultState(), Blocks.BONE_BLOCK, "up&down=blocks/bone_block_top,all=blocks/bone_block_side");
-        reg.addSkin(Blocks.HAY_BLOCK.getDefaultState(), Blocks.HAY_BLOCK, "up&down=blocks/hay_block_top,all=blocks/hay_block_side");
-        reg.addSkin(Blocks.BOOKSHELF.getDefaultState(), Blocks.BOOKSHELF, "up&down=blocks/planks_oak,all=blocks/bookshelf");
+        reg.addSkin(Blocks.DIRT.getDefaultState(), "all=blocks/dirt");
+        reg.addSkin(Blocks.STONEBRICK.getDefaultState(), "all=blocks/stonebrick");
+        reg.addSkin(Blocks.BRICK_BLOCK.getDefaultState(), "all=blocks/brick");
+        reg.addSkin(Blocks.OBSIDIAN.getDefaultState(), "all=blocks/obsidian");
+        reg.addSkin(Blocks.END_BRICKS.getDefaultState(), "all=blocks/end_bricks");
+        reg.addSkin(Blocks.NETHER_BRICK.getDefaultState(), "all=blocks/nether_brick");
+        reg.addSkin(Blocks.RED_NETHER_BRICK.getDefaultState(), "all=blocks/red_nether_brick");
+        reg.addSkin(Blocks.PRISMARINE.getDefaultState(), "all=blocks/prismarine_bricks");
+        reg.addSkin(Blocks.DRAGON_EGG.getDefaultState(), "all=blocks/dragon_egg");
+        reg.addSkin(Blocks.MELON_BLOCK.getDefaultState(), "up&down=minecraft:blocks/melon_top,all=minecraft:blocks/melon_side");
+        reg.addSkin(Blocks.PUMPKIN.getDefaultState(), "up&down=blocks/pumpkin_top,all=blocks/pumpkin_side");
+        reg.addSkin(Blocks.ICE.getDefaultState(), "all=blocks/ice");
+        reg.addSkin(Blocks.GLASS.getDefaultState(), "all=blocks/glass");
+        reg.addSkin(Blocks.GLOWSTONE.getDefaultState(), "all=blocks/glowstone");
+        reg.addSkin(Blocks.MAGMA.getDefaultState(), "all=blocks/magma");
+        reg.addSkin(Blocks.NOTEBLOCK.getDefaultState(), "all=blocks/jukebox_side");
+        reg.addSkin(Blocks.WATER.getDefaultState(), "all=blocks/water_still");
+        reg.addSkin(Blocks.LAVA.getDefaultState(), "all=blocks/lava_still");
+        reg.addSkin(Blocks.PORTAL.getDefaultState(), "all=blocks/portal");
+        reg.addSkin(Blocks.GOLD_BLOCK.getDefaultState(), "all=blocks/gold_block");
+        reg.addSkin(Blocks.IRON_BLOCK.getDefaultState(), "all=blocks/iron_block");
+        reg.addSkin(Blocks.LAPIS_BLOCK.getDefaultState(), "all=blocks/lapis_block");
+        reg.addSkin(Blocks.DIAMOND_BLOCK.getDefaultState(), "all=blocks/diamond_block");
+        reg.addSkin(Blocks.REDSTONE_BLOCK.getDefaultState(), "all=blocks/redstone_block");
+        reg.addSkin(Blocks.EMERALD_BLOCK.getDefaultState(), "all=blocks/emerald_block");
+        reg.addSkin(Blocks.QUARTZ_BLOCK.getDefaultState(), "all=blocks/quartz_block_lines_top");
+        reg.addSkin(Blocks.COAL_BLOCK.getDefaultState(), "all=blocks/coal_block");
+        reg.addSkin(Blocks.BONE_BLOCK.getDefaultState(), "up&down=blocks/bone_block_top,all=blocks/bone_block_side");
+        reg.addSkin(Blocks.HAY_BLOCK.getDefaultState(), "up&down=blocks/hay_block_top,all=blocks/hay_block_side");
+        reg.addSkin(Blocks.BOOKSHELF.getDefaultState(), "up&down=blocks/planks_oak,all=blocks/bookshelf");
 
         for(EnumDyeColor dye : EnumDyeColor.values())
         {
-            reg.addSkin(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, dye),
-                    new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, dye.getMetadata()),
-                    "all=blocks/hardened_clay_stained_" + dye.getName());
-
-            reg.addSkin(Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, dye),
-                    new ItemStack(Blocks.WOOL, 1, dye.getMetadata()),
-                    "all=blocks/wool_colored_" + dye.getName());
+            reg.addSkin(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/hardened_clay_stained_" + dye.getName());
+            reg.addSkin(Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/wool_colored_" + dye.getName());
         }
 
         reg.addTier(YabbaCommon.TIER_DIRT);
@@ -122,8 +116,8 @@ public class YabbaEventHandler
         reg.addTier(YabbaCommon.TIER_DMD);
 
         reg.addModel(ModelCrate.INSTANCE);
-        //reg.addModel(ModelSolid.INSTANCE);
-        //reg.addModel(ModelSolidBorders.INSTANCE);
+        reg.addModel(ModelSolid.INSTANCE);
+        reg.addModel(ModelSolidBorders.INSTANCE);
     }
 
     @SubscribeEvent

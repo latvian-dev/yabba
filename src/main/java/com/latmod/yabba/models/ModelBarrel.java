@@ -63,10 +63,9 @@ public class ModelBarrel extends ModelBase
         model.addCube(0F, 6F, 0F, 16F, 10F, 16F, spriteSet.exclude(EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH));
 
         // Inside borders
-        //TODO
+        model.addInvertedCube(4F, 4F, 0F, 12F, 12F, 1F, spriteSet);
 
         // Front
-        model.addQuad(4F, 4F, 1F, 12F, 12F, 1F, EnumFacing.NORTH, frontSprite);
         model.addQuad(0F, 6F, 0F, 4F, 10F, 0F, EnumFacing.NORTH, frontSprite);
         model.addQuad(12F, 6F, 0F, 16F, 10F, 0F, EnumFacing.NORTH, frontSprite);
 

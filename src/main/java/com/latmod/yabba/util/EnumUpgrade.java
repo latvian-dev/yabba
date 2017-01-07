@@ -30,7 +30,7 @@ public enum EnumUpgrade implements IUpgrade
 
     public static final EnumUpgrade[] VALUES = values();
 
-    private final String name;
+    public final String name;
     public final String uname;
     public final int metadata;
 
@@ -57,12 +57,6 @@ public enum EnumUpgrade implements IUpgrade
         }
 
         return BLANK;
-    }
-
-    @Override
-    public String getUpgradeName()
-    {
-        return name;
     }
 
     @Override

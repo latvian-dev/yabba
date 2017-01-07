@@ -16,6 +16,7 @@ item.yabba.upgrade.hopper=Hopper
 item.yabba.upgrade.void=Void Items
 
 item.yabba.painter.name=Barrel Painter
+item.yabba.hammer.name=Barrel Hammer
 
 # Blocks
 tile.yabba.barrel.name=Item Barrel
@@ -23,3 +24,9 @@ tile.yabba.antibarrel.name=AntiBarrel
 
 # Guide
 yabba.guide=YABBA
+
+# Models
+yabba.model.barrel=Barrel
+yabba.model.crate=Crate
+yabba.model.solid=Solid Block
+yabba.model.solid_borders=Solid Bordered Block

@@ -98,6 +98,7 @@ public class YabbaCommon
 
         register("upgrade", YabbaItems.UPGRADE);
         register("painter", YabbaItems.PAINTER);
+        register("hammer", YabbaItems.HAMMER);
         register("barrel", YabbaItems.BARREL, new ItemBlockBarrel(YabbaItems.BARREL));
         register("antibarrel", YabbaItems.ANTIBARREL, new ItemBlock(YabbaItems.ANTIBARREL));
 
@@ -127,6 +128,12 @@ public class YabbaCommon
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.PAINTER),
                 "WWU", " I ", " I ",
+                'U', blankUpgrade,
+                'I', "ingotIron",
+                'W', Blocks.WOOL));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(YabbaItems.HAMMER),
+                "WUW", " I ", " I ",
                 'U', blankUpgrade,
                 'I', "ingotIron",
                 'W', Blocks.WOOL));
@@ -163,5 +170,13 @@ public class YabbaCommon
                 'Q', "blockQuartz",
                 'O', "obsidian",
                 'C', "chestWood"));
+    }
+
+    public void openModelGui()
+    {
+    }
+
+    public void openSkinGui()
+    {
     }
 }

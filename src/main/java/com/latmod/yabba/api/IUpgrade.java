@@ -8,7 +8,5 @@ import net.minecraft.world.World;
  */
 public interface IUpgrade
 {
-    String getUpgradeName();
-
     boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate);
 }

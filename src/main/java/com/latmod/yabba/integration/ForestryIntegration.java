@@ -25,8 +25,8 @@ public class ForestryIntegration
                 continue;
             }
 
-            reg.addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.PLANKS, false), TreeManager.woodAccess.getStack(type, WoodBlockKind.PLANKS, false), "all=" + type.getPlankTexture());
-            reg.addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.LOG, false), TreeManager.woodAccess.getStack(type, WoodBlockKind.LOG, false), "up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture());
+            reg.addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.PLANKS, false), "all=" + type.getPlankTexture());
+            reg.addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.LOG, false), "up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture());
         }
     }
 }

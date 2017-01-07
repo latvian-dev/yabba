@@ -38,7 +38,7 @@ public class ItemBlockBarrel extends ItemBlock
     {
         IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
-        list.add("Model: " + barrel.getModel().getName());
+        list.add("Model: " + I18n.format("yabba.model." + barrel.getModel().getName()));
         list.add("Skin: " + barrel.getSkin().getDisplayName());
 
         ITier tier = barrel.getTier();

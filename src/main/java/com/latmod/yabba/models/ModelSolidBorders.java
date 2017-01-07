@@ -22,7 +22,7 @@ import java.util.List;
 public class ModelSolidBorders extends ModelBase
 {
     public static final ModelSolidBorders INSTANCE = new ModelSolidBorders();
-    private static final IIconSet TEXTURES_EDGES = new IconSet("all=yabba:blocks/barrel_solid_borders");
+    private static final IIconSet TEXTURES_EDGES = new IconSet("north=yabba:blocks/barrel_solid_borders_window,all=yabba:blocks/barrel_solid_borders");
 
     public ModelSolidBorders()
     {
@@ -42,15 +42,19 @@ public class ModelSolidBorders extends ModelBase
         ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(data.getFacing()));
 
         model.addCube(0F, 0F, 0F, 16F, 16F, 16F, new SpriteSet(TEXTURES_EDGES, textureAtlas));
-
         model.addQuad(1F, 16F, 1F, 15F, 16F, 15F, EnumFacing.UP, spriteSet.get(EnumFacing.UP));
         model.addQuad(1F, 0F, 1F, 15F, 0F, 15F, EnumFacing.DOWN, spriteSet.get(EnumFacing.DOWN));
-
         model.addQuad(0F, 1F, 1F, 0F, 15F, 15F, EnumFacing.WEST, spriteSet.get(EnumFacing.WEST));
         model.addQuad(16F, 1F, 1F, 16F, 15F, 15F, EnumFacing.EAST, spriteSet.get(EnumFacing.EAST));
-
-        //model.addQuad(1F, 1F, 0F, 15F, 15F, 0F, EnumFacing.NORTH, spriteSet.get(EnumFacing.NORTH));
         model.addQuad(1F, 1F, 16F, 15F, 15F, 16F, EnumFacing.SOUTH, spriteSet.get(EnumFacing.SOUTH));
+
+        TextureAtlasSprite frontSprite = spriteSet.get(EnumFacing.NORTH);
+
+        model.addInvertedCube(4F, 4F, 0F, 12F, 12F, 1F, spriteSet);
+        model.addQuad(1F, 1F, 0F, 15F, 4F, 0F, EnumFacing.NORTH, frontSprite);
+        model.addQuad(1F, 12F, 0F, 15F, 15F, 0F, EnumFacing.NORTH, frontSprite);
+        model.addQuad(1F, 4F, 0F, 4F, 12F, 0F, EnumFacing.NORTH, frontSprite);
+        model.addQuad(12F, 4F, 0F, 15F, 12F, 0F, EnumFacing.NORTH, frontSprite);
 
         return model.getQuads();
     }

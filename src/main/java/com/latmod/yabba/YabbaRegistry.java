@@ -14,12 +14,10 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +49,7 @@ public enum YabbaRegistry implements IYabbaRegistry
     public static TIntObjectHashMap<IBarrelSkin> SKIN_ID_MAP_C = new TIntObjectHashMap<>();
     private static int lastSkinID = 0;
 
-    public static final IBarrelSkin DEFAULT_SKIN = INSTANCE.addSkin(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.OAK), new ItemStack(Blocks.PLANKS, 1, BlockPlanks.EnumType.OAK.getMetadata()), "all=blocks/planks_oak");
+    public static final IBarrelSkin DEFAULT_SKIN = INSTANCE.addSkin(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.OAK), "all=blocks/planks_oak");
 
     public void sendEvent()
     {
@@ -149,9 +147,9 @@ public enum YabbaRegistry implements IYabbaRegistry
     }
 
     @Override
-    public IBarrelSkin addSkin(IBlockState parentState, @Nullable Object craftItem, String icons)
+    public IBarrelSkin addSkin(IBlockState parentState, String icons)
     {
-        IBarrelSkin skin = new BarrelSkin(parentState, craftItem, new IconSet(icons));
+        IBarrelSkin skin = new BarrelSkin(parentState, new IconSet(icons));
         addSkin(skin);
         return skin;
     }
