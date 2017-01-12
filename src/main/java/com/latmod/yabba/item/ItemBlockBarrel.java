@@ -51,9 +51,13 @@ public class ItemBlockBarrel extends ItemBlock
 
         if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
         {
-            if(stack1 != null)
+            if(barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
             {
-                list.add(barrel.getItemCount() + " / " + tier.getMaxItems(stack1));
+                list.add(barrel.getItemCount() + " items");
+            }
+            else if(stack1 != null)
+            {
+                list.add(barrel.getItemCount() + " / " + tier.getMaxItems(barrel, stack1));
             }
             else
             {

@@ -13,8 +13,13 @@ public interface ITier
 
     int getMaxStacks();
 
-    default int getMaxItems(@Nullable ItemStack itemStack)
+    default int getMaxItems(IBarrel barrel, @Nullable ItemStack itemStack)
     {
+        if(barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
+        {
+            return 2000000000;
+        }
+
         return getMaxStacks() * (itemStack == null ? 1 : itemStack.getMaxStackSize());
     }
 }

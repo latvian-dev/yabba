@@ -336,6 +336,6 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     @Override
     public int getMaxStoredCount()
     {
-        return barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY) ? 2000000000 : barrel.getTier().getMaxItems(barrel.getStackInSlot(0));
+        return barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
     }
 }

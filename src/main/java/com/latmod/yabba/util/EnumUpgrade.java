@@ -119,6 +119,7 @@ public enum EnumUpgrade implements IUpgrade
                     if(!simulate)
                     {
                         barrel.setFlag(IBarrel.FLAG_INFINITE_CAPACITY, true);
+                        barrel.addUpgradeName(NETHER_STAR_UPGRADE.uname);
                     }
                     return true;
                 }

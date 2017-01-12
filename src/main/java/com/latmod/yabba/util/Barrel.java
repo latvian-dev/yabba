@@ -126,7 +126,7 @@ public abstract class Barrel implements IBarrelModifiable
 
         if(itemCount > 0)
         {
-            capacity = tier.getMaxItems(storedItem);
+            capacity = tier.getMaxItems(this, storedItem);
 
             if(itemCount >= capacity)
             {
@@ -135,7 +135,7 @@ public abstract class Barrel implements IBarrelModifiable
         }
         else
         {
-            capacity = tier.getMaxItems(stack);
+            capacity = tier.getMaxItems(this, stack);
         }
 
         if(canInsert)
