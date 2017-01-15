@@ -2,6 +2,7 @@ package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.net.YabbaNetHandler;
@@ -183,7 +184,12 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     {
         if(cachedRotation == -1F)
         {
-            IBlockState state = worldObj.getBlockState(getPos());
+            IBlockState state = worldObj.getBlockState(pos);
+
+            if(!(state.getBlock() instanceof BlockBarrel))
+            {
+                return 0F;
+            }
 
             EnumFacing facing = state.getValue(BlockHorizontal.FACING);
             cachedRotation = 0F;

@@ -74,7 +74,7 @@ public class YabbaClient extends YabbaCommon
             }
         }
 
-        GuiSelectSkin.initSkins();
+        GuiSelectSkin.INSTANCE.initSkins();
     }
 
     private void registerModel(@Nullable Item item, int meta, String id, String v)
