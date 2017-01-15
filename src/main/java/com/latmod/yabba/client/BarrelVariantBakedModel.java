@@ -2,6 +2,7 @@ package com.latmod.yabba.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -24,15 +25,11 @@ import java.util.List;
 public class BarrelVariantBakedModel implements IPerspectiveAwareModel
 {
     private static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORM_MAP;
-    private static final TRSRTransformation flipX = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
+    private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
 
     private static TRSRTransformation get(float tx, float ty, float tz, float ax, float ay, float az, float s)
     {
-        return TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new Vector3f(tx / 16, ty / 16, tz / 16),
-                TRSRTransformation.quatFromXYZDegrees(new Vector3f(ax, ay, az)),
-                new Vector3f(s, s, s),
-                null));
+        return TRSRTransformation.blockCenterToCorner(new TRSRTransformation(new Vector3f(tx / 16F, ty / 16F, tz / 16F), TRSRTransformation.quatFromXYZDegrees(new Vector3f(ax, ay, az)), new Vector3f(s, s, s), null));
     }
 
     static
@@ -43,19 +40,22 @@ public class BarrelVariantBakedModel implements IPerspectiveAwareModel
         builder.put(ItemCameraTransforms.TransformType.GROUND, get(0, 3, 0, 0, 0, 0, 0.25F));
         builder.put(ItemCameraTransforms.TransformType.FIXED, get(0, 0, 0, 0, 0, 0, 0.5F));
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson);
-        builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TRSRTransformation.blockCenterToCorner(flipX.compose(TRSRTransformation.blockCornerToCenter(thirdperson)).compose(flipX)));
+        builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TRSRTransformation.blockCenterToCorner(FLIP_X.compose(TRSRTransformation.blockCornerToCenter(thirdperson)).compose(FLIP_X)));
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, get(0, 0, 0, 0, 45, 0, 0.4F));
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, get(0, 0, 0, 0, 225, 0, 0.4F));
         TRANSFORM_MAP = Maps.immutableEnumMap(builder.build());
     }
 
     private final TextureAtlasSprite particle;
-    private final List<BakedQuad> quads;
+    private final List<BakedQuad> quadsN, quadsS, quadsW, quadsE;
 
-    public BarrelVariantBakedModel(TextureAtlasSprite p, List<BakedQuad> q)
+    public BarrelVariantBakedModel(TextureAtlasSprite p, List<BakedQuad> n, List<BakedQuad> s, List<BakedQuad> w, List<BakedQuad> e)
     {
         particle = p;
-        quads = q;
+        quadsN = n;
+        quadsS = s;
+        quadsW = w;
+        quadsE = e;
     }
 
     @Override
@@ -67,7 +67,22 @@ public class BarrelVariantBakedModel implements IPerspectiveAwareModel
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
     {
-        return quads;
+        if(state != null)
+        {
+            switch(state.getValue(BlockHorizontal.FACING))
+            {
+                case NORTH:
+                    return quadsN;
+                case SOUTH:
+                    return quadsS;
+                case WEST:
+                    return quadsW;
+                case EAST:
+                    return quadsE;
+            }
+        }
+
+        return quadsN;
     }
 
     @Override

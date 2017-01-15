@@ -1,7 +1,8 @@
 package com.latmod.yabba.models;
 
 import com.google.common.base.Function;
-import com.latmod.yabba.api.IBarrelModelData;
+import com.latmod.yabba.api.IBarrelModel;
+import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.IIconSet;
 import com.latmod.yabba.util.IconSet;
 import com.latmod.yabba.util.ModelBuilder;
@@ -37,9 +38,10 @@ public class ModelBarrel extends ModelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<BakedQuad> buildModel(SpriteSet spriteSet, IBarrelModelData data, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    public List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, EnumFacing rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
-        ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(data.getFacing()));
+        ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(rotation));
+        SpriteSet spriteSet = new SpriteSet(skin.getTextures(), textureAtlas);
 
         TextureAtlasSprite topSprite = spriteSet.get(EnumFacing.UP);
         TextureAtlasSprite bottomSprite = spriteSet.get(EnumFacing.DOWN);

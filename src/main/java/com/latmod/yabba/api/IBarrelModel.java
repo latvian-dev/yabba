@@ -1,9 +1,9 @@
 package com.latmod.yabba.api;
 
 import com.google.common.base.Function;
-import com.latmod.yabba.util.SpriteSet;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,5 +20,5 @@ public interface IBarrelModel extends IStringSerializable, Comparable<IBarrelMod
     Collection<ResourceLocation> getExtraTextures();
 
     @SideOnly(Side.CLIENT)
-    List<BakedQuad> buildModel(SpriteSet spriteSet, IBarrelModelData data, Function<ResourceLocation, TextureAtlasSprite> textureAtlas);
+    List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, EnumFacing rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas);
 }

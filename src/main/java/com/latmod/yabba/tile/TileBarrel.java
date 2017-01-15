@@ -88,7 +88,14 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         {
             if(sendUpdate > 1)
             {
-                super.markDirty();
+                worldObj.markChunkDirty(pos, this);
+
+                /*
+                if(getBlockType() != Blocks.AIR)
+                {
+                    worldObj.updateComparatorOutputLevel(pos, getBlockType());
+                }
+                */
             }
 
             if(!worldObj.isRemote)

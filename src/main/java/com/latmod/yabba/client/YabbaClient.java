@@ -10,8 +10,10 @@ import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
 import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.EnumUpgrade;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -34,6 +36,7 @@ public class YabbaClient extends YabbaCommon
     public void preInit()
     {
         super.preInit();
+        ModelLoader.setCustomStateMapper(YabbaItems.BARREL, new StateMap.Builder().ignore(BlockHorizontal.FACING).build());
         ModelLoaderRegistry.registerLoader(new YabbaModels());
         Item barrelItem = Item.getItemFromBlock(YabbaItems.BARREL);
         List<ResourceLocation> variants = new ArrayList<>();
@@ -42,7 +45,7 @@ public class YabbaClient extends YabbaCommon
         {
             for(IBarrelSkin skin : YabbaRegistry.ALL_SKINS)
             {
-                variants.add(new ModelResourceLocation(YabbaItems.BARREL.getRegistryName(), "facing=north,model=" + model.getName() + ",skin=" + skin.getName()));
+                variants.add(new ModelResourceLocation(YabbaItems.BARREL.getRegistryName(), "model=" + model.getName() + ",skin=" + skin.getName()));
             }
         }
 
@@ -76,7 +79,7 @@ public class YabbaClient extends YabbaCommon
 
     private void registerModel(@Nullable Item item, int meta, String id, String v)
     {
-        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(new ResourceLocation(Yabba.MOD_ID, id), v));
+        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Yabba.MOD_ID + ':' + id + '#' + v));
     }
 
     @Override

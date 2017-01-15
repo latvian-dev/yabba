@@ -6,18 +6,22 @@ import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectSkin;
 import com.latmod.yabba.net.YabbaNetHandler;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -139,15 +143,15 @@ public class GuiSelectSkin extends GuiScreen
     {
         private final int index;
         private final IBarrelSkin skin;
-        private final ItemStack stack;
+        private final String spriteName;
 
-        private Skin(int i, IBarrelSkin s, ItemStack is)
+        private Skin(int i, IBarrelSkin s)
         {
             super(0, 0, 18, 18);
             index = i;
             skin = s;
-            stack = is == null ? new ItemStack(Blocks.STONE) : is;
             mouseOverText = s.getDisplayName();
+            spriteName = skin.getTextures().getTexture(EnumFacing.NORTH).toString();
         }
 
         @Override
@@ -163,19 +167,18 @@ public class GuiSelectSkin extends GuiScreen
             {
                 INSTANCE.mc.getTextureManager().bindTexture(TEXTURE);
                 INSTANCE.drawTexturedModalRect(posX, posY, 194, 0, width, height);
+                INSTANCE.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             }
 
-            INSTANCE.itemRender.zLevel = 200F;
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(posX + 1F, posY + 1F, 32F);
-            GlStateManager.enableLighting();
-            RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableRescaleNormal();
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            INSTANCE.itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
-            GlStateManager.popMatrix();
-            INSTANCE.itemRender.zLevel = 0F;
+            TextureAtlasSprite sprite = INSTANCE.mc.getTextureMapBlocks().getAtlasSprite(spriteName);
+            Tessellator tessellator = Tessellator.getInstance();
+            VertexBuffer buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            buffer.pos(posX + 1D, posY + 17D, 0D).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
+            buffer.pos(posX + 17D, posY + 17D, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
+            buffer.pos(posX + 17D, posY + 1D, 0D).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
+            buffer.pos(posX + 1D, posY + 1D, 0D).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
+            tessellator.draw();
         }
     }
 
@@ -187,9 +190,7 @@ public class GuiSelectSkin extends GuiScreen
 
         for(int i = 0; i < YabbaRegistry.ALL_SKINS.size(); i++)
         {
-            IBarrelSkin skin = YabbaRegistry.ALL_SKINS.get(i);
-            IBlockState state = skin.getState();
-            ALL_SKINS.add(new Skin(i, skin, new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))));
+            ALL_SKINS.add(new Skin(i, YabbaRegistry.ALL_SKINS.get(i)));
         }
     }
 
@@ -311,6 +312,8 @@ public class GuiSelectSkin extends GuiScreen
         GlStateManager.translate(guiX, guiY, 0F);
         int rmouseX = mouseX - guiX;
         int rmouseY = mouseY - guiY;
+
+        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         for(Button button : buttons)
         {
