@@ -125,7 +125,7 @@ public class GuiSelectSkin extends GuiScreen
             }
         }
 
-        skinsHeight = MathHelper.ceiling_float_int(matchingSkins.size() / 9F) * 19F - SKINS_PANEL.height;
+        skinsHeight = MathHelper.ceiling_float_int(matchingSkins.size() / 9F) * 19F - SKINS_PANEL.height + 1;
 
         if(!matchingSkins.isEmpty())
         {

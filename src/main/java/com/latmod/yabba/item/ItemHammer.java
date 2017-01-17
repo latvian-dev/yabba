@@ -6,6 +6,7 @@ import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -120,6 +121,6 @@ public class ItemHammer extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Model: " + getModel(stack, playerIn.worldObj.isRemote).getName());
+        tooltip.add("Model: " + I18n.format("yabba.model." + getModel(stack, playerIn.worldObj.isRemote).getName()));
     }
 }
