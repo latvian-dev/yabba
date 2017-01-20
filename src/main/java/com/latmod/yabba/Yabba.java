@@ -7,14 +7,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
 /**
  * Created by LatvianModder on 06.12.2016.
  */
-@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, dependencies = "after:forestry")
+@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, dependencies = "required-after:ftbl;after:forestry")
 public class Yabba
 {
     public static final String MOD_ID = "yabba";
@@ -37,12 +36,6 @@ public class Yabba
 
         YabbaNetHandler.init();
         PROXY.preInit();
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        PROXY.postInit();
     }
 
     @Mod.EventHandler

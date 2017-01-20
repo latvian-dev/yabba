@@ -141,10 +141,9 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    @Nullable
     public NBTTagCompound getUpgradeNBT()
     {
-        return (NBTTagCompound) getBarrelNBT().getTag("Upgrades");
+        return getBarrelNBT().getCompoundTag("Upgrades");
     }
 
     @Override

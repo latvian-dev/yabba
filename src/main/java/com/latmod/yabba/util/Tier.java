@@ -1,47 +1,26 @@
 package com.latmod.yabba.util;
 
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.latmod.yabba.api.ITier;
 
 /**
  * Created by LatvianModder on 17.12.2016.
  */
-public class Tier implements ITier
+public class Tier extends FinalIDObject implements ITier
 {
-    public static final Tier NONE = new Tier("none", 0);
+    public static final Tier WOOD = new Tier("wood", 64);
 
-    private final String name;
     private final int maxStacks;
 
     public Tier(String id, int max)
     {
-        name = id;
+        super(id);
         maxStacks = max;
-    }
-
-    @Override
-    public String getName()
-    {
-        return name;
     }
 
     @Override
     public int getMaxStacks()
     {
         return maxStacks;
-    }
-
-    public String toString()
-    {
-        return name;
-    }
-
-    public boolean equals(Object o)
-    {
-        return o == this || o != null && o.toString().equals(name);
-    }
-
-    public int hashCode()
-    {
-        return name.hashCode();
     }
 }

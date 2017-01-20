@@ -1,38 +1,16 @@
 package com.latmod.yabba.models;
 
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.latmod.yabba.api.IBarrelModel;
 
 /**
  * Created by LatvianModder on 21.12.2016.
  */
-public abstract class ModelBase implements IBarrelModel
+public abstract class ModelBase extends FinalIDObject implements IBarrelModel
 {
-    private final String name;
-
     public ModelBase(String id)
     {
-        name = id;
-    }
-
-    @Override
-    public String getName()
-    {
-        return name;
-    }
-
-    public String toString()
-    {
-        return name;
-    }
-
-    public int hashCode()
-    {
-        return name.hashCode();
-    }
-
-    public boolean equals(Object o)
-    {
-        return o == this || o != null && o.toString().equals(name);
+        super(id);
     }
 
     @Override

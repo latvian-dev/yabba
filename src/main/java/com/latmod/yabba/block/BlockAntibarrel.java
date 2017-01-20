@@ -20,7 +20,7 @@ public class BlockAntibarrel extends BlockBarrelBase
 {
     public BlockAntibarrel()
     {
-        super(Material.ROCK, MapColor.NETHERRACK);
+        super("antibarrel", Material.ROCK, MapColor.NETHERRACK);
         setHardness(4F);
         setResistance(1000F);
     }

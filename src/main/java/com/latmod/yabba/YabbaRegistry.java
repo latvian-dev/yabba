@@ -1,5 +1,6 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.lib.model.IconSet;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;
@@ -7,7 +8,6 @@ import com.latmod.yabba.api.IYabbaRegistry;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.BarrelSkin;
-import com.latmod.yabba.util.IconSet;
 import com.latmod.yabba.util.Tier;
 import gnu.trove.map.hash.TByteObjectHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -53,7 +53,7 @@ public enum YabbaRegistry implements IYabbaRegistry
 
     public void sendEvent()
     {
-        addTier(Tier.NONE);
+        addTier(Tier.WOOD);
         addModel(ModelBarrel.INSTANCE);
 
         MinecraftForge.EVENT_BUS.post(new YabbaRegistryEvent(this));
@@ -201,7 +201,7 @@ public enum YabbaRegistry implements IYabbaRegistry
     public ITier getTier(String id)
     {
         ITier tier = TIERS.get(id);
-        return tier == null ? Tier.NONE : tier;
+        return tier == null ? Tier.WOOD : tier;
     }
 
     public boolean hasSkin(String id)

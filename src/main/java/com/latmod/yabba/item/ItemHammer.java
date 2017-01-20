@@ -8,7 +8,6 @@ import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +28,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 21.12.2016.
  */
-public class ItemHammer extends Item
+public class ItemHammer extends ItemYabba
 {
     private static IBarrelModel getModel(ItemStack stack, boolean client)
     {
@@ -79,6 +78,7 @@ public class ItemHammer extends Item
 
     public ItemHammer()
     {
+        super("hammer");
         setMaxStackSize(1);
         setMaxDamage(0);
     }

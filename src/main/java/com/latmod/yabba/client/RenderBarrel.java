@@ -4,7 +4,6 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.net.MessageRequestBarrelUpdate;
-import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -36,23 +35,21 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         {
             return;
         }
-
-        if(te.requestClientUpdate)
+        else if(te.requestClientUpdate)
         {
-            YabbaNetHandler.NET.sendToServer(new MessageRequestBarrelUpdate(te));
+            new MessageRequestBarrelUpdate(te.getPos()).sendToServer();
             te.requestClientUpdate = false;
         }
 
         IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-
         ItemStack stack = barrel.getStackInSlot(0);
+        boolean hasStack = stack != null;
+        Minecraft mc = Minecraft.getMinecraft();
 
-        if(stack == null)
+        if(!hasStack && !mc.thePlayer.isSneaking())
         {
             return;
         }
-
-        Minecraft mc = Minecraft.getMinecraft();
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
@@ -73,24 +70,26 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0.5F, 0.075F, -0.005F);
+            if(hasStack)
+            {
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0.5F, 0.075F, -0.005F);
+                String s1 = te.getItemDisplayCount();
+                int sw = getFontRenderer().getStringWidth(s1);
+                float f = 1F / (float) Math.max((sw + 10), 64);
+                GlStateManager.scale(f, f, 1F);
+                getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
+                GlStateManager.popMatrix();
 
-            String s1 = te.getItemDisplayCount();
-            int sw = getFontRenderer().getStringWidth(s1);
-            float f = 1F / (float) Math.max((sw + 10), 64);
-            GlStateManager.scale(f, f, 1F);
-            getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
-            GlStateManager.popMatrix();
-
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0.5F, 0.80F, -0.005F);
-            s1 = te.getItemDisplayName();
-            sw = getFontRenderer().getStringWidth(s1);
-            f = 1F / (float) Math.max((sw + 10), 64);
-            GlStateManager.scale(f, f, 1F);
-            getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
-            GlStateManager.popMatrix();
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0.5F, 0.80F, -0.005F);
+                s1 = te.getItemDisplayName();
+                sw = getFontRenderer().getStringWidth(s1);
+                f = 1F / (float) Math.max((sw + 10), 64);
+                GlStateManager.scale(f, f, 1F);
+                getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
+                GlStateManager.popMatrix();
+            }
 
             if(mc.thePlayer.isSneaking() && mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND) == null)
             {
@@ -131,29 +130,32 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             }
         }
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0.5F, 0.5F, 0.04F);
-        GlStateManager.scale(0.4F, -0.4F, -0.015F);
+        if(hasStack)
+        {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0.5F, 0.5F, 0.04F);
+            GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
-        RenderItem itemRender = mc.getRenderItem();
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.enableAlpha();
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        IBakedModel bakedmodel = itemRender.getItemModelWithOverrides(stack, null, mc.thePlayer);
-        bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-        itemRender.renderItem(stack, bakedmodel);
-        GlStateManager.disableAlpha();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableLighting();
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+            RenderItem itemRender = mc.getRenderItem();
+            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.enableAlpha();
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            IBakedModel bakedmodel = itemRender.getItemModelWithOverrides(stack, null, mc.thePlayer);
+            bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
+            itemRender.renderItem(stack, bakedmodel);
+            GlStateManager.disableAlpha();
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableLighting();
+            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 
-        GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
+        }
 
         GlStateManager.enableLighting();
         GlStateManager.disableBlend();

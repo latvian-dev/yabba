@@ -1,7 +1,9 @@
 package com.latmod.yabba.util;
 
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.model.IconSet;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.api.IIconSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
@@ -9,24 +11,17 @@ import net.minecraft.util.text.translation.I18n;
 /**
  * Created by LatvianModder on 19.12.2016.
  */
-public class BarrelSkin implements IBarrelSkin
+public class BarrelSkin extends FinalIDObject implements IBarrelSkin
 {
-    private final String name;
     private final IBlockState state;
-    private final IIconSet iconSet;
+    private final IconSet iconSet;
     private String cachedName;
 
-    public BarrelSkin(IBlockState state, IIconSet is)
+    public BarrelSkin(IBlockState s, IconSet is)
     {
-        name = YabbaUtils.getName(state);
-        this.state = state;
+        super(LMUtils.getName(s));
+        state = s;
         iconSet = is;
-    }
-
-    @Override
-    public String getName()
-    {
-        return name;
     }
 
     @Override
@@ -36,7 +31,7 @@ public class BarrelSkin implements IBarrelSkin
     }
 
     @Override
-    public IIconSet getTextures()
+    public IconSet getTextures()
     {
         return iconSet;
     }
@@ -63,20 +58,5 @@ public class BarrelSkin implements IBarrelSkin
     public int compareTo(IBarrelSkin o)
     {
         return getName().compareTo(o.getName());
-    }
-
-    public String toString()
-    {
-        return name;
-    }
-
-    public boolean equals(Object o)
-    {
-        return o == this || o instanceof IBarrelSkin && state.equals(((IBarrelSkin) o).getState());
-    }
-
-    public int hashCode()
-    {
-        return name.hashCode();
     }
 }

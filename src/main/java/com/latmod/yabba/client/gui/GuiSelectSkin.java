@@ -4,8 +4,6 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.net.MessageSelectSkin;
-import com.latmod.yabba.net.YabbaNetHandler;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -24,17 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by LatvianModder on 05.01.2017.
  */
-public class GuiSelectSkin extends GuiScreen
+public class GuiSelectSkin extends GuiYabba
 {
     public static final GuiSelectSkin INSTANCE = new GuiSelectSkin();
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Yabba.MOD_ID, "textures/gui/skin.png");
-    private static final int WIDTH = 193;
-    private static final int HEIGHT = 155;
 
     private static class Button
     {
@@ -87,13 +81,17 @@ public class GuiSelectSkin extends GuiScreen
     }
 
     private final List<Skin> ALL_SKINS = new ArrayList<>();
-    private int guiX, guiY;
     private List<Skin> visibleSkins = new ArrayList<>();
     private String searchBar = "";
     private boolean searchSelected = false, updateVisibleSkins = true;
     private float scroll = 0F;
     private float skinsHeight;
     private boolean scrollGrabbed = false;
+
+    private GuiSelectSkin()
+    {
+        super(new ResourceLocation(Yabba.MOD_ID, "textures/gui/skin.png"), 193, 155);
+    }
 
     public void initSkins()
     {
@@ -114,11 +112,11 @@ public class GuiSelectSkin extends GuiScreen
 
         if(!searchBar.isEmpty())
         {
-            String searchBar1 = searchBar.toLowerCase(Locale.ENGLISH).replace(" ", "");
+            String searchBar1 = searchBar.toLowerCase().replace(" ", "");
 
             for(Skin skin : ALL_SKINS)
             {
-                if(skin.mouseOverText.toLowerCase(Locale.ENGLISH).replace(" ", "").contains(searchBar1))
+                if(skin.mouseOverText.toLowerCase().replace(" ", "").contains(searchBar1))
                 {
                     matchingSkins.add(skin);
                 }
@@ -137,14 +135,6 @@ public class GuiSelectSkin extends GuiScreen
                 visibleSkins.add(skin);
             }
         }
-    }
-
-    @Override
-    public void initGui()
-    {
-        guiX = (width - WIDTH) / 2;
-        guiY = (height - HEIGHT) / 2;
-        updateVisibleSkins();
     }
 
     @Override
@@ -189,11 +179,7 @@ public class GuiSelectSkin extends GuiScreen
             }
         }
 
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        mc.getTextureManager().bindTexture(TEXTURE);
-        drawTexturedModalRect(guiX, guiY, 0, 0, WIDTH, HEIGHT);
+        super.drawScreen(mouseX, mouseY, ticks);
 
         int rmouseX = mouseX - guiX;
         int rmouseY = mouseY - guiY;
@@ -231,32 +217,16 @@ public class GuiSelectSkin extends GuiScreen
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.pos(guiX + skin.posX + 1D, guiY + skin.posY + 17D, 0D).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
-            buffer.pos(guiX + skin.posX + 17D, guiY + skin.posY + 17D, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
-            buffer.pos(guiX + skin.posX + 17D, guiY + skin.posY + 1D, 0D).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-            buffer.pos(guiX + skin.posX + 1D, guiY + skin.posY + 1D, 0D).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
+            double x = guiX + skin.posX + 1D;
+            double y = guiY + skin.posY + 1D;
+            buffer.pos(x, y + 16D, 0D).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
+            buffer.pos(x + 16D, y + 16D, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
+            buffer.pos(x + 16D, y, 0D).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
+            buffer.pos(x, y, 0D).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
             tessellator.draw();
         }
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-        /*
-        int models = Math.min(7, YabbaRegistry.ALL_MODELS.size());
-
-        for(int i = 0; i < models; i++)
-        {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(22 + i * 19, 136, 32F);
-            GlStateManager.enableLighting();
-            RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableRescaleNormal();
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            itemRender.renderItemAndEffectIntoGUI(YabbaClient.STACKS_FOR_GUI[i][selectedSkin.index], 0, 0);
-            GlStateManager.popMatrix();
-        }
-        */
-
         String searchBarText = searchBar;
 
         if(searchSelected && (System.currentTimeMillis() % 800L >= 400L))
@@ -306,7 +276,7 @@ public class GuiSelectSkin extends GuiScreen
             {
                 if(skin.isMouseOver(rmouseX, rmouseY))
                 {
-                    YabbaNetHandler.NET.sendToServer(new MessageSelectSkin(YabbaRegistry.INSTANCE.getSkinId(skin.skin.getName())));
+                    new MessageSelectSkin(skin.skin.getName()).sendToServer();
                     INSTANCE.mc.thePlayer.closeScreen();
                     return;
                 }
@@ -357,15 +327,9 @@ public class GuiSelectSkin extends GuiScreen
                     break;
             }
         }
-        else if(keyCode == Keyboard.KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode))
+        else
         {
-            mc.thePlayer.closeScreen();
+            super.keyTyped(typedChar, keyCode);
         }
-    }
-
-    @Override
-    public boolean doesGuiPauseGame()
-    {
-        return false;
     }
 }

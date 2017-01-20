@@ -1,5 +1,8 @@
 package com.latmod.yabba.net;
 
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.MessageToClient;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
@@ -9,23 +12,21 @@ import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.block.BlockBarrel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by LatvianModder on 15.12.2016.
  */
-public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<MessageUpdateBarrelFull, IMessage>
+public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrelFull>
 {
     private byte model;
-    private int posX, posY, posZ, itemCount, flags, skin;
+    private BlockPos pos;
+    private int itemCount, flags, skin;
     private ItemStack storedItem;
     private NBTTagCompound upgrades;
 
@@ -33,13 +34,9 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     {
     }
 
-    public MessageUpdateBarrelFull(TileEntity tile)
+    public MessageUpdateBarrelFull(BlockPos p, IBarrel barrel)
     {
-        posX = tile.getPos().getX();
-        posY = tile.getPos().getY();
-        posZ = tile.getPos().getZ();
-
-        IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+        pos = p;
         storedItem = barrel.getStackInSlot(0);
         itemCount = barrel.getItemCount();
         flags = barrel.getFlags();
@@ -49,11 +46,15 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     }
 
     @Override
+    public LMNetworkWrapper getWrapper()
+    {
+        return YabbaNetHandler.NET;
+    }
+
+    @Override
     public void fromBytes(ByteBuf buf)
     {
-        posX = buf.readInt();
-        posY = buf.readInt();
-        posZ = buf.readInt();
+        pos = LMNetUtils.readPos(buf);
         storedItem = ByteBufUtils.readItemStack(buf);
         itemCount = buf.readInt();
         flags = buf.readInt();
@@ -65,9 +66,7 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(posX);
-        buf.writeInt(posY);
-        buf.writeInt(posZ);
+        LMNetUtils.writePos(buf, pos);
         ByteBufUtils.writeItemStack(buf, storedItem);
         buf.writeInt(itemCount);
         buf.writeInt(flags);
@@ -77,9 +76,9 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
     }
 
     @Override
-    public IMessage onMessage(MessageUpdateBarrelFull message, MessageContext ctx)
+    public void onMessage(MessageUpdateBarrelFull message, EntityPlayer player)
     {
-        TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
+        TileEntity tile = player.worldObj.getTileEntity(message.pos);
 
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
@@ -105,7 +104,5 @@ public class MessageUpdateBarrelFull implements IMessage, IMessageHandler<Messag
                 tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 8);
             }
         }
-
-        return null;
     }
 }

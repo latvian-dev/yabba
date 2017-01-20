@@ -1,10 +1,10 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.common.base.Function;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.util.YabbaUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -32,7 +32,7 @@ public class BarrelModel implements IModel
 
     public BarrelModel(String v)
     {
-        Map<String, String> map = YabbaUtils.parse(YabbaUtils.TEMP_MAP, v);
+        Map<String, String> map = LMStringUtils.parse(LMStringUtils.TEMP_MAP, v);
         skin = YabbaRegistry.INSTANCE.getSkin(map.get("skin"));
         model = YabbaRegistry.INSTANCE.getModel(map.get("model"));
 

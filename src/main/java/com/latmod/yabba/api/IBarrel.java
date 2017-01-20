@@ -1,6 +1,5 @@
 package com.latmod.yabba.api;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.items.IItemHandler;
@@ -33,11 +32,7 @@ public interface IBarrel extends IItemHandler
 
     IBarrelSkin getSkin();
 
-    @Nullable
     NBTTagCompound getUpgradeNBT();
-
-    @Nullable
-    NBTBase getUpgradeData(String upgrade);
 
     @Nullable
     NBTTagList getUpgradeNames();

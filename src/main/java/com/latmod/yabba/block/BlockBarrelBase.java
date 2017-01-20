@@ -1,6 +1,5 @@
 package com.latmod.yabba.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -20,11 +19,11 @@ import java.util.Random;
 /**
  * Created by LatvianModder on 18.12.2016.
  */
-public abstract class BlockBarrelBase extends Block
+public abstract class BlockBarrelBase extends BlockYabba
 {
-    public BlockBarrelBase(Material blockMaterialIn, MapColor blockMapColorIn)
+    public BlockBarrelBase(String id, Material blockMaterialIn, MapColor blockMapColorIn)
     {
-        super(blockMaterialIn, blockMapColorIn);
+        super(id, blockMaterialIn, blockMapColorIn);
     }
 
     public abstract void dropItem(ItemStack itemStack, @Nullable TileEntity tile);

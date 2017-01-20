@@ -7,7 +7,6 @@ import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
@@ -28,7 +27,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 21.12.2016.
  */
-public class ItemPainter extends Item
+public class ItemPainter extends ItemYabba
 {
     private static IBarrelSkin getSkin(ItemStack stack, boolean client)
     {
@@ -78,6 +77,7 @@ public class ItemPainter extends Item
 
     public ItemPainter()
     {
+        super("painter");
         setMaxStackSize(1);
         setMaxDamage(0);
     }

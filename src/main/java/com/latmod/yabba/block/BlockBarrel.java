@@ -7,10 +7,12 @@ import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.PropertyBarrelModel;
 import com.latmod.yabba.util.PropertyBarrelSkin;
+import com.latmod.yabba.util.Tier;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -22,6 +24,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -54,12 +57,18 @@ public class BlockBarrel extends BlockBarrelBase
 
     public BlockBarrel()
     {
-        super(Material.WOOD, MapColor.WOOD);
+        super("barrel", Material.WOOD, MapColor.WOOD);
         setDefaultState(blockState.getBaseState()
                 .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN)
                 .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH)
                 .withProperty(MODEL, ModelBarrel.INSTANCE));
         setHardness(2F);
+    }
+
+    @Override
+    public ItemBlock createItemBlock()
+    {
+        return new ItemBlockBarrel(this);
     }
 
     @Override
@@ -115,7 +124,7 @@ public class BlockBarrel extends BlockBarrelBase
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        list.add(createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, YabbaCommon.TIER_WOOD));
+        list.add(createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD));
     }
 
     @Override
@@ -179,7 +188,7 @@ public class BlockBarrel extends BlockBarrelBase
         {
             TileEntity tile = world.getTileEntity(pos);
 
-            if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getUpgradeData("ObsidianShell") != null)
+            if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
             {
                 return 100000000F;
             }
@@ -228,5 +237,33 @@ public class BlockBarrel extends BlockBarrelBase
         }
 
         return false;
+    }
+
+    @Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+    {
+        if(side == null)
+        {
+            return false;
+        }
+
+        TileEntity tile = world.getTileEntity(pos);
+        return tile instanceof TileBarrel && ((TileBarrel) tile).canConnectRedstone(side);
+    }
+
+    @Override
+    @Deprecated
+    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    {
+        TileEntity tile = blockAccess.getTileEntity(pos);
+        return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
+    }
+
+    @Override
+    @Deprecated
+    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    {
+        TileEntity tile = blockAccess.getTileEntity(pos);
+        return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
     }
 }

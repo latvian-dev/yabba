@@ -208,14 +208,6 @@ public abstract class Barrel implements IBarrelModifiable
     }
 
     @Override
-    @Nullable
-    public NBTBase getUpgradeData(String upgrade)
-    {
-        NBTTagCompound nbt = getUpgradeNBT();
-        return nbt == null ? null : nbt.getTag(upgrade);
-    }
-
-    @Override
     public void setUpgradeData(String upgrade, @Nullable NBTBase v)
     {
         NBTTagCompound nbt = getUpgradeNBT();

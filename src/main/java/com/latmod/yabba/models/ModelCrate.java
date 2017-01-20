@@ -1,10 +1,10 @@
 package com.latmod.yabba.models;
 
+import com.feed_the_beast.ftbl.lib.model.ModelBuilder;
+import com.feed_the_beast.ftbl.lib.model.SpriteSet;
 import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.util.ModelBuilder;
-import com.latmod.yabba.util.SpriteSet;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;

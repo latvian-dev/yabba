@@ -1,14 +1,18 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
+import com.feed_the_beast.ftbl.lib.config.PropertyInt;
+import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
+import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.models.ModelSolid;
 import com.latmod.yabba.models.ModelSolidBorders;
 import com.latmod.yabba.net.MessageSyncData;
-import com.latmod.yabba.net.YabbaNetHandler;
+import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockNewLog;
@@ -22,16 +26,19 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Locale;
 
 /**
  * Created by LatvianModder on 14.12.2016.
@@ -68,7 +75,7 @@ public class YabbaEventHandler
         {
             if(type != BlockStone.EnumType.STONE)
             {
-                reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, type), "all=blocks/stone_" + type.name().toLowerCase(Locale.ENGLISH));
+                reg.addSkin(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, type), "all=blocks/stone_" + type.name().toLowerCase());
             }
         }
 
@@ -109,8 +116,6 @@ public class YabbaEventHandler
             reg.addSkin(Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/wool_colored_" + dye.getName());
         }
 
-        reg.addTier(YabbaCommon.TIER_DIRT);
-        reg.addTier(YabbaCommon.TIER_WOOD);
         reg.addTier(YabbaCommon.TIER_IRON);
         reg.addTier(YabbaCommon.TIER_GOLD);
         reg.addTier(YabbaCommon.TIER_DMD);
@@ -118,6 +123,48 @@ public class YabbaEventHandler
         reg.addModel(ModelCrate.INSTANCE);
         reg.addModel(ModelSolid.INSTANCE);
         reg.addModel(ModelSolidBorders.INSTANCE);
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void createConfigEvent(YabbaCreateConfigEvent event)
+    {
+        IBarrelModifiable barrel = event.getBarrel();
+        System.out.println("Barrel TX: " + barrel);
+
+        if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+        {
+            event.getConfig().add(new SimpleConfigKey("redstone.mode"), new PropertyEnum<EnumRedstoneCompMode>(EnumRedstoneCompMode.NAME_MAP, EnumRedstoneCompMode.EQUAL)
+            {
+                @Nullable
+                @Override
+                public EnumRedstoneCompMode get()
+                {
+                    return EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode"));
+                }
+
+                @Override
+                public void set(@Nullable EnumRedstoneCompMode e)
+                {
+                    barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) e.ordinal()));
+                }
+            });
+
+            event.getConfig().add(new SimpleConfigKey("redstone.item_count"), new PropertyInt(0, 0, Integer.MAX_VALUE)
+            {
+                @Override
+                public int getInt()
+                {
+                    return barrel.getUpgradeNBT().getInteger("RedstoneItemCount");
+                }
+
+                @Override
+                public void setInt(int v)
+                {
+                    barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(v));
+                }
+            });
+        }
     }
 
     @SubscribeEvent
@@ -143,7 +190,7 @@ public class YabbaEventHandler
     {
         if(event.player instanceof EntityPlayerMP)
         {
-            YabbaNetHandler.NET.sendTo(new MessageSyncData(), (EntityPlayerMP) event.player);
+            new MessageSyncData().sendTo(event.player);
         }
     }
 

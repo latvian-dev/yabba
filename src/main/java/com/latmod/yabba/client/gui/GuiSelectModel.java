@@ -4,8 +4,6 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectModel;
-import com.latmod.yabba.net.YabbaNetHandler;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -18,33 +16,21 @@ import java.util.Collections;
 /**
  * Created by LatvianModder on 05.01.2017.
  */
-public class GuiSelectModel extends GuiScreen
+public class GuiSelectModel extends GuiYabba
 {
     public static final GuiSelectModel INSTANCE = new GuiSelectModel();
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Yabba.MOD_ID, "textures/gui/model.png");
-    private static final int WIDTH = 178;
-    private static final int HEIGHT = 143;
 
-    private int guiX, guiY;
-
-    @Override
-    public void initGui()
+    private GuiSelectModel()
     {
-        guiX = (width - WIDTH) / 2;
-        guiY = (height - HEIGHT) / 2;
+        super(new ResourceLocation(Yabba.MOD_ID, "textures/gui/model.png"), 178, 143);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float ticks)
     {
+        super.drawScreen(mouseX, mouseY, ticks);
+
         int skin = (int) ((System.currentTimeMillis() / 1000L) % YabbaRegistry.ALL_SKINS.size());
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        mc.getTextureManager().bindTexture(TEXTURE);
-        drawTexturedModalRect(guiX, guiY, 0, 0, WIDTH, HEIGHT);
-
         itemRender.zLevel = 200F;
 
         for(int i = 0; i < YabbaRegistry.ALL_MODELS.size(); i++)
@@ -90,24 +76,9 @@ public class GuiSelectModel extends GuiScreen
 
             if(buttonOver < YabbaRegistry.ALL_MODELS.size())
             {
-                YabbaNetHandler.NET.sendToServer(new MessageSelectModel(YabbaRegistry.INSTANCE.getModelId(YabbaRegistry.ALL_MODELS.get(buttonOver).getName())));
+                new MessageSelectModel(YabbaRegistry.ALL_MODELS.get(buttonOver).getName()).sendToServer();
                 mc.thePlayer.closeScreen();
             }
         }
-    }
-
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
-    {
-        if(keyCode == 1 || mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode))
-        {
-            mc.thePlayer.closeScreen();
-        }
-    }
-
-    @Override
-    public boolean doesGuiPauseGame()
-    {
-        return false;
     }
 }

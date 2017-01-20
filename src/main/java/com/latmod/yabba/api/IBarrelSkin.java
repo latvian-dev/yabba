@@ -1,5 +1,6 @@
 package com.latmod.yabba.api;
 
+import com.feed_the_beast.ftbl.lib.model.IconSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
 
@@ -10,7 +11,7 @@ public interface IBarrelSkin extends IStringSerializable, Comparable<IBarrelSkin
 {
     IBlockState getState();
 
-    IIconSet getTextures();
+    IconSet getTextures();
 
     String getDisplayName();
 }

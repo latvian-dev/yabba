@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 13.12.2016.
  */
-public class ItemUpgrade extends Item
+public class ItemUpgrade extends ItemYabba
 {
     private static class UpgradeCapProvider implements ICapabilityProvider
     {
@@ -46,6 +46,7 @@ public class ItemUpgrade extends Item
 
     public ItemUpgrade()
     {
+        super("upgrade");
         setHasSubtypes(true);
         setMaxDamage(0);
     }

@@ -10,6 +10,7 @@ import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
 import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.EnumUpgrade;
+import com.latmod.yabba.util.Tier;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -56,7 +57,7 @@ public class YabbaClient extends YabbaCommon
 
         for(EnumUpgrade type : EnumUpgrade.VALUES)
         {
-            registerModel(YabbaItems.UPGRADE, type.metadata, "upgrade/" + type.name, "inventory");
+            registerModel(YabbaItems.UPGRADE, type.metadata, "upgrade/" + type.getName(), "inventory");
         }
 
         registerModel(YabbaItems.PAINTER, 0, "painter", "inventory");
@@ -70,7 +71,7 @@ public class YabbaClient extends YabbaCommon
         {
             for(int s = 0; s < YabbaRegistry.ALL_SKINS.size(); s++)
             {
-                STACKS_FOR_GUI[m][s] = YabbaItems.BARREL.createStack(YabbaRegistry.ALL_MODELS.get(m), YabbaRegistry.ALL_SKINS.get(s), TIER_DIRT);
+                STACKS_FOR_GUI[m][s] = YabbaItems.BARREL.createStack(YabbaRegistry.ALL_MODELS.get(m), YabbaRegistry.ALL_SKINS.get(s), Tier.WOOD);
             }
         }
 

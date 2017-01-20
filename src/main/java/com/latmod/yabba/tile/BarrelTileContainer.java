@@ -71,21 +71,6 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         model = YabbaRegistry.INSTANCE.getModel(nbt.getByte("Model"), false);
         skin = YabbaRegistry.INSTANCE.getSkin(nbt.getInteger("Skin"), false);
         upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
-
-        if(getUpgradeData("Locked") != null)
-        {
-            setFlag(FLAG_LOCKED, true);
-        }
-
-        if(tierID.equals("creative"))
-        {
-            setFlag(FLAG_INFINITE_CAPACITY, true);
-            setFlag(FLAG_IS_CREATIVE, true);
-        }
-        else if(tierID.equals("inf"))
-        {
-            setFlag(FLAG_INFINITE_CAPACITY, true);
-        }
     }
 
     @Override
@@ -103,7 +88,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     @Override
     public ITier getTier()
     {
-        return tier == null ? Tier.NONE : tier;
+        return tier == null ? Tier.WOOD : tier;
     }
 
     @Override
@@ -121,6 +106,11 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     @Override
     public NBTTagCompound getUpgradeNBT()
     {
+        if(upgrades == null)
+        {
+            upgrades = new NBTTagCompound();
+        }
+
         return upgrades;
     }
 

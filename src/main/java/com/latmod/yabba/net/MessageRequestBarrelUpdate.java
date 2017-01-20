@@ -1,57 +1,57 @@
 package com.latmod.yabba.net;
 
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by LatvianModder on 15.12.2016.
  */
-public class MessageRequestBarrelUpdate implements IMessage, IMessageHandler<MessageRequestBarrelUpdate, IMessage>
+public class MessageRequestBarrelUpdate extends MessageToServer<MessageRequestBarrelUpdate>
 {
-    private int posX, posY, posZ;
+    private BlockPos pos;
 
     public MessageRequestBarrelUpdate()
     {
     }
 
-    public MessageRequestBarrelUpdate(TileBarrel tile)
+    public MessageRequestBarrelUpdate(BlockPos p)
     {
-        posX = tile.getPos().getX();
-        posY = tile.getPos().getY();
-        posZ = tile.getPos().getZ();
+        pos = p;
+    }
+
+    @Override
+    public LMNetworkWrapper getWrapper()
+    {
+        return YabbaNetHandler.NET;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        posX = buf.readInt();
-        posY = buf.readInt();
-        posZ = buf.readInt();
+        pos = LMNetUtils.readPos(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(posX);
-        buf.writeInt(posY);
-        buf.writeInt(posZ);
+        LMNetUtils.writePos(buf, pos);
     }
 
     @Override
-    public IMessage onMessage(MessageRequestBarrelUpdate message, MessageContext ctx)
+    public void onMessage(MessageRequestBarrelUpdate message, EntityPlayer player)
     {
-        TileEntity tile = ctx.getServerHandler().playerEntity.worldObj.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
+        TileEntity tile = player.worldObj.getTileEntity(message.pos);
 
         if(tile instanceof TileBarrel)
         {
-            return new MessageUpdateBarrelFull((TileBarrel) tile);
+            new MessageUpdateBarrelFull(tile.getPos(), tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).sendTo(player);
         }
-
-        return null;
     }
 }

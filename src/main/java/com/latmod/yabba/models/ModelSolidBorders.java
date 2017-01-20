@@ -1,12 +1,11 @@
 package com.latmod.yabba.models;
 
+import com.feed_the_beast.ftbl.lib.model.IconSet;
+import com.feed_the_beast.ftbl.lib.model.ModelBuilder;
+import com.feed_the_beast.ftbl.lib.model.SpriteSet;
 import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.api.IIconSet;
-import com.latmod.yabba.util.IconSet;
-import com.latmod.yabba.util.ModelBuilder;
-import com.latmod.yabba.util.SpriteSet;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +22,7 @@ import java.util.List;
 public class ModelSolidBorders extends ModelBase
 {
     public static final ModelSolidBorders INSTANCE = new ModelSolidBorders();
-    private static final IIconSet TEXTURES_EDGES = new IconSet("north=yabba:blocks/barrel_solid_borders_window,all=yabba:blocks/barrel_solid_borders");
+    private static final IconSet TEXTURES_EDGES = new IconSet("north=yabba:blocks/barrel_solid_borders_window,all=yabba:blocks/barrel_solid_borders");
 
     public ModelSolidBorders()
     {

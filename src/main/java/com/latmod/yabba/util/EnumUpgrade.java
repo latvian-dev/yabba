@@ -6,39 +6,43 @@ import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
-
-import java.util.Locale;
 
 /**
  * Created by LatvianModder on 15.12.2016.
  */
-public enum EnumUpgrade implements IUpgrade
+public enum EnumUpgrade implements IUpgrade, IStringSerializable
 {
-    BLANK(0),
-    IRON_UPGRADE(1),
-    GOLD_UPGRADE(2),
-    DIAMOND_UPGRADE(3),
-    NETHER_STAR_UPGRADE(4),
-    CREATIVE(9),
-    //10
-    OBSIDIAN_SHELL(11),
-    REDSTONE_OUT(12),
-    HOPPER(13),
-    //14
-    VOID(15);
+    BLANK(0, "blank"),
+    IRON_UPGRADE(1, "iron_upgrade"),
+    GOLD_UPGRADE(2, "gold_upgrade"),
+    DIAMOND_UPGRADE(3, "diamond_upgrade"),
+    NETHER_STAR_UPGRADE(4, "nether_star_upgrade"),
+    CREATIVE(9, "creative"),
+    OBSIDIAN_SHELL(11, "obsidian_shell"),
+    REDSTONE_OUT(12, "redstone_out"),
+    HOPPER(13, "hopper"),
+    VOID(15, "void");
 
     public static final EnumUpgrade[] VALUES = values();
 
-    public final String name;
+    private final String name;
     public final String uname;
     public final int metadata;
 
-    EnumUpgrade(int meta)
+    EnumUpgrade(int meta, String n)
     {
-        name = name().toLowerCase(Locale.ENGLISH);
+        name = n;
         uname = "item.yabba.upgrade." + name;
         metadata = meta;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 
     public ItemStack item()
@@ -64,21 +68,9 @@ public enum EnumUpgrade implements IUpgrade
     {
         switch(this)
         {
-            case BLANK:
-            {
-                if(barrel.getTier().equals(Tier.NONE))
-                {
-                    if(!simulate)
-                    {
-                        barrel.setTier(YabbaCommon.TIER_WOOD);
-                    }
-                    return true;
-                }
-                break;
-            }
             case IRON_UPGRADE:
             {
-                if(barrel.getTier().equals(YabbaCommon.TIER_WOOD))
+                if(barrel.getTier().equals(Tier.WOOD))
                 {
                     if(!simulate)
                     {
@@ -154,7 +146,6 @@ public enum EnumUpgrade implements IUpgrade
                 }
                 break;
             }
-            /*
             case REDSTONE_OUT:
             {
                 if(!barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
@@ -169,6 +160,7 @@ public enum EnumUpgrade implements IUpgrade
                 }
                 break;
             }
+            /*
             case HOPPER:
             {
                 if(!barrel.getFlag(IBarrel.FLAG_HOPPER))

@@ -1,59 +1,57 @@
 package com.latmod.yabba.net;
 
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.MessageToClient;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by LatvianModder on 15.12.2016.
  */
-public class MessageUpdateBarrelItemCount implements IMessage, IMessageHandler<MessageUpdateBarrelItemCount, IMessage>
+public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateBarrelItemCount>
 {
-    private int posX, posY, posZ, itemCount;
+    private BlockPos pos;
+    private int itemCount;
 
     public MessageUpdateBarrelItemCount()
     {
     }
 
-    public MessageUpdateBarrelItemCount(TileEntity tile)
+    public MessageUpdateBarrelItemCount(BlockPos p, int c)
     {
-        posX = tile.getPos().getX();
-        posY = tile.getPos().getY();
-        posZ = tile.getPos().getZ();
+        pos = p;
+        itemCount = c;
+    }
 
-        IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-        itemCount = barrel.getItemCount();
+    @Override
+    public LMNetworkWrapper getWrapper()
+    {
+        return YabbaNetHandler.NET;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        posX = buf.readInt();
-        posY = buf.readInt();
-        posZ = buf.readInt();
+        pos = LMNetUtils.readPos(buf);
         itemCount = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(posX);
-        buf.writeInt(posY);
-        buf.writeInt(posZ);
+        LMNetUtils.writePos(buf, pos);
         buf.writeInt(itemCount);
     }
 
     @Override
-    public IMessage onMessage(MessageUpdateBarrelItemCount message, MessageContext ctx)
+    public void onMessage(MessageUpdateBarrelItemCount message, EntityPlayer player)
     {
-        TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.posX, message.posY, message.posZ));
+        TileEntity tile = player.worldObj.getTileEntity(message.pos);
 
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
@@ -61,7 +59,5 @@ public class MessageUpdateBarrelItemCount implements IMessage, IMessageHandler<M
             barrel.setItemCount(message.itemCount);
             barrel.clearCachedData();
         }
-
-        return null;
     }
 }

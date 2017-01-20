@@ -1,14 +1,20 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
-import com.latmod.yabba.net.YabbaNetHandler;
+import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -17,8 +23,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
@@ -90,7 +96,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             if(sendUpdate > 1)
             {
                 worldObj.markChunkDirty(pos, this);
-
+                
                 /*
                 if(getBlockType() != Blocks.AIR)
                 {
@@ -101,8 +107,12 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
             if(!worldObj.isRemote)
             {
-                NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 300);
-                YabbaNetHandler.NET.sendToAllAround(sendUpdate > 1 ? new MessageUpdateBarrelFull(this) : new MessageUpdateBarrelItemCount(this), targetPoint);
+                (sendUpdate > 1 ? new MessageUpdateBarrelFull(pos, barrel) : new MessageUpdateBarrelItemCount(pos, barrel.getItemCount())).sendToAllAround(worldObj.provider.getDimension(), pos, 300D);
+            }
+
+            if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+            {
+                worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
             }
 
             sendUpdate = 0;
@@ -237,7 +247,9 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(x < BUTTON_SIZE)
                 {
-                    playerIn.addChatMessage(new TextComponentString("Not implemented yet!"));
+                    IConfigTree tree = new ConfigTree();
+                    MinecraftForge.EVENT_BUS.post(new YabbaCreateConfigEvent(this, barrel, tree));
+                    FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentString("Barrel Settings"), tree));
                 }
                 else if(x > 1D - BUTTON_SIZE && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
                 {
@@ -350,5 +362,23 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     public int getMaxStoredCount()
     {
         return barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
+    }
+
+    public boolean canConnectRedstone(EnumFacing facing)
+    {
+        return barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT);
+    }
+
+    public int redstoneOutput(EnumFacing facing)
+    {
+        if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+        {
+            int stored = barrel.getItemCount();
+            int count = barrel.getUpgradeNBT().getInteger("RedstoneItemCount");
+            return EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode")).matchesCount(stored, count) ? 15 : 0;
+        }
+
+        ////return !((Boolean)blockState.getValue(POWERED)).booleanValue() ? 0 : (blockState.getValue(FACING) == side ? 15 : 0);
+        return 0;
     }
 }
