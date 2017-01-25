@@ -8,19 +8,23 @@ import com.latmod.yabba.api.ITier;
  */
 public class Tier extends FinalIDObject implements ITier
 {
-    public static final Tier WOOD = new Tier("wood", 64);
+    public static final Tier WOOD = new Tier("wood");
 
-    private final int maxStacks;
+    private int maxStacks;
 
-    public Tier(String id, int max)
+    public Tier(String id)
     {
         super(id);
-        maxStacks = max;
     }
 
     @Override
     public int getMaxStacks()
     {
         return maxStacks;
+    }
+
+    public void setMaxStacks(int m)
+    {
+        maxStacks = m;
     }
 }

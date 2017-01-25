@@ -1,7 +1,7 @@
 package com.latmod.yabba.models;
 
-import com.feed_the_beast.ftbl.lib.model.ModelBuilder;
-import com.feed_the_beast.ftbl.lib.model.SpriteSet;
+import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
+import com.feed_the_beast.ftbl.lib.client.SpriteSet;
 import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;

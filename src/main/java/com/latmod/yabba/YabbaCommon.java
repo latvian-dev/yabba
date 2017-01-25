@@ -27,9 +27,9 @@ public class YabbaCommon
     @CapabilityInject(IUpgrade.class)
     public static Capability<IUpgrade> UPGRADE_CAPABILITY;
 
-    public static final Tier TIER_IRON = new Tier("iron", Tier.WOOD.getMaxStacks() * 4);
-    public static final Tier TIER_GOLD = new Tier("gold", TIER_IRON.getMaxStacks() * 4);
-    public static final Tier TIER_DMD = new Tier("dmd", TIER_GOLD.getMaxStacks() * 4);
+    public static final Tier TIER_IRON = new Tier("iron");
+    public static final Tier TIER_GOLD = new Tier("gold");
+    public static final Tier TIER_DMD = new Tier("dmd");
 
     public static final YabbaCreativeTab TAB = new YabbaCreativeTab();
 
@@ -50,6 +50,11 @@ public class YabbaCommon
 
         CraftingManager.getInstance().addRecipe(new RecipeBarrelUpgrade());
         RecipeSorter.register(Yabba.MOD_ID + ":barrel_upgrade", RecipeBarrelUpgrade.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        Tier.WOOD.setMaxStacks(YabbaConfig.BASE_MAX_STACKS);
+        TIER_IRON.setMaxStacks(Tier.WOOD.getMaxStacks() * YabbaConfig.MULTIPLIER);
+        TIER_GOLD.setMaxStacks(TIER_IRON.getMaxStacks() * YabbaConfig.MULTIPLIER);
+        TIER_DMD.setMaxStacks(TIER_GOLD.getMaxStacks() * YabbaConfig.MULTIPLIER);
     }
 
     public void openModelGui()

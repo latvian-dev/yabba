@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nullable;
@@ -116,6 +117,28 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             }
 
             sendUpdate = 0;
+        }
+
+        if(!worldObj.isRemote && barrel.getFlag(IBarrel.FLAG_HOPPER) && (worldObj.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
+        {
+            boolean ender = barrel.getFlag(IBarrel.FLAG_HOPPER_ENDER);
+            int maxItems = ender ? 64 : 8;
+
+            if(barrel.getItemCount() > 0)
+            {
+                ItemStack extracted = barrel.extractItem(0, maxItems, true);
+
+                if(extracted != null && extracted.stackSize > 0)
+                {
+                    TileEntity tileDown = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
+
+                    if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
+                    {
+                        ItemStack inserted = ItemHandlerHelper.insertItem(tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), extracted, false);
+                        barrel.extractItem(0, inserted == null ? maxItems : inserted.stackSize, false);
+                    }
+                }
+            }
         }
     }
 

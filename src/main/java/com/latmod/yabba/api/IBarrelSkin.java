@@ -1,6 +1,6 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftbl.lib.model.IconSet;
+import com.feed_the_beast.ftbl.lib.IconSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
 

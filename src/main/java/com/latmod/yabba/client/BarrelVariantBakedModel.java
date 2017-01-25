@@ -1,6 +1,6 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.model.ModelBuilder;
+import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;

@@ -53,7 +53,7 @@ public abstract class BlockBarrelBase extends BlockYabba
     @Override
     public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
     {
-        return true;
+        return side != EnumFacing.DOWN;
     }
 
     @Override

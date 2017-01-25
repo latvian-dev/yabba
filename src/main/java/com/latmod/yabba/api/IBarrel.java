@@ -19,6 +19,7 @@ public interface IBarrel extends IItemHandler
     int FLAG_OBSIDIAN_SHELL = 32;
     int FLAG_REDSTONE_OUT = 64;
     int FLAG_HOPPER = 128;
+    int FLAG_HOPPER_ENDER = 256;
 
     ITier getTier();
 

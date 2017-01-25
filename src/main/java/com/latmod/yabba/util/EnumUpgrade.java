@@ -7,6 +7,7 @@ import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 
@@ -154,13 +155,13 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
                     {
                         barrel.setFlag(IBarrel.FLAG_REDSTONE_OUT, true);
                         barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) 0));
+                        barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(0));
                         barrel.addUpgradeName(REDSTONE_OUT.uname);
                     }
                     return true;
                 }
                 break;
             }
-            /*
             case HOPPER:
             {
                 if(!barrel.getFlag(IBarrel.FLAG_HOPPER))
@@ -168,13 +169,15 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
                     if(!simulate)
                     {
                         barrel.setFlag(IBarrel.FLAG_HOPPER, true);
+                        barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) 1));
+                        barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) 1));
+                        barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) 1));
                         barrel.addUpgradeName(HOPPER.uname);
                     }
                     return true;
                 }
                 break;
             }
-            */
             case VOID:
             {
                 if(!barrel.getFlag(IBarrel.FLAG_VOID_ITEMS))

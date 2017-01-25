@@ -1,6 +1,6 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftbl.lib.model.IconSet;
+import com.feed_the_beast.ftbl.lib.IconSet;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;

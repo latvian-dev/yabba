@@ -1,5 +1,6 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
@@ -162,6 +163,54 @@ public class YabbaEventHandler
                 public void setInt(int v)
                 {
                     barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(v));
+                }
+            });
+        }
+
+        if(barrel.getFlag(IBarrel.FLAG_HOPPER))
+        {
+            event.getConfig().add(new SimpleConfigKey("hopper.up"), new PropertyBool(true)
+            {
+                @Override
+                public boolean getBoolean()
+                {
+                    return barrel.getUpgradeNBT().getBoolean("HopperUp");
+                }
+
+                @Override
+                public void setBoolean(boolean v)
+                {
+                    barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)));
+                }
+            });
+
+            event.getConfig().add(new SimpleConfigKey("hopper.down"), new PropertyBool(true)
+            {
+                @Override
+                public boolean getBoolean()
+                {
+                    return barrel.getUpgradeNBT().getBoolean("HopperDown");
+                }
+
+                @Override
+                public void setBoolean(boolean v)
+                {
+                    barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)));
+                }
+            });
+
+            event.getConfig().add(new SimpleConfigKey("hopper.collect"), new PropertyBool(true)
+            {
+                @Override
+                public boolean getBoolean()
+                {
+                    return barrel.getUpgradeNBT().getBoolean("HopperCollect");
+                }
+
+                @Override
+                public void setBoolean(boolean v)
+                {
+                    barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)));
                 }
             });
         }

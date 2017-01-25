@@ -1,7 +1,7 @@
 package com.latmod.yabba.util;
 
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.model.IconSet;
+import com.feed_the_beast.ftbl.lib.IconSet;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.block.state.IBlockState;
