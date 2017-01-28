@@ -1,0 +1,32 @@
+# Creative Tabs
+itemGroup.yabba=YABBA
+itemGroup.yabba.all_models=Все Бочки YABBA
+
+# Items
+item.yabba.upgrade.name=Улучшение Бочки
+item.yabba.upgrade.blank=Пустой
+item.yabba.upgrade.iron_upgrade=Деревянная - в Железную
+item.yabba.upgrade.gold_upgrade=Железная - в Золотую
+item.yabba.upgrade.diamond_upgrade=Золотая - в Алмазную
+item.yabba.upgrade.nether_star_upgrade=Бесконечное хранилище
+item.yabba.upgrade.creative=Креативная Бочка
+item.yabba.upgrade.obsidian_shell=Обсидиановая прослойка
+item.yabba.upgrade.redstone_out=Вывод Редстоун-сигнала
+item.yabba.upgrade.hopper=Воронка
+item.yabba.upgrade.void=Уничтожить Предметы
+
+item.yabba.painter.name=Окрашиватель Бочек
+item.yabba.hammer.name=Молот для Бочек
+
+# Blocks
+tile.yabba.barrel.name=Бочка-предмет
+tile.yabba.antibarrel.name=АнтиБочка
+
+# Guide
+yabba.guide=YABBA
+
+# Models
+yabba.model.barrel=Бочка
+yabba.model.crate=Ящик
+yabba.model.solid=Полный Блок
+yabba.model.solid_borders=Полный Блок с Ободом
