@@ -13,6 +13,7 @@ import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -124,7 +126,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             boolean ender = barrel.getFlag(IBarrel.FLAG_HOPPER_ENDER);
             int maxItems = ender ? 64 : 8;
 
-            if(barrel.getItemCount() > 0)
+            if(barrel.getItemCount() > 0 && barrel.getUpgradeNBT().getBoolean("HopperDown"))
             {
                 ItemStack extracted = barrel.extractItem(0, maxItems, true);
 
@@ -136,6 +138,32 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                     {
                         ItemStack inserted = ItemHandlerHelper.insertItem(tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), extracted, false);
                         barrel.extractItem(0, inserted == null ? maxItems : inserted.stackSize, false);
+                    }
+                }
+            }
+
+            if(barrel.getUpgradeNBT().getBoolean("HopperUp"))
+            {
+                //FIXME
+            }
+
+            if(barrel.getUpgradeNBT().getBoolean("HopperCollect"))
+            {
+                AxisAlignedBB aabb = new AxisAlignedBB(pos.add(0, 1, 0), pos.add(1, 2, 1));
+
+                if(ender)
+                {
+                    aabb = aabb.expand(5D, 5D, 5D);
+                }
+
+                for(EntityItem item : worldObj.getEntitiesWithinAABB(EntityItem.class, aabb, null))
+                {
+                    ItemStack stack = barrel.insertItem(0, item.getEntityItem().copy(), false);
+                    item.setEntityItemStack(stack);
+
+                    if(stack == null || stack.stackSize == 0)
+                    {
+                        item.setDead();
                     }
                 }
             }
