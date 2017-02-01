@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by LatvianModder on 06.12.2016.
@@ -23,6 +25,8 @@ public class Yabba
 
     @SidedProxy(serverSide = "com.latmod.yabba.YabbaCommon", clientSide = "com.latmod.yabba.client.YabbaClient")
     public static YabbaCommon PROXY;
+
+    public static final Logger LOGGER = LogManager.getLogger("YABBA");
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)

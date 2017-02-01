@@ -184,14 +184,11 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
     {
-        if(!world.isRemote)
-        {
-            TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getTileEntity(pos);
 
-            if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
-            {
-                return 100000000F;
-            }
+        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
+        {
+            return 100000000F;
         }
 
         return 8F;

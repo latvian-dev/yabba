@@ -171,7 +171,7 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
                         barrel.setFlag(IBarrel.FLAG_HOPPER, true);
                         barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) 1));
                         barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) 1));
-                        barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) 1));
+                        barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) 0));
                         barrel.addUpgradeName(HOPPER.uname);
                     }
                     return true;

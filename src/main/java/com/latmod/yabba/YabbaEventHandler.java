@@ -169,6 +169,7 @@ public class YabbaEventHandler
 
         if(barrel.getFlag(IBarrel.FLAG_HOPPER))
         {
+            /*
             event.getConfig().add(new SimpleConfigKey("hopper.up"), new PropertyBool(true)
             {
                 @Override
@@ -183,6 +184,7 @@ public class YabbaEventHandler
                     barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)));
                 }
             });
+            */
 
             event.getConfig().add(new SimpleConfigKey("hopper.down"), new PropertyBool(true)
             {
@@ -199,7 +201,7 @@ public class YabbaEventHandler
                 }
             });
 
-            event.getConfig().add(new SimpleConfigKey("hopper.collect"), new PropertyBool(true)
+            event.getConfig().add(new SimpleConfigKey("hopper.collect"), new PropertyBool(false)
             {
                 @Override
                 public boolean getBoolean()
