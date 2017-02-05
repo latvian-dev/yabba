@@ -63,9 +63,9 @@ public enum YabbaRegistry implements IYabbaRegistry
         Collections.sort(ALL_MODELS);
         Collections.sort(ALL_SKINS);
 
-        Yabba.LOGGER.info("YABBA Models: " + ALL_MODELS);
-        Yabba.LOGGER.info("YABBA Skins: " + ALL_SKINS);
-        Yabba.LOGGER.info("YABBA Tiers: " + TIERS.keySet());
+        Yabba.LOGGER.info("YABBA Models: " + ALL_MODELS.size());
+        Yabba.LOGGER.info("YABBA Skins: " + ALL_SKINS.size());
+        Yabba.LOGGER.info("YABBA Tiers: " + TIERS.size());
     }
 
     public void loadData(File file)
