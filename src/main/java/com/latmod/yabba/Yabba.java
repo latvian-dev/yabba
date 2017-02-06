@@ -45,6 +45,6 @@ public class Yabba
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event)
     {
-        BlockBarrel.LAST_RIGHT_CLICK_MAP.clear();
+        BlockBarrel.LAST_CLICK_MAP.clear();
     }
 }

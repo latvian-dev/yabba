@@ -24,9 +24,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrelFull>
 {
-    private byte model;
+    private String model, skin;
     private BlockPos pos;
-    private int itemCount, flags, skin;
+    private int itemCount, flags;
     private ItemStack storedItem;
     private NBTTagCompound upgrades;
 
@@ -41,8 +41,8 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         itemCount = barrel.getItemCount();
         flags = barrel.getFlags();
         upgrades = barrel.getUpgradeNBT();
-        model = YabbaRegistry.INSTANCE.getModelId(barrel.getModel().getName());
-        skin = YabbaRegistry.INSTANCE.getSkinId(barrel.getSkin().getName());
+        model = barrel.getModel().getName();
+        skin = barrel.getSkin().getName();
     }
 
     @Override
@@ -59,8 +59,8 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         itemCount = buf.readInt();
         flags = buf.readInt();
         upgrades = ByteBufUtils.readTag(buf);
-        model = buf.readByte();
-        skin = buf.readInt();
+        model = ByteBufUtils.readUTF8String(buf);
+        skin = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         buf.writeInt(itemCount);
         buf.writeInt(flags);
         ByteBufUtils.writeTag(buf, upgrades);
-        buf.writeByte(model);
-        buf.writeInt(skin);
+        ByteBufUtils.writeUTF8String(buf, model);
+        ByteBufUtils.writeUTF8String(buf, skin);
     }
 
     @Override
@@ -83,8 +83,8 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
             IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(message.model, true);
-            IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(message.skin, true);
+            IBarrelModel model = YabbaRegistry.INSTANCE.getModel(message.model);
+            IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(message.skin);
             boolean updateVariant = !barrel.getModel().equals(model) || !barrel.getSkin().equals(skin);
 
             barrel.setFlags(message.flags);

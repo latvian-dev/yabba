@@ -9,16 +9,11 @@ import com.latmod.yabba.api.events.YabbaRegistryEvent;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.BarrelSkin;
 import com.latmod.yabba.util.Tier;
-import gnu.trove.map.hash.TByteObjectHashMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,16 +34,6 @@ public enum YabbaRegistry implements IYabbaRegistry
     public static final List<IBarrelModel> ALL_MODELS = new ArrayList<>();
     public static final List<IBarrelSkin> ALL_SKINS = new ArrayList<>();
 
-    public static NBTTagCompound MODEL_NAME_ID_MAP;
-    private static final TByteObjectHashMap<IBarrelModel> MODEL_ID_MAP_S = new TByteObjectHashMap<>();
-    public static TByteObjectHashMap<IBarrelModel> MODEL_ID_MAP_C = new TByteObjectHashMap<>();
-    private static int lastModelID = 0;
-
-    public static NBTTagCompound SKIN_NAME_ID_MAP;
-    private static final TIntObjectHashMap<IBarrelSkin> SKIN_ID_MAP_S = new TIntObjectHashMap<>();
-    public static TIntObjectHashMap<IBarrelSkin> SKIN_ID_MAP_C = new TIntObjectHashMap<>();
-    private static int lastSkinID = 0;
-
     public static final IBarrelSkin DEFAULT_SKIN = INSTANCE.addSkin(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.OAK), "all=blocks/planks_oak");
 
     public void sendEvent()
@@ -66,77 +51,6 @@ public enum YabbaRegistry implements IYabbaRegistry
         Yabba.LOGGER.info("YABBA Models: " + ALL_MODELS.size());
         Yabba.LOGGER.info("YABBA Skins: " + ALL_SKINS.size());
         Yabba.LOGGER.info("YABBA Tiers: " + TIERS.size());
-    }
-
-    public void loadData(File file)
-    {
-        MODEL_NAME_ID_MAP = new NBTTagCompound();
-        SKIN_NAME_ID_MAP = new NBTTagCompound();
-        lastModelID = 0;
-        lastSkinID = 0;
-        MODEL_ID_MAP_S.clear();
-        SKIN_ID_MAP_S.clear();
-
-        if(file.exists())
-        {
-            try
-            {
-                NBTTagCompound nbt = CompressedStreamTools.read(file);
-
-                lastModelID = nbt.getInteger("LastModelID");
-                lastSkinID = nbt.getInteger("LastSkinID");
-
-                NBTTagCompound nbt1 = nbt.getCompoundTag("Models");
-
-                for(String s : nbt1.getKeySet())
-                {
-                    MODEL_NAME_ID_MAP.setByte(getModel(s).getName(), nbt1.getByte(s));
-                }
-
-                nbt1 = nbt.getCompoundTag("Skins");
-
-                for(String s : nbt1.getKeySet())
-                {
-                    SKIN_NAME_ID_MAP.setInteger(getSkin(s).getName(), nbt1.getInteger(s));
-                }
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-
-        for(IBarrelModel model : ALL_MODELS)
-        {
-            MODEL_ID_MAP_S.put(getModelId(model.getName()), model);
-        }
-
-        for(IBarrelSkin skin : ALL_SKINS)
-        {
-            SKIN_ID_MAP_S.put(getSkinId(skin.getName()), skin);
-        }
-    }
-
-    public void saveData(File file)
-    {
-        try
-        {
-            if(!file.exists())
-            {
-                file.createNewFile();
-            }
-
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setInteger("LastModelID", lastModelID);
-            nbt.setInteger("LastSkinID", lastSkinID);
-            nbt.setTag("Models", MODEL_NAME_ID_MAP);
-            nbt.setTag("Skins", SKIN_NAME_ID_MAP);
-            CompressedStreamTools.write(nbt, file);
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
     }
 
     @Override
@@ -178,26 +92,6 @@ public enum YabbaRegistry implements IYabbaRegistry
         return skin == null ? DEFAULT_SKIN : skin;
     }
 
-    public IBarrelSkin getSkin(int id, boolean client)
-    {
-        IBarrelSkin skin = (client ? SKIN_ID_MAP_C : SKIN_ID_MAP_S).get(id);
-        return skin == null ? DEFAULT_SKIN : skin;
-    }
-
-    public int getSkinId(String skinId)
-    {
-        int id = SKIN_NAME_ID_MAP.getInteger(skinId);
-
-        if(id == 0)
-        {
-            lastSkinID++;
-            id = lastSkinID;
-            SKIN_NAME_ID_MAP.setInteger(skinId, id);
-        }
-
-        return id;
-    }
-
     public ITier getTier(String id)
     {
         ITier tier = TIERS.get(id);
@@ -213,25 +107,5 @@ public enum YabbaRegistry implements IYabbaRegistry
     {
         IBarrelModel model = MODELS.get(id);
         return model == null ? ModelBarrel.INSTANCE : model;
-    }
-
-    public IBarrelModel getModel(byte id, boolean client)
-    {
-        IBarrelModel model = (client ? MODEL_ID_MAP_C : MODEL_ID_MAP_S).get(id);
-        return model == null ? ModelBarrel.INSTANCE : model;
-    }
-
-    public byte getModelId(String modelId)
-    {
-        byte id = MODEL_NAME_ID_MAP.getByte(modelId);
-
-        if(id == 0)
-        {
-            lastModelID++;
-            id = (byte) lastModelID;
-            MODEL_NAME_ID_MAP.setByte(modelId, id);
-        }
-
-        return id;
     }
 }

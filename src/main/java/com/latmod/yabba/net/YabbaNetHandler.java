@@ -13,7 +13,6 @@ public class YabbaNetHandler
     public static void init()
     {
         int id = 0;
-        NET.register(++id, new MessageSyncData());
         NET.register(++id, new MessageUpdateBarrelItemCount());
         NET.register(++id, new MessageUpdateBarrelFull());
         NET.register(++id, new MessageRequestBarrelUpdate());

@@ -2,7 +2,6 @@ package com.latmod.yabba.net;
 
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.item.ItemPainter;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,7 +50,7 @@ public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
 
         if(stack != null && stack.getItem() instanceof ItemPainter)
         {
-            ItemPainter.setSkin(stack, YabbaRegistry.INSTANCE.getSkinId(message.skinId));
+            ItemPainter.setSkin(stack, message.skinId);
         }
     }
 }

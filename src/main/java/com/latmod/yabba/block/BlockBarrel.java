@@ -51,7 +51,7 @@ import java.util.UUID;
  */
 public class BlockBarrel extends BlockBarrelBase
 {
-    public static final Map<UUID, Long> LAST_RIGHT_CLICK_MAP = new HashMap<>();
+    public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
     public static final PropertyBarrelSkin SKIN = PropertyBarrelSkin.create("skin");
     public static final PropertyBarrelModel MODEL = PropertyBarrelModel.create("model");
 
@@ -226,7 +226,10 @@ public class BlockBarrel extends BlockBarrelBase
 
                 if(tile instanceof TileBarrel)
                 {
-                    ((TileBarrel) tile).onRightClick(playerIn, heldItem, hitX, hitY, hitZ, side);
+                    Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+                    long time = worldIn.getTotalWorldTime();
+                    ((TileBarrel) tile).onRightClick(playerIn, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
+                    LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
                 }
             }
 

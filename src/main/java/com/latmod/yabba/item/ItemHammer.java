@@ -9,8 +9,8 @@ import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -30,14 +30,14 @@ import java.util.List;
  */
 public class ItemHammer extends ItemYabba
 {
-    private static IBarrelModel getModel(ItemStack stack, boolean client)
+    private static IBarrelModel getModel(ItemStack stack)
     {
-        return YabbaRegistry.INSTANCE.getModel(stack.hasTagCompound() ? stack.getTagCompound().getByte("BarrelModel") : 0, client);
+        return YabbaRegistry.INSTANCE.getModel(stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelModel") : "");
     }
 
-    public static void setModel(ItemStack stack, byte modelId)
+    public static void setModel(ItemStack stack, String modelId)
     {
-        stack.setTagInfo("BarrelModel", new NBTTagByte(modelId));
+        stack.setTagInfo("BarrelModel", new NBTTagString(modelId));
     }
 
     private enum CapUpgrade implements ICapabilityProvider, IUpgrade
@@ -59,7 +59,7 @@ public class ItemHammer extends ItemYabba
         @Override
         public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
         {
-            IBarrelModel model = getModel(upgradeItem, worldIn.isRemote);
+            IBarrelModel model = getModel(upgradeItem);
 
             if(barrel.getModel().equals(model))
             {
@@ -121,6 +121,6 @@ public class ItemHammer extends ItemYabba
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Model: " + I18n.format("yabba.model." + getModel(stack, playerIn.worldObj.isRemote).getName()));
+        tooltip.add("Model: " + I18n.format("yabba.model." + getModel(stack).getName()));
     }
 }

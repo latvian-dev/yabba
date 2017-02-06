@@ -9,7 +9,7 @@ import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -29,14 +29,14 @@ import java.util.List;
  */
 public class ItemPainter extends ItemYabba
 {
-    private static IBarrelSkin getSkin(ItemStack stack, boolean client)
+    private static IBarrelSkin getSkin(ItemStack stack)
     {
-        return YabbaRegistry.INSTANCE.getSkin(stack.hasTagCompound() ? stack.getTagCompound().getInteger("BarrelSkin") : 0, client);
+        return YabbaRegistry.INSTANCE.getSkin(stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelSkin") : "");
     }
 
-    public static void setSkin(ItemStack stack, int skinId)
+    public static void setSkin(ItemStack stack, String skinId)
     {
-        stack.setTagInfo("BarrelSkin", new NBTTagInt(skinId));
+        stack.setTagInfo("BarrelSkin", new NBTTagString(skinId));
     }
 
     private enum CapUpgrade implements ICapabilityProvider, IUpgrade
@@ -58,7 +58,7 @@ public class ItemPainter extends ItemYabba
         @Override
         public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
         {
-            IBarrelSkin skin = getSkin(upgradeItem, worldIn.isRemote);
+            IBarrelSkin skin = getSkin(upgradeItem);
 
             if(barrel.getSkin().equals(skin))
             {
@@ -120,6 +120,6 @@ public class ItemPainter extends ItemYabba
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Skin: " + getSkin(stack, playerIn.worldObj.isRemote).getDisplayName());
+        tooltip.add("Skin: " + getSkin(stack).getDisplayName());
     }
 }

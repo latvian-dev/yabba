@@ -2,7 +2,6 @@ package com.latmod.yabba.net;
 
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.item.ItemHammer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,7 +50,7 @@ public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 
         if(stack != null && stack.getItem() instanceof ItemHammer)
         {
-            ItemHammer.setModel(stack, YabbaRegistry.INSTANCE.getModelId(message.modelId));
+            ItemHammer.setModel(stack, message.modelId);
         }
     }
 }

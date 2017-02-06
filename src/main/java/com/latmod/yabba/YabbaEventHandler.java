@@ -9,10 +9,10 @@ import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.models.ModelSolid;
 import com.latmod.yabba.models.ModelSolidBorders;
-import com.latmod.yabba.net.MessageSyncData;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockHorizontal;
@@ -23,7 +23,6 @@ import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -32,14 +31,11 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.io.File;
 
 /**
  * Created by LatvianModder on 14.12.2016.
@@ -219,33 +215,6 @@ public class YabbaEventHandler
     }
 
     @SubscribeEvent
-    public void loadWorldData(WorldEvent.Load event)
-    {
-        if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
-        {
-            YabbaRegistry.INSTANCE.loadData(new File(event.getWorld().getSaveHandler().getWorldDirectory(), "data/yabba.dat"));
-        }
-    }
-
-    @SubscribeEvent
-    public void saveWorldData(WorldEvent.Save event)
-    {
-        if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
-        {
-            YabbaRegistry.INSTANCE.saveData(new File(event.getWorld().getSaveHandler().getWorldDirectory(), "data/yabba.dat"));
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
-    {
-        if(event.player instanceof EntityPlayerMP)
-        {
-            new MessageSyncData().sendTo(event.player);
-        }
-    }
-
-    @SubscribeEvent
     public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
     {
         World world = event.getWorld();
@@ -254,6 +223,16 @@ public class YabbaEventHandler
         {
             return;
         }
+
+        Long l = BlockBarrel.LAST_CLICK_MAP.get(event.getEntityPlayer().getGameProfile().getId());
+        long time = event.getWorld().getTotalWorldTime();
+
+        if(l != null && (time - l) < 2)
+        {
+            return;
+        }
+
+        BlockBarrel.LAST_CLICK_MAP.put(event.getEntityPlayer().getGameProfile().getId(), time);
 
         TileEntity tile = world.getTileEntity(event.getPos());
 

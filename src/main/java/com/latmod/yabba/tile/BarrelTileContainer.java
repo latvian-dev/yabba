@@ -48,8 +48,8 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
             nbt.setTag("Upgrades", upgrades);
         }
 
-        nbt.setByte("Model", YabbaRegistry.INSTANCE.getModelId(getModel().getName()));
-        nbt.setInteger("Skin", YabbaRegistry.INSTANCE.getSkinId(getSkin().getName()));
+        nbt.setString("Model", getModel().getName());
+        nbt.setString("Skin", getSkin().getName());
 
         if(upgradeNames != null && !upgradeNames.hasNoTags())
         {
@@ -68,8 +68,8 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         storedItem = nbt.hasKey("Item") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("Item")) : null;
         itemCount = storedItem == null ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
-        model = YabbaRegistry.INSTANCE.getModel(nbt.getByte("Model"), false);
-        skin = YabbaRegistry.INSTANCE.getSkin(nbt.getInteger("Skin"), false);
+        model = YabbaRegistry.INSTANCE.getModel(nbt.getString("Model"));
+        skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));
         upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
     }
 

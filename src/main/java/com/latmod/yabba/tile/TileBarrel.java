@@ -272,8 +272,38 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         return cachedRotation;
     }
 
-    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem, float hitX, float y, float hitZ, EnumFacing facing)
+    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem, float hitX, float y, float hitZ, EnumFacing facing, long deltaClickTime)
     {
+        if(deltaClickTime <= 8)
+        {
+            if(barrel.storedItem != null)
+            {
+                for(int i = 0; i < playerIn.inventory.mainInventory.length; i++)
+                {
+                    ItemStack is = barrel.insertItem(0, playerIn.inventory.mainInventory[i], false);
+
+                    if(is != playerIn.inventory.mainInventory[i])
+                    {
+                        playerIn.inventory.mainInventory[i].stackSize = is == null ? 0 : is.stackSize;
+
+                        if(playerIn.inventory.mainInventory[i].stackSize <= 0)
+                        {
+                            playerIn.inventory.mainInventory[i] = null;
+                        }
+                    }
+                }
+            }
+
+            playerIn.inventory.markDirty();
+
+            if(playerIn.openContainer != null)
+            {
+                playerIn.openContainer.detectAndSendChanges();
+            }
+
+            return;
+        }
+        
         if(heldItem == null)
         {
             if(playerIn.isSneaking())
@@ -314,24 +344,6 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 markDirty();
                 return;
-            }
-
-            if(barrel.storedItem != null)
-            {
-                for(int i = 0; i < playerIn.inventory.mainInventory.length; i++)
-                {
-                    ItemStack is = barrel.insertItem(0, playerIn.inventory.mainInventory[i], false);
-
-                    if(is != playerIn.inventory.mainInventory[i])
-                    {
-                        playerIn.inventory.mainInventory[i].stackSize = is == null ? 0 : is.stackSize;
-
-                        if(playerIn.inventory.mainInventory[i].stackSize <= 0)
-                        {
-                            playerIn.inventory.mainInventory[i] = null;
-                        }
-                    }
-                }
             }
 
             playerIn.inventory.markDirty();
