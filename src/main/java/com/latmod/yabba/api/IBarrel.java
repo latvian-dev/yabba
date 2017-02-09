@@ -37,4 +37,6 @@ public interface IBarrel extends IItemHandler
 
     @Nullable
     NBTTagList getUpgradeNames();
+
+    int getFreeSpace();
 }

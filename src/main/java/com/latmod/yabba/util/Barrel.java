@@ -262,4 +262,10 @@ public abstract class Barrel implements IBarrelModifiable
         NBTTagList upgradeNames = barrel.getUpgradeNames();
         setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
     }
+
+    @Override
+    public int getFreeSpace()
+    {
+        return getTier().getMaxItems(this, getStackInSlot(0)) - getItemCount();
+    }
 }

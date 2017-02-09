@@ -3,6 +3,7 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
@@ -28,7 +29,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nullable;
@@ -124,27 +124,26 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         if(!worldObj.isRemote && barrel.getFlag(IBarrel.FLAG_HOPPER) && (worldObj.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
         {
             boolean ender = barrel.getFlag(IBarrel.FLAG_HOPPER_ENDER);
-            int maxItems = ender ? 64 : 8;
+            int maxItems = ender ? 64 : 1;
 
             if(barrel.getItemCount() > 0 && barrel.getUpgradeNBT().getBoolean("HopperDown"))
             {
-                ItemStack extracted = barrel.extractItem(0, maxItems, true);
+                TileEntity tileDown = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
 
-                if(extracted != null && extracted.stackSize > 0)
+                if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
                 {
-                    TileEntity tileDown = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
-
-                    if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
-                    {
-                        ItemStack inserted = ItemHandlerHelper.insertItem(tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), extracted, false);
-                        barrel.extractItem(0, inserted == null ? maxItems : inserted.stackSize, false);
-                    }
+                    LMInvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()));
                 }
             }
 
             if(barrel.getUpgradeNBT().getBoolean("HopperUp"))
             {
-                //FIXME
+                TileEntity tileUp = worldObj.getTileEntity(pos.offset(EnumFacing.UP));
+
+                if(tileUp != null && tileUp.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN))
+                {
+                    LMInvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()));
+                }
             }
 
             if(barrel.getUpgradeNBT().getBoolean("HopperCollect"))
@@ -303,7 +302,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
             return;
         }
-        
+
         if(heldItem == null)
         {
             if(playerIn.isSneaking())
