@@ -50,11 +50,6 @@ public class YabbaCommon
 
         CraftingManager.getInstance().addRecipe(new RecipeBarrelUpgrade());
         RecipeSorter.register(Yabba.MOD_ID + ":barrel_upgrade", RecipeBarrelUpgrade.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
-
-        Tier.WOOD.setMaxStacks(YabbaConfig.BASE_MAX_STACKS);
-        TIER_IRON.setMaxStacks(Tier.WOOD.getMaxStacks() * YabbaConfig.MULTIPLIER);
-        TIER_GOLD.setMaxStacks(TIER_IRON.getMaxStacks() * YabbaConfig.MULTIPLIER);
-        TIER_DMD.setMaxStacks(TIER_GOLD.getMaxStacks() * YabbaConfig.MULTIPLIER);
     }
 
     public void openModelGui()

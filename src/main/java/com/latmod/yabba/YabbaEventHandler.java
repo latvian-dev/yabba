@@ -165,7 +165,6 @@ public class YabbaEventHandler
 
         if(barrel.getFlag(IBarrel.FLAG_HOPPER))
         {
-            /*
             event.getConfig().add(new SimpleConfigKey("hopper.up"), new PropertyBool(true)
             {
                 @Override
@@ -180,7 +179,6 @@ public class YabbaEventHandler
                     barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)));
                 }
             });
-            */
 
             event.getConfig().add(new SimpleConfigKey("hopper.down"), new PropertyBool(true)
             {

@@ -32,16 +32,16 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     @Override
     public void registerCommon(IFTBLibRegistry reg)
     {
-        /*
-        reg.addConfigFileProvider(XPT.MOD_ID, () -> new File(LMUtils.folderConfig, "YABBA.json"));
+        YabbaConfig.init(reg);
+    }
 
-        reg.addConfig(XPT.MOD_ID, "general.enable_crafting", XPTConfig.ENABLE_CRAFTING).setInfo("Enable crafting recipes");
-        reg.addConfig(XPT.MOD_ID, "general.levels_per_block", XPTConfig.LEVELS_PER_BLOCK).setInfo("Levels required to teleport in same dimension");
-        reg.addConfig(XPT.MOD_ID, "general.levels_for_crossdim", XPTConfig.LEVELS_FOR_CROSSDIM).setInfo("Levels required to teleport to another dimension");
-        reg.addConfig(XPT.MOD_ID, "general.soft_blocks", XPTConfig.SOFT_BLOCKS).setInfo("Soft blocks are like torches - you can walk trough them, BUT it solved the 'getting stuck in block' issue");
-
-        reg.addSyncData(XPT.MOD_ID, new XPTSyncData());
-        */
+    @Override
+    public void configLoaded(boolean init)
+    {
+        Tier.WOOD.setMaxStacks(YabbaConfig.BARRELTIER_BASE_MAX_STACKS.getInt());
+        YabbaCommon.TIER_IRON.setMaxStacks(Tier.WOOD.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());
+        YabbaCommon.TIER_GOLD.setMaxStacks(YabbaCommon.TIER_IRON.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());
+        YabbaCommon.TIER_DMD.setMaxStacks(YabbaCommon.TIER_GOLD.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());
     }
 
     @Override
@@ -49,18 +49,28 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     {
         ItemStack blankUpgrade = EnumUpgrade.BLANK.item();
 
-        recipes.addRecipe(ItemHandlerHelper.copyStackWithSize(blankUpgrade, 16),
+        recipes.addRecipe(ItemHandlerHelper.copyStackWithSize(blankUpgrade, YabbaConfig.CRAFTING_UPGRADE_STACK_SIZE.getByte()),
                 "SSS", "ICI", "SSS",
                 'I', Blocks.IRON_BARS,
                 'C', "chestWood",
                 'S', "slabWood");
 
-        recipes.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
-                " U ", "SCS", " P ",
-                'U', blankUpgrade,
-                'C', "chestWood",
-                'S', "slabWood",
-                'P', "plankWood");
+        if(YabbaConfig.CRAFTING_BARREL_EASY_RECIPE.getBoolean())
+        {
+            recipes.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
+                    "U", "C",
+                    'U', blankUpgrade,
+                    'C', "chestWood");
+        }
+        else
+        {
+            recipes.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
+                    " U ", "SCS", " P ",
+                    'U', blankUpgrade,
+                    'C', "chestWood",
+                    'S', "slabWood",
+                    'P', "plankWood");
+        }
 
         recipes.addRecipe(new ItemStack(YabbaItems.PAINTER),
                 "WWU", " I ", " I ",
