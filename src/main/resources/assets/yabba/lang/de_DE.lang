@@ -1,0 +1,32 @@
+# Creative Tabs
+itemGroup.yabba=YABBA
+itemGroup.yabba.all_models=Alle YABBA-Fässer
+
+# Items
+item.yabba.upgrade.name=Fassupgrade
+item.yabba.upgrade.blank=Leer
+item.yabba.upgrade.iron_upgrade=Holz zu Eisen
+item.yabba.upgrade.gold_upgrade=Eisen zu Gold
+item.yabba.upgrade.diamond_upgrade=Gold zu Diamant
+item.yabba.upgrade.nether_star_upgrade=Unendliche Kapazität
+item.yabba.upgrade.creative=Kreativfass
+item.yabba.upgrade.obsidian_shell=Obsidianhülle
+item.yabba.upgrade.redstone_out=Redstone-Output
+item.yabba.upgrade.hopper=Trichter
+item.yabba.upgrade.void=Gegenstände löschen
+
+item.yabba.painter.name=Fassbemaler
+item.yabba.hammer.name=Fasshammer
+
+# Blocks
+tile.yabba.barrel.name=Gegenstandsfass
+tile.yabba.antibarrel.name=AntiFass
+
+# Guide
+yabba.guide=YABBA
+
+# Models
+yabba.model.barrel=Fass
+yabba.model.crate=Kiste
+yabba.model.solid=Solider Block
+yabba.model.solid_borders=Solider eingefasster Block
