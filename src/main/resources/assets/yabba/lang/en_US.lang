@@ -30,3 +30,6 @@ yabba.model.barrel=Barrel
 yabba.model.crate=Crate
 yabba.model.solid=Solid Block
 yabba.model.solid_borders=Solid Bordered Block
+yabba.model.cover=Cover
+yabba.model.panel=Panel
+yabba.model.slab=Slab

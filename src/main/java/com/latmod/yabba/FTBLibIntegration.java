@@ -100,7 +100,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
                 'I', "gemDiamond");
 
         recipes.addShapelessRecipe(EnumUpgrade.VOID.item(), blankUpgrade, "obsidian");
-        recipes.addShapelessRecipe(EnumUpgrade.NETHER_STAR_UPGRADE.item(), EnumUpgrade.VOID.item(), Items.NETHER_STAR);
+        recipes.addShapelessRecipe(EnumUpgrade.NETHER_STAR_UPGRADE.item(), blankUpgrade, Items.NETHER_STAR);
 
         recipes.addRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.OBSIDIAN_SHELL.metadata),
                 " I ", "IUI", " I ",

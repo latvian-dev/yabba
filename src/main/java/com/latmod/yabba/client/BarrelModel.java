@@ -7,6 +7,7 @@ import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
@@ -56,12 +57,21 @@ public class BarrelModel implements IModel
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
     {
-        List<BakedQuad> quadsN, quadsS, quadsW, quadsE;
-        quadsN = new ArrayList<>(model.buildModel(model, skin, EnumFacing.NORTH, bakedTextureGetter));
-        quadsS = new ArrayList<>(model.buildModel(model, skin, EnumFacing.SOUTH, bakedTextureGetter));
-        quadsW = new ArrayList<>(model.buildModel(model, skin, EnumFacing.WEST, bakedTextureGetter));
-        quadsE = new ArrayList<>(model.buildModel(model, skin, EnumFacing.EAST, bakedTextureGetter));
-        return new BarrelVariantBakedModel(bakedTextureGetter.apply(skin.getTextures().getTexture(EnumFacing.NORTH)), quadsN, quadsS, quadsW, quadsE);
+        List<List<BakedQuad>> quads = new ArrayList<>(ModelRotation.values().length);
+
+        for(ModelRotation rotation : ModelRotation.values())
+        {
+            quads.add(model.buildModel(model, skin, rotation, bakedTextureGetter));
+        }
+
+        List<BakedQuad> noStateQuads = model.buildItemModel(model, skin, bakedTextureGetter);
+
+        if(noStateQuads == null)
+        {
+            noStateQuads = quads.get(0);
+        }
+
+        return new BarrelVariantBakedModel(bakedTextureGetter.apply(skin.getTextures().getTexture(EnumFacing.NORTH)), quads, noStateQuads);
     }
 
     @Override

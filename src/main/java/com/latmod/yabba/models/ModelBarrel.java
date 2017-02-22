@@ -7,6 +7,7 @@ import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -37,9 +38,9 @@ public class ModelBarrel extends ModelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, EnumFacing rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    public List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
-        ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(rotation));
+        ModelBuilder model = new ModelBuilder(rotation);
         SpriteSet spriteSet = new SpriteSet(skin.getTextures(), textureAtlas);
 
         TextureAtlasSprite topSprite = spriteSet.get(EnumFacing.UP);

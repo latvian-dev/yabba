@@ -56,7 +56,8 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.glNormal3f(0F, 1F, 0F);
         GlStateManager.translate(0.5F, 0.5F, 0.5F);
         GlStateManager.rotate(180F, 0F, 0F, 1F);
-        GlStateManager.rotate(te.getRotationAngle(), 0F, 1F, 0F);
+        GlStateManager.rotate(te.getRotationAngleY(), 0F, 1F, 0F);
+        GlStateManager.rotate(te.getRotationAngleX(), 1F, 0F, 0F);
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);
         GlStateManager.color(1F, 1F, 1F, 1F);
         setLightmapDisabled(true);
@@ -69,12 +70,13 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         if(mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos()))
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
+            float textDistance = barrel.getModel().getTextDistance();
 
             if(hasStack)
             {
                 GlStateManager.pushMatrix();
-                GlStateManager.translate(0.5F, 0.075F, -0.005F);
-                String s1 = te.getItemDisplayCount();
+                GlStateManager.translate(0.5F, 0.075F, textDistance);
+                String s1 = te.getItemDisplayCount(mc.thePlayer.isSneaking());
                 int sw = getFontRenderer().getStringWidth(s1);
                 float f = 1F / (float) Math.max((sw + 10), 64);
                 GlStateManager.scale(f, f, 1F);
@@ -82,7 +84,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 GlStateManager.popMatrix();
 
                 GlStateManager.pushMatrix();
-                GlStateManager.translate(0.5F, 0.80F, -0.005F);
+                GlStateManager.translate(0.5F, 0.80F, textDistance);
                 s1 = te.getItemDisplayName();
                 sw = getFontRenderer().getStringWidth(s1);
                 f = 1F / (float) Math.max((sw + 10), 64);
@@ -94,7 +96,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             if(mc.thePlayer.isSneaking() && mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND) == null)
             {
                 GlStateManager.pushMatrix();
-                GlStateManager.translate(0D, 0D, -0.005F);
+                GlStateManager.translate(0D, 0D, textDistance);
                 mc.getTextureManager().bindTexture(TEXTURE_SETTINGS);
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(1F, 1F, 1F, 1F);
@@ -133,7 +135,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         if(hasStack)
         {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0.5F, 0.5F, 0.04F);
+            GlStateManager.translate(0.5F, 0.5F, barrel.getModel().getItemDistance());
             GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
             RenderItem itemRender = mc.getRenderItem();

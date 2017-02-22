@@ -7,6 +7,7 @@ import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +22,6 @@ import java.util.List;
  */
 public class ModelSolid extends ModelBase
 {
-    public static final ModelSolid INSTANCE = new ModelSolid();
     private static final IconSet TEXTURE_WINDOW = new IconSet("north=yabba:blocks/barrel_solid_window");
 
     public ModelSolid()
@@ -37,9 +37,9 @@ public class ModelSolid extends ModelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, EnumFacing rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    public List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
-        ModelBuilder model = new ModelBuilder(ModelBuilder.getRotation(rotation));
+        ModelBuilder model = new ModelBuilder(rotation);
         SpriteSet spriteSet = new SpriteSet(skin.getTextures(), textureAtlas);
 
         model.addCube(0F, 0F, 0F, 16F, 16F, 16F, spriteSet.exclude(EnumFacing.NORTH));

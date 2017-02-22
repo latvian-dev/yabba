@@ -11,16 +11,15 @@ import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
 import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.models.ModelCrate;
+import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
 import com.latmod.yabba.models.ModelSolidBorders;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockColored;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockStone;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -117,9 +116,12 @@ public class YabbaEventHandler
         reg.addTier(YabbaCommon.TIER_GOLD);
         reg.addTier(YabbaCommon.TIER_DMD);
 
-        reg.addModel(ModelCrate.INSTANCE);
-        reg.addModel(ModelSolid.INSTANCE);
-        reg.addModel(ModelSolidBorders.INSTANCE);
+        reg.addModel(new ModelCrate());
+        reg.addModel(new ModelSolid());
+        reg.addModel(new ModelSolidBorders());
+        reg.addModel(new ModelPanel("cover", 0.125F));
+        reg.addModel(new ModelPanel("panel", 0.25F));
+        reg.addModel(new ModelPanel("slab", 0.5F));
     }
 
     @SubscribeEvent
@@ -225,7 +227,7 @@ public class YabbaEventHandler
         Long l = BlockBarrel.LAST_CLICK_MAP.get(event.getEntityPlayer().getGameProfile().getId());
         long time = event.getWorld().getTotalWorldTime();
 
-        if(l != null && (time - l) < 2)
+        if(l != null && (time - l) < 3)
         {
             return;
         }
@@ -234,14 +236,7 @@ public class YabbaEventHandler
 
         TileEntity tile = world.getTileEntity(event.getPos());
 
-        if(tile == null || !tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-        {
-            return;
-        }
-
-        IBlockState state = world.getBlockState(event.getPos());
-
-        if(state.getValue(BlockHorizontal.FACING) != event.getFace())
+        if(tile == null || !tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) || BlockBarrel.normalizeFacing(world.getBlockState(event.getPos())) != event.getFace())
         {
             return;
         }

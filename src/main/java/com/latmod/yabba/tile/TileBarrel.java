@@ -42,7 +42,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
     private BarrelTileContainer barrel;
     private String cachedItemName, cachedItemCount;
-    private float cachedRotation;
+    private float cachedRotationX, cachedRotationY;
     private int sendUpdate = 2;
     public boolean requestClientUpdate = true;
 
@@ -68,7 +68,8 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             {
                 cachedItemName = null;
                 cachedItemCount = null;
-                cachedRotation = -1F;
+                cachedRotationX = -1F;
+                cachedRotationY = -1F;
             }
         };
 
@@ -209,16 +210,18 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         return cachedItemName;
     }
 
-    public String getItemDisplayCount()
+    public String getItemDisplayCount(boolean sneaking)
     {
-        if(cachedItemCount == null)
+        if(barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
         {
-            if(barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
-            {
-                cachedItemCount = "INF";
-                return cachedItemCount;
-            }
-
+            return "INF";
+        }
+        else if(sneaking)
+        {
+            return barrel.getItemCount() + " / " + barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
+        }
+        else if(cachedItemCount == null)
+        {
             int max = barrel.storedItem == null ? 64 : barrel.storedItem.getMaxStackSize();
             int c = barrel.getItemCount();
 
@@ -240,9 +243,9 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         return cachedItemCount;
     }
 
-    public float getRotationAngle()
+    public float getRotationAngleX()
     {
-        if(cachedRotation == -1F)
+        if(cachedRotationX == -1F)
         {
             IBlockState state = worldObj.getBlockState(pos);
 
@@ -251,27 +254,30 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 return 0F;
             }
 
-            EnumFacing facing = state.getValue(BlockHorizontal.FACING);
-            cachedRotation = 0F;
-
-            switch(facing)
-            {
-                case SOUTH:
-                    cachedRotation = 180F;
-                    break;
-                case WEST:
-                    cachedRotation = 270F;
-                    break;
-                case EAST:
-                    cachedRotation = 90F;
-                    break;
-            }
+            cachedRotationX = state.getValue(BlockBarrel.ROTATION).ordinal() * 90F;
         }
 
-        return cachedRotation;
+        return cachedRotationX;
     }
 
-    public void onRightClick(EntityPlayer playerIn, @Nullable ItemStack heldItem, float hitX, float y, float hitZ, EnumFacing facing, long deltaClickTime)
+    public float getRotationAngleY()
+    {
+        if(cachedRotationY == -1F)
+        {
+            IBlockState state = worldObj.getBlockState(pos);
+
+            if(!(state.getBlock() instanceof BlockBarrel))
+            {
+                return 0F;
+            }
+
+            cachedRotationY = state.getValue(BlockHorizontal.FACING).getHorizontalAngle() + 180F;
+        }
+
+        return cachedRotationY;
+    }
+
+    public void onRightClick(EntityPlayer playerIn, IBlockState state, @Nullable ItemStack heldItem, float hitX, float hitY, float hitZ, EnumFacing facing, long deltaClickTime)
     {
         if(deltaClickTime <= 8)
         {
@@ -307,22 +313,15 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         {
             if(playerIn.isSneaking())
             {
-                float x = 0.5F;
+                float x;
 
-                switch(facing)
+                if(facing == EnumFacing.UP || facing == EnumFacing.DOWN)
                 {
-                    case EAST:
-                        x = 1F - hitZ;
-                        break;
-                    case WEST:
-                        x = hitZ;
-                        break;
-                    case NORTH:
-                        x = 1F - hitX;
-                        break;
-                    case SOUTH:
-                        x = hitX;
-                        break;
+                    x = getX(state.getValue(BlockHorizontal.FACING), hitX, hitZ);
+                }
+                else
+                {
+                    x = getX(facing, hitX, hitZ);
                 }
 
                 if(x < BUTTON_SIZE)
@@ -374,6 +373,23 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         }
 
         markDirty();
+    }
+
+    private static float getX(EnumFacing facing, float hitX, float hitZ)
+    {
+        switch(facing)
+        {
+            case EAST:
+                return 1F - hitZ;
+            case WEST:
+                return hitZ;
+            case NORTH:
+                return 1F - hitX;
+            case SOUTH:
+                return hitX;
+            default:
+                return 0.5F;
+        }
     }
 
     @Override

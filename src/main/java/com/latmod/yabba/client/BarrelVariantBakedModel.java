@@ -1,6 +1,7 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
+import com.latmod.yabba.block.BlockBarrel;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -22,15 +23,14 @@ import java.util.List;
 public class BarrelVariantBakedModel implements IPerspectiveAwareModel
 {
     private final TextureAtlasSprite particle;
-    private final List<BakedQuad> quadsN, quadsS, quadsW, quadsE;
+    private final List<List<BakedQuad>> quads;
+    private final List<BakedQuad> noStateQuads;
 
-    public BarrelVariantBakedModel(TextureAtlasSprite p, List<BakedQuad> n, List<BakedQuad> s, List<BakedQuad> w, List<BakedQuad> e)
+    public BarrelVariantBakedModel(TextureAtlasSprite p, List<List<BakedQuad>> q, List<BakedQuad> nsq)
     {
         particle = p;
-        quadsN = n;
-        quadsS = s;
-        quadsW = w;
-        quadsE = e;
+        quads = q;
+        noStateQuads = nsq;
     }
 
     @Override
@@ -44,20 +44,10 @@ public class BarrelVariantBakedModel implements IPerspectiveAwareModel
     {
         if(state != null)
         {
-            switch(state.getValue(BlockHorizontal.FACING))
-            {
-                case NORTH:
-                    return quadsN;
-                case SOUTH:
-                    return quadsS;
-                case WEST:
-                    return quadsW;
-                case EAST:
-                    return quadsE;
-            }
+            return quads.get(state.getValue(BlockBarrel.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
         }
 
-        return quadsN;
+        return noStateQuads;
     }
 
     @Override

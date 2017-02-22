@@ -1,5 +1,6 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftbl.lib.block.EnumRotation;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
@@ -17,6 +18,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -32,6 +34,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
@@ -52,16 +55,18 @@ import java.util.UUID;
 public class BlockBarrel extends BlockBarrelBase
 {
     public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
-    public static final PropertyBarrelSkin SKIN = PropertyBarrelSkin.create("skin");
+    public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
     public static final PropertyBarrelModel MODEL = PropertyBarrelModel.create("model");
+    public static final PropertyBarrelSkin SKIN = PropertyBarrelSkin.create("skin");
 
     public BlockBarrel()
     {
         super("barrel", Material.WOOD, MapColor.WOOD);
         setDefaultState(blockState.getBaseState()
-                .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN)
+                .withProperty(ROTATION, EnumRotation.NORMAL)
                 .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH)
-                .withProperty(MODEL, ModelBarrel.INSTANCE));
+                .withProperty(MODEL, ModelBarrel.INSTANCE)
+                .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN));
         setHardness(2F);
     }
 
@@ -69,6 +74,22 @@ public class BlockBarrel extends BlockBarrelBase
     public ItemBlock createItemBlock()
     {
         return new ItemBlockBarrel(this);
+    }
+
+    public static EnumFacing normalizeFacing(IBlockState state)
+    {
+        EnumRotation rotation = state.getValue(ROTATION);
+
+        if(rotation == EnumRotation.FACING_DOWN)
+        {
+            return EnumFacing.DOWN;
+        }
+        else if(rotation == EnumRotation.FACING_UP)
+        {
+            return EnumFacing.UP;
+        }
+
+        return state.getValue(BlockHorizontal.FACING);
     }
 
     @Override
@@ -136,20 +157,20 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, SKIN, BlockHorizontal.FACING, MODEL);
+        return new BlockStateContainer(this, BlockHorizontal.FACING, ROTATION, MODEL, SKIN);
     }
 
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta)
     {
-        return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta & 3));
+        return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta)).withProperty(ROTATION, EnumRotation.VALUES[(meta >> 2) & 3]);
     }
 
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+        return (state.getValue(ROTATION).ordinal() << 2) | state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
     }
 
     @Override
@@ -188,7 +209,7 @@ public class BlockBarrel extends BlockBarrelBase
 
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
         {
-            return 100000000F;
+            return Float.MAX_VALUE;
         }
 
         return 8F;
@@ -212,13 +233,13 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
     {
-        return getDefaultState().withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
+        return getDefaultState().withProperty(ROTATION, EnumRotation.getRotationFromEntity(pos, placer)).withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if(side == state.getValue(BlockHorizontal.FACING))
+        if(side == BlockBarrel.normalizeFacing(state))
         {
             if(!worldIn.isRemote)
             {
@@ -228,8 +249,12 @@ public class BlockBarrel extends BlockBarrelBase
                 {
                     Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
                     long time = worldIn.getTotalWorldTime();
-                    ((TileBarrel) tile).onRightClick(playerIn, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
-                    LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+                    ((TileBarrel) tile).onRightClick(playerIn, state, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
+
+                    if(heldItem == null || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+                    {
+                        LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+                    }
                 }
             }
 
@@ -265,5 +290,13 @@ public class BlockBarrel extends BlockBarrelBase
     {
         TileEntity tile = blockAccess.getTileEntity(pos);
         return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
+    }
+
+    @Override
+    @Deprecated
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
+    {
+        TileEntity tile = world.getTileEntity(pos);
+        return tile instanceof TileBarrel ? tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getModel().getAABB(state, world, pos) : FULL_BLOCK_AABB;
     }
 }
