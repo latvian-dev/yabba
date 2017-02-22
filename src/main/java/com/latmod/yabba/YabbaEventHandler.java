@@ -31,8 +31,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -125,7 +123,6 @@ public class YabbaEventHandler
     }
 
     @SubscribeEvent
-    @SideOnly(Side.CLIENT)
     public void createConfigEvent(YabbaCreateConfigEvent event)
     {
         IBarrelModifiable barrel = event.getBarrel();
