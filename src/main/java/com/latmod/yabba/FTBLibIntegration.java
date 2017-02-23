@@ -49,7 +49,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     {
         ItemStack blankUpgrade = EnumUpgrade.BLANK.item();
 
-        recipes.addRecipe(ItemHandlerHelper.copyStackWithSize(blankUpgrade, YabbaConfig.CRAFTING_UPGRADE_STACK_SIZE.getByte()),
+        recipes.addRecipe(ItemHandlerHelper.copyStackWithSize(blankUpgrade, YabbaConfig.CRAFTING_UPGRADE_STACK_SIZE.getInt()),
                 "SSS", "ICI", "SSS",
                 'I', Blocks.IRON_BARS,
                 'C', "chestWood",
