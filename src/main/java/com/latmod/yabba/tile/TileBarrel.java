@@ -404,6 +404,17 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         if(amount != barrel.getItemCount() && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
         {
             boolean wasEmpty = barrel.getItemCount() == 0;
+
+            if(amount > 0 && barrel.getFlag(IBarrel.FLAG_VOID_ITEMS))
+            {
+                int max = barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
+
+                if(amount > max)
+                {
+                    amount = max;
+                }
+            }
+
             barrel.setItemCount(amount);
 
             if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
@@ -439,7 +450,8 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     @Override
     public int getMaxStoredCount()
     {
-        return barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
+        int i = barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
+        return i + (barrel.getFlag(IBarrel.FLAG_VOID_ITEMS) ? 256 : 0);
     }
 
     public boolean canConnectRedstone(EnumFacing facing)
