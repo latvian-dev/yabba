@@ -126,7 +126,6 @@ public class YabbaEventHandler
     public void createConfigEvent(YabbaCreateConfigEvent event)
     {
         IBarrelModifiable barrel = event.getBarrel();
-        System.out.println("Barrel TX: " + barrel);
 
         if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
         {
