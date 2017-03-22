@@ -77,7 +77,7 @@ public class GuiSelectModel extends GuiYabba
             if(buttonOver < YabbaRegistry.ALL_MODELS.size())
             {
                 new MessageSelectModel(YabbaRegistry.ALL_MODELS.get(buttonOver).getName()).sendToServer();
-                mc.thePlayer.closeScreen();
+                mc.player.closeScreen();
             }
         }
     }

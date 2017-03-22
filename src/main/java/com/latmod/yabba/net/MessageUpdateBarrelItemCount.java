@@ -51,7 +51,7 @@ public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateB
     @Override
     public void onMessage(MessageUpdateBarrelItemCount message, EntityPlayer player)
     {
-        TileEntity tile = player.worldObj.getTileEntity(message.pos);
+        TileEntity tile = player.world.getTileEntity(message.pos);
 
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {

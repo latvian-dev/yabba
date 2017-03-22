@@ -47,7 +47,7 @@ public class MessageRequestBarrelUpdate extends MessageToServer<MessageRequestBa
     @Override
     public void onMessage(MessageRequestBarrelUpdate message, EntityPlayer player)
     {
-        TileEntity tile = player.worldObj.getTileEntity(message.pos);
+        TileEntity tile = player.world.getTileEntity(message.pos);
 
         if(tile instanceof TileBarrel)
         {

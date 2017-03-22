@@ -46,7 +46,9 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         boolean hasStack = stack != null;
         Minecraft mc = Minecraft.getMinecraft();
 
-        if(!hasStack && !mc.thePlayer.isSneaking())
+        boolean isSneaking = mc.player.isSneaking();
+
+        if(!hasStack && !isSneaking)
         {
             return;
         }
@@ -76,7 +78,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0.5F, 0.075F, textDistance);
-                String s1 = te.getItemDisplayCount(mc.thePlayer.isSneaking());
+                String s1 = te.getItemDisplayCount(isSneaking);
                 int sw = getFontRenderer().getStringWidth(s1);
                 float f = 1F / (float) Math.max((sw + 10), 64);
                 GlStateManager.scale(f, f, 1F);
@@ -93,7 +95,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 GlStateManager.popMatrix();
             }
 
-            if(mc.thePlayer.isSneaking() && mc.thePlayer.getHeldItem(EnumHand.MAIN_HAND) == null)
+            if(isSneaking && mc.player.getHeldItem(EnumHand.MAIN_HAND) == null)
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0D, 0D, textDistance);
@@ -147,7 +149,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            IBakedModel bakedmodel = itemRender.getItemModelWithOverrides(stack, null, mc.thePlayer);
+            IBakedModel bakedmodel = itemRender.getItemModelWithOverrides(stack, null, mc.player);
             bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
             itemRender.renderItem(stack, bakedmodel);
             GlStateManager.disableAlpha();

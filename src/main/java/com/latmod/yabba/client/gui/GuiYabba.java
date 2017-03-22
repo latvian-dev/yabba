@@ -44,7 +44,7 @@ public class GuiYabba extends GuiScreen
     {
         if(keyCode == 1 || mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode))
         {
-            mc.thePlayer.closeScreen();
+            mc.player.closeScreen();
         }
     }
 

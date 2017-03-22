@@ -123,7 +123,7 @@ public class GuiSelectSkin extends GuiYabba
             }
         }
 
-        skinsHeight = MathHelper.ceiling_float_int(matchingSkins.size() / 9F) * 19F - SKINS_PANEL.height + 1;
+        skinsHeight = MathHelper.ceil(matchingSkins.size() / 9F) * 19F - SKINS_PANEL.height + 1;
 
         if(!matchingSkins.isEmpty())
         {
@@ -277,7 +277,7 @@ public class GuiSelectSkin extends GuiYabba
                 if(skin.isMouseOver(rmouseX, rmouseY))
                 {
                     new MessageSelectSkin(skin.skin.getName()).sendToServer();
-                    INSTANCE.mc.thePlayer.closeScreen();
+                    INSTANCE.mc.player.closeScreen();
                     return;
                 }
             }

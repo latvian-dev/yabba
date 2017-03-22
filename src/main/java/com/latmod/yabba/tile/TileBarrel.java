@@ -99,37 +99,37 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         {
             if(sendUpdate > 1)
             {
-                worldObj.markChunkDirty(pos, this);
+                world.markChunkDirty(pos, this);
                 
                 /*
                 if(getBlockType() != Blocks.AIR)
                 {
-                    worldObj.updateComparatorOutputLevel(pos, getBlockType());
+                    world.updateComparatorOutputLevel(pos, getBlockType());
                 }
                 */
             }
 
-            if(!worldObj.isRemote)
+            if(!world.isRemote)
             {
-                (sendUpdate > 1 ? new MessageUpdateBarrelFull(pos, barrel) : new MessageUpdateBarrelItemCount(pos, barrel.getItemCount())).sendToAllAround(worldObj.provider.getDimension(), pos, 300D);
+                (sendUpdate > 1 ? new MessageUpdateBarrelFull(pos, barrel) : new MessageUpdateBarrelItemCount(pos, barrel.getItemCount())).sendToAllAround(world.provider.getDimension(), pos, 300D);
             }
 
             if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
             {
-                worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
+                world.notifyNeighborsOfStateChange(pos, getBlockType());
             }
 
             sendUpdate = 0;
         }
 
-        if(!worldObj.isRemote && barrel.getFlag(IBarrel.FLAG_HOPPER) && (worldObj.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
+        if(!world.isRemote && barrel.getFlag(IBarrel.FLAG_HOPPER) && (world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
         {
             boolean ender = barrel.getFlag(IBarrel.FLAG_HOPPER_ENDER);
             int maxItems = ender ? 64 : 1;
 
             if(barrel.getItemCount() > 0 && barrel.getUpgradeNBT().getBoolean("HopperDown"))
             {
-                TileEntity tileDown = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
+                TileEntity tileDown = world.getTileEntity(pos.offset(EnumFacing.DOWN));
 
                 if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
                 {
@@ -139,7 +139,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
             if(barrel.getUpgradeNBT().getBoolean("HopperUp"))
             {
-                TileEntity tileUp = worldObj.getTileEntity(pos.offset(EnumFacing.UP));
+                TileEntity tileUp = world.getTileEntity(pos.offset(EnumFacing.UP));
 
                 if(tileUp != null && tileUp.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN))
                 {
@@ -156,7 +156,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                     aabb = aabb.expand(5D, 5D, 5D);
                 }
 
-                for(EntityItem item : worldObj.getEntitiesWithinAABB(EntityItem.class, aabb, null))
+                for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, aabb, null))
                 {
                     ItemStack stack = barrel.insertItem(0, item.getEntityItem().copy(), false);
                     item.setEntityItemStack(stack);
@@ -247,7 +247,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     {
         if(cachedRotationX == -1F)
         {
-            IBlockState state = worldObj.getBlockState(pos);
+            IBlockState state = world.getBlockState(pos);
 
             if(!(state.getBlock() instanceof BlockBarrel))
             {
@@ -264,7 +264,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     {
         if(cachedRotationY == -1F)
         {
-            IBlockState state = worldObj.getBlockState(pos);
+            IBlockState state = world.getBlockState(pos);
 
             if(!(state.getBlock() instanceof BlockBarrel))
             {
@@ -355,7 +355,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         {
             if(heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
             {
-                if(heldItem.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn(barrel, worldObj, heldItem, false))
+                if(heldItem.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn(barrel, world, heldItem, false))
                 {
                     if(!heldItem.getItem().hasContainerItem(heldItem))
                     {

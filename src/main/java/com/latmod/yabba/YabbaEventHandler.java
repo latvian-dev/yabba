@@ -279,10 +279,10 @@ public class YabbaEventHandler
                 }
                 else
                 {
-                    EntityItem ei = new EntityItem(playerIn.worldObj, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
+                    EntityItem ei = new EntityItem(playerIn.world, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
                     ei.motionX = ei.motionY = ei.motionZ = 0D;
                     ei.setPickupDelay(0);
-                    playerIn.worldObj.spawnEntityInWorld(ei);
+                    playerIn.world.spawnEntity(ei);
                 }
             }
 

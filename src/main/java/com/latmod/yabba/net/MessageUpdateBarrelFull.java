@@ -78,7 +78,7 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
     @Override
     public void onMessage(MessageUpdateBarrelFull message, EntityPlayer player)
     {
-        TileEntity tile = player.worldObj.getTileEntity(message.pos);
+        TileEntity tile = player.world.getTileEntity(message.pos);
 
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
