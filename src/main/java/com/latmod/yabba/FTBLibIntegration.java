@@ -11,6 +11,7 @@ import com.latmod.yabba.util.Tier;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
@@ -36,7 +37,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     }
 
     @Override
-    public void configLoaded(boolean init)
+    public void configLoaded(LoaderState.ModState state)
     {
         Tier.WOOD.setMaxStacks(YabbaConfig.BARRELTIER_BASE_MAX_STACKS.getInt());
         YabbaCommon.TIER_IRON.setMaxStacks(Tier.WOOD.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());

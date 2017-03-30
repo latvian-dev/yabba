@@ -31,11 +31,11 @@ public class Yabba
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        MinecraftForge.EVENT_BUS.register(new YabbaEventHandler());
+        MinecraftForge.EVENT_BUS.register(YabbaEventHandler.class);
 
         if(Loader.isModLoaded("forestry"))
         {
-            MinecraftForge.EVENT_BUS.register(new ForestryIntegration());
+            MinecraftForge.EVENT_BUS.register(ForestryIntegration.class);
         }
 
         YabbaNetHandler.init();

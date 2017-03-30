@@ -297,6 +297,13 @@ public class BlockBarrel extends BlockBarrelBase
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
     {
         TileEntity tile = world.getTileEntity(pos);
-        return tile instanceof TileBarrel ? tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getModel().getAABB(state, world, pos) : FULL_BLOCK_AABB;
+
+        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+        {
+            IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+            return barrel.getModel().getAABB(state, world, pos, barrel);
+        }
+
+        return FULL_BLOCK_AABB;
     }
 }

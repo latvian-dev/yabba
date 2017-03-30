@@ -4,8 +4,7 @@ import com.feed_the_beast.ftbl.lib.IconSet;
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
 import com.google.common.base.Function;
-import com.latmod.yabba.api.IBarrelModel;
-import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.api.IBarrel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -37,10 +36,10 @@ public class ModelSolid extends ModelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    public List<BakedQuad> buildModel(IBarrel barrel, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
         ModelBuilder model = new ModelBuilder(rotation);
-        SpriteSet spriteSet = new SpriteSet(skin.getTextures(), textureAtlas);
+        SpriteSet spriteSet = new SpriteSet(barrel.getSkin().getTextures(), textureAtlas);
 
         model.addCube(0F, 0F, 0F, 16F, 16F, 16F, spriteSet.exclude(EnumFacing.NORTH));
         model.addQuad(0F, 0F, 0F, 16F, 16F, 0F, EnumFacing.NORTH, textureAtlas.apply(TEXTURE_WINDOW.getTexture(EnumFacing.NORTH)));

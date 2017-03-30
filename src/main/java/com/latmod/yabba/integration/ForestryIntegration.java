@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ForestryIntegration
 {
     @SubscribeEvent
-    public void onRegistryEvent(YabbaRegistryEvent event)
+    public static void onRegistryEvent(YabbaRegistryEvent event)
     {
         IYabbaRegistry reg = event.getRegistry();
 

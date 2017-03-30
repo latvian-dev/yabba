@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 public class YabbaEventHandler
 {
     @SubscribeEvent
-    public void onRegistryEvent(YabbaRegistryEvent event)
+    public static void onRegistryEvent(YabbaRegistryEvent event)
     {
         IYabbaRegistry reg = event.getRegistry();
 
@@ -123,7 +123,7 @@ public class YabbaEventHandler
     }
 
     @SubscribeEvent
-    public void createConfigEvent(YabbaCreateConfigEvent event)
+    public static void createConfigEvent(YabbaCreateConfigEvent event)
     {
         IBarrelModifiable barrel = event.getBarrel();
 
@@ -211,7 +211,7 @@ public class YabbaEventHandler
     }
 
     @SubscribeEvent
-    public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
+    public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
     {
         World world = event.getWorld();
 

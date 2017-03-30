@@ -26,11 +26,11 @@ public interface IBarrelModel extends IStringSerializable, Comparable<IBarrelMod
     Collection<ResourceLocation> getExtraTextures();
 
     @SideOnly(Side.CLIENT)
-    List<BakedQuad> buildModel(IBarrelModel barrelModel, IBarrelSkin skin, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas);
+    List<BakedQuad> buildModel(IBarrel barrel, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas);
 
     @Nullable
     @SideOnly(Side.CLIENT)
-    default List<BakedQuad> buildItemModel(IBarrelModel barrelModel, IBarrelSkin skin, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    default List<BakedQuad> buildItemModel(IBarrel barrel, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
         return null;
     }
@@ -45,7 +45,7 @@ public interface IBarrelModel extends IStringSerializable, Comparable<IBarrelMod
         return 0.04F;
     }
 
-    default AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos)
+    default AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
     {
         return Block.FULL_BLOCK_AABB;
     }
