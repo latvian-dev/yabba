@@ -1,5 +1,6 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
@@ -39,6 +40,14 @@ import javax.annotation.Nullable;
  */
 public class YabbaEventHandler
 {
+    private static final IConfigKey KEY_DISABLE_ORE_ITEMS = new SimpleConfigKey("disable_ore_items");
+    private static final IConfigKey KEY_ALWAYS_DISPLAY_DATA = new SimpleConfigKey("always_display_data");
+    private static final IConfigKey KEY_REDSTONE_MODE = new SimpleConfigKey("redstone.mode");
+    private static final IConfigKey KEY_REDSTONE_ITEM_COUNT = new SimpleConfigKey("redstone.item_count");
+    private static final IConfigKey KEY_HOPPER_UP = new SimpleConfigKey("hopper.up");
+    private static final IConfigKey KEY_HOPPER_DOWN = new SimpleConfigKey("hopper.down");
+    private static final IConfigKey KEY_HOPPER_COLLECT = new SimpleConfigKey("hopper.collect");
+
     @SubscribeEvent
     public static void onRegistryEvent(YabbaRegistryEvent event)
     {
@@ -127,86 +136,20 @@ public class YabbaEventHandler
     {
         IBarrelModifiable barrel = event.getBarrel();
 
+        event.getConfig().add(KEY_DISABLE_ORE_ITEMS, PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY), v -> barrel.setFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY, v)));
+        event.getConfig().add(KEY_ALWAYS_DISPLAY_DATA, PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA), v -> barrel.setFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA, v)));
+
         if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
         {
-            event.getConfig().add(new SimpleConfigKey("redstone.mode"), new PropertyEnum<EnumRedstoneCompMode>(EnumRedstoneCompMode.NAME_MAP, EnumRedstoneCompMode.EQUAL)
-            {
-                @Nullable
-                @Override
-                public EnumRedstoneCompMode get()
-                {
-                    return EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode"));
-                }
-
-                @Override
-                public void set(@Nullable EnumRedstoneCompMode e)
-                {
-                    barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) e.ordinal()));
-                }
-            });
-
-            event.getConfig().add(new SimpleConfigKey("redstone.item_count"), new PropertyInt(0, 0, Integer.MAX_VALUE)
-            {
-                @Override
-                public int getInt()
-                {
-                    return barrel.getUpgradeNBT().getInteger("RedstoneItemCount");
-                }
-
-                @Override
-                public void setInt(int v)
-                {
-                    barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(v));
-                }
-            });
+            event.getConfig().add(KEY_REDSTONE_MODE, PropertyEnum.create(EnumRedstoneCompMode.NAME_MAP, EnumRedstoneCompMode.EQUAL, () -> EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode")), v -> barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) v.ordinal()))));
+            event.getConfig().add(KEY_REDSTONE_ITEM_COUNT, PropertyInt.create(0, 0, Integer.MAX_VALUE, () -> barrel.getUpgradeNBT().getInteger("RedstoneItemCount"), v -> barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(v))));
         }
 
         if(barrel.getFlag(IBarrel.FLAG_HOPPER))
         {
-            event.getConfig().add(new SimpleConfigKey("hopper.up"), new PropertyBool(true)
-            {
-                @Override
-                public boolean getBoolean()
-                {
-                    return barrel.getUpgradeNBT().getBoolean("HopperUp");
-                }
-
-                @Override
-                public void setBoolean(boolean v)
-                {
-                    barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)));
-                }
-            });
-
-            event.getConfig().add(new SimpleConfigKey("hopper.down"), new PropertyBool(true)
-            {
-                @Override
-                public boolean getBoolean()
-                {
-                    return barrel.getUpgradeNBT().getBoolean("HopperDown");
-                }
-
-                @Override
-                public void setBoolean(boolean v)
-                {
-                    barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)));
-                }
-            });
-
-            event.getConfig().add(new SimpleConfigKey("hopper.collect"), new PropertyBool(false)
-            {
-                @Override
-                public boolean getBoolean()
-                {
-                    return barrel.getUpgradeNBT().getBoolean("HopperCollect");
-                }
-
-                @Override
-                public void setBoolean(boolean v)
-                {
-                    barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)));
-                }
-            });
+            event.getConfig().add(KEY_HOPPER_UP, PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperUp"), v -> barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)))));
+            event.getConfig().add(KEY_HOPPER_DOWN, PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperDown"), v -> barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)))));
+            event.getConfig().add(KEY_HOPPER_COLLECT, PropertyBool.create(false, () -> barrel.getUpgradeNBT().getBoolean("HopperCollect"), v -> barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)))));
         }
     }
 
@@ -215,7 +158,7 @@ public class YabbaEventHandler
     {
         World world = event.getWorld();
 
-        if(world.isRemote)
+        if(world.isRemote || event.getEntityPlayer().capabilities.isCreativeMode)
         {
             return;
         }

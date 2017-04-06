@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
@@ -14,6 +15,7 @@ import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +26,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -204,7 +206,8 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     {
         if(cachedItemName == null)
         {
-            cachedItemName = barrel.storedItem == null ? "" : barrel.storedItem.getDisplayName();
+            ItemStack is = barrel.getStackInSlot(0);
+            cachedItemName = is == null ? "" : is.getDisplayName();
         }
 
         return cachedItemName;
@@ -222,7 +225,8 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         }
         else if(cachedItemCount == null)
         {
-            int max = barrel.storedItem == null ? 64 : barrel.storedItem.getMaxStackSize();
+            ItemStack is = barrel.getStackInSlot(0);
+            int max = is == null ? 64 : is.getMaxStackSize();
             int c = barrel.getItemCount();
 
             if(max == 1 || c <= max)
@@ -281,7 +285,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     {
         if(deltaClickTime <= 8)
         {
-            if(barrel.storedItem != null)
+            if(barrel.getStackInSlot(0) != null)
             {
                 for(int i = 0; i < playerIn.inventory.mainInventory.length; i++)
                 {
@@ -328,15 +332,23 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 {
                     IConfigTree tree = new ConfigTree();
                     MinecraftForge.EVENT_BUS.post(new YabbaCreateConfigEvent(this, barrel, tree));
-                    FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentString("Barrel Settings"), tree));
+                    FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentTranslation(getBlockType().getUnlocalizedName()), tree)
+                    {
+                        @Override
+                        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+                        {
+                            super.saveConfig(sender, nbt, json);
+                            barrel.markBarrelDirty(true);
+                        }
+                    });
                 }
                 else if(x > 1D - BUTTON_SIZE && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
                 {
                     barrel.setFlag(IBarrel.FLAG_LOCKED, !barrel.getFlag(IBarrel.FLAG_LOCKED));
 
-                    if(barrel.storedItem != null && barrel.itemCount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
+                    if(barrel.getStackInSlot(0) != null && barrel.getItemCount() == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
                     {
-                        barrel.storedItem = null;
+                        barrel.setStackInSlot(0, null);
                     }
                 }
 

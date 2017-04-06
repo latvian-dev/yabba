@@ -1,5 +1,6 @@
 package com.latmod.yabba.util;
 
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
@@ -13,19 +14,20 @@ import javax.annotation.Nullable;
  */
 public class Tier extends FinalIDObject implements ITier
 {
-    public static final Tier WOOD = new Tier("wood");
+    public static final Tier WOOD = new Tier("wood", YabbaConfig.TIER_ITEM_WOOD);
 
-    private int maxStacks;
+    private final IConfigValue config;
 
-    public Tier(String id)
+    public Tier(String id, IConfigValue p)
     {
         super(id);
+        config = p;
     }
 
     @Override
     public int getMaxStacks()
     {
-        return maxStacks;
+        return config.getInt();
     }
 
     @Override
@@ -33,14 +35,9 @@ public class Tier extends FinalIDObject implements ITier
     {
         if(barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
         {
-            return YabbaConfig.BARRELTIER_INFINITE_CAPACITY.getInt();
+            return YabbaConfig.TIER_ITEM_INFINITY.getInt();
         }
 
         return getMaxStacks() * (itemStack == null ? 1 : itemStack.getMaxStackSize());
-    }
-
-    public void setMaxStacks(int m)
-    {
-        maxStacks = m;
     }
 }

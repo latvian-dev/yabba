@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IRecipes;
 import com.latmod.yabba.models.ModelBarrel;
+import com.latmod.yabba.util.Barrel;
 import com.latmod.yabba.util.EnumUpgrade;
 import com.latmod.yabba.util.Tier;
 import net.minecraft.init.Blocks;
@@ -39,10 +40,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     @Override
     public void configLoaded(LoaderState.ModState state)
     {
-        Tier.WOOD.setMaxStacks(YabbaConfig.BARRELTIER_BASE_MAX_STACKS.getInt());
-        YabbaCommon.TIER_IRON.setMaxStacks(Tier.WOOD.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());
-        YabbaCommon.TIER_GOLD.setMaxStacks(YabbaCommon.TIER_IRON.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());
-        YabbaCommon.TIER_DMD.setMaxStacks(YabbaCommon.TIER_GOLD.getMaxStacks() * YabbaConfig.BARRELTIER_MULTIPLIER.getInt());
+        Barrel.clearCache();
     }
 
     @Override

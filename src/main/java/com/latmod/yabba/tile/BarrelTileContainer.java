@@ -22,8 +22,8 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
 {
     private ITier tier;
     private int flags;
-    ItemStack storedItem;
-    int itemCount;
+    private ItemStack storedItem;
+    private int itemCount;
     private NBTTagCompound upgrades;
     private NBTTagList upgradeNames;
     private IBarrelSkin skin;
@@ -71,6 +71,11 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         model = YabbaRegistry.INSTANCE.getModel(nbt.getString("Model"));
         skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));
         upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
+
+        if(getFlag(FLAG_IS_CREATIVE))
+        {
+            itemCount = tier.getMaxItems(this, getStackInSlot(0)) / 2;
+        }
     }
 
     @Override
@@ -79,7 +84,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     {
         if(storedItem != null)
         {
-            storedItem.stackSize = itemCount;
+            storedItem.stackSize = getItemCount();
         }
 
         return storedItem;

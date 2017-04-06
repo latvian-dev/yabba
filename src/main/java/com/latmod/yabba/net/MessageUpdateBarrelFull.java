@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrelFull>
 {
-    private String model, skin;
+    private String model, skin, tier;
     private BlockPos pos;
     private int itemCount, flags;
     private ItemStack storedItem;
@@ -43,6 +43,7 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         upgrades = barrel.getUpgradeNBT();
         model = barrel.getModel().getName();
         skin = barrel.getSkin().getName();
+        tier = barrel.getTier().getName();
     }
 
     @Override
@@ -61,6 +62,7 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         upgrades = ByteBufUtils.readTag(buf);
         model = ByteBufUtils.readUTF8String(buf);
         skin = ByteBufUtils.readUTF8String(buf);
+        tier = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -73,6 +75,7 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
         ByteBufUtils.writeTag(buf, upgrades);
         ByteBufUtils.writeUTF8String(buf, model);
         ByteBufUtils.writeUTF8String(buf, skin);
+        ByteBufUtils.writeUTF8String(buf, tier);
     }
 
     @Override
@@ -93,6 +96,7 @@ public class MessageUpdateBarrelFull extends MessageToClient<MessageUpdateBarrel
             barrel.setUpgradeNBT(message.upgrades);
             barrel.setModel(model);
             barrel.setSkin(skin);
+            barrel.setTier(YabbaRegistry.INSTANCE.getTier(message.tier));
             barrel.clearCachedData();
 
             if(updateVariant)

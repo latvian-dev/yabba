@@ -13,13 +13,14 @@ public interface IBarrel extends IItemHandler
 {
     int FLAG_LOCKED = 1;
     int FLAG_VOID_ITEMS = 2;
-    int FLAG_CHECK_ORE_NAMES = 4;
+    int FLAG_DISABLE_ORE_DICTIONARY = 4;
     int FLAG_IS_CREATIVE = 8;
     int FLAG_INFINITE_CAPACITY = 16;
     int FLAG_OBSIDIAN_SHELL = 32;
     int FLAG_REDSTONE_OUT = 64;
     int FLAG_HOPPER = 128;
     int FLAG_HOPPER_ENDER = 256;
+    int FLAG_ALWAYS_DISPLAY_DATA = 512;
 
     ITier getTier();
 

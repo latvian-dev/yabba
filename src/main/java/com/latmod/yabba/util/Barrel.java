@@ -1,5 +1,8 @@
 package com.latmod.yabba.util;
 
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.ITier;
@@ -20,8 +23,12 @@ import java.util.Objects;
  */
 public abstract class Barrel implements IBarrelModifiable
 {
-    private static final String[] ALLOWED_ORE_NAMES = {"ingot", "block", "nugget", "ore", "dust", "gem"};
     private static final TIntByteHashMap ALLOWED_ORE_NAME_CACHE = new TIntByteHashMap();
+
+    public static void clearCache()
+    {
+        ALLOWED_ORE_NAME_CACHE.clear();
+    }
 
     private static boolean isOreNameAllowed(int id)
     {
@@ -33,9 +40,9 @@ public abstract class Barrel implements IBarrelModifiable
 
             String name = OreDictionary.getOreName(id);
 
-            for(String s : ALLOWED_ORE_NAMES)
+            for(IConfigValue v : YabbaConfig.ALLOWED_ORE_PREFIXES.getList())
             {
-                if(name.startsWith(s))
+                if(name.startsWith(v.getString()))
                 {
                     b = 1;
                     break;
@@ -50,50 +57,40 @@ public abstract class Barrel implements IBarrelModifiable
 
     private static boolean canInsertItem(ItemStack stored, ItemStack stack, boolean checkOreNames)
     {
-        if(checkOreNames)
-        {
-            int[] storedIDs = OreDictionary.getOreIDs(stored);
-
-            if(storedIDs.length != -1)
-            {
-                return false;
-            }
-
-            int[] stackIDs = OreDictionary.getOreIDs(stack);
-
-            if(stackIDs.length != 1 || storedIDs[0] != stackIDs[0] || !isOreNameAllowed(stackIDs[0]))
-            {
-                return false;
-            }
-        }
-
         if(stored.getItem() != stack.getItem() || stored.getMetadata() != stack.getMetadata() || stored.getItemDamage() != stack.getItemDamage())
         {
-            return false;
+            return checkOreNames && canInsertOreItem(stored, stack);
         }
 
         NBTTagCompound tag1 = stored.getTagCompound();
         NBTTagCompound tag2 = stack.getTagCompound();
-        return Objects.equals((tag1 == null || tag1.hasNoTags()) ? null : tag1, (tag2 == null || tag2.hasNoTags()) ? null : tag2) && stored.areCapsCompatible(stack);
+        return Objects.equals((tag1 == null || tag1.hasNoTags()) ? null : tag1, (tag2 == null || tag2.hasNoTags()) ? null : tag2) && stored.areCapsCompatible(stack) || checkOreNames && canInsertOreItem(stored, stack);
+
+    }
+
+    private static boolean canInsertOreItem(ItemStack stored, ItemStack stack)
+    {
+        int[] storedIDs = OreDictionary.getOreIDs(stored);
+
+        if(storedIDs.length != 1)
+        {
+            return false;
+        }
+
+        int[] stackIDs = OreDictionary.getOreIDs(stack);
+        return !(stackIDs.length != 1 || storedIDs[0] != stackIDs[0] || !isOreNameAllowed(stackIDs[0]));
     }
 
     @Override
     public boolean getFlag(int flag)
     {
-        return (getFlags() & flag) != 0;
+        return Bits.getFlag(getFlags(), flag);
     }
 
     @Override
     public void setFlag(int flag, boolean v)
     {
-        if(v)
-        {
-            setFlags(getFlags() | flag);
-        }
-        else
-        {
-            setFlags(getFlags() & ~flag);
-        }
+        setFlags(Bits.setFlag(getFlags(), flag, v));
     }
 
     @Override
@@ -113,7 +110,7 @@ public abstract class Barrel implements IBarrelModifiable
 
         ItemStack storedItem = getStackInSlot(0);
 
-        boolean canInsert = storedItem == null || canInsertItem(storedItem, stack, getFlag(FLAG_CHECK_ORE_NAMES));
+        boolean canInsert = storedItem == null || canInsertItem(storedItem, stack, !getFlag(FLAG_DISABLE_ORE_DICTIONARY));
 
         if(storedItem != null && getFlag(FLAG_IS_CREATIVE))
         {

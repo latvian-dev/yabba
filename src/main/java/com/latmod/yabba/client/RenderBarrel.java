@@ -69,7 +69,9 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.depthMask(true);
 
-        if(mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos()))
+        boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
+
+        if(mouseOver || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
             float textDistance = barrel.getModel().getTextDistance();
@@ -95,7 +97,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 GlStateManager.popMatrix();
             }
 
-            if(isSneaking && mc.player.getHeldItem(EnumHand.MAIN_HAND) == null)
+            if(isSneaking && mouseOver && mc.player.getHeldItem(EnumHand.MAIN_HAND) == null)
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0D, 0D, textDistance);
