@@ -332,7 +332,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 {
                     IConfigTree tree = new ConfigTree();
                     MinecraftForge.EVENT_BUS.post(new YabbaCreateConfigEvent(this, barrel, tree));
-                    FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentTranslation(getBlockType().getUnlocalizedName()), tree)
+                    FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentTranslation(getBlockType().getUnlocalizedName() + ".name"), tree)
                     {
                         @Override
                         public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)

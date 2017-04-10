@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class ModelCrate extends ModelBase
 {
-    public ModelCrate()
+    public ModelCrate(String id)
     {
-        super("crate");
+        super(id);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyByte;
@@ -26,6 +27,9 @@ public class YabbaConfig
 
     public static final PropertyList ALLOWED_ORE_PREFIXES = new PropertyList(PropertyString.ID);
 
+    //Client
+    public static final PropertyBool ALWAYS_RENDER_BARREL_DATA = new PropertyBool(false);
+
     static
     {
         ALLOWED_ORE_PREFIXES.add(new PropertyString("ingot"));
@@ -50,5 +54,10 @@ public class YabbaConfig
         reg.addConfig(Yabba.MOD_ID, "crafting.barrel_easy_recipe", CRAFTING_BARREL_EASY_RECIPE);
 
         reg.addConfig(Yabba.MOD_ID, "allowed_ore_prefixes", ALLOWED_ORE_PREFIXES);
+    }
+
+    public static void initClient(IFTBLibClientRegistry reg)
+    {
+        reg.addClientConfig(Yabba.MOD_ID, "always_render_barrel_data", ALWAYS_RENDER_BARREL_DATA);
     }
 }

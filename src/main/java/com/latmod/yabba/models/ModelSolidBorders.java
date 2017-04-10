@@ -23,9 +23,9 @@ public class ModelSolidBorders extends ModelBase
 {
     private static final IconSet TEXTURES_EDGES = new IconSet("north=yabba:blocks/barrel_solid_borders_window,all=yabba:blocks/barrel_solid_borders");
 
-    public ModelSolidBorders()
+    public ModelSolidBorders(String id)
     {
-        super("solid_borders");
+        super(id);
     }
 
     @Override

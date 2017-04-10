@@ -2,6 +2,7 @@ package com.latmod.yabba;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibPlugin;
+import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IRecipes;
@@ -35,6 +36,12 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     public void registerCommon(IFTBLibRegistry reg)
     {
         YabbaConfig.init(reg);
+    }
+
+    @Override
+    public void registerClient(IFTBLibClientRegistry reg)
+    {
+        YabbaConfig.initClient(reg);
     }
 
     @Override
@@ -98,7 +105,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
                 'U', blankUpgrade,
                 'I', "gemDiamond");
 
-        recipes.addShapelessRecipe(EnumUpgrade.VOID.item(), blankUpgrade, "obsidian");
+        recipes.addShapelessRecipe(EnumUpgrade.VOID.item(), blankUpgrade, "dyeBlack");
         recipes.addShapelessRecipe(EnumUpgrade.NETHER_STAR_UPGRADE.item(), blankUpgrade, Items.NETHER_STAR);
 
         recipes.addRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.OBSIDIAN_SHELL.metadata),

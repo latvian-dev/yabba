@@ -2,6 +2,7 @@ package com.latmod.yabba.client;
 
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.net.MessageRequestBarrelUpdate;
 import com.latmod.yabba.tile.TileBarrel;
@@ -71,7 +72,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 
         boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
 
-        if(mouseOver || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
+        if(mouseOver || YabbaConfig.ALWAYS_RENDER_BARREL_DATA.getBoolean() || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
             float textDistance = barrel.getModel().getTextDistance();

@@ -23,9 +23,9 @@ public class ModelSolid extends ModelBase
 {
     private static final IconSet TEXTURE_WINDOW = new IconSet("north=yabba:blocks/barrel_solid_window");
 
-    public ModelSolid()
+    public ModelSolid(String id)
     {
-        super("solid");
+        super(id);
     }
 
     @Override
