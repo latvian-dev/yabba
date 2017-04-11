@@ -1,5 +1,6 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
@@ -28,6 +29,7 @@ import org.lwjgl.opengl.GL11;
 public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 {
     private static final ResourceLocation TEXTURE_SETTINGS = new ResourceLocation(Yabba.MOD_ID, "textures/blocks/barrel_settings.png");
+    private static final Color4I CREATIVE_COLOR = new Color4I(false, 0xFFFF00DC);
 
     @Override
     public void renderTileEntityAt(TileBarrel te, double x, double y, double z, float partialTicks, int destroyStage)
@@ -72,7 +74,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 
         boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
 
-        if(mouseOver || YabbaConfig.ALWAYS_RENDER_BARREL_DATA.getBoolean() || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
+        if(mouseOver || YabbaConfig.ALWAYS_DISPLAY_BARREL_DATA.getBoolean() || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
             float textDistance = barrel.getModel().getTextDistance();
@@ -126,10 +128,11 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 ix = 0D;
                 u = 0D;
                 v = 0.5D;
-                buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(255, 255, 255, a).endVertex();
-                buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(255, 255, 255, a).endVertex();
-                buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(255, 255, 255, a).endVertex();
-                buffer.pos(ix, iy, 0D).tex(u, v).color(255, 255, 255, a).endVertex();
+                Color4I col = isCreative ? CREATIVE_COLOR : barrel.getTier().getColor();
+                buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(col.red(), col.green(), col.blue(), a).endVertex();
+                buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(col.red(), col.green(), col.blue(), a).endVertex();
+                buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(col.red(), col.green(), col.blue(), a).endVertex();
+                buffer.pos(ix, iy, 0D).tex(u, v).color(col.red(), col.green(), col.blue(), a).endVertex();
 
                 tessellator.draw();
 

@@ -1,6 +1,7 @@
 package com.latmod.yabba.util;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
@@ -14,14 +15,16 @@ import javax.annotation.Nullable;
  */
 public class Tier extends FinalIDObject implements ITier
 {
-    public static final Tier WOOD = new Tier("wood", YabbaConfig.TIER_ITEM_WOOD);
+    public static final Tier WOOD = new Tier("wood", YabbaConfig.TIER_ITEM_WOOD, 0xFFC69569);
 
     private final IConfigValue config;
+    private final Color4I color;
 
-    public Tier(String id, IConfigValue p)
+    public Tier(String id, IConfigValue p, int col)
     {
         super(id);
         config = p;
+        color = new Color4I(false, col);
     }
 
     @Override
@@ -39,5 +42,11 @@ public class Tier extends FinalIDObject implements ITier
         }
 
         return getMaxStacks() * (itemStack == null ? 1 : itemStack.getMaxStackSize());
+    }
+
+    @Override
+    public Color4I getColor()
+    {
+        return color;
     }
 }

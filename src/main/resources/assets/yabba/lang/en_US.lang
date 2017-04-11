@@ -22,6 +22,24 @@ item.yabba.hammer.name=Barrel Hammer
 tile.yabba.barrel.name=Item Barrel
 tile.yabba.antibarrel.name=AntiBarrel
 
+# Config
+config.yabba.allowed_ore_prefixes.name=Allowed Ore Prefixes
+config.yabba.tier.item.wood.name=Wood
+config.yabba.tier.item.iron.name=Iron
+config.yabba.tier.item.gold.name=Gold
+config.yabba.tier.item.diamond.name=Diamond
+config.yabba.tier.item.infinity.name=Infinity
+config.yabba.crafting.upgrade_stack_size.name=Upgrade Stack Size
+config.yabba.crafting.barrel_easy_recipe.name=Easy Barrel Recipe
+
+barrel_config.yabba.disable_ore_items.name=Disable Ore Items
+barrel_config.yabba.always_display_data.name=Always Display Data
+barrel_config.yabba.redstone.mode.name=Mode
+barrel_config.yabba.redstone.item_count.name=Item Count
+barrel_config.yabba.hopper.up.name=Up
+barrel_config.yabba.hopper.down.name=Down
+barrel_config.yabba.hopper.collect.name=Collect
+
 # Guide
 yabba.guide=YABBA
 

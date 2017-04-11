@@ -27,9 +27,9 @@ public class YabbaCommon
     @CapabilityInject(IUpgrade.class)
     public static Capability<IUpgrade> UPGRADE_CAPABILITY;
 
-    public static final Tier TIER_IRON = new Tier("iron", YabbaConfig.TIER_ITEM_IRON);
-    public static final Tier TIER_GOLD = new Tier("gold", YabbaConfig.TIER_ITEM_GOLD);
-    public static final Tier TIER_DMD = new Tier("dmd", YabbaConfig.TIER_ITEM_DIAMOND);
+    public static final Tier TIER_IRON = new Tier("iron", YabbaConfig.TIER_ITEM_IRON, 0xFFD8D8D8);
+    public static final Tier TIER_GOLD = new Tier("gold", YabbaConfig.TIER_ITEM_GOLD, 0xFFFCD803);
+    public static final Tier TIER_DMD = new Tier("dmd", YabbaConfig.TIER_ITEM_DIAMOND, 0xFF00FFFF);
 
     public static final YabbaCreativeTab TAB = new YabbaCreativeTab();
 

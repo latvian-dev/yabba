@@ -1,10 +1,8 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
@@ -40,14 +38,6 @@ import javax.annotation.Nullable;
  */
 public class YabbaEventHandler
 {
-    private static final IConfigKey KEY_DISABLE_ORE_ITEMS = new SimpleConfigKey("disable_ore_items");
-    private static final IConfigKey KEY_ALWAYS_DISPLAY_DATA = new SimpleConfigKey("always_display_data");
-    private static final IConfigKey KEY_REDSTONE_MODE = new SimpleConfigKey("redstone.mode");
-    private static final IConfigKey KEY_REDSTONE_ITEM_COUNT = new SimpleConfigKey("redstone.item_count");
-    private static final IConfigKey KEY_HOPPER_UP = new SimpleConfigKey("hopper.up");
-    private static final IConfigKey KEY_HOPPER_DOWN = new SimpleConfigKey("hopper.down");
-    private static final IConfigKey KEY_HOPPER_COLLECT = new SimpleConfigKey("hopper.collect");
-
     @SubscribeEvent
     public static void onRegistryEvent(YabbaRegistryEvent event)
     {
@@ -83,7 +73,7 @@ public class YabbaEventHandler
         }
 
         reg.addSkin(Blocks.COBBLESTONE, "all=blocks/cobblestone");
-        reg.addSkin(Blocks.MOSSY_COBBLESTONE, "all=blocks/mossy_cobblestone");
+        reg.addSkin(Blocks.MOSSY_COBBLESTONE, "all=blocks/cobblestone_mossy");
         reg.addSkin(Blocks.DIRT, "all=blocks/dirt");
         reg.addSkin(Blocks.STONEBRICK, "all=blocks/stonebrick");
         reg.addSkin(Blocks.BRICK_BLOCK, "all=blocks/brick");
@@ -138,20 +128,23 @@ public class YabbaEventHandler
     {
         IBarrelModifiable barrel = event.getBarrel();
 
-        event.getConfig().add(KEY_DISABLE_ORE_ITEMS, PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY), v -> barrel.setFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY, v)));
-        event.getConfig().add(KEY_ALWAYS_DISPLAY_DATA, PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA), v -> barrel.setFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA, v)));
+        String group = Yabba.MOD_ID;
+        event.add(group, "disable_ore_items", PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY), v -> barrel.setFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY, v)));
+        event.add(group, "always_display_data", PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA), v -> barrel.setFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA, v)));
 
         if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
         {
-            event.getConfig().add(KEY_REDSTONE_MODE, PropertyEnum.create(EnumRedstoneCompMode.NAME_MAP, EnumRedstoneCompMode.EQUAL, () -> EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode")), v -> barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) v.ordinal()))));
-            event.getConfig().add(KEY_REDSTONE_ITEM_COUNT, PropertyInt.create(0, 0, Integer.MAX_VALUE, () -> barrel.getUpgradeNBT().getInteger("RedstoneItemCount"), v -> barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(v))));
+            group = Yabba.MOD_ID + ".redstone";
+            event.add(group, "mode", PropertyEnum.create(EnumRedstoneCompMode.NAME_MAP, EnumRedstoneCompMode.EQUAL, () -> EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode")), v -> barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) v.ordinal()))));
+            event.add(group, "item_count", PropertyInt.create(0, 0, Integer.MAX_VALUE, () -> barrel.getUpgradeNBT().getInteger("RedstoneItemCount"), v -> barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(v))));
         }
 
         if(barrel.getFlag(IBarrel.FLAG_HOPPER))
         {
-            event.getConfig().add(KEY_HOPPER_UP, PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperUp"), v -> barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)))));
-            event.getConfig().add(KEY_HOPPER_DOWN, PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperDown"), v -> barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)))));
-            event.getConfig().add(KEY_HOPPER_COLLECT, PropertyBool.create(false, () -> barrel.getUpgradeNBT().getBoolean("HopperCollect"), v -> barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)))));
+            group = Yabba.MOD_ID + ".hopper";
+            event.add(group, "up", PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperUp"), v -> barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) (v ? 1 : 0)))));
+            event.add(group, "down", PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperDown"), v -> barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)))));
+            event.add(group, "collect", PropertyBool.create(false, () -> barrel.getUpgradeNBT().getBoolean("HopperCollect"), v -> barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)))));
         }
     }
 

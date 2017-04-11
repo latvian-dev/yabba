@@ -28,7 +28,7 @@ public class YabbaConfig
     public static final PropertyList ALLOWED_ORE_PREFIXES = new PropertyList(PropertyString.ID);
 
     //Client
-    public static final PropertyBool ALWAYS_RENDER_BARREL_DATA = new PropertyBool(false);
+    public static final PropertyBool ALWAYS_DISPLAY_BARREL_DATA = new PropertyBool(false);
 
     static
     {
@@ -44,20 +44,23 @@ public class YabbaConfig
     {
         reg.addConfigFileProvider(Yabba.MOD_ID, () -> new File(LMUtils.folderConfig, "YABBA.json"));
 
-        reg.addConfig(Yabba.MOD_ID, "tier.item.wood", TIER_ITEM_WOOD);
-        reg.addConfig(Yabba.MOD_ID, "tier.item.iron", TIER_ITEM_IRON);
-        reg.addConfig(Yabba.MOD_ID, "tier.item.gold", TIER_ITEM_GOLD);
-        reg.addConfig(Yabba.MOD_ID, "tier.item.diamond", TIER_ITEM_DIAMOND);
-        reg.addConfig(Yabba.MOD_ID, "tier.item.infinity", TIER_ITEM_INFINITY);
+        String id = Yabba.MOD_ID;
+        reg.addConfig(id, "allowed_ore_prefixes", ALLOWED_ORE_PREFIXES);
+        id = Yabba.MOD_ID + ".tier.item";
+        reg.addConfig(id, "wood", TIER_ITEM_WOOD);
+        reg.addConfig(id, "iron", TIER_ITEM_IRON);
+        reg.addConfig(id, "gold", TIER_ITEM_GOLD);
+        reg.addConfig(id, "diamond", TIER_ITEM_DIAMOND);
+        reg.addConfig(id, "infinity", TIER_ITEM_INFINITY);
+        id = Yabba.MOD_ID + ".crafting";
+        reg.addConfig(id, "upgrade_stack_size", CRAFTING_UPGRADE_STACK_SIZE);
+        reg.addConfig(id, "barrel_easy_recipe", CRAFTING_BARREL_EASY_RECIPE);
 
-        reg.addConfig(Yabba.MOD_ID, "crafting.upgrade_stack_size", CRAFTING_UPGRADE_STACK_SIZE);
-        reg.addConfig(Yabba.MOD_ID, "crafting.barrel_easy_recipe", CRAFTING_BARREL_EASY_RECIPE);
 
-        reg.addConfig(Yabba.MOD_ID, "allowed_ore_prefixes", ALLOWED_ORE_PREFIXES);
     }
 
     public static void initClient(IFTBLibClientRegistry reg)
     {
-        reg.addClientConfig(Yabba.MOD_ID, "always_render_barrel_data", ALWAYS_RENDER_BARREL_DATA);
+        reg.addClientConfig(Yabba.MOD_ID, "always_display_barrel_data", ALWAYS_DISPLAY_BARREL_DATA);
     }
 }
