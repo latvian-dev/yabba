@@ -3,7 +3,7 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
@@ -135,7 +135,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
                 {
-                    LMInvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()));
+                    InvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()));
                 }
             }
 
@@ -145,7 +145,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(tileUp != null && tileUp.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN))
                 {
-                    LMInvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()));
+                    InvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()));
                 }
             }
 

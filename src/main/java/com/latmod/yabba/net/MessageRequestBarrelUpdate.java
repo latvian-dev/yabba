@@ -1,8 +1,8 @@
 package com.latmod.yabba.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.tile.TileBarrel;
 import io.netty.buffer.ByteBuf;
@@ -27,7 +27,7 @@ public class MessageRequestBarrelUpdate extends MessageToServer<MessageRequestBa
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return YabbaNetHandler.NET;
     }
@@ -35,13 +35,13 @@ public class MessageRequestBarrelUpdate extends MessageToServer<MessageRequestBa
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        pos = LMNetUtils.readPos(buf);
+        pos = NetUtils.readPos(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        LMNetUtils.writePos(buf, pos);
+        NetUtils.writePos(buf, pos);
     }
 
     @Override

@@ -12,15 +12,16 @@ import javax.annotation.Nullable;
 public interface IBarrel extends IItemHandler
 {
     int FLAG_LOCKED = 1;
-    int FLAG_VOID_ITEMS = 2;
-    int FLAG_DISABLE_ORE_DICTIONARY = 4;
-    int FLAG_IS_CREATIVE = 8;
-    int FLAG_INFINITE_CAPACITY = 16;
-    int FLAG_OBSIDIAN_SHELL = 32;
-    int FLAG_REDSTONE_OUT = 64;
-    int FLAG_HOPPER = 128;
-    int FLAG_HOPPER_ENDER = 256;
-    int FLAG_ALWAYS_DISPLAY_DATA = 512;
+    int FLAG_VOID_ITEMS = 1 << 1;
+    int FLAG_DISABLE_ORE_DICTIONARY = 1 << 2;
+    int FLAG_IS_CREATIVE = 1 << 3;
+    int FLAG_INFINITE_CAPACITY = 1 << 4;
+    int FLAG_OBSIDIAN_SHELL = 1 << 5;
+    int FLAG_REDSTONE_OUT = 1 << 6;
+    int FLAG_HOPPER = 1 << 7;
+    int FLAG_HOPPER_ENDER = 1 << 8;
+    int FLAG_ALWAYS_DISPLAY_DATA = 1 << 9;
+    int FLAG_DISPLAY_BAR = 1 << 10;
 
     ITier getTier();
 

@@ -84,7 +84,17 @@ public abstract class Barrel implements IBarrelModifiable
     @Override
     public boolean getFlag(int flag)
     {
+        if(flag == FLAG_ALWAYS_DISPLAY_DATA)
+        {
+            return YabbaConfig.ALWAYS_DISPLAY_DATA.get().get(Bits.getFlag(getFlags(), FLAG_ALWAYS_DISPLAY_DATA));
+        }
+        else if(flag == FLAG_DISPLAY_BAR)
+        {
+            return YabbaConfig.DISPLAY_BAR.get().get(Bits.getFlag(getFlags(), FLAG_DISPLAY_BAR));
+        }
+
         return Bits.getFlag(getFlags(), flag);
+
     }
 
     @Override

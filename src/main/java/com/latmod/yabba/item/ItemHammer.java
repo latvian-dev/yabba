@@ -1,12 +1,12 @@
 package com.latmod.yabba.item;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -121,6 +121,6 @@ public class ItemHammer extends ItemYabba
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Model: " + I18n.format("yabba.model." + getModel(stack).getName()));
+        tooltip.add("Model: " + StringUtils.translate("yabba.model." + getModel(stack).getName()));
     }
 }

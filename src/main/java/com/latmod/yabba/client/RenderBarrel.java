@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.opengl.GL11;
 
@@ -74,29 +75,58 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 
         boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
 
-        if(mouseOver || YabbaConfig.ALWAYS_DISPLAY_BARREL_DATA.getBoolean() || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
+        if(mouseOver || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
             float textDistance = barrel.getModel().getTextDistance();
 
             if(hasStack)
             {
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(0.5F, 0.075F, textDistance);
-                String s1 = te.getItemDisplayCount(isSneaking);
-                int sw = getFontRenderer().getStringWidth(s1);
-                float f = 1F / (float) Math.max((sw + 10), 64);
-                GlStateManager.scale(f, f, 1F);
-                getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
-                GlStateManager.popMatrix();
+                if(!isCreative && !isSneaking && barrel.getFlag(IBarrel.FLAG_DISPLAY_BAR))
+                {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.disableTexture2D();
+                    Tessellator tessellator = Tessellator.getInstance();
+                    VertexBuffer buffer = tessellator.getBuffer();
+                    buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+                    double b = 0.02D;
+                    double b2 = b * 2D;
+                    double bx = 0.0625D;
+                    double by = 0.0625D;
+                    double bw = 1D - bx * 2D;
+                    double bh = 0.15D;
+                    double filled = MathHelper.clamp(barrel.getItemCount() / (double) barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0)), 0D, 1D);
+
+                    int a = YabbaConfig.BAR_COLOR_ALPHA.getInt();
+                    rect(buffer, bx, by, textDistance, b, bh, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
+                    rect(buffer, 1D - b - bx, by, textDistance, b, bh, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
+                    rect(buffer, bx + b, by, textDistance, bw - b2, b, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
+                    rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
+                    rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, YabbaConfig.BAR_COLOR_FREE.getColor(), a);
+                    rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, YabbaConfig.BAR_COLOR_FILLED.getColor(), a);
+                    tessellator.draw();
+                    GlStateManager.enableTexture2D();
+                    GlStateManager.popMatrix();
+                }
+                else
+                {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(0.5F, 0.075F, textDistance);
+                    String s1 = te.getItemDisplayCount(isSneaking);
+                    int sw = getFontRenderer().getStringWidth(s1);
+                    float f = 1F / (float) Math.max((sw + 10), 64);
+                    GlStateManager.scale(f, f, 1F);
+                    getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
+                    GlStateManager.popMatrix();
+                }
 
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0.5F, 0.80F, textDistance);
-                s1 = te.getItemDisplayName();
-                sw = getFontRenderer().getStringWidth(s1);
-                f = 1F / (float) Math.max((sw + 10), 64);
-                GlStateManager.scale(f, f, 1F);
-                getFontRenderer().drawString(s1, -sw / 2, 0, 0xFFFFFFFF);
+                String s2 = te.getItemDisplayName();
+                int sw1 = getFontRenderer().getStringWidth(s2);
+                float f1 = 1F / (float) Math.max((sw1 + 10), 64);
+                GlStateManager.scale(f1, f1, 1F);
+                getFontRenderer().drawString(s2, -sw1 / 2, 0, 0xFFFFFFFF);
                 GlStateManager.popMatrix();
             }
 
@@ -173,5 +203,13 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.popMatrix();
 
         setLightmapDisabled(false);
+    }
+
+    private static void rect(VertexBuffer buffer, double x, double y, double z, double w, double h, Color4I col, int a)
+    {
+        buffer.pos(x, y, z).color(col.red(), col.green(), col.blue(), a).endVertex();
+        buffer.pos(x, y + h, z).color(col.red(), col.green(), col.blue(), a).endVertex();
+        buffer.pos(x + w, y + h, z).color(col.red(), col.green(), col.blue(), a).endVertex();
+        buffer.pos(x + w, y, z).color(col.red(), col.green(), col.blue(), a).endVertex();
     }
 }

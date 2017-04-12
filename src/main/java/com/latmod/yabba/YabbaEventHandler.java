@@ -131,6 +131,7 @@ public class YabbaEventHandler
         String group = Yabba.MOD_ID;
         event.add(group, "disable_ore_items", PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY), v -> barrel.setFlag(IBarrel.FLAG_DISABLE_ORE_DICTIONARY, v)));
         event.add(group, "always_display_data", PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA), v -> barrel.setFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA, v)));
+        event.add(group, "display_bar", PropertyBool.create(false, () -> barrel.getFlag(IBarrel.FLAG_DISPLAY_BAR), v -> barrel.setFlag(IBarrel.FLAG_DISPLAY_BAR, v)));
 
         if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
         {

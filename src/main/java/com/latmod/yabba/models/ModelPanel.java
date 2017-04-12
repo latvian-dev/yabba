@@ -2,7 +2,7 @@ package com.latmod.yabba.models;
 
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.block.BlockBarrel;
@@ -33,7 +33,7 @@ public class ModelPanel extends ModelBase
     {
         super(id);
         height = h;
-        boxes = MathHelperLM.getRotatedBoxes(new AxisAlignedBB(0D, 1D - height, 0D, 1D, 1D, 1D));
+        boxes = MathUtils.getRotatedBoxes(new AxisAlignedBB(0D, 1D - height, 0D, 1D, 1D, 1D));
     }
 
     @Override

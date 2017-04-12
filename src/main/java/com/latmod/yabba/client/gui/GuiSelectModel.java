@@ -1,5 +1,6 @@
 package com.latmod.yabba.client.gui;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.client.YabbaClient;
@@ -7,7 +8,6 @@ import com.latmod.yabba.net.MessageSelectModel;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class GuiSelectModel extends GuiYabba
 
                 if(buttonOver < YabbaRegistry.ALL_MODELS.size())
                 {
-                    drawHoveringText(Collections.singletonList(I18n.format("yabba.model." + YabbaRegistry.ALL_MODELS.get(buttonOver).getName())), mouseX, mouseY);
+                    drawHoveringText(Collections.singletonList(StringUtils.translate("yabba.model." + YabbaRegistry.ALL_MODELS.get(buttonOver).getName())), mouseX, mouseY);
                 }
             }
         }

@@ -1,10 +1,10 @@
 package com.latmod.yabba.item;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.ITier;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class ItemBlockBarrel extends ItemBlock
     {
         IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
-        list.add("Model: " + I18n.format("yabba.model." + barrel.getModel().getName()));
+        list.add("Model: " + StringUtils.translate("yabba.model." + barrel.getModel().getName()));
         list.add("Skin: " + barrel.getSkin().getDisplayName());
 
         ITier tier = barrel.getTier();
@@ -73,7 +73,7 @@ public class ItemBlockBarrel extends ItemBlock
 
             for(int i = 0; i < upgrades.tagCount(); i++)
             {
-                list.add("> " + I18n.format(upgrades.getStringTagAt(i)));
+                list.add("> " + StringUtils.translate(upgrades.getStringTagAt(i)));
             }
         }
     }

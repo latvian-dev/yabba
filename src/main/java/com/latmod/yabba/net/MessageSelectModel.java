@@ -1,7 +1,7 @@
 package com.latmod.yabba.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.latmod.yabba.item.ItemHammer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class MessageSelectModel extends MessageToServer<MessageSelectModel>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return YabbaNetHandler.NET;
     }

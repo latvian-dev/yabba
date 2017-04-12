@@ -1,6 +1,6 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.base.Function;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
@@ -130,7 +130,7 @@ public class BarrelModel implements IModel
 
     public BarrelModel(String v)
     {
-        Map<String, String> map = LMStringUtils.parse(LMStringUtils.TEMP_MAP, v);
+        Map<String, String> map = StringUtils.parse(StringUtils.TEMP_MAP, v);
         IBarrelModel model = YabbaRegistry.INSTANCE.getModel(map.get("model"));
         IBarrelSkin skin = YabbaRegistry.INSTANCE.getSkin(map.get("skin"));
         barrel = new BarrelForModel(model, skin);

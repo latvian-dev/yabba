@@ -3,10 +3,10 @@ package com.latmod.yabba.util;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.IconSet;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
 
 /**
  * Created by LatvianModder on 19.12.2016.
@@ -47,7 +47,7 @@ public class BarrelSkin extends FinalIDObject implements IBarrelSkin
             }
             catch(Exception ex)
             {
-                cachedName = I18n.translateToLocal(state.getBlock().getUnlocalizedName());
+                cachedName = StringUtils.translate(state.getBlock().getUnlocalizedName());
             }
         }
 
