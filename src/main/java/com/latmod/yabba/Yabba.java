@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +30,7 @@ public class Yabba
     public static final Logger LOGGER = LogManager.getLogger("YABBA");
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
+    public void onPreInit(FMLPreInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(YabbaEventHandler.class);
 
@@ -40,6 +41,12 @@ public class Yabba
 
         YabbaNetHandler.init();
         PROXY.preInit();
+    }
+
+    @Mod.EventHandler
+    public void onInit(FMLInitializationEvent event)
+    {
+        PROXY.init();
     }
 
     @Mod.EventHandler

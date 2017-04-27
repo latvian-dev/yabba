@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 public class YabbaEventHandler
 {
     @SubscribeEvent
-    public static void onRegistryEvent(YabbaRegistryEvent event)
+    public static void onYabbaRegistry(YabbaRegistryEvent event)
     {
         IYabbaRegistry reg = event.getRegistry();
 
@@ -124,7 +124,7 @@ public class YabbaEventHandler
     }
 
     @SubscribeEvent
-    public static void createConfigEvent(YabbaCreateConfigEvent event)
+    public static void createConfig(YabbaCreateConfigEvent event)
     {
         IBarrelModifiable barrel = event.getBarrel();
 
