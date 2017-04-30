@@ -5,6 +5,7 @@ import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.ITier;
 import mcjty.lib.compat.CompatItemBlock;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -44,7 +45,7 @@ public class ItemBlockBarrel extends CompatItemBlock
         ITier tier = barrel.getTier();
         ItemStack stack1 = barrel.getStackInSlot(0);
 
-        if(stack1 != null)
+        if(!ItemStackTools.isEmpty(stack1))
         {
             list.add("Item: " + stack1.getDisplayName());
         }
@@ -55,7 +56,7 @@ public class ItemBlockBarrel extends CompatItemBlock
             {
                 list.add(barrel.getItemCount() + " items");
             }
-            else if(stack1 != null)
+            else if(!ItemStackTools.isEmpty(stack1))
             {
                 list.add(barrel.getItemCount() + " / " + tier.getMaxItems(barrel, stack1));
             }

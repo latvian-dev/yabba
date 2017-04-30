@@ -2,10 +2,11 @@ package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelModifiable;
+import mcjty.lib.compat.CompatIRecipe;
+import mcjty.lib.tools.ItemStackList;
 import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -15,7 +16,7 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 17.12.2016.
  */
-public class RecipeBarrelUpgrade implements IRecipe
+public class RecipeBarrelUpgrade implements CompatIRecipe
 {
     private ItemStack barrelStack, upgradeStack;
     private World worldObj;
@@ -95,23 +96,16 @@ public class RecipeBarrelUpgrade implements IRecipe
         return 2;
     }
 
-    @Nullable
     @Override
-    public ItemStack getRecipeOutput()
+    public ItemStackList getRemainingItemsCompat(InventoryCrafting inv)
     {
-        return ItemStackTools.getEmptyStack();
-    }
+        ItemStackList list = ItemStackList.create();
 
-    @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inv)
-    {
-        ItemStack[] stacks = new ItemStack[inv.getSizeInventory()];
-
-        for(int i = 0; i < stacks.length; ++i)
+        for(int i = 0; i < inv.getSizeInventory(); ++i)
         {
-            stacks[i] = ForgeHooks.getContainerItem(inv.getStackInSlot(i));
+            list.add(ForgeHooks.getContainerItem(inv.getStackInSlot(i)));
         }
 
-        return stacks;
+        return list;
     }
 }
