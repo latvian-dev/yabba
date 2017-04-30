@@ -131,7 +131,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 GlStateManager.popMatrix();
             }
 
-            if(isSneaking && mouseOver && mc.player.getHeldItem(EnumHand.MAIN_HAND) == null)
+            if(isSneaking && mouseOver && ItemStackTools.isEmpty(mc.player.getHeldItem(EnumHand.MAIN_HAND)))
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0D, 0D, textDistance);
