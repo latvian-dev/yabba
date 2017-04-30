@@ -144,7 +144,7 @@ public class BlockBarrel extends BlockBarrelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    public void clGetSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         list.add(createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD));
     }
@@ -238,7 +238,7 @@ public class BlockBarrel extends BlockBarrelBase
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean clOnBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if(side == BlockBarrel.normalizeFacing(state))
         {
@@ -250,6 +250,7 @@ public class BlockBarrel extends BlockBarrelBase
                 {
                     Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
                     long time = worldIn.getTotalWorldTime();
+                    ItemStack heldItem = playerIn.getHeldItem(hand);
                     ((TileBarrel) tile).onRightClick(playerIn, state, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
 
                     if(ItemStackTools.isEmpty(heldItem) || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))

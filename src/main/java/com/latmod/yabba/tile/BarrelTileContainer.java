@@ -66,7 +66,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         String tierID = nbt.getString("Tier");
         tier = YabbaRegistry.INSTANCE.getTier(tierID);
         flags = nbt.getInteger("Flags");
-        storedItem = nbt.hasKey("Item") ? ItemStackTools.loadFromNBT(nbt.getCompoundTag("Item")) : null;
+        storedItem = nbt.hasKey("Item") ? ItemStackTools.loadFromNBT(nbt.getCompoundTag("Item")) : ItemStackTools.getEmptyStack();
         itemCount = ItemStackTools.isEmpty(storedItem) ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
         model = YabbaRegistry.INSTANCE.getModel(nbt.getString("Model"));
@@ -83,6 +83,11 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     @Nullable
     public ItemStack getStackInSlot(int slot)
     {
+        if(storedItem == null) // shouldnt happen but better to check anyway
+        {
+            storedItem = ItemStackTools.getEmptyStack();
+        }
+
         int count = getItemCount();
         if(count > 0)
         {

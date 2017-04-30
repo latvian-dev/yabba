@@ -101,7 +101,7 @@ public class ItemPainter extends ItemYabba
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    public ActionResult<ItemStack> clOnItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
         if(hand == EnumHand.MAIN_HAND && playerIn.isSneaking())
         {
@@ -110,15 +110,15 @@ public class ItemPainter extends ItemYabba
                 Yabba.PROXY.openSkinGui();
             }
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+            return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
         }
 
-        return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(hand));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void clAddInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         tooltip.add("Skin: " + getSkin(stack).getDisplayName());
     }

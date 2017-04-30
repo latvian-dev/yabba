@@ -4,9 +4,9 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.ITier;
+import mcjty.lib.compat.CompatItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 13.12.2016.
  */
-public class ItemBlockBarrel extends ItemBlock
+public class ItemBlockBarrel extends CompatItemBlock
 {
     public ItemBlockBarrel(Block block)
     {
@@ -34,7 +34,7 @@ public class ItemBlockBarrel extends ItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
+    public void clAddInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
         IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 

@@ -59,7 +59,7 @@ public class ItemUpgrade extends ItemYabba
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(@Nullable Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    public void clGetSubItems(@Nullable Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
         for(EnumUpgrade type : EnumUpgrade.VALUES)
         {
@@ -69,7 +69,7 @@ public class ItemUpgrade extends ItemYabba
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
+    public void clAddInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
         list.add(StringUtils.translate(EnumUpgrade.getFromMeta(stack.getMetadata()).uname));
     }
