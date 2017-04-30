@@ -52,6 +52,8 @@ public class YabbaCommon
         LMUtils.register(YabbaItems.BARREL);
         LMUtils.register(YabbaItems.ANTIBARREL);
 
+        TAB.addIcon(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata));
+
         GameRegistry.registerTileEntity(TileBarrel.class, Yabba.MOD_ID + ".barrel");
         GameRegistry.registerTileEntity(TileAntibarrel.class, Yabba.MOD_ID + ".antibarrel");
 
