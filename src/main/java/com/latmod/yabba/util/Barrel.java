@@ -7,6 +7,7 @@ import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.ITier;
 import gnu.trove.map.hash.TIntByteHashMap;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -113,18 +114,17 @@ public abstract class Barrel implements IBarrelModifiable
     @Nullable
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        if(stack == null || stack.stackSize <= 0)
+        if(ItemStackTools.isEmpty(stack))
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
         ItemStack storedItem = getStackInSlot(0);
-
-        boolean canInsert = storedItem == null || canInsertItem(storedItem, stack, !getFlag(FLAG_DISABLE_ORE_DICTIONARY));
-
-        if(storedItem != null && getFlag(FLAG_IS_CREATIVE))
+        boolean storedIsEmpty = ItemStackTools.isEmpty(storedItem);
+        boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack, !getFlag(FLAG_DISABLE_ORE_DICTIONARY));
+        if(!storedIsEmpty && getFlag(FLAG_IS_CREATIVE))
         {
-            return canInsert ? null : stack;
+            return canInsert ? ItemStackTools.getEmptyStack() : stack;
         }
 
         ITier tier = getTier();
@@ -137,7 +137,7 @@ public abstract class Barrel implements IBarrelModifiable
 
             if(itemCount >= capacity)
             {
-                return (canInsert && getFlag(FLAG_VOID_ITEMS)) ? null : stack;
+                return (canInsert && getFlag(FLAG_VOID_ITEMS)) ? ItemStackTools.getEmptyStack() : stack;
             }
         }
         else
@@ -147,14 +147,14 @@ public abstract class Barrel implements IBarrelModifiable
 
         if(canInsert)
         {
-            int size = Math.min(stack.stackSize, capacity - itemCount);
+            int size = Math.min(ItemStackTools.getStackSize(stack), capacity - itemCount);
 
             if(size > 0)
             {
                 if(!simulate)
                 {
                     boolean full = false;
-                    if(storedItem == null)
+                    if(ItemStackTools.isEmpty(storedItem))
                     {
                         setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
                         setItemCount(0);
@@ -166,7 +166,7 @@ public abstract class Barrel implements IBarrelModifiable
                 }
             }
 
-            return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - size);
+            return ItemHandlerHelper.copyStackWithSize(stack, ItemStackTools.getStackSize(stack) - size);
         }
 
         return stack;
@@ -176,18 +176,23 @@ public abstract class Barrel implements IBarrelModifiable
     @Nullable
     public ItemStack extractItem(int slot, int amount, boolean simulate)
     {
+        if(amount <= 0)
+        {
+            return ItemStackTools.getEmptyStack();
+        }
+
         int itemCount = getItemCount();
 
-        if(amount <= 0 || itemCount <= 0)
+        if(itemCount <= 0)
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
         ItemStack storedItem = getStackInSlot(0);
 
-        if(storedItem == null)
+        if(ItemStackTools.isEmpty(storedItem))
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
         if(getFlag(FLAG_IS_CREATIVE))
@@ -199,12 +204,12 @@ public abstract class Barrel implements IBarrelModifiable
 
         if(!simulate)
         {
-            setItemCount(itemCount - stack.stackSize);
+            setItemCount(itemCount - ItemStackTools.getStackSize(stack));
             boolean full = false;
 
-            if(itemCount - stack.stackSize <= 0 && !getFlag(FLAG_LOCKED))
+            if(itemCount - ItemStackTools.getStackSize(stack) <= 0 && !getFlag(FLAG_LOCKED))
             {
-                setStackInSlot(0, null);
+                setStackInSlot(0, ItemStackTools.getEmptyStack());
                 full = true;
             }
 

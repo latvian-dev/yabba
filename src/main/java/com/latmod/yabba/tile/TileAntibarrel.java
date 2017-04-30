@@ -1,5 +1,6 @@
 package com.latmod.yabba.tile;
 
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -25,7 +26,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
 
     public static boolean isValidItem(ItemStack is)
     {
-        return is.stackSize == 1 && !is.isStackable();
+        return ItemStackTools.getStackSize(is) == 1 && !is.isStackable();
     }
 
     @Override
@@ -54,9 +55,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
 
         for(ItemStack is : items)
         {
-            NBTTagCompound tag1 = new NBTTagCompound();
-            is.writeToNBT(tag1);
-            list.appendTag(tag1);
+            list.appendTag(is.serializeNBT());
         }
 
         nbt.setTag("Inv", list);
@@ -73,9 +72,9 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
 
         for(int i = 0; i < list.tagCount(); i++)
         {
-            ItemStack is = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i));
+            ItemStack is = ItemStackTools.loadFromNBT(list.getCompoundTagAt(i));
 
-            if(is != null)
+            if(!ItemStackTools.isEmpty(is))
             {
                 items.add(is);
             }
@@ -101,16 +100,16 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
     @Nullable
     public ItemStack getStackInSlot(int slot)
     {
-        return (slot == 0) ? null : items.get(slot - 1);
+        return (slot == 0) ? ItemStackTools.getEmptyStack() : getItemStack(slot - 1);
     }
 
     @Override
     @Nullable
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        if(stack == null || stack.stackSize == 0)
+        if(ItemStackTools.isEmpty(stack))
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
         else if(items.size() < MAX_ITEMS && isValidItem(stack))
         {
@@ -131,14 +130,14 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
     {
         if(slot == 0 || amount < 1)
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
-        ItemStack is = items.get(slot - 1);
+        ItemStack is = getItemStack(slot - 1);
 
         if(!simulate)
         {
-            setItemStack(slot - 1, null);
+            setItemStack(slot - 1, ItemStackTools.getEmptyStack());
         }
 
         return is;
@@ -151,7 +150,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
 
         if(slot < 0 || slot >= items.size())
         {
-            if(stack != null && stack.stackSize == 1)
+            if(ItemStackTools.getStackSize(stack) == 1)
             {
                 items.add(stack);
             }
@@ -160,7 +159,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
         }
         else
         {
-            if(stack == null || stack.stackSize < 1)
+            if(ItemStackTools.isEmpty(stack))
             {
                 is = items.remove(slot);
             }
@@ -171,12 +170,13 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
         }
 
         markDirty();
-        return is;
+        return is == null ? ItemStackTools.getEmptyStack() : is;
     }
 
     @Nullable
     public ItemStack getItemStack(int slot)
     {
-        return (slot < 0 || slot >= items.size()) ? null : items.get(slot);
+        ItemStack stack = (slot < 0 || slot >= items.size()) ? null : items.get(slot);
+        return stack == null ? ItemStackTools.getEmptyStack() : stack;
     }
 }

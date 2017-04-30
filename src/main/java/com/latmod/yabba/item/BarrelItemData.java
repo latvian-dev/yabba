@@ -6,6 +6,7 @@ import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;
 import com.latmod.yabba.util.Barrel;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -124,13 +125,13 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     public ItemStack getStackInSlot(int slot)
     {
         NBTTagCompound nbt = (NBTTagCompound) getBarrelNBT().getTag("Item");
-        return nbt == null ? null : ItemStack.loadItemStackFromNBT(nbt);
+        return nbt == null ? ItemStackTools.getEmptyStack() : ItemStackTools.loadFromNBT(nbt);
     }
 
     @Override
     public void setStackInSlot(int slot, ItemStack stack)
     {
-        if(stack == null)
+        if(ItemStackTools.isEmpty(stack))
         {
             getBarrelNBT().removeTag("Item");
         }

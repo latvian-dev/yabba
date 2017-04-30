@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.ITier;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -41,7 +42,7 @@ public class Tier extends FinalIDObject implements ITier
             return YabbaConfig.TIER_ITEM_INFINITY.getInt();
         }
 
-        return getMaxStacks() * (itemStack == null ? 1 : itemStack.getMaxStackSize());
+        return getMaxStacks() * (ItemStackTools.isEmpty(itemStack) ? 1 : itemStack.getMaxStackSize());
     }
 
     @Override

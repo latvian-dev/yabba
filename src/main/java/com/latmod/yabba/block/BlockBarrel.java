@@ -14,6 +14,7 @@ import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.PropertyBarrelModel;
 import com.latmod.yabba.util.PropertyBarrelSkin;
 import com.latmod.yabba.util.Tier;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -251,7 +252,7 @@ public class BlockBarrel extends BlockBarrelBase
                     long time = worldIn.getTotalWorldTime();
                     ((TileBarrel) tile).onRightClick(playerIn, state, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
 
-                    if(heldItem == null || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+                    if(ItemStackTools.isEmpty(heldItem) || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
                     {
                         LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
                     }

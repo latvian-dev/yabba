@@ -7,6 +7,7 @@ import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.net.MessageRequestBarrelUpdate;
 import com.latmod.yabba.tile.TileBarrel;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
@@ -47,7 +48,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 
         IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
         ItemStack stack = barrel.getStackInSlot(0);
-        boolean hasStack = stack != null;
+        boolean hasStack = !ItemStackTools.isEmpty(stack);
         Minecraft mc = Minecraft.getMinecraft();
 
         boolean isSneaking = mc.player.isSneaking();

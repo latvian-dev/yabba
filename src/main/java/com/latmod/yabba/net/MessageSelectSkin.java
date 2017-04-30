@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.latmod.yabba.item.ItemPainter;
 import io.netty.buffer.ByteBuf;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -48,7 +49,7 @@ public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
     {
         ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
-        if(stack != null && stack.getItem() instanceof ItemPainter)
+        if(!ItemStackTools.isEmpty(stack) && stack.getItem() instanceof ItemPainter)
         {
             ItemPainter.setSkin(stack, message.skinId);
         }

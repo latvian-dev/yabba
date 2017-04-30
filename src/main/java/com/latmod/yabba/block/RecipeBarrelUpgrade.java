@@ -2,6 +2,7 @@ package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelModifiable;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -23,21 +24,21 @@ public class RecipeBarrelUpgrade implements IRecipe
     public boolean matches(InventoryCrafting inv, World worldIn)
     {
         worldObj = worldIn;
-        barrelStack = null;
-        upgradeStack = null;
+        barrelStack = ItemStackTools.getEmptyStack();
+        upgradeStack = ItemStackTools.getEmptyStack();
 
         for(int i = 0; i < inv.getSizeInventory(); i++)
         {
             ItemStack is = inv.getStackInSlot(i);
 
-            if(is == null)
+            if(ItemStackTools.isEmpty(is))
             {
                 continue;
             }
 
             if(is.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
             {
-                if(barrelStack != null)
+                if(!ItemStackTools.isEmpty(barrelStack))
                 {
                     return false;
                 }
@@ -48,7 +49,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             }
             else if(is.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
             {
-                if(upgradeStack != null)
+                if(!ItemStackTools.isEmpty(upgradeStack))
                 {
                     return false;
                 }
@@ -59,7 +60,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             }
         }
 
-        if(barrelStack == null || upgradeStack == null)
+        if(ItemStackTools.isEmpty(barrelStack) || ItemStackTools.isEmpty(upgradeStack))
         {
             return false;
         }
@@ -69,7 +70,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             {
                 ItemStack is = inv.getStackInSlot(i);
 
-                if(is != null && is != barrelStack && is != upgradeStack)
+                if(!ItemStackTools.isEmpty(is) && is != barrelStack && is != upgradeStack)
                 {
                     return false;
                 }
@@ -98,7 +99,7 @@ public class RecipeBarrelUpgrade implements IRecipe
     @Override
     public ItemStack getRecipeOutput()
     {
-        return null;
+        return ItemStackTools.getEmptyStack();
     }
 
     @Override

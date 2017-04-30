@@ -3,6 +3,7 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
@@ -14,12 +15,12 @@ import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
 import com.latmod.yabba.models.ModelSolidBorders;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockStone;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
@@ -187,14 +188,14 @@ public class YabbaEventHandler
     private static boolean onLeftClick(IBarrelModifiable barrel, EntityPlayer playerIn, @Nullable ItemStack heldItem)
     {
         ItemStack storedItem = barrel.getStackInSlot(0);
-        if(storedItem != null && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
+        if(!ItemStackTools.isEmpty(storedItem) && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
         {
             barrel.setStackInSlot(0, null);
             barrel.markBarrelDirty(true);
             return true;
         }
 
-        if(storedItem != null && barrel.getItemCount() > 0)
+        if(!ItemStackTools.isEmpty(storedItem) && barrel.getItemCount() > 0)
         {
             int size = 1;
 
@@ -203,28 +204,7 @@ public class YabbaEventHandler
                 size = storedItem.getMaxStackSize();
             }
 
-            ItemStack stack = barrel.extractItem(0, size, false);
-
-            if(stack != null)
-            {
-                if(playerIn.inventory.addItemStackToInventory(stack))
-                {
-                    playerIn.inventory.markDirty();
-
-                    if(playerIn.openContainer != null)
-                    {
-                        playerIn.openContainer.detectAndSendChanges();
-                    }
-                }
-                else
-                {
-                    EntityItem ei = new EntityItem(playerIn.world, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
-                    ei.motionX = ei.motionY = ei.motionZ = 0D;
-                    ei.setPickupDelay(0);
-                    playerIn.world.spawnEntity(ei);
-                }
-            }
-
+            InvUtils.giveItem(playerIn, barrel.extractItem(0, size, false));
             return !playerIn.isSneaking();
         }
 

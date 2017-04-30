@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
@@ -13,6 +14,7 @@ import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
@@ -135,7 +137,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
                 {
-                    InvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()));
+                    InvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()), LMUtils.alwaysTruePredicate());
                 }
             }
 
@@ -145,7 +147,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(tileUp != null && tileUp.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN))
                 {
-                    InvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()));
+                    InvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()), LMUtils.alwaysTruePredicate());
                 }
             }
 
@@ -161,11 +163,14 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, aabb, null))
                 {
                     ItemStack stack = barrel.insertItem(0, item.getEntityItem().copy(), false);
-                    item.setEntityItemStack(stack);
 
-                    if(stack == null || stack.stackSize == 0)
+                    if(ItemStackTools.isEmpty(stack))
                     {
                         item.setDead();
+                    }
+                    else
+                    {
+                        item.setEntityItemStack(stack);
                     }
                 }
             }
@@ -207,7 +212,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         if(cachedItemName == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            cachedItemName = is == null ? "" : is.getDisplayName();
+            cachedItemName = ItemStackTools.isEmpty(is) ? "" : is.getDisplayName();
         }
 
         return cachedItemName;
@@ -226,7 +231,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         else if(cachedItemCount == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            int max = is == null ? 64 : is.getMaxStackSize();
+            int max = ItemStackTools.isEmpty(is) ? 64 : is.getMaxStackSize();
             int c = barrel.getItemCount();
 
             if(max == 1 || c <= max)
@@ -293,11 +298,11 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                     if(is != playerIn.inventory.mainInventory[i])
                     {
-                        playerIn.inventory.mainInventory[i].stackSize = is == null ? 0 : is.stackSize;
+                        playerIn.inventory.mainInventory[i] = ItemStackTools.setStackSize(playerIn.inventory.mainInventory[i], ItemStackTools.getStackSize(is));
 
-                        if(playerIn.inventory.mainInventory[i].stackSize <= 0)
+                        if(ItemStackTools.isEmpty(playerIn.inventory.mainInventory[i]))
                         {
-                            playerIn.inventory.mainInventory[i] = null;
+                            playerIn.inventory.mainInventory[i] = ItemStackTools.getEmptyStack();
                         }
                     }
                 }
@@ -313,7 +318,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             return;
         }
 
-        if(heldItem == null)
+        if(ItemStackTools.isEmpty(heldItem))
         {
             if(playerIn.isSneaking())
             {
@@ -371,7 +376,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 {
                     if(!heldItem.getItem().hasContainerItem(heldItem))
                     {
-                        heldItem.stackSize--;
+                        ItemStackTools.incStackSize(heldItem, -1);
                     }
 
                     markDirty();
@@ -379,8 +384,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             }
             else
             {
-                ItemStack is = barrel.insertItem(0, heldItem, false);
-                heldItem.stackSize = is == null ? 0 : is.stackSize;
+                ItemStackTools.setStackSize(heldItem, ItemStackTools.getStackSize(barrel.insertItem(0, heldItem, false)));
             }
         }
 
@@ -450,7 +454,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
                 {
-                    type = null;
+                    type = ItemStackTools.getEmptyStack();
                 }
 
                 barrel.setStackInSlot(0, type);

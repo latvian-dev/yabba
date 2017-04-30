@@ -1,6 +1,7 @@
 package com.latmod.yabba;
 
 import com.feed_the_beast.ftbl.lib.EmptyCapStorage;
+import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.RecipeUtils;
 import com.latmod.yabba.api.IBarrel;
@@ -65,70 +66,70 @@ public class YabbaCommon
         RecipeUtils.addRecipe(ItemHandlerHelper.copyStackWithSize(blankUpgrade, YabbaConfig.CRAFTING_UPGRADE_STACK_SIZE.getInt()),
                 "SSS", "ICI", "SSS",
                 'I', Blocks.IRON_BARS,
-                'C', "chestWood",
-                'S', "slabWood");
+                'C', ODItems.CHEST_WOOD,
+                'S', ODItems.SLAB);
 
         if(YabbaConfig.CRAFTING_BARREL_EASY_RECIPE.getBoolean())
         {
             RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
                     "U", "C",
                     'U', blankUpgrade,
-                    'C', "chestWood");
+                    'C', ODItems.CHEST_WOOD);
         }
         else
         {
             RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
                     " U ", "SCS", " P ",
                     'U', blankUpgrade,
-                    'C', "chestWood",
-                    'S', "slabWood",
-                    'P', "plankWood");
+                    'C', ODItems.CHEST_WOOD,
+                    'S', ODItems.SLAB,
+                    'P', ODItems.PLANKS);
         }
 
         RecipeUtils.addRecipe(new ItemStack(YabbaItems.PAINTER),
                 "WWU", " I ", " I ",
                 'U', blankUpgrade,
-                'I', "ingotIron",
+                'I', ODItems.IRON,
                 'W', Blocks.WOOL);
 
         RecipeUtils.addRecipe(new ItemStack(YabbaItems.HAMMER),
                 "WUW", " I ", " I ",
                 'U', blankUpgrade,
-                'I', "ingotIron",
+                'I', ODItems.IRON,
                 'W', Blocks.WOOL);
 
         RecipeUtils.addRecipe(EnumUpgrade.IRON_UPGRADE.item(),
                 "III", "IUI", "III",
                 'U', blankUpgrade,
-                'I', "ingotIron");
+                'I', ODItems.IRON);
 
         RecipeUtils.addRecipe(EnumUpgrade.GOLD_UPGRADE.item(),
                 "III", "IUI", "III",
                 'U', blankUpgrade,
-                'I', "ingotGold");
+                'I', ODItems.GOLD);
 
         RecipeUtils.addRecipe(EnumUpgrade.DIAMOND_UPGRADE.item(),
                 "IUI",
                 'U', blankUpgrade,
-                'I', "gemDiamond");
+                'I', ODItems.DIAMOND);
 
         RecipeUtils.addShapelessRecipe(EnumUpgrade.VOID.item(), blankUpgrade, "dyeBlack");
-        RecipeUtils.addShapelessRecipe(EnumUpgrade.NETHER_STAR_UPGRADE.item(), blankUpgrade, Items.NETHER_STAR);
+        RecipeUtils.addShapelessRecipe(EnumUpgrade.NETHER_STAR_UPGRADE.item(), blankUpgrade, ODItems.NETHERSTAR);
 
         RecipeUtils.addRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.OBSIDIAN_SHELL.metadata),
                 " I ", "IUI", " I ",
                 'U', blankUpgrade,
-                'I', "obsidian");
+                'I', ODItems.OBSIDIAN);
 
         RecipeUtils.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.REDSTONE_OUT.metadata), blankUpgrade, Items.COMPARATOR);
         RecipeUtils.addShapelessRecipe(new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.HOPPER.metadata), blankUpgrade, Blocks.HOPPER);
 
         RecipeUtils.addRecipe(new ItemStack(YabbaItems.ANTIBARREL),
                 "NQN", "NON", "NCN",
-                'N', "ingotBrickNether",
-                'Q', "blockQuartz",
-                'O', "obsidian",
-                'C', "chestWood");
+                'N', ODItems.NETHER_INGOT,
+                'Q', ODItems.QUARTZ_BLOCK,
+                'O', ODItems.OBSIDIAN,
+                'C', ODItems.CHEST_WOOD);
     }
 
     public void openModelGui()
