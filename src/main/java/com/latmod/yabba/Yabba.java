@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by LatvianModder on 06.12.2016.
  */
-@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, dependencies = "required-after:ftbl;after:forestry")
+@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, acceptedMinecraftVersions = "[1.10,1.12)", dependencies = "required-after:ftbl;after:forestry")
 public class Yabba
 {
     public static final String MOD_ID = "yabba";
