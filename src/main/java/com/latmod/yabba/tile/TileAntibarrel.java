@@ -1,6 +1,5 @@
 package com.latmod.yabba.tile;
 
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -11,7 +10,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
 
     public static boolean isValidItem(ItemStack is)
     {
-        return ItemStackTools.getStackSize(is) == 1 && !is.isStackable();
+        return is.getCount() == 1 && !is.isStackable();
     }
 
     @Override
@@ -72,9 +70,9 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
 
         for(int i = 0; i < list.tagCount(); i++)
         {
-            ItemStack is = ItemStackTools.loadFromNBT(list.getCompoundTagAt(i));
+            ItemStack is = new ItemStack(list.getCompoundTagAt(i));
 
-            if(!ItemStackTools.isEmpty(is))
+            if(is.getCount() > 0)
             {
                 items.add(is);
             }
@@ -97,60 +95,62 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
     }
 
     @Override
-    @Nullable
     public ItemStack getStackInSlot(int slot)
     {
-        return (slot == 0) ? ItemStackTools.getEmptyStack() : getItemStack(slot - 1);
+        return (slot == 0) ? ItemStack.EMPTY : getItemStack(slot - 1);
     }
 
     @Override
-    @Nullable
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        if(ItemStackTools.isEmpty(stack))
+        if(stack.getCount() == 0)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
         else if(items.size() < MAX_ITEMS && isValidItem(stack))
         {
             if(!simulate)
             {
-                setItemStack(-1, stack);
+                setItemStack(-1, stack); //return ?
             }
 
-            return null;
+            return ItemStack.EMPTY;
         }
 
         return stack;
     }
 
     @Override
-    @Nullable
     public ItemStack extractItem(int slot, int amount, boolean simulate)
     {
         if(slot == 0 || amount < 1)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
 
         ItemStack is = getItemStack(slot - 1);
 
         if(!simulate)
         {
-            setItemStack(slot - 1, ItemStackTools.getEmptyStack());
+            setItemStack(slot - 1, ItemStack.EMPTY);
         }
 
         return is;
     }
 
-    @Nullable
-    public ItemStack setItemStack(int slot, @Nullable ItemStack stack)
+    @Override
+    public int getSlotLimit(int slot)
+    {
+        return 1;
+    }
+
+    public ItemStack setItemStack(int slot, ItemStack stack)
     {
         ItemStack is;
 
         if(slot < 0 || slot >= items.size())
         {
-            if(ItemStackTools.getStackSize(stack) == 1)
+            if(stack.getCount() == 1)
             {
                 items.add(stack);
             }
@@ -159,7 +159,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
         }
         else
         {
-            if(ItemStackTools.isEmpty(stack))
+            if(stack.getCount() == 0)
             {
                 is = items.remove(slot);
             }
@@ -170,13 +170,12 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
         }
 
         markDirty();
-        return is == null ? ItemStackTools.getEmptyStack() : is;
+        return is == null ? ItemStack.EMPTY : is;
     }
 
-    @Nullable
     public ItemStack getItemStack(int slot)
     {
         ItemStack stack = (slot < 0 || slot >= items.size()) ? null : items.get(slot);
-        return stack == null ? ItemStackTools.getEmptyStack() : stack;
+        return stack == null ? ItemStack.EMPTY : stack;
     }
 }

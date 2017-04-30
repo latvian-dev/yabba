@@ -15,7 +15,6 @@ import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
 import com.latmod.yabba.models.ModelSolidBorders;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
@@ -31,8 +30,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 14.12.2016.
@@ -185,17 +182,17 @@ public class YabbaEventHandler
         }
     }
 
-    private static boolean onLeftClick(IBarrelModifiable barrel, EntityPlayer playerIn, @Nullable ItemStack heldItem)
+    private static boolean onLeftClick(IBarrelModifiable barrel, EntityPlayer playerIn, ItemStack heldItem)
     {
         ItemStack storedItem = barrel.getStackInSlot(0);
-        if(!ItemStackTools.isEmpty(storedItem) && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
+        if(storedItem.getCount() > 0 && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
         {
-            barrel.setStackInSlot(0, null);
+            barrel.setStackInSlot(0, ItemStack.EMPTY);
             barrel.markBarrelDirty(true);
             return true;
         }
 
-        if(!ItemStackTools.isEmpty(storedItem) && barrel.getItemCount() > 0)
+        if(storedItem.getCount() > 0 && barrel.getItemCount() > 0)
         {
             int size = 1;
 

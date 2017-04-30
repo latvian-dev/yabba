@@ -7,7 +7,6 @@ import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.ITier;
 import gnu.trove.map.hash.TIntByteHashMap;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -111,20 +110,19 @@ public abstract class Barrel implements IBarrelModifiable
     }
 
     @Override
-    @Nullable
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        if(ItemStackTools.isEmpty(stack))
+        if(stack.getCount() == 0)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
 
         ItemStack storedItem = getStackInSlot(0);
-        boolean storedIsEmpty = ItemStackTools.isEmpty(storedItem);
+        boolean storedIsEmpty = storedItem.getCount() == 0;
         boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack, !getFlag(FLAG_DISABLE_ORE_DICTIONARY));
         if(!storedIsEmpty && getFlag(FLAG_IS_CREATIVE))
         {
-            return canInsert ? ItemStackTools.getEmptyStack() : stack;
+            return canInsert ? ItemStack.EMPTY : stack;
         }
 
         ITier tier = getTier();
@@ -137,7 +135,7 @@ public abstract class Barrel implements IBarrelModifiable
 
             if(itemCount >= capacity)
             {
-                return (canInsert && getFlag(FLAG_VOID_ITEMS)) ? ItemStackTools.getEmptyStack() : stack;
+                return (canInsert && getFlag(FLAG_VOID_ITEMS)) ? ItemStack.EMPTY : stack;
             }
         }
         else
@@ -147,14 +145,14 @@ public abstract class Barrel implements IBarrelModifiable
 
         if(canInsert)
         {
-            int size = Math.min(ItemStackTools.getStackSize(stack), capacity - itemCount);
+            int size = Math.min(stack.getCount(), capacity - itemCount);
 
             if(size > 0)
             {
                 if(!simulate)
                 {
                     boolean full = false;
-                    if(ItemStackTools.isEmpty(storedItem))
+                    if(storedItem.getCount() == 0)
                     {
                         setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
                         setItemCount(0);
@@ -166,33 +164,32 @@ public abstract class Barrel implements IBarrelModifiable
                 }
             }
 
-            return ItemHandlerHelper.copyStackWithSize(stack, ItemStackTools.getStackSize(stack) - size);
+            return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - size);
         }
 
         return stack;
     }
 
     @Override
-    @Nullable
     public ItemStack extractItem(int slot, int amount, boolean simulate)
     {
         if(amount <= 0)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
 
         int itemCount = getItemCount();
 
         if(itemCount <= 0)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
 
         ItemStack storedItem = getStackInSlot(0);
 
-        if(ItemStackTools.isEmpty(storedItem))
+        if(storedItem.getCount() == 0)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
 
         if(getFlag(FLAG_IS_CREATIVE))
@@ -204,12 +201,12 @@ public abstract class Barrel implements IBarrelModifiable
 
         if(!simulate)
         {
-            setItemCount(itemCount - ItemStackTools.getStackSize(stack));
+            setItemCount(itemCount - stack.getCount());
             boolean full = false;
 
-            if(itemCount - ItemStackTools.getStackSize(stack) <= 0 && !getFlag(FLAG_LOCKED))
+            if(itemCount - stack.getCount() <= 0 && !getFlag(FLAG_LOCKED))
             {
-                setStackInSlot(0, ItemStackTools.getEmptyStack());
+                setStackInSlot(0, ItemStack.EMPTY);
                 full = true;
             }
 
@@ -217,6 +214,12 @@ public abstract class Barrel implements IBarrelModifiable
         }
 
         return stack;
+    }
+
+    @Override
+    public int getSlotLimit(int slot)
+    {
+        return getTier().getMaxItems(this, getStackInSlot(slot));
     }
 
     @Override

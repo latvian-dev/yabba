@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,7 +60,7 @@ public class ItemUpgrade extends ItemYabba
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void clGetSubItems(@Nullable Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    public void getSubItems(@Nullable Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
         for(EnumUpgrade type : EnumUpgrade.VALUES)
         {
@@ -69,7 +70,7 @@ public class ItemUpgrade extends ItemYabba
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void clAddInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
         list.add(StringUtils.translate(EnumUpgrade.getFromMeta(stack.getMetadata()).uname));
     }

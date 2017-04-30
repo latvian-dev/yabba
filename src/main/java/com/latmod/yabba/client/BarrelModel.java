@@ -8,7 +8,6 @@ import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.ITier;
 import com.latmod.yabba.util.Tier;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -110,7 +109,7 @@ public class BarrelModel implements IModel
         @Override
         public ItemStack getStackInSlot(int slot)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
         }
 
         @Override
@@ -122,7 +121,13 @@ public class BarrelModel implements IModel
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate)
         {
-            return ItemStackTools.getEmptyStack();
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public int getSlotLimit(int slot)
+        {
+            return 0;
         }
     }
 

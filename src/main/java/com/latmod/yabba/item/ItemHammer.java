@@ -102,7 +102,7 @@ public class ItemHammer extends ItemYabba
     }
 
     @Override
-    public ActionResult<ItemStack> clOnItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
         if(hand == EnumHand.MAIN_HAND && playerIn.isSneaking())
         {
@@ -119,7 +119,7 @@ public class ItemHammer extends ItemYabba
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void clAddInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         tooltip.add("Model: " + StringUtils.translate("yabba.model." + getModel(stack).getName()));
     }

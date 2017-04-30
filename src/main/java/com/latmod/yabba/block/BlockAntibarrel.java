@@ -49,7 +49,7 @@ public class BlockAntibarrel extends BlockBarrelBase
     }
 
     @Override
-    public void clAddInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
     {
         if(stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
         {

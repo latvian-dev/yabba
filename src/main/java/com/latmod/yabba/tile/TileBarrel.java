@@ -14,7 +14,6 @@ import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
@@ -25,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -120,7 +120,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
             if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
             {
-                world.notifyNeighborsOfStateChange(pos, getBlockType());
+                world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
             }
 
             sendUpdate = 0;
@@ -164,7 +164,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 {
                     ItemStack stack = barrel.insertItem(0, item.getEntityItem().copy(), false);
 
-                    if(ItemStackTools.isEmpty(stack))
+                    if(stack.getCount() == 0)
                     {
                         item.setDead();
                     }
@@ -212,7 +212,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         if(cachedItemName == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            cachedItemName = ItemStackTools.isEmpty(is) ? "" : is.getDisplayName();
+            cachedItemName = is.getCount() == 0 ? "" : is.getDisplayName();
         }
 
         return cachedItemName;
@@ -231,7 +231,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         else if(cachedItemCount == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            int max = ItemStackTools.isEmpty(is) ? 64 : is.getMaxStackSize();
+            int max = is.getCount() == 0 ? 64 : is.getMaxStackSize();
             int c = barrel.getItemCount();
 
             if(max == 1 || c <= max)
@@ -286,23 +286,25 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         return cachedRotationY;
     }
 
-    public void onRightClick(EntityPlayer playerIn, IBlockState state, @Nullable ItemStack heldItem, float hitX, float hitY, float hitZ, EnumFacing facing, long deltaClickTime)
+    public void onRightClick(EntityPlayer playerIn, IBlockState state, EnumHand hand, float hitX, float hitY, float hitZ, EnumFacing facing, long deltaClickTime)
     {
         if(deltaClickTime <= 8)
         {
-            if(barrel.getStackInSlot(0) != null)
+            if(barrel.getStackInSlot(0).getCount() > 0)
             {
-                for(int i = 0; i < playerIn.inventory.mainInventory.length; i++)
+                for(int i = 0; i < playerIn.inventory.mainInventory.size(); i++)
                 {
-                    ItemStack is = barrel.insertItem(0, playerIn.inventory.mainInventory[i], false);
+                    ItemStack stack0 = playerIn.inventory.mainInventory.get(i);
+                    ItemStack is = barrel.insertItem(0, stack0, false);
+                    stack0 = playerIn.inventory.mainInventory.get(i);
 
-                    if(is != playerIn.inventory.mainInventory[i])
+                    if(is != stack0)
                     {
-                        playerIn.inventory.mainInventory[i] = ItemStackTools.setStackSize(playerIn.inventory.mainInventory[i], ItemStackTools.getStackSize(is));
+                        stack0.setCount(is.getCount());
 
-                        if(ItemStackTools.isEmpty(playerIn.inventory.mainInventory[i]))
+                        if(stack0.getCount() == 0)
                         {
-                            playerIn.inventory.mainInventory[i] = ItemStackTools.getEmptyStack();
+                            playerIn.inventory.mainInventory.set(i, ItemStack.EMPTY);
                         }
                     }
                 }
@@ -318,7 +320,8 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             return;
         }
 
-        if(ItemStackTools.isEmpty(heldItem))
+        ItemStack heldItem = playerIn.getHeldItem(hand);
+        if(heldItem.getCount() == 0)
         {
             if(playerIn.isSneaking())
             {
@@ -376,7 +379,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 {
                     if(!heldItem.getItem().hasContainerItem(heldItem))
                     {
-                        ItemStackTools.incStackSize(heldItem, -1);
+                        heldItem.shrink(1);
                     }
 
                     markDirty();
@@ -384,7 +387,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
             }
             else
             {
-                ItemStackTools.setStackSize(heldItem, ItemStackTools.getStackSize(barrel.insertItem(0, heldItem, false)));
+                heldItem.setCount(barrel.insertItem(0, heldItem, false).getCount());
             }
         }
 
@@ -454,7 +457,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
                 {
-                    type = ItemStackTools.getEmptyStack();
+                    type = ItemStack.EMPTY;
                 }
 
                 barrel.setStackInSlot(0, type);

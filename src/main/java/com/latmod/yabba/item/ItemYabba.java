@@ -2,12 +2,12 @@ package com.latmod.yabba.item;
 
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
-import mcjty.lib.compat.CompatItem;
+import net.minecraft.item.Item;
 
 /**
  * Created by LatvianModder on 19.01.2017.
  */
-public class ItemYabba extends CompatItem
+public class ItemYabba extends Item
 {
     public ItemYabba(String id)
     {

@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
 import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
-import mcjty.lib.compat.CompatBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
@@ -12,7 +12,7 @@ import net.minecraft.item.ItemBlock;
 /**
  * Created by LatvianModder on 19.01.2017.
  */
-public class BlockYabba extends CompatBlock implements IBlockWithItem
+public class BlockYabba extends Block implements IBlockWithItem
 {
     public BlockYabba(String id, Material blockMaterialIn, MapColor blockMapColorIn)
     {

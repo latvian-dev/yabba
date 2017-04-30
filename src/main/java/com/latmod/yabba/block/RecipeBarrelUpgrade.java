@@ -2,13 +2,11 @@ package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelModifiable;
-import mcjty.lib.compat.CompatIRecipe;
-import mcjty.lib.tools.ItemStackList;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -16,7 +14,7 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 17.12.2016.
  */
-public class RecipeBarrelUpgrade implements CompatIRecipe
+public class RecipeBarrelUpgrade implements IRecipe
 {
     private ItemStack barrelStack, upgradeStack;
     private World worldObj;
@@ -25,21 +23,21 @@ public class RecipeBarrelUpgrade implements CompatIRecipe
     public boolean matches(InventoryCrafting inv, World worldIn)
     {
         worldObj = worldIn;
-        barrelStack = ItemStackTools.getEmptyStack();
-        upgradeStack = ItemStackTools.getEmptyStack();
+        barrelStack = ItemStack.EMPTY;
+        upgradeStack = ItemStack.EMPTY;
 
         for(int i = 0; i < inv.getSizeInventory(); i++)
         {
             ItemStack is = inv.getStackInSlot(i);
 
-            if(ItemStackTools.isEmpty(is))
+            if(is.getCount() == 0)
             {
                 continue;
             }
 
             if(is.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
             {
-                if(!ItemStackTools.isEmpty(barrelStack))
+                if(barrelStack.getCount() > 0)
                 {
                     return false;
                 }
@@ -50,7 +48,7 @@ public class RecipeBarrelUpgrade implements CompatIRecipe
             }
             else if(is.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
             {
-                if(!ItemStackTools.isEmpty(upgradeStack))
+                if(upgradeStack.getCount() > 0)
                 {
                     return false;
                 }
@@ -61,7 +59,7 @@ public class RecipeBarrelUpgrade implements CompatIRecipe
             }
         }
 
-        if(ItemStackTools.isEmpty(barrelStack) || ItemStackTools.isEmpty(upgradeStack))
+        if(barrelStack.getCount() == 0 || upgradeStack.getCount() == 0)
         {
             return false;
         }
@@ -71,7 +69,7 @@ public class RecipeBarrelUpgrade implements CompatIRecipe
             {
                 ItemStack is = inv.getStackInSlot(i);
 
-                if(!ItemStackTools.isEmpty(is) && is != barrelStack && is != upgradeStack)
+                if(is.getCount() > 0 && is != barrelStack && is != upgradeStack)
                 {
                     return false;
                 }
@@ -97,13 +95,20 @@ public class RecipeBarrelUpgrade implements CompatIRecipe
     }
 
     @Override
-    public ItemStackList getRemainingItemsCompat(InventoryCrafting inv)
+    public ItemStack getRecipeOutput()
     {
-        ItemStackList list = ItemStackList.create();
+        return ItemStack.EMPTY;
+    }
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i)
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
+    {
+        NonNullList<ItemStack> list = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+
+        for(int i = 0; i < list.size(); ++i)
         {
-            list.add(ForgeHooks.getContainerItem(inv.getStackInSlot(i)));
+            ItemStack itemstack = inv.getStackInSlot(i);
+            list.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
         }
 
         return list;

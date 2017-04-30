@@ -14,7 +14,6 @@ import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.PropertyBarrelModel;
 import com.latmod.yabba.util.PropertyBarrelSkin;
 import com.latmod.yabba.util.Tier;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -34,6 +33,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -46,7 +46,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -144,7 +143,7 @@ public class BlockBarrel extends BlockBarrelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void clGetSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
     {
         list.add(createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD));
     }
@@ -232,13 +231,14 @@ public class BlockBarrel extends BlockBarrelBase
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
+    @Deprecated
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return getDefaultState().withProperty(ROTATION, EnumRotation.getRotationFromEntity(pos, placer)).withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     @Override
-    public boolean clOnBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if(side == BlockBarrel.normalizeFacing(state))
         {
@@ -250,10 +250,10 @@ public class BlockBarrel extends BlockBarrelBase
                 {
                     Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
                     long time = worldIn.getTotalWorldTime();
+                    ((TileBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
                     ItemStack heldItem = playerIn.getHeldItem(hand);
-                    ((TileBarrel) tile).onRightClick(playerIn, state, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
 
-                    if(ItemStackTools.isEmpty(heldItem) || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+                    if(heldItem.getCount() == 0 || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
                     {
                         LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
                     }

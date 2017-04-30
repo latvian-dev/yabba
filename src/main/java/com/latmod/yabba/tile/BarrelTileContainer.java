@@ -7,7 +7,6 @@ import com.latmod.yabba.api.ITier;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.Barrel;
 import com.latmod.yabba.util.Tier;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -37,9 +36,9 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         nbt.setString("Tier", getTier().getName());
         nbt.setInteger("Flags", flags);
 
-        if(!ItemStackTools.isEmpty(storedItem))
+        if(storedItem.getCount() > 0)
         {
-            ItemStackTools.setStackSize(storedItem, 1);
+            storedItem.setCount(1);
             nbt.setTag("Item", storedItem.serializeNBT());
             nbt.setInteger("Count", getItemCount());
         }
@@ -66,8 +65,8 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         String tierID = nbt.getString("Tier");
         tier = YabbaRegistry.INSTANCE.getTier(tierID);
         flags = nbt.getInteger("Flags");
-        storedItem = nbt.hasKey("Item") ? ItemStackTools.loadFromNBT(nbt.getCompoundTag("Item")) : ItemStackTools.getEmptyStack();
-        itemCount = ItemStackTools.isEmpty(storedItem) ? 0 : nbt.getInteger("Count");
+        storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
+        itemCount = storedItem.getCount() == 0 ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
         model = YabbaRegistry.INSTANCE.getModel(nbt.getString("Model"));
         skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));
@@ -80,19 +79,19 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     }
 
     @Override
-    @Nullable
     public ItemStack getStackInSlot(int slot)
     {
         if(storedItem == null) // shouldnt happen but better to check anyway
         {
-            storedItem = ItemStackTools.getEmptyStack();
+            storedItem = ItemStack.EMPTY;
         }
 
         int count = getItemCount();
         if(count > 0)
         {
-            ItemStackTools.setStackSize(storedItem, count);
+            storedItem.setCount(count);
         }
+
         return storedItem;
     }
 

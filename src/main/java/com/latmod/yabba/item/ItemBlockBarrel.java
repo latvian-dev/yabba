@@ -4,10 +4,9 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.ITier;
-import mcjty.lib.compat.CompatItemBlock;
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 13.12.2016.
  */
-public class ItemBlockBarrel extends CompatItemBlock
+public class ItemBlockBarrel extends ItemBlock
 {
     public ItemBlockBarrel(Block block)
     {
@@ -35,7 +34,7 @@ public class ItemBlockBarrel extends CompatItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void clAddInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean adv)
     {
         IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
@@ -45,7 +44,7 @@ public class ItemBlockBarrel extends CompatItemBlock
         ITier tier = barrel.getTier();
         ItemStack stack1 = barrel.getStackInSlot(0);
 
-        if(!ItemStackTools.isEmpty(stack1))
+        if(stack1.getCount() > 0)
         {
             list.add("Item: " + stack1.getDisplayName());
         }
@@ -56,7 +55,7 @@ public class ItemBlockBarrel extends CompatItemBlock
             {
                 list.add(barrel.getItemCount() + " items");
             }
-            else if(!ItemStackTools.isEmpty(stack1))
+            else if(stack1.getCount() > 1)
             {
                 list.add(barrel.getItemCount() + " / " + tier.getMaxItems(barrel, stack1));
             }
