@@ -185,14 +185,14 @@ public class YabbaEventHandler
     private static boolean onLeftClick(IBarrelModifiable barrel, EntityPlayer playerIn, ItemStack heldItem)
     {
         ItemStack storedItem = barrel.getStackInSlot(0);
-        if(storedItem.getCount() > 0 && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
+        if(!storedItem.isEmpty() && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
         {
             barrel.setStackInSlot(0, ItemStack.EMPTY);
             barrel.markBarrelDirty(true);
             return true;
         }
 
-        if(storedItem.getCount() > 0 && barrel.getItemCount() > 0)
+        if(!storedItem.isEmpty() && barrel.getItemCount() > 0)
         {
             int size = 1;
 

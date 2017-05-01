@@ -112,13 +112,13 @@ public abstract class Barrel implements IBarrelModifiable
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        if(stack.getCount() == 0)
+        if(stack.isEmpty())
         {
             return ItemStack.EMPTY;
         }
 
         ItemStack storedItem = getStackInSlot(0);
-        boolean storedIsEmpty = storedItem.getCount() == 0;
+        boolean storedIsEmpty = storedItem.isEmpty();
         boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack, !getFlag(FLAG_DISABLE_ORE_DICTIONARY));
         if(!storedIsEmpty && getFlag(FLAG_IS_CREATIVE))
         {
@@ -152,7 +152,7 @@ public abstract class Barrel implements IBarrelModifiable
                 if(!simulate)
                 {
                     boolean full = false;
-                    if(storedItem.getCount() == 0)
+                    if(storedItem.isEmpty())
                     {
                         setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
                         setItemCount(0);
@@ -187,7 +187,7 @@ public abstract class Barrel implements IBarrelModifiable
 
         ItemStack storedItem = getStackInSlot(0);
 
-        if(storedItem.getCount() == 0)
+        if(storedItem.isEmpty())
         {
             return ItemStack.EMPTY;
         }

@@ -72,7 +72,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
         {
             ItemStack is = new ItemStack(list.getCompoundTagAt(i));
 
-            if(is.getCount() > 0)
+            if(!is.isEmpty())
             {
                 items.add(is);
             }
@@ -103,7 +103,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        if(stack.getCount() == 0)
+        if(stack.isEmpty())
         {
             return ItemStack.EMPTY;
         }
@@ -159,7 +159,7 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
         }
         else
         {
-            if(stack.getCount() == 0)
+            if(stack.isEmpty())
             {
                 is = items.remove(slot);
             }

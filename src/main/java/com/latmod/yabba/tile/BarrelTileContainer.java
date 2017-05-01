@@ -36,7 +36,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         nbt.setString("Tier", getTier().getName());
         nbt.setInteger("Flags", flags);
 
-        if(storedItem.getCount() > 0)
+        if(!storedItem.isEmpty())
         {
             storedItem.setCount(1);
             nbt.setTag("Item", storedItem.serializeNBT());
@@ -66,7 +66,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
         tier = YabbaRegistry.INSTANCE.getTier(tierID);
         flags = nbt.getInteger("Flags");
         storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
-        itemCount = storedItem.getCount() == 0 ? 0 : nbt.getInteger("Count");
+        itemCount = storedItem.isEmpty() ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
         model = YabbaRegistry.INSTANCE.getModel(nbt.getString("Model"));
         skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));

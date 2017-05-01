@@ -39,7 +39,7 @@ public class Tier extends FinalIDObject implements ITier
             return YabbaConfig.TIER_ITEM_INFINITY.getInt();
         }
 
-        return getMaxStacks() * (itemStack.getCount() == 0 ? 1 : itemStack.getMaxStackSize());
+        return getMaxStacks() * (itemStack.isEmpty() ? 1 : itemStack.getMaxStackSize());
     }
 
     @Override

@@ -164,7 +164,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                 {
                     ItemStack stack = barrel.insertItem(0, item.getEntityItem().copy(), false);
 
-                    if(stack.getCount() == 0)
+                    if(stack.isEmpty())
                     {
                         item.setDead();
                     }
@@ -212,7 +212,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         if(cachedItemName == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            cachedItemName = is.getCount() == 0 ? "" : is.getDisplayName();
+            cachedItemName = is.isItemDamaged() ? "" : is.getDisplayName();
         }
 
         return cachedItemName;
@@ -231,7 +231,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         else if(cachedItemCount == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            int max = is.getCount() == 0 ? 64 : is.getMaxStackSize();
+            int max = is.isEmpty() ? 64 : is.getMaxStackSize();
             int c = barrel.getItemCount();
 
             if(max == 1 || c <= max)
@@ -290,7 +290,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     {
         if(deltaClickTime <= 8)
         {
-            if(barrel.getStackInSlot(0).getCount() > 0)
+            if(!barrel.getStackInSlot(0).isEmpty())
             {
                 for(int i = 0; i < playerIn.inventory.mainInventory.size(); i++)
                 {
@@ -302,7 +302,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
                     {
                         stack0.setCount(is.getCount());
 
-                        if(stack0.getCount() == 0)
+                        if(stack0.isEmpty())
                         {
                             playerIn.inventory.mainInventory.set(i, ItemStack.EMPTY);
                         }
@@ -321,7 +321,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         }
 
         ItemStack heldItem = playerIn.getHeldItem(hand);
-        if(heldItem.getCount() == 0)
+        if(heldItem.isEmpty())
         {
             if(playerIn.isSneaking())
             {

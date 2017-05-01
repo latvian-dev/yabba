@@ -46,8 +46,14 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         }
 
         IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+
+        if(barrel == null)
+        {
+            return;
+        }
+
         ItemStack stack = barrel.getStackInSlot(0);
-        boolean hasStack = stack.getCount() > 0;
+        boolean hasStack = !stack.isEmpty();
         Minecraft mc = Minecraft.getMinecraft();
 
         boolean isSneaking = mc.player.isSneaking();
@@ -130,7 +136,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 GlStateManager.popMatrix();
             }
 
-            if(isSneaking && mouseOver && mc.player.getHeldItem(EnumHand.MAIN_HAND).getCount() == 0)
+            if(isSneaking && mouseOver && mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0D, 0D, textDistance);

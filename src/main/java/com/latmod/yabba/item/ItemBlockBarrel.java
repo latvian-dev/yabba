@@ -44,7 +44,7 @@ public class ItemBlockBarrel extends ItemBlock
         ITier tier = barrel.getTier();
         ItemStack stack1 = barrel.getStackInSlot(0);
 
-        if(stack1.getCount() > 0)
+        if(!stack1.isEmpty())
         {
             list.add("Item: " + stack1.getDisplayName());
         }
@@ -55,7 +55,7 @@ public class ItemBlockBarrel extends ItemBlock
             {
                 list.add(barrel.getItemCount() + " items");
             }
-            else if(stack1.getCount() > 1)
+            else if(!stack1.isEmpty())
             {
                 list.add(barrel.getItemCount() + " / " + tier.getMaxItems(barrel, stack1));
             }

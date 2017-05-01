@@ -48,7 +48,7 @@ public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
     {
         ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
-        if(stack.getCount() > 0 && stack.getItem() instanceof ItemPainter)
+        if(!stack.isEmpty() && stack.getItem() instanceof ItemPainter)
         {
             ItemPainter.setSkin(stack, message.skinId);
         }

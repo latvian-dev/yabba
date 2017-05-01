@@ -48,7 +48,7 @@ public class MessageSelectModel extends MessageToServer<MessageSelectModel>
     {
         ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
-        if(stack.getCount() > 0 && stack.getItem() instanceof ItemHammer)
+        if(!stack.isEmpty() && stack.getItem() instanceof ItemHammer)
         {
             ItemHammer.setModel(stack, message.modelId);
         }

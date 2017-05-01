@@ -30,14 +30,14 @@ public class RecipeBarrelUpgrade implements IRecipe
         {
             ItemStack is = inv.getStackInSlot(i);
 
-            if(is.getCount() == 0)
+            if(is.isEmpty())
             {
                 continue;
             }
 
             if(is.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
             {
-                if(barrelStack.getCount() > 0)
+                if(!barrelStack.isEmpty())
                 {
                     return false;
                 }
@@ -48,7 +48,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             }
             else if(is.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
             {
-                if(upgradeStack.getCount() > 0)
+                if(!upgradeStack.isEmpty())
                 {
                     return false;
                 }
@@ -59,7 +59,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             }
         }
 
-        if(barrelStack.getCount() == 0 || upgradeStack.getCount() == 0)
+        if(barrelStack.isEmpty() || upgradeStack.isEmpty())
         {
             return false;
         }
@@ -69,7 +69,7 @@ public class RecipeBarrelUpgrade implements IRecipe
             {
                 ItemStack is = inv.getStackInSlot(i);
 
-                if(is.getCount() > 0 && is != barrelStack && is != upgradeStack)
+                if(!is.isEmpty() && is != barrelStack && is != upgradeStack)
                 {
                     return false;
                 }

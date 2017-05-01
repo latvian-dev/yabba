@@ -129,7 +129,7 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     @Override
     public void setStackInSlot(int slot, ItemStack stack)
     {
-        if(stack.getCount() == 0)
+        if(stack.isEmpty())
         {
             getBarrelNBT().removeTag("Item");
         }

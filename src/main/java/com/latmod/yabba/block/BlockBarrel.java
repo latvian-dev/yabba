@@ -253,7 +253,7 @@ public class BlockBarrel extends BlockBarrelBase
                     ((TileBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
                     ItemStack heldItem = playerIn.getHeldItem(hand);
 
-                    if(heldItem.getCount() == 0 || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+                    if(heldItem.isEmpty() || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
                     {
                         LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
                     }
