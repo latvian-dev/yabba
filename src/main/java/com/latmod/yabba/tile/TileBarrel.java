@@ -4,9 +4,11 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
@@ -135,7 +137,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(tileDown != null && tileDown.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
                 {
-                    InvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()));
+                    InvUtils.transferItems(barrel, tileDown.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), Math.min(maxItems, barrel.getItemCount()), LMUtils.alwaysTruePredicate());
                 }
             }
 
@@ -145,7 +147,7 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
 
                 if(tileUp != null && tileUp.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN))
                 {
-                    InvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()));
+                    InvUtils.transferItems(tileUp.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), barrel, Math.min(maxItems, barrel.getFreeSpace()), LMUtils.alwaysTruePredicate());
                 }
             }
 
@@ -279,6 +281,55 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
         }
 
         return cachedRotationY;
+    }
+
+    public void onLeftClick(EntityPlayer playerIn)
+    {
+        ItemStack storedItem = barrel.getStackInSlot(0);
+        if(storedItem != null && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
+        {
+            barrel.setStackInSlot(0, null);
+            barrel.markBarrelDirty(true);
+            return;
+        }
+
+        if(storedItem != null && barrel.getItemCount() > 0)
+        {
+            int size;
+
+            if(YabbaConfig.SNEAK_LEFT_CLICK_EXTRACTS_STACK.getBoolean() == playerIn.isSneaking())
+            {
+                size = storedItem.getMaxStackSize();
+            }
+            else
+            {
+                size = 1;
+            }
+
+            ItemStack stack = barrel.extractItem(0, size, false);
+
+            if(stack != null)
+            {
+                if(playerIn.inventory.addItemStackToInventory(stack))
+                {
+                    playerIn.inventory.markDirty();
+
+                    if(playerIn.openContainer != null)
+                    {
+                        playerIn.openContainer.detectAndSendChanges();
+                    }
+                }
+                else
+                {
+                    EntityItem ei = new EntityItem(playerIn.world, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
+                    ei.motionX = ei.motionY = ei.motionZ = 0D;
+                    ei.setPickupDelay(0);
+                    playerIn.world.spawnEntity(ei);
+                }
+            }
+            //return !playerIn.isSneaking();
+        }
+        //return barrel.getItemCount() > 0;
     }
 
     public void onRightClick(EntityPlayer playerIn, IBlockState state, @Nullable ItemStack heldItem, float hitX, float hitY, float hitZ, EnumFacing facing, long deltaClickTime)

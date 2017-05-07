@@ -38,6 +38,8 @@ public class YabbaConfig
     public static final PropertyColor BAR_COLOR_FILLED = new PropertyColor(0xFFFF635B);
     public static final PropertyInt BAR_COLOR_ALPHA = new PropertyInt(85, 1, 255);
 
+    public static final PropertyBool SNEAK_LEFT_CLICK_EXTRACTS_STACK = new PropertyBool(true);
+
     static
     {
         ALLOWED_ORE_PREFIXES.add(new PropertyString("ingot"));
@@ -54,6 +56,7 @@ public class YabbaConfig
 
         String group = Yabba.MOD_ID;
         reg.addConfig(group, "allowed_ore_prefixes", ALLOWED_ORE_PREFIXES);
+        reg.addConfig(group, "sneak_left_click_extracts_stack", SNEAK_LEFT_CLICK_EXTRACTS_STACK);
         group = Yabba.MOD_ID + ".tier.item";
         reg.addConfig(group, "wood", TIER_ITEM_WOOD);
         reg.addConfig(group, "iron", TIER_ITEM_IRON);

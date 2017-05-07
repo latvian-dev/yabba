@@ -237,31 +237,57 @@ public class BlockBarrel extends BlockBarrelBase
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
     {
-        if(side == BlockBarrel.normalizeFacing(state))
+        if(worldIn.isRemote || playerIn.capabilities.isCreativeMode)
         {
-            if(!worldIn.isRemote)
-            {
-                TileEntity tile = worldIn.getTileEntity(pos);
-
-                if(tile instanceof TileBarrel)
-                {
-                    Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
-                    long time = worldIn.getTotalWorldTime();
-                    ((TileBarrel) tile).onRightClick(playerIn, state, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
-
-                    if(heldItem == null || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
-                    {
-                        LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
-                    }
-                }
-            }
-
-            return true;
+            return;
         }
 
-        return false;
+        Long l = BlockBarrel.LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+        long time = worldIn.getTotalWorldTime();
+
+        if(l != null && (time - l) < 3)
+        {
+            return;
+        }
+
+        BlockBarrel.LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+        if(tileEntity instanceof TileBarrel)
+        {
+            ((TileBarrel) tileEntity).onLeftClick(playerIn);
+        }
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        if(side != BlockBarrel.normalizeFacing(state) && (heldItem == null || heldItem.getItem() instanceof ItemBlockBarrel))
+        {
+            return false;
+        }
+
+        if(!worldIn.isRemote)
+        {
+            TileEntity tile = worldIn.getTileEntity(pos);
+
+            if(tile instanceof TileBarrel)
+            {
+                Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+                long time = worldIn.getTotalWorldTime();
+                ((TileBarrel) tile).onRightClick(playerIn, state, heldItem, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
+
+                if(heldItem == null || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+                {
+                    LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override

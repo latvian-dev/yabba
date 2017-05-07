@@ -45,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    compile 'LatMod:FTBLib:1.1x-3.5.5:api'
+    compile 'LatMod:FTBLib:1.1x-3.6.3:api'
     deobfCompile "mezz.jei:jei_1.10.2:3.14.2.401:api"
     deobfCompile "net.sengir.forestry:forestry_1.10.2:5.2.16.347:api"
 }

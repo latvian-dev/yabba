@@ -8,7 +8,6 @@ import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IYabbaRegistry;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.api.events.YabbaRegistryEvent;
-import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
@@ -19,19 +18,11 @@ import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockStone;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 14.12.2016.
@@ -147,87 +138,5 @@ public class YabbaEventHandler
             event.add(group, "down", PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperDown"), v -> barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)))));
             event.add(group, "collect", PropertyBool.create(false, () -> barrel.getUpgradeNBT().getBoolean("HopperCollect"), v -> barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)))));
         }
-    }
-
-    @SubscribeEvent
-    public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
-    {
-        World world = event.getWorld();
-
-        if(world.isRemote || event.getEntityPlayer().capabilities.isCreativeMode)
-        {
-            return;
-        }
-
-        Long l = BlockBarrel.LAST_CLICK_MAP.get(event.getEntityPlayer().getGameProfile().getId());
-        long time = event.getWorld().getTotalWorldTime();
-
-        if(l != null && (time - l) < 3)
-        {
-            return;
-        }
-
-        BlockBarrel.LAST_CLICK_MAP.put(event.getEntityPlayer().getGameProfile().getId(), time);
-
-        TileEntity tile = world.getTileEntity(event.getPos());
-
-        if(tile == null || !tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) || BlockBarrel.normalizeFacing(world.getBlockState(event.getPos())) != event.getFace())
-        {
-            return;
-        }
-
-        IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-
-        if(barrel instanceof IBarrelModifiable && onLeftClick((IBarrelModifiable) barrel, event.getEntityPlayer(), event.getItemStack()))
-        {
-            event.setCanceled(true);
-        }
-    }
-
-    private static boolean onLeftClick(IBarrelModifiable barrel, EntityPlayer playerIn, @Nullable ItemStack heldItem)
-    {
-        ItemStack storedItem = barrel.getStackInSlot(0);
-        if(storedItem != null && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
-        {
-            barrel.setStackInSlot(0, null);
-            barrel.markBarrelDirty(true);
-            return true;
-        }
-
-        if(storedItem != null && barrel.getItemCount() > 0)
-        {
-            int size = 1;
-
-            if(playerIn.isSneaking())
-            {
-                size = storedItem.getMaxStackSize();
-            }
-
-            ItemStack stack = barrel.extractItem(0, size, false);
-
-            if(stack != null)
-            {
-                if(playerIn.inventory.addItemStackToInventory(stack))
-                {
-                    playerIn.inventory.markDirty();
-
-                    if(playerIn.openContainer != null)
-                    {
-                        playerIn.openContainer.detectAndSendChanges();
-                    }
-                }
-                else
-                {
-                    EntityItem ei = new EntityItem(playerIn.world, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
-                    ei.motionX = ei.motionY = ei.motionZ = 0D;
-                    ei.setPickupDelay(0);
-                    playerIn.world.spawnEntity(ei);
-                }
-            }
-
-            return !playerIn.isSneaking();
-        }
-
-        return barrel.getItemCount() > 0;
     }
 }
