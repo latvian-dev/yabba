@@ -22,6 +22,39 @@ item.yabba.hammer.name=Fasshammer
 tile.yabba.barrel.name=Gegenstandsfass
 tile.yabba.antibarrel.name=AntiFass
 
+# Config
+config_group.yabba.name=YABBA
+config_group.yabba.crafting.name=Handwerk
+config_group.yabba.tier.name=Stufe
+config_group.yabba.tier.item.name=Gegenstand
+
+# Client Config
+config_group.yabba.bar_color.name=Balkenfarbe
+client_config.yabba.bar_color.border.name=Rahmen
+client_config.yabba.bar_color.free.name=Freier Platz
+client_config.yabba.bar_color.filled.name=Belegter Platz
+client_config.yabba.bar_color.alpha.name=Alpha
+
+config.yabba.allowed_ore_prefixes.name=Erlaubte Erz-Präfixe
+config.yabba.tier.item.wood.name=Holz
+config.yabba.tier.item.iron.name=Eisen
+config.yabba.tier.item.gold.name=Gold
+config.yabba.tier.item.diamond.name=Diamant
+config.yabba.tier.item.infinity.name=Unendlichkeit
+config.yabba.crafting.upgrade_stack_size.name=Stackgröße verbessern
+config.yabba.crafting.barrel_easy_recipe.name=Einfaches Fassrezept
+
+barrel_config.yabba.disable_ore_items.name=Erz-Items deaktivieren
+barrel_config.yabba.always_display_data.name=Daten immer anzeigen
+barrel_config.yabba.display_bar.name=Balken anzeigen
+config_group.yabba.redstone.name=Redstone-Output
+barrel_config.yabba.redstone.mode.name=Modus
+barrel_config.yabba.redstone.item_count.name=Gegenstandsanzahl
+config_group.yabba.hopper.name=Trichter
+barrel_config.yabba.hopper.up.name=Oben
+barrel_config.yabba.hopper.down.name=Unten
+barrel_config.yabba.hopper.collect.name=Sammeln
+
 # Guide
 yabba.guide=YABBA
 
@@ -30,3 +63,6 @@ yabba.model.barrel=Fass
 yabba.model.crate=Kiste
 yabba.model.solid=Solider Block
 yabba.model.solid_borders=Solider eingefasster Block
+yabba.model.cover=Hülle
+yabba.model.panel=Platte
+yabba.model.slab=Stufe
