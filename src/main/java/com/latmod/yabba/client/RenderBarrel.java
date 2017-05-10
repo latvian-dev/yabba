@@ -5,7 +5,6 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.net.MessageRequestBarrelUpdate;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,11 +37,6 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         if(te.isInvalid())
         {
             return;
-        }
-        else if(te.requestClientUpdate)
-        {
-            new MessageRequestBarrelUpdate(te.getPos()).sendToServer();
-            te.requestClientUpdate = false;
         }
 
         IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);

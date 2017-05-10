@@ -3,6 +3,7 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
@@ -11,7 +12,6 @@ import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
-import com.latmod.yabba.net.MessageUpdateBarrelFull;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
 import com.latmod.yabba.util.EnumRedstoneCompMode;
 import net.minecraft.block.BlockHorizontal;
@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 13.12.2016.
  */
-public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUnit
+public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 {
     public static final double BUTTON_SIZE = 0.24D;
 
@@ -48,7 +48,6 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     private String cachedItemName, cachedItemCount;
     private float cachedRotationX, cachedRotationY;
     private int sendUpdate = 2;
-    public boolean requestClientUpdate = true;
 
     public TileBarrel()
     {
@@ -97,25 +96,24 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     }
 
     @Override
+    public IBlockState createState(IBlockState state)
+    {
+        return state.withProperty(BlockBarrel.MODEL, barrel.getModel()).withProperty(BlockBarrel.SKIN, barrel.getSkin());
+    }
+
+    @Override
     public void update()
     {
         if(sendUpdate > 0)
         {
             if(sendUpdate > 1)
             {
-                world.markChunkDirty(pos, this);
-                
-                /*
-                if(getBlockType() != Blocks.AIR)
-                {
-                    world.updateComparatorOutputLevel(pos, getBlockType());
-                }
-                */
+                sendDirtyUpdate();
             }
 
             if(!world.isRemote)
             {
-                (sendUpdate > 1 ? new MessageUpdateBarrelFull(pos, barrel) : new MessageUpdateBarrelItemCount(pos, barrel.getItemCount())).sendToAllAround(world.provider.getDimension(), pos, 300D);
+                new MessageUpdateBarrelItemCount(pos, barrel.getItemCount()).sendToAllAround(world.provider.getDimension(), pos, 300D);
             }
 
             if(barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
@@ -191,13 +189,13 @@ public class TileBarrel extends TileEntity implements ITickable, IDeepStorageUni
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == YabbaCommon.BARREL_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if(capability == YabbaCommon.BARREL_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {

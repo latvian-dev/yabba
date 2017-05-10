@@ -14,8 +14,6 @@ public class YabbaNetHandler
     {
         int id = 0;
         NET.register(++id, new MessageUpdateBarrelItemCount());
-        NET.register(++id, new MessageUpdateBarrelFull());
-        NET.register(++id, new MessageRequestBarrelUpdate());
         NET.register(++id, new MessageSelectModel());
         NET.register(++id, new MessageSelectSkin());
     }

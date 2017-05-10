@@ -1,22 +1,23 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by LatvianModder on 16.12.2016.
  */
-public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
+public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 {
     public static final int MAX_ITEMS = 32000;
 
@@ -28,14 +29,13 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing side)
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, side);
-
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing side)
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side)
     {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
@@ -177,5 +177,17 @@ public class TileAntibarrel extends TileEntity implements IItemHandlerModifiable
     {
         ItemStack stack = (slot < 0 || slot >= items.size()) ? null : items.get(slot);
         return stack == null ? ItemStack.EMPTY : stack;
+    }
+
+    @Override
+    public boolean notifyBlock()
+    {
+        return false;
+    }
+
+    @Override
+    public void markDirty()
+    {
+        sendDirtyUpdate();
     }
 }
