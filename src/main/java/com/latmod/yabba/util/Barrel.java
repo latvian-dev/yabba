@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
- * Created by LatvianModder on 15.12.2016.
+ * @author LatvianModder
  */
 public abstract class Barrel implements IBarrelModifiable
 {
@@ -151,16 +151,14 @@ public abstract class Barrel implements IBarrelModifiable
             {
                 if(!simulate)
                 {
-                    boolean full = false;
                     if(storedItem.isEmpty())
                     {
                         setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
                         setItemCount(0);
-                        full = true;
+                        markBarrelDirty();
                     }
 
                     setItemCount(itemCount + size);
-                    markBarrelDirty(full);
                 }
             }
 
@@ -202,15 +200,12 @@ public abstract class Barrel implements IBarrelModifiable
         if(!simulate)
         {
             setItemCount(itemCount - stack.getCount());
-            boolean full = false;
 
             if(itemCount - stack.getCount() <= 0 && !getFlag(FLAG_LOCKED))
             {
                 setStackInSlot(0, ItemStack.EMPTY);
-                full = true;
+                markBarrelDirty();
             }
-
-            markBarrelDirty(full);
         }
 
         return stack;
@@ -229,22 +224,13 @@ public abstract class Barrel implements IBarrelModifiable
 
         if(v != null)
         {
-            if(nbt == null)
-            {
-                nbt = new NBTTagCompound();
-                setUpgradeNBT(nbt);
-            }
-
             nbt.setTag(upgrade, v);
+            setUpgradeNBT(nbt);
         }
-        else if(nbt != null)
+        else
         {
             nbt.removeTag(upgrade);
-
-            if(nbt.hasNoTags())
-            {
-                setUpgradeNBT(null);
-            }
+            setUpgradeNBT(nbt);
         }
     }
 
@@ -272,8 +258,7 @@ public abstract class Barrel implements IBarrelModifiable
         setStackInSlot(0, barrel.getStackInSlot(0));
         setModel(barrel.getModel());
         setSkin(barrel.getSkin());
-        NBTTagCompound upgradeNBT = barrel.getUpgradeNBT();
-        setUpgradeNBT(upgradeNBT == null ? null : upgradeNBT.copy());
+        setUpgradeNBT(barrel.getUpgradeNBT().copy());
         NBTTagList upgradeNames = barrel.getUpgradeNames();
         setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
     }

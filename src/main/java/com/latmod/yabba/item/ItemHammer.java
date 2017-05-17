@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 21.12.2016.
+ * @author LatvianModder
  */
 public class ItemHammer extends ItemYabba
 {
@@ -69,7 +69,7 @@ public class ItemHammer extends ItemYabba
             if(!simulate)
             {
                 barrel.setModel(model);
-                barrel.markBarrelDirty(true);
+                barrel.markBarrelDirty();
             }
 
             return true;
@@ -84,7 +84,7 @@ public class ItemHammer extends ItemYabba
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
     {
         return CapUpgrade.INSTANCE;
     }

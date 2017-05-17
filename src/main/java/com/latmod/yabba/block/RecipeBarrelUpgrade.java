@@ -9,10 +9,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-
 /**
- * Created by LatvianModder on 17.12.2016.
+ * @author LatvianModder
  */
 public class RecipeBarrelUpgrade implements IRecipe
 {
@@ -79,7 +77,6 @@ public class RecipeBarrelUpgrade implements IRecipe
         return upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) barrelStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, true);
     }
 
-    @Nullable
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv)
     {

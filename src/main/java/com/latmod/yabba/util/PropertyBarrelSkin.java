@@ -8,7 +8,7 @@ import net.minecraft.block.properties.PropertyHelper;
 import java.util.Collection;
 
 /**
- * Created by LatvianModder on 19.12.2016.
+ * @author LatvianModder
  */
 public class PropertyBarrelSkin extends PropertyHelper<IBarrelSkin>
 {

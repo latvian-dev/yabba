@@ -10,14 +10,14 @@ import com.latmod.yabba.util.Barrel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/**
- * Created by LatvianModder on 19.01.2017.
- */
 public enum FTBLibIntegration implements IFTBLibPlugin
 {
     @FTBLibPlugin
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     public static FTBLibAPI API;
 
     @Override

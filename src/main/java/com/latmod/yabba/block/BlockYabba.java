@@ -10,7 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 
 /**
- * Created by LatvianModder on 19.01.2017.
+ * @author LatvianModder
  */
 public class BlockYabba extends Block implements IBlockWithItem
 {

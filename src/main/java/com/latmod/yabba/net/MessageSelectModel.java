@@ -10,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
- * Created by LatvianModder on 15.12.2016.
+ * @author LatvianModder
  */
 public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 {

@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import java.io.IOException;
 
 /**
- * Created by LatvianModder on 18.01.2017.
+ * @author LatvianModder
  */
 public class GuiYabba extends GuiScreen
 {

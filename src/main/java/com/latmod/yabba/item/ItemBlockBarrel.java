@@ -14,10 +14,11 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 13.12.2016.
+ * @author LatvianModder
  */
 public class ItemBlockBarrel extends ItemBlock
 {
@@ -27,7 +28,7 @@ public class ItemBlockBarrel extends ItemBlock
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
     {
         return new BarrelItemData(stack);
     }

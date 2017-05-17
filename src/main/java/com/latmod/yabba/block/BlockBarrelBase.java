@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
- * Created by LatvianModder on 18.12.2016.
+ * @author LatvianModder
  */
 public abstract class BlockBarrelBase extends BlockYabba
 {

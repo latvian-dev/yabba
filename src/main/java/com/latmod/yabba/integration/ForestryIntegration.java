@@ -9,7 +9,7 @@ import forestry.api.arboriculture.WoodBlockKind;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Created by LatvianModder on 02.01.2017.
+ * @author LatvianModder
  */
 public class ForestryIntegration
 {

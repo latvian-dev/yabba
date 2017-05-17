@@ -5,7 +5,7 @@ import com.latmod.yabba.YabbaCommon;
 import net.minecraft.item.Item;
 
 /**
- * Created by LatvianModder on 19.01.2017.
+ * @author LatvianModder
  */
 public class ItemYabba extends Item
 {

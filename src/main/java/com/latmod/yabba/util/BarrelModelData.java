@@ -4,7 +4,7 @@ import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
 
 /**
- * Created by LatvianModder on 21.12.2016.
+ * @author LatvianModder
  */
 public class BarrelModelData
 {

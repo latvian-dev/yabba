@@ -18,7 +18,7 @@ import javax.vecmath.Matrix4f;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 19.12.2016.
+ * @author LatvianModder
  */
 public class BarrelVariantBakedModel implements IPerspectiveAwareModel
 {

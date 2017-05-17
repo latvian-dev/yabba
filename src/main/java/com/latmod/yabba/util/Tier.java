@@ -9,7 +9,7 @@ import com.latmod.yabba.api.ITier;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by LatvianModder on 17.12.2016.
+ * @author LatvianModder
  */
 public class Tier extends FinalIDObject implements ITier
 {

@@ -9,7 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by LatvianModder on 19.12.2016.
+ * @author LatvianModder
  */
 public class BarrelSkin extends FinalIDObject implements IBarrelSkin
 {

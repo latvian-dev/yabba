@@ -15,7 +15,7 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import java.io.File;
 
 /**
- * Created by LatvianModder on 23.01.2017.
+ * @author LatvianModder
  */
 public class YabbaConfig
 {
@@ -25,10 +25,11 @@ public class YabbaConfig
     public static final PropertyInt TIER_ITEM_DIAMOND = new PropertyInt(4096, 1, Integer.MAX_VALUE);
     public static final PropertyInt TIER_ITEM_INFINITY = new PropertyInt(2000000000, 1, Integer.MAX_VALUE);
 
-    public static final PropertyByte CRAFTING_UPGRADE_STACK_SIZE = new PropertyByte(16, 0, 64);
+    public static final PropertyByte CRAFTING_UPGRADE_STACK_SIZE = new PropertyByte(16, 0, 64).setUnsigned();
     public static final PropertyBool CRAFTING_BARREL_EASY_RECIPE = new PropertyBool(true);
 
     public static final PropertyList ALLOWED_ORE_PREFIXES = new PropertyList(PropertyString.ID);
+    public static final PropertyBool SNEAK_LEFT_CLICK_EXTRACTS_STACK = new PropertyBool(true);
 
     //Client
     public static final PropertyTristate ALWAYS_DISPLAY_DATA = new PropertyTristate(EnumTristate.DEFAULT);
@@ -54,6 +55,7 @@ public class YabbaConfig
 
         String group = Yabba.MOD_ID;
         reg.addConfig(group, "allowed_ore_prefixes", ALLOWED_ORE_PREFIXES);
+        reg.addConfig(group, "sneak_left_click_extracts_stack", SNEAK_LEFT_CLICK_EXTRACTS_STACK);
         group = Yabba.MOD_ID + ".tier.item";
         reg.addConfig(group, "wood", TIER_ITEM_WOOD);
         reg.addConfig(group, "iron", TIER_ITEM_IRON);

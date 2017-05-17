@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 16.12.2016.
+ * @author LatvianModder
  */
 public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 {

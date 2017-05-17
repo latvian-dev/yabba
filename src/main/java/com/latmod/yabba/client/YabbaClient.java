@@ -22,12 +22,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 06.12.2016.
+ * @author LatvianModder
  */
 public class YabbaClient extends YabbaCommon
 {
@@ -78,7 +77,7 @@ public class YabbaClient extends YabbaCommon
         GuiSelectSkin.INSTANCE.initSkins();
     }
 
-    private void registerModel(@Nullable Item item, int meta, String id, String v)
+    private void registerModel(Item item, int meta, String id, String v)
     {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Yabba.MOD_ID + ':' + id + '#' + v));
     }

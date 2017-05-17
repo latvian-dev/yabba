@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * Created by LatvianModder on 15.12.2016.
+ * @author LatvianModder
  */
 public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateBarrelItemCount>
 {

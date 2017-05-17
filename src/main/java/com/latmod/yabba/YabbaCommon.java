@@ -24,7 +24,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.RecipeSorter;
 
 /**
- * Created by LatvianModder on 06.12.2016.
+ * @author LatvianModder
  */
 public class YabbaCommon
 {

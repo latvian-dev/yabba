@@ -8,7 +8,7 @@ import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 
 /**
- * Created by LatvianModder on 19.12.2016.
+ * @author LatvianModder
  */
 public class YabbaModels implements ICustomModelLoader
 {

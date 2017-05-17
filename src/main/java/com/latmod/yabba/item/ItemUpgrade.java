@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 13.12.2016.
+ * @author LatvianModder
  */
 public class ItemUpgrade extends ItemYabba
 {
@@ -53,7 +53,7 @@ public class ItemUpgrade extends ItemYabba
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
     {
         return new UpgradeCapProvider(stack);
     }

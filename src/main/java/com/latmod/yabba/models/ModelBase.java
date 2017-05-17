@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.latmod.yabba.api.IBarrelModel;
 
 /**
- * Created by LatvianModder on 21.12.2016.
+ * @author LatvianModder
  */
 public abstract class ModelBase extends FinalIDObject implements IBarrelModel
 {

@@ -36,6 +36,7 @@ client_config.yabba.bar_color.filled.name=Filled Space
 client_config.yabba.bar_color.alpha.name=Alpha
 
 config.yabba.allowed_ore_prefixes.name=Allowed Ore Prefixes
+config.yabba.sneak_left_click_extracts_stack.name=Sneak-Left-Click Extracts a Stack
 config.yabba.tier.item.wood.name=Wood
 config.yabba.tier.item.iron.name=Iron
 config.yabba.tier.item.gold.name=Gold

@@ -7,7 +7,7 @@ import com.latmod.yabba.item.ItemPainter;
 import com.latmod.yabba.item.ItemUpgrade;
 
 /**
- * Created by LatvianModder on 12.12.2016.
+ * @author LatvianModder
  */
 public class YabbaItems
 {

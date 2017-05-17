@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * Created by LatvianModder on 05.01.2017.
+ * @author LatvianModder
  */
 public class GuiSelectModel extends GuiYabba
 {

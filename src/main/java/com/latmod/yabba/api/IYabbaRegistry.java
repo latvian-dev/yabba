@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
 /**
- * Created by LatvianModder on 18.12.2016.
+ * @author LatvianModder
  */
 public interface IYabbaRegistry
 {

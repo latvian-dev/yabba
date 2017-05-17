@@ -11,9 +11,6 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 
-/**
- * Created by LatvianModder on 15.12.2016.
- */
 public enum EnumUpgrade implements IUpgrade, IStringSerializable
 {
     BLANK(0, "blank"),
@@ -27,6 +24,9 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
     HOPPER(13, "hopper"),
     VOID(15, "void");
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumUpgrade[] VALUES = values();
 
     private final String name;
@@ -120,7 +120,7 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
             }
             case CREATIVE:
             {
-                if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE) && barrel.getStackInSlot(0) != null)
+                if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE) && !barrel.getStackInSlot(0).isEmpty())
                 {
                     if(!simulate)
                     {

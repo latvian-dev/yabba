@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
@@ -38,7 +39,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 13.12.2016.
+ * @author LatvianModder
  */
 public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 {
@@ -47,23 +48,16 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
     private BarrelTileContainer barrel;
     private String cachedItemName, cachedItemCount;
     private float cachedRotationX, cachedRotationY;
-    private int sendUpdate = 2;
+    private int prevItemCount = -1;
 
     public TileBarrel()
     {
         barrel = new BarrelTileContainer()
         {
             @Override
-            public void markBarrelDirty(boolean full)
+            public void markBarrelDirty()
             {
-                if(full)
-                {
-                    sendUpdate = 2;
-                }
-                else if(sendUpdate == 0)
-                {
-                    sendUpdate = 1;
-                }
+                prevItemCount = -1;
             }
 
             @Override
@@ -104,9 +98,9 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
     @Override
     public void update()
     {
-        if(sendUpdate > 0)
+        if(prevItemCount != barrel.getItemCount())
         {
-            if(sendUpdate > 1)
+            if(prevItemCount == -1)
             {
                 sendDirtyUpdate();
             }
@@ -121,7 +115,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
                 world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
             }
 
-            sendUpdate = 0;
+            prevItemCount = barrel.getItemCount();
         }
 
         if(!world.isRemote && barrel.getFlag(IBarrel.FLAG_HOPPER) && (world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
@@ -185,7 +179,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
     @Override
     public void markDirty()
     {
-        barrel.markBarrelDirty(true);
+        //barrel.markBarrelDirty();
     }
 
     @Override
@@ -284,6 +278,55 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
         return cachedRotationY;
     }
 
+    public void onLeftClick(EntityPlayer playerIn)
+    {
+        ItemStack storedItem = barrel.getStackInSlot(0);
+        if(!storedItem.isEmpty() && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
+        {
+            barrel.setStackInSlot(0, ItemStack.EMPTY);
+            barrel.markBarrelDirty();
+            return;
+        }
+
+        if(!storedItem.isEmpty() && barrel.getItemCount() > 0)
+        {
+            int size;
+
+            if(YabbaConfig.SNEAK_LEFT_CLICK_EXTRACTS_STACK.getBoolean() == playerIn.isSneaking())
+            {
+                size = storedItem.getMaxStackSize();
+            }
+            else
+            {
+                size = 1;
+            }
+
+            ItemStack stack = barrel.extractItem(0, size, false);
+
+            if(!stack.isEmpty())
+            {
+                if(playerIn.inventory.addItemStackToInventory(stack))
+                {
+                    playerIn.inventory.markDirty();
+
+                    if(playerIn.openContainer != null)
+                    {
+                        playerIn.openContainer.detectAndSendChanges();
+                    }
+                }
+                else
+                {
+                    EntityItem ei = new EntityItem(playerIn.world, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
+                    ei.motionX = ei.motionY = ei.motionZ = 0D;
+                    ei.setPickupDelay(0);
+                    playerIn.world.spawnEntity(ei);
+                }
+            }
+            //return !playerIn.isSneaking();
+        }
+        //return barrel.getItemCount() > 0;
+    }
+
     public void onRightClick(EntityPlayer playerIn, IBlockState state, EnumHand hand, float hitX, float hitY, float hitZ, EnumFacing facing, long deltaClickTime)
     {
         if(deltaClickTime <= 8)
@@ -344,7 +387,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
                         public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
                         {
                             super.saveConfig(sender, nbt, json);
-                            barrel.markBarrelDirty(true);
+                            barrel.markBarrelDirty();
                         }
                     });
                 }
@@ -352,9 +395,9 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
                 {
                     barrel.setFlag(IBarrel.FLAG_LOCKED, !barrel.getFlag(IBarrel.FLAG_LOCKED));
 
-                    if(barrel.getStackInSlot(0) != null && barrel.getItemCount() == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
+                    if(!barrel.getStackInSlot(0).isEmpty() && barrel.getItemCount() == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
                     {
-                        barrel.setStackInSlot(0, null);
+                        barrel.setStackInSlot(0, ItemStack.EMPTY);
                     }
                 }
 
@@ -436,30 +479,34 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 
             if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
             {
-                barrel.setStackInSlot(0, null);
+                barrel.setStackInSlot(0, ItemStack.EMPTY);
             }
 
-            barrel.markBarrelDirty(wasEmpty != (amount == 0));
+            if(wasEmpty != (amount == 0))
+            {
+                barrel.markBarrelDirty();
+            }
         }
     }
 
     @Override
     public void setStoredItemType(ItemStack type, int amount)
     {
-        if(!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+        if(amount != barrel.getItemCount() && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
         {
-            if(amount != barrel.getItemCount())
+            boolean wasEmpty = barrel.getItemCount() == 0;
+            barrel.setItemCount(amount);
+
+            if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
             {
-                boolean wasEmpty = barrel.getItemCount() == 0;
-                barrel.setItemCount(amount);
+                type = ItemStack.EMPTY;
+            }
 
-                if(amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
-                {
-                    type = ItemStack.EMPTY;
-                }
+            barrel.setStackInSlot(0, type);
 
-                barrel.setStackInSlot(0, type);
-                barrel.markBarrelDirty(wasEmpty != (amount == 0));
+            if(wasEmpty != (amount == 0))
+            {
+                barrel.markBarrelDirty();
             }
         }
     }
@@ -471,7 +518,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
         return i + (barrel.getFlag(IBarrel.FLAG_VOID_ITEMS) ? 256 : 0);
     }
 
-    public boolean canConnectRedstone(EnumFacing facing)
+    public boolean canConnectRedstone(@Nullable EnumFacing facing)
     {
         return barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT);
     }

@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by LatvianModder on 18.01.2017.
+ * @author LatvianModder
  */
 public class YabbaCreateConfigEvent extends Event
 {

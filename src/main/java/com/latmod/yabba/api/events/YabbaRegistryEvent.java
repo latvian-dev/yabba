@@ -4,7 +4,7 @@ import com.latmod.yabba.api.IYabbaRegistry;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by LatvianModder on 18.12.2016.
+ * @author LatvianModder
  */
 public class YabbaRegistryEvent extends Event
 {

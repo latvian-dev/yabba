@@ -20,13 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by LatvianModder on 18.12.2016.
- */
 public enum YabbaRegistry implements IYabbaRegistry
 {
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     private static final Map<String, IBarrelSkin> SKINS = new HashMap<>();
     private static final Map<IBlockState, IBarrelSkin> SKINS_STATE_MAP = new HashMap<>();
     private static final Map<String, ITier> TIERS = new HashMap<>();

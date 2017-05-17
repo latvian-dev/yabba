@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 19.12.2016.
+ * @author LatvianModder
  */
 public abstract class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
 {
@@ -154,7 +154,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     }
 
     @Override
-    public void setStackInSlot(int slot, @Nullable ItemStack stack)
+    public void setStackInSlot(int slot, ItemStack stack)
     {
         storedItem = stack;
     }

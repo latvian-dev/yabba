@@ -17,7 +17,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 15.12.2016.
+ * @author LatvianModder
  */
 public class BarrelItemData extends Barrel implements ICapabilityProvider
 {
@@ -179,7 +179,7 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public void markBarrelDirty(boolean full)
+    public void markBarrelDirty()
     {
     }
 

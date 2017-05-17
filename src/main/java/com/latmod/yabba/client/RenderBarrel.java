@@ -24,7 +24,7 @@ import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.opengl.GL11;
 
 /**
- * Created by LatvianModder on 13.12.2016.
+ * @author LatvianModder
  */
 public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 {

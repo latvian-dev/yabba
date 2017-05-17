@@ -8,7 +8,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 18.12.2016.
+ * @author LatvianModder
  */
 public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 {
@@ -32,7 +32,7 @@ public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 
     void addUpgradeName(String name);
 
-    void markBarrelDirty(boolean fullUpdate);
+    void markBarrelDirty();
 
     void clearCachedData();
 

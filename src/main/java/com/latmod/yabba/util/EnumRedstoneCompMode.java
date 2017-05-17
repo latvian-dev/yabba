@@ -3,9 +3,6 @@ package com.latmod.yabba.util;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 
-/**
- * Created by LatvianModder on 18.01.2017.
- */
 public enum EnumRedstoneCompMode implements IStringSerializable
 {
     EQUAL("=="),
@@ -15,6 +12,9 @@ public enum EnumRedstoneCompMode implements IStringSerializable
     LESS_THAN("<"),
     LESS_THAN_OR_EQUAL("<=");
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumRedstoneCompMode[] VALUES = values();
     public static final EnumNameMap<EnumRedstoneCompMode> NAME_MAP = new EnumNameMap<>(VALUES, false);
 

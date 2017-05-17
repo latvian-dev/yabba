@@ -7,7 +7,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 15.12.2016.
+ * @author LatvianModder
  */
 public interface IBarrel extends IItemHandler
 {

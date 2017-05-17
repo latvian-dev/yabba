@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 21.12.2016.
+ * @author LatvianModder
  */
 public class ItemPainter extends ItemYabba
 {
@@ -68,7 +68,7 @@ public class ItemPainter extends ItemYabba
             if(!simulate)
             {
                 barrel.setSkin(skin);
-                barrel.markBarrelDirty(true);
+                barrel.markBarrelDirty();
             }
 
             return true;
@@ -83,7 +83,7 @@ public class ItemPainter extends ItemYabba
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
     {
         return CapUpgrade.INSTANCE;
     }
