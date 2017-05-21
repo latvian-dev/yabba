@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  */
 public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 {
-    void setTier(ITier tier);
+    void setTier(Tier tier);
 
     void setFlags(int flags);
 
@@ -20,9 +20,9 @@ public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 
     void setItemCount(int v);
 
-    void setModel(IBarrelModel model);
+    void setModel(String model);
 
-    void setSkin(IBarrelSkin variant);
+    void setSkin(String skin);
 
     void setUpgradeNBT(@Nullable NBTTagCompound nbt);
 
@@ -36,5 +36,16 @@ public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 
     void clearCachedData();
 
-    void copyFrom(IBarrel barrel);
+    default void copyFrom(IBarrel barrel)
+    {
+        setTier(barrel.getTier());
+        setFlags(barrel.getFlags());
+        setItemCount(barrel.getItemCount());
+        setStackInSlot(0, barrel.getStackInSlot(0));
+        setModel(barrel.getModel());
+        setSkin(barrel.getSkin());
+        setUpgradeNBT(barrel.getUpgradeNBT().copy());
+        NBTTagList upgradeNames = barrel.getUpgradeNames();
+        setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
+    }
 }

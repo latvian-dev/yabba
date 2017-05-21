@@ -6,12 +6,12 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.RecipeUtils;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IUpgrade;
+import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.block.RecipeBarrelUpgrade;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.EnumUpgrade;
-import com.latmod.yabba.util.Tier;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -33,10 +33,6 @@ public class YabbaCommon
 
     @CapabilityInject(IUpgrade.class)
     public static Capability<IUpgrade> UPGRADE_CAPABILITY;
-
-    public static final Tier TIER_IRON = new Tier("iron", YabbaConfig.TIER_ITEM_IRON, 0xFFD8D8D8);
-    public static final Tier TIER_GOLD = new Tier("gold", YabbaConfig.TIER_ITEM_GOLD, 0xFFFCD803);
-    public static final Tier TIER_DMD = new Tier("dmd", YabbaConfig.TIER_ITEM_DIAMOND, 0xFF00FFFF);
 
     public static final YabbaCreativeTab TAB = new YabbaCreativeTab();
 
@@ -71,14 +67,14 @@ public class YabbaCommon
 
         if(YabbaConfig.CRAFTING_BARREL_EASY_RECIPE.getBoolean())
         {
-            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
+            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE.getName(), YabbaRegistry.DEFAULT_SKIN.getName(), Tier.WOOD),
                     "U", "C",
                     'U', blankUpgrade,
                     'C', ODItems.CHEST_WOOD);
         }
         else
         {
-            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD),
+            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE.getName(), YabbaRegistry.DEFAULT_SKIN.getName(), Tier.WOOD),
                     " U ", "SCS", " P ",
                     'U', blankUpgrade,
                     'C', ODItems.CHEST_WOOD,

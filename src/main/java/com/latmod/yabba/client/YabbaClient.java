@@ -6,13 +6,12 @@ import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
 import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.EnumUpgrade;
-import com.latmod.yabba.util.Tier;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
@@ -70,11 +69,9 @@ public class YabbaClient extends YabbaCommon
         {
             for(int s = 0; s < YabbaRegistry.ALL_SKINS.size(); s++)
             {
-                STACKS_FOR_GUI[m][s] = YabbaItems.BARREL.createStack(YabbaRegistry.ALL_MODELS.get(m), YabbaRegistry.ALL_SKINS.get(s), Tier.WOOD);
+                STACKS_FOR_GUI[m][s] = YabbaItems.BARREL.createStack(YabbaRegistry.ALL_MODELS.get(m).getName(), YabbaRegistry.ALL_SKINS.get(s).getName(), Tier.WOOD);
             }
         }
-
-        GuiSelectSkin.INSTANCE.initSkins();
     }
 
     private void registerModel(Item item, int meta, String id, String v)
@@ -85,12 +82,12 @@ public class YabbaClient extends YabbaCommon
     @Override
     public void openModelGui()
     {
-        Minecraft.getMinecraft().displayGuiScreen(GuiSelectModel.INSTANCE);
+        new GuiSelectModel().openGui();
     }
 
     @Override
     public void openSkinGui()
     {
-        Minecraft.getMinecraft().displayGuiScreen(GuiSelectSkin.INSTANCE);
+        new GuiSelectSkin().openGui();
     }
 }

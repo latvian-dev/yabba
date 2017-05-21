@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.latmod.yabba.api.Tier;
 
 import java.io.File;
 
@@ -19,12 +20,6 @@ import java.io.File;
  */
 public class YabbaConfig
 {
-    public static final PropertyInt TIER_ITEM_WOOD = new PropertyInt(64, 1, Integer.MAX_VALUE);
-    public static final PropertyInt TIER_ITEM_IRON = new PropertyInt(256, 1, Integer.MAX_VALUE);
-    public static final PropertyInt TIER_ITEM_GOLD = new PropertyInt(1024, 1, Integer.MAX_VALUE);
-    public static final PropertyInt TIER_ITEM_DIAMOND = new PropertyInt(4096, 1, Integer.MAX_VALUE);
-    public static final PropertyInt TIER_ITEM_INFINITY = new PropertyInt(2000000000, 1, Integer.MAX_VALUE);
-
     public static final PropertyByte CRAFTING_UPGRADE_STACK_SIZE = new PropertyByte(16, 0, 64).setUnsigned();
     public static final PropertyBool CRAFTING_BARREL_EASY_RECIPE = new PropertyBool(true);
 
@@ -57,11 +52,10 @@ public class YabbaConfig
         reg.addConfig(group, "allowed_ore_prefixes", ALLOWED_ORE_PREFIXES);
         reg.addConfig(group, "sneak_left_click_extracts_stack", SNEAK_LEFT_CLICK_EXTRACTS_STACK);
         group = Yabba.MOD_ID + ".tier.item";
-        reg.addConfig(group, "wood", TIER_ITEM_WOOD);
-        reg.addConfig(group, "iron", TIER_ITEM_IRON);
-        reg.addConfig(group, "gold", TIER_ITEM_GOLD);
-        reg.addConfig(group, "diamond", TIER_ITEM_DIAMOND);
-        reg.addConfig(group, "infinity", TIER_ITEM_INFINITY);
+        reg.addConfig(group, "wood", Tier.WOOD.maxItemStacks);
+        reg.addConfig(group, "iron", Tier.IRON.maxItemStacks);
+        reg.addConfig(group, "gold", Tier.GOLD.maxItemStacks);
+        reg.addConfig(group, "diamond", Tier.DIAMOND.maxItemStacks);
         group = Yabba.MOD_ID + ".crafting";
         reg.addConfig(group, "upgrade_stack_size", CRAFTING_UPGRADE_STACK_SIZE);
         reg.addConfig(group, "barrel_easy_recipe", CRAFTING_BARREL_EASY_RECIPE);

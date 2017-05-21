@@ -4,7 +4,9 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -74,11 +76,12 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.depthMask(true);
 
         boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
+        IBarrelModel model = YabbaRegistry.INSTANCE.getModel(barrel.getModel());
 
         if(mouseOver || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
-            float textDistance = barrel.getModel().getTextDistance();
+            float textDistance = model.getTextDistance();
 
             if(hasStack)
             {
@@ -158,7 +161,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 ix = 0D;
                 u = 0D;
                 v = 0.5D;
-                Color4I col = isCreative ? CREATIVE_COLOR : barrel.getTier().getColor();
+                Color4I col = isCreative ? CREATIVE_COLOR : barrel.getTier().color;
                 buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(col.red(), col.green(), col.blue(), a).endVertex();
                 buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(col.red(), col.green(), col.blue(), a).endVertex();
                 buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(col.red(), col.green(), col.blue(), a).endVertex();
@@ -173,7 +176,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         if(hasStack)
         {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0.5F, 0.5F, barrel.getModel().getItemDistance());
+            GlStateManager.translate(0.5F, 0.5F, model.getItemDistance());
             GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
             RenderItem itemRender = mc.getRenderItem();

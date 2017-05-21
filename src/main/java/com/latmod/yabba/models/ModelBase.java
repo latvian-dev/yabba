@@ -12,10 +12,4 @@ public abstract class ModelBase extends FinalIDObject implements IBarrelModel
     {
         super(id);
     }
-
-    @Override
-    public int compareTo(IBarrelModel o)
-    {
-        return getName().compareTo(o.getName());
-    }
 }

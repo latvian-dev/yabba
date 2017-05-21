@@ -21,16 +21,16 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public interface IBarrelModel extends IStringSerializable, Comparable<IBarrelModel>
+public interface IBarrelModel extends IStringSerializable
 {
     Collection<ResourceLocation> getExtraTextures();
 
     @SideOnly(Side.CLIENT)
-    List<BakedQuad> buildModel(IBarrel barrel, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas);
+    List<BakedQuad> buildModel(IBarrelSkin skin, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas);
 
     @Nullable
     @SideOnly(Side.CLIENT)
-    default List<BakedQuad> buildItemModel(IBarrel barrel, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    default List<BakedQuad> buildItemModel(IBarrelSkin skin, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
         return null;
     }

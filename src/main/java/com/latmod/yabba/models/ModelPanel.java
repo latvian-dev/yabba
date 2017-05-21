@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.client.SpriteSet;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.common.base.Function;
 import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.block.BlockBarrel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -44,20 +45,20 @@ public class ModelPanel extends ModelBase
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<BakedQuad> buildModel(IBarrel barrel, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    public List<BakedQuad> buildModel(IBarrelSkin skin, ModelRotation rotation, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
         ModelBuilder model = new ModelBuilder(rotation);
-        SpriteSet spriteSet = new SpriteSet(barrel.getSkin().getTextures(), textureAtlas);
+        SpriteSet spriteSet = new SpriteSet(skin.getTextures(), textureAtlas);
         model.addCube(0F, 0F, 16F - height * 16F, 16F, 16F, 16F, spriteSet);
         return model.getQuads();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<BakedQuad> buildItemModel(IBarrel barrel, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
+    public List<BakedQuad> buildItemModel(IBarrelSkin skin, Function<ResourceLocation, TextureAtlasSprite> textureAtlas)
     {
         ModelBuilder model = new ModelBuilder(ModelRotation.X0_Y0);
-        SpriteSet spriteSet = new SpriteSet(barrel.getSkin().getTextures(), textureAtlas);
+        SpriteSet spriteSet = new SpriteSet(skin.getTextures(), textureAtlas);
         model.addCube(0F, 0F, 8F - height * 8F, 16F, 16F, 8F + height * 8F, spriteSet);
         return model.getQuads();
     }

@@ -1,10 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.IBarrelModel;
-import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.util.Barrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,37 +57,37 @@ public class BarrelItemData extends Barrel implements ICapabilityProvider
     }
 
     @Override
-    public IBarrelModel getModel()
+    public String getModel()
     {
-        return YabbaRegistry.INSTANCE.getModel(getBarrelNBT().getString("Model"));
+        return getBarrelNBT().getString("Model");
     }
 
     @Override
-    public void setModel(IBarrelModel model)
+    public void setModel(String model)
     {
-        getBarrelNBT().setString("Model", model.getName());
+        getBarrelNBT().setString("Model", model);
     }
 
     @Override
-    public IBarrelSkin getSkin()
+    public String getSkin()
     {
-        return YabbaRegistry.INSTANCE.getSkin(getBarrelNBT().getString("Skin"));
+        return getBarrelNBT().getString("Skin");
     }
 
     @Override
-    public void setSkin(IBarrelSkin skin)
+    public void setSkin(String skin)
     {
-        getBarrelNBT().setString("Skin", skin.getName());
+        getBarrelNBT().setString("Skin", skin);
     }
 
     @Override
-    public ITier getTier()
+    public Tier getTier()
     {
-        return YabbaRegistry.INSTANCE.getTier(getBarrelNBT().getString("Tier"));
+        return Tier.getFromName(getBarrelNBT().getString("Tier"));
     }
 
     @Override
-    public void setTier(ITier tier)
+    public void setTier(Tier tier)
     {
         getBarrelNBT().setString("Tier", tier.getName());
     }

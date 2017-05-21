@@ -1,10 +1,10 @@
 package com.latmod.yabba.item;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.IUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,9 +29,9 @@ import java.util.List;
  */
 public class ItemPainter extends ItemYabba
 {
-    private static IBarrelSkin getSkin(ItemStack stack)
+    private static String getSkin(ItemStack stack)
     {
-        return YabbaRegistry.INSTANCE.getSkin(stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelSkin") : "");
+        return stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelSkin") : YabbaRegistry.DEFAULT_SKIN.getName();
     }
 
     public static void setSkin(ItemStack stack, String skinId)
@@ -58,7 +58,7 @@ public class ItemPainter extends ItemYabba
         @Override
         public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
         {
-            IBarrelSkin skin = getSkin(upgradeItem);
+            String skin = getSkin(upgradeItem);
 
             if(barrel.getSkin().equals(skin))
             {
@@ -116,10 +116,16 @@ public class ItemPainter extends ItemYabba
         return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(hand));
     }
 
+    @SideOnly(Side.CLIENT)
+    public static String getSkinTooltip(String skin)
+    {
+        return "Skin: " + StringUtils.translate(YabbaRegistry.INSTANCE.getSkin(skin).getUnlocalizedName());
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Skin: " + getSkin(stack).getDisplayName());
+        tooltip.add(getSkinTooltip(getSkin(stack)));
     }
 }

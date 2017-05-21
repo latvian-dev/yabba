@@ -3,7 +3,7 @@ package com.latmod.yabba.item;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.api.Tier;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -39,10 +39,10 @@ public class ItemBlockBarrel extends ItemBlock
     {
         IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
-        list.add("Model: " + StringUtils.translate("yabba.model." + barrel.getModel().getName()));
-        list.add("Skin: " + barrel.getSkin().getDisplayName());
+        list.add(ItemHammer.getModelTooltip(barrel.getModel()));
+        list.add(ItemPainter.getSkinTooltip(barrel.getSkin()));
 
-        ITier tier = barrel.getTier();
+        Tier tier = barrel.getTier();
         ItemStack stack1 = barrel.getStackInSlot(0);
 
         if(!stack1.isEmpty())
@@ -62,7 +62,7 @@ public class ItemBlockBarrel extends ItemBlock
             }
             else
             {
-                list.add("Max " + tier.getMaxStacks() + " stacks");
+                list.add("Max " + tier.maxItemStacks.getInt() + " stacks");
             }
         }
 

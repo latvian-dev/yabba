@@ -1,19 +1,15 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
+import com.feed_the_beast.ftbl.lib.util.BlockPropertyString;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileBarrel;
-import com.latmod.yabba.util.PropertyBarrelModel;
-import com.latmod.yabba.util.PropertyBarrelSkin;
-import com.latmod.yabba.util.Tier;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -56,8 +52,8 @@ public class BlockBarrel extends BlockBarrelBase
 {
     public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
     public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-    public static final PropertyBarrelModel MODEL = PropertyBarrelModel.create("model");
-    public static final PropertyBarrelSkin SKIN = PropertyBarrelSkin.create("skin");
+    public static BlockPropertyString MODEL;
+    public static BlockPropertyString SKIN;
 
     public BlockBarrel()
     {
@@ -65,8 +61,8 @@ public class BlockBarrel extends BlockBarrelBase
         setDefaultState(blockState.getBaseState()
                 .withProperty(ROTATION, EnumRotation.NORMAL)
                 .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH)
-                .withProperty(MODEL, ModelBarrel.INSTANCE)
-                .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN));
+                .withProperty(MODEL, ModelBarrel.INSTANCE.getName())
+                .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN.getName()));
         setHardness(2F);
     }
 
@@ -113,7 +109,7 @@ public class BlockBarrel extends BlockBarrelBase
         }
     }
 
-    public ItemStack createStack(IBarrelModel model, IBarrelSkin skin, ITier tier)
+    public ItemStack createStack(String model, String skin, Tier tier)
     {
         ItemStack stack = new ItemStack(this);
         IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
@@ -145,7 +141,7 @@ public class BlockBarrel extends BlockBarrelBase
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
     {
-        list.add(createStack(ModelBarrel.INSTANCE, YabbaRegistry.DEFAULT_SKIN, Tier.WOOD));
+        list.add(createStack(ModelBarrel.INSTANCE.getName(), YabbaRegistry.DEFAULT_SKIN.getName(), Tier.WOOD));
     }
 
     @Override
@@ -181,8 +177,7 @@ public class BlockBarrel extends BlockBarrelBase
 
         if(tile instanceof TileBarrel)
         {
-            IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            return state.withProperty(SKIN, barrel.getSkin()).withProperty(MODEL, barrel.getModel());
+            return ((TileBarrel) tile).createState(state);
         }
 
         return state;
@@ -218,7 +213,7 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity)
     {
-        IBlockState parent = state.getValue(SKIN).getState();
+        IBlockState parent = YabbaRegistry.INSTANCE.getSkin(state.getValue(SKIN)).getState();
         return parent.getBlock().getSoundType(parent, world, pos, entity);
     }
 
@@ -324,7 +319,7 @@ public class BlockBarrel extends BlockBarrelBase
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
             IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            return barrel.getModel().getAABB(state, world, pos, barrel);
+            return YabbaRegistry.INSTANCE.getModel(barrel.getModel()).getAABB(state, world, pos, barrel);
         }
 
         return FULL_BLOCK_AABB;

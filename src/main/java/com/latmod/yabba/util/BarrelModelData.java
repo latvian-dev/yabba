@@ -1,35 +1,21 @@
 package com.latmod.yabba.util;
 
-import com.latmod.yabba.api.IBarrelModel;
-import com.latmod.yabba.api.IBarrelSkin;
-
 /**
  * @author LatvianModder
  */
 public class BarrelModelData
 {
-    private final IBarrelModel model;
-    private final IBarrelSkin skin;
+    public final String model, skin;
 
-    public BarrelModelData(IBarrelModel m, IBarrelSkin s)
+    public BarrelModelData(String m, String s)
     {
         model = m;
         skin = s;
     }
 
-    public IBarrelModel getModel()
-    {
-        return model;
-    }
-
-    public IBarrelSkin getSkin()
-    {
-        return skin;
-    }
-
     public String toString()
     {
-        return "model=" + model.getName() + ",skin=" + getSkin().getName();
+        return "model=" + model + ",skin=" + skin;
     }
 
     public boolean equals(Object o)

@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
@@ -92,7 +93,14 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
     @Override
     public IBlockState createState(IBlockState state)
     {
-        return state.withProperty(BlockBarrel.MODEL, barrel.getModel()).withProperty(BlockBarrel.SKIN, barrel.getSkin());
+        return state.withProperty(BlockBarrel.MODEL, YabbaRegistry.INSTANCE.getModel(barrel.getModel()).getName()).withProperty(BlockBarrel.SKIN, YabbaRegistry.INSTANCE.getSkin(barrel.getSkin()).getName());
+    }
+
+    @Override
+    public void onUpdatePacket()
+    {
+        super.onUpdatePacket();
+        prevItemCount = -1;
     }
 
     @Override
@@ -401,7 +409,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
                     }
                 }
 
-                markDirty();
+                barrel.markBarrelDirty();
                 return;
             }
 
@@ -423,7 +431,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
                         heldItem.shrink(1);
                     }
 
-                    markDirty();
+                    barrel.markBarrelDirty();
                 }
             }
             else
@@ -432,7 +440,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
             }
         }
 
-        markDirty();
+        barrel.markBarrelDirty();
     }
 
     private static float getX(EnumFacing facing, float hitX, float hitZ)

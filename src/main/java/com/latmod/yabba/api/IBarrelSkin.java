@@ -7,11 +7,11 @@ import net.minecraft.util.IStringSerializable;
 /**
  * @author LatvianModder
  */
-public interface IBarrelSkin extends IStringSerializable, Comparable<IBarrelSkin>
+public interface IBarrelSkin extends IStringSerializable
 {
     IBlockState getState();
 
     IconSet getTextures();
 
-    String getDisplayName();
+    String getUnlocalizedName();
 }

@@ -3,10 +3,9 @@ package com.latmod.yabba.item;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
+import com.latmod.yabba.models.ModelBarrel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,9 +29,9 @@ import java.util.List;
  */
 public class ItemHammer extends ItemYabba
 {
-    private static IBarrelModel getModel(ItemStack stack)
+    private static String getModel(ItemStack stack)
     {
-        return YabbaRegistry.INSTANCE.getModel(stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelModel") : "");
+        return stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelModel") : ModelBarrel.INSTANCE.getName();
     }
 
     public static void setModel(ItemStack stack, String modelId)
@@ -59,7 +58,7 @@ public class ItemHammer extends ItemYabba
         @Override
         public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
         {
-            IBarrelModel model = getModel(upgradeItem);
+            String model = getModel(upgradeItem);
 
             if(barrel.getModel().equals(model))
             {
@@ -117,10 +116,16 @@ public class ItemHammer extends ItemYabba
         return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(hand));
     }
 
+    @SideOnly(Side.CLIENT)
+    public static String getModelTooltip(String model)
+    {
+        return "Model: " + StringUtils.translate("yabba.model." + model);
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Model: " + StringUtils.translate("yabba.model." + getModel(stack).getName()));
+        tooltip.add(getModelTooltip(getModel(stack)));
     }
 }

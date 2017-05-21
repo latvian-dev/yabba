@@ -23,7 +23,7 @@ public interface IBarrel extends IItemHandler
     int FLAG_ALWAYS_DISPLAY_DATA = 1 << 9;
     int FLAG_DISPLAY_BAR = 1 << 10;
 
-    ITier getTier();
+    Tier getTier();
 
     int getFlags();
 
@@ -31,9 +31,9 @@ public interface IBarrel extends IItemHandler
 
     int getItemCount();
 
-    IBarrelModel getModel();
+    String getModel();
 
-    IBarrelSkin getSkin();
+    String getSkin();
 
     NBTTagCompound getUpgradeNBT();
 

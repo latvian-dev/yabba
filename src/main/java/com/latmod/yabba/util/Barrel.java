@@ -3,9 +3,8 @@ package com.latmod.yabba.util;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.api.Tier;
 import gnu.trove.map.hash.TIntByteHashMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -125,7 +124,7 @@ public abstract class Barrel implements IBarrelModifiable
             return canInsert ? ItemStack.EMPTY : stack;
         }
 
-        ITier tier = getTier();
+        Tier tier = getTier();
         int itemCount = getItemCount();
         int capacity;
 
@@ -247,20 +246,6 @@ public abstract class Barrel implements IBarrelModifiable
         list.appendTag(new NBTTagString(name));
 
         setUpgradeNames(list);
-    }
-
-    @Override
-    public void copyFrom(IBarrel barrel)
-    {
-        setTier(barrel.getTier());
-        setFlags(barrel.getFlags());
-        setItemCount(barrel.getItemCount());
-        setStackInSlot(0, barrel.getStackInSlot(0));
-        setModel(barrel.getModel());
-        setSkin(barrel.getSkin());
-        setUpgradeNBT(barrel.getUpgradeNBT().copy());
-        NBTTagList upgradeNames = barrel.getUpgradeNames();
-        setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
     }
 
     @Override

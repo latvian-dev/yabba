@@ -1,10 +1,10 @@
 package com.latmod.yabba.util;
 
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
+import com.latmod.yabba.api.Tier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagInt;
@@ -75,7 +75,7 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
                 {
                     if(!simulate)
                     {
-                        barrel.setTier(YabbaCommon.TIER_IRON);
+                        barrel.setTier(Tier.IRON);
                     }
                     return true;
                 }
@@ -83,11 +83,11 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
             }
             case GOLD_UPGRADE:
             {
-                if(barrel.getTier().equals(YabbaCommon.TIER_IRON))
+                if(barrel.getTier().equals(Tier.IRON))
                 {
                     if(!simulate)
                     {
-                        barrel.setTier(YabbaCommon.TIER_GOLD);
+                        barrel.setTier(Tier.GOLD);
                     }
                     return true;
                 }
@@ -95,11 +95,11 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
             }
             case DIAMOND_UPGRADE:
             {
-                if(barrel.getTier().equals(YabbaCommon.TIER_GOLD))
+                if(barrel.getTier().equals(Tier.GOLD))
                 {
                     if(!simulate)
                     {
-                        barrel.setTier(YabbaCommon.TIER_DMD);
+                        barrel.setTier(Tier.DIAMOND);
                     }
                     return true;
                 }

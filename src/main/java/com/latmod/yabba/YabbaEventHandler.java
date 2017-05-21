@@ -5,9 +5,9 @@ import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
-import com.latmod.yabba.api.IYabbaRegistry;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
-import com.latmod.yabba.api.events.YabbaRegistryEvent;
+import com.latmod.yabba.api.events.YabbaModelsEvent;
+import com.latmod.yabba.api.events.YabbaSkinsEvent;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
@@ -30,9 +30,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class YabbaEventHandler
 {
     @SubscribeEvent
-    public static void onYabbaRegistry(YabbaRegistryEvent event)
+    public static void addModels(YabbaModelsEvent event)
     {
-        IYabbaRegistry reg = event.getRegistry();
+        YabbaModelsEvent.YabbaModelRegistry reg = event.getRegistry();
+
+        reg.addModel(new ModelCrate("crate"));
+        reg.addModel(new ModelSolid("solid"));
+        reg.addModel(new ModelSolidBorders("solid_borders"));
+        reg.addModel(new ModelPanel("cover", 0.125F));
+        reg.addModel(new ModelPanel("panel", 0.25F));
+        reg.addModel(new ModelPanel("slab", 0.5F));
+    }
+
+    @SubscribeEvent
+    public static void addSkins(YabbaSkinsEvent event)
+    {
+        YabbaSkinsEvent.YabbaSkinRegistry reg = event.getRegistry();
 
         for(BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
         {
@@ -101,17 +114,6 @@ public class YabbaEventHandler
             reg.addSkin(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/hardened_clay_stained_" + dye.getName());
             reg.addSkin(Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/wool_colored_" + dye.getName());
         }
-
-        reg.addTier(YabbaCommon.TIER_IRON);
-        reg.addTier(YabbaCommon.TIER_GOLD);
-        reg.addTier(YabbaCommon.TIER_DMD);
-
-        reg.addModel(new ModelCrate("crate"));
-        reg.addModel(new ModelSolid("solid"));
-        reg.addModel(new ModelSolidBorders("solid_borders"));
-        reg.addModel(new ModelPanel("cover", 0.125F));
-        reg.addModel(new ModelPanel("panel", 0.25F));
-        reg.addModel(new ModelPanel("slab", 0.5F));
     }
 
     @SubscribeEvent

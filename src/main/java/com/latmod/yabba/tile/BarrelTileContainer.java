@@ -1,12 +1,9 @@
 package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.IBarrelModel;
-import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.api.ITier;
+import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.Barrel;
-import com.latmod.yabba.util.Tier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,14 +17,14 @@ import javax.annotation.Nullable;
  */
 public abstract class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
 {
-    private ITier tier;
+    private Tier tier = Tier.WOOD;
     private int flags;
-    private ItemStack storedItem;
+    private ItemStack storedItem = ItemStack.EMPTY;
     private int itemCount;
     private NBTTagCompound upgrades;
     private NBTTagList upgradeNames;
-    private IBarrelSkin skin;
-    private IBarrelModel model;
+    private String skin = YabbaRegistry.DEFAULT_SKIN.getName();
+    private String model = ModelBarrel.INSTANCE.getName();
 
     @Override
     public NBTTagCompound serializeNBT()
@@ -48,8 +45,8 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
             nbt.setTag("Upgrades", upgrades);
         }
 
-        nbt.setString("Model", getModel().getName());
-        nbt.setString("Skin", getSkin().getName());
+        nbt.setString("Model", getModel());
+        nbt.setString("Skin", getSkin());
 
         if(upgradeNames != null && !upgradeNames.hasNoTags())
         {
@@ -62,14 +59,13 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        String tierID = nbt.getString("Tier");
-        tier = YabbaRegistry.INSTANCE.getTier(tierID);
+        tier = Tier.getFromName(nbt.getString("Tier"));
         flags = nbt.getInteger("Flags");
         storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
         itemCount = storedItem.isEmpty() ? 0 : nbt.getInteger("Count");
         upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
-        model = YabbaRegistry.INSTANCE.getModel(nbt.getString("Model"));
-        skin = YabbaRegistry.INSTANCE.getSkin(nbt.getString("Skin"));
+        model = nbt.getString("Model");
+        skin = nbt.getString("Skin");
         upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
 
         if(getFlag(FLAG_IS_CREATIVE))
@@ -81,11 +77,6 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        if(storedItem == null) // shouldnt happen but better to check anyway
-        {
-            storedItem = ItemStack.EMPTY;
-        }
-
         int count = getItemCount();
         if(count > 0)
         {
@@ -96,7 +87,7 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     }
 
     @Override
-    public ITier getTier()
+    public Tier getTier()
     {
         return tier == null ? Tier.WOOD : tier;
     }
@@ -125,24 +116,14 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     }
 
     @Override
-    public IBarrelSkin getSkin()
+    public String getSkin()
     {
-        if(skin == null)
-        {
-            skin = YabbaRegistry.DEFAULT_SKIN;
-        }
-
         return skin;
     }
 
     @Override
-    public IBarrelModel getModel()
+    public String getModel()
     {
-        if(model == null)
-        {
-            model = ModelBarrel.INSTANCE;
-        }
-
         return model;
     }
 
@@ -156,11 +137,11 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     @Override
     public void setStackInSlot(int slot, ItemStack stack)
     {
-        storedItem = stack;
+        storedItem = (stack == null || stack.isEmpty()) ? ItemStack.EMPTY : stack;
     }
 
     @Override
-    public void setTier(ITier t)
+    public void setTier(Tier t)
     {
         tier = t;
     }
@@ -184,13 +165,13 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     }
 
     @Override
-    public void setSkin(IBarrelSkin v)
+    public void setSkin(String v)
     {
         skin = v;
     }
 
     @Override
-    public void setModel(IBarrelModel m)
+    public void setModel(String m)
     {
         model = m;
     }
