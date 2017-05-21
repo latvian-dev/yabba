@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class GuiSelectModel extends GuiBase
 {
-    public static final IDrawableObject GUI_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xC7353535)).setLineColor(Color4I.BLACK).setRoundEdges(true);
+    public static final IDrawableObject GUI_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x22000000)).setLineColor(Color4I.BLACK).setRoundEdges(true);
     public static final IDrawableObject BUTTON_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(Color4I.BLACK);
 
     private class ButtonModel extends Button

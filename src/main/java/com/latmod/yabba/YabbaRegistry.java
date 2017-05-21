@@ -37,9 +37,8 @@ public enum YabbaRegistry implements YabbaModelsEvent.YabbaModelRegistry, YabbaS
 
     public void sendEvent()
     {
-        addModel(ModelBarrel.INSTANCE);
-
         MinecraftForge.EVENT_BUS.post(new YabbaModelsEvent(this));
+        addModel(ModelBarrel.INSTANCE);
         ALL_MODELS.addAll(MODELS.values());
         ALL_MODELS.sort(StringUtils.ID_COMPARATOR);
         BlockBarrel.MODEL = new BlockPropertyString("model", MODELS.keySet())
@@ -75,7 +74,7 @@ public enum YabbaRegistry implements YabbaModelsEvent.YabbaModelRegistry, YabbaS
     @Override
     public IBarrelSkin addSkin(IBlockState parentState, String icons, String uname)
     {
-        IBarrelSkin skin = new BarrelSkin(parentState, new IconSet(icons), uname);
+        IBarrelSkin skin = new BarrelSkin(false, parentState, new IconSet(icons), uname);
         addSkin(skin);
         return skin;
     }

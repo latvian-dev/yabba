@@ -17,6 +17,7 @@ import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
@@ -76,9 +77,15 @@ public class YabbaEventHandler
             }
         }
 
+        //reg.addSkin(Blocks.COBBLESTONE, "all=blocks/cobblestone");
+        //BlockSandStone.EnumType
+
         reg.addSkin(Blocks.COBBLESTONE, "all=blocks/cobblestone");
         reg.addSkin(Blocks.MOSSY_COBBLESTONE, "all=blocks/cobblestone_mossy");
         reg.addSkin(Blocks.DIRT, "all=blocks/dirt");
+        reg.addSkin(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.SAND), "all=blocks/sand");
+        reg.addSkin(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND), "all=blocks/red_sand");
+        reg.addSkin(Blocks.CLAY, "all=blocks/clay");
         reg.addSkin(Blocks.STONEBRICK, "all=blocks/stonebrick");
         reg.addSkin(Blocks.BRICK_BLOCK, "all=blocks/brick");
         reg.addSkin(Blocks.OBSIDIAN, "all=blocks/obsidian");
@@ -90,6 +97,7 @@ public class YabbaEventHandler
         reg.addSkin(Blocks.MELON_BLOCK, "up&down=minecraft:blocks/melon_top,all=minecraft:blocks/melon_side");
         reg.addSkin(Blocks.PUMPKIN, "up&down=blocks/pumpkin_top,all=blocks/pumpkin_side");
         reg.addSkin(Blocks.ICE, "all=blocks/ice");
+        reg.addSkin(Blocks.PACKED_ICE, "all=blocks/ice_packed");
         reg.addSkin(Blocks.GLASS, "all=blocks/glass");
         reg.addSkin(Blocks.GLOWSTONE, "all=blocks/glowstone");
         reg.addSkin(Blocks.MAGMA, "all=blocks/magma");
@@ -108,6 +116,10 @@ public class YabbaEventHandler
         reg.addSkin(Blocks.BONE_BLOCK, "up&down=blocks/bone_block_top,all=blocks/bone_block_side");
         reg.addSkin(Blocks.HAY_BLOCK, "up&down=blocks/hay_block_top,all=blocks/hay_block_side");
         reg.addSkin(Blocks.BOOKSHELF, "up&down=blocks/planks_oak,all=blocks/bookshelf");
+        reg.addSkin(Blocks.RED_MUSHROOM_BLOCK, "all=blocks/mushroom_block_skin_red");
+        reg.addSkin(Blocks.BROWN_MUSHROOM_BLOCK, "all=blocks/mushroom_block_skin_brown");
+        reg.addSkin(Blocks.NETHERRACK, "all=blocks/netherrack");
+        reg.addSkin(Blocks.DAYLIGHT_DETECTOR, "up&down=blocks/daylight_detector_top,all=blocks/daylight_detector_side");
 
         for(EnumDyeColor dye : EnumDyeColor.values())
         {

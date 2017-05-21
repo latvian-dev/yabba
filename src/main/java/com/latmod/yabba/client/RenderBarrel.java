@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -49,7 +48,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         }
 
         ItemStack stack = barrel.getStackInSlot(0);
-        boolean hasStack = !stack.isEmpty();
+        boolean hasStack = !stack.isEmpty() && (barrel.getItemCount() > 0 || barrel.getFlag(IBarrel.FLAG_LOCKED));
         Minecraft mc = Minecraft.getMinecraft();
 
         boolean isSneaking = mc.player.isSneaking();
@@ -82,10 +81,11 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         {
             boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
             float textDistance = model.getTextDistance();
+            boolean infinite = isCreative || barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY);
 
             if(hasStack)
             {
-                if(!isCreative && !isSneaking && barrel.getFlag(IBarrel.FLAG_DISPLAY_BAR))
+                if(!infinite && !isSneaking && barrel.getFlag(IBarrel.FLAG_DISPLAY_BAR))
                 {
                     GlStateManager.pushMatrix();
                     GlStateManager.disableTexture2D();
@@ -115,7 +115,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 {
                     GlStateManager.pushMatrix();
                     GlStateManager.translate(0.5F, 0.075F, textDistance);
-                    String s1 = te.getItemDisplayCount(isSneaking);
+                    String s1 = te.getItemDisplayCount(isSneaking, isCreative, infinite);
                     int sw = getFontRenderer().getStringWidth(s1);
                     float f = 1F / (float) Math.max((sw + 10), 64);
                     GlStateManager.scale(f, f, 1F);
@@ -133,7 +133,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 GlStateManager.popMatrix();
             }
 
-            if(isSneaking && mouseOver && mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+            if(isSneaking && mouseOver)
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0D, 0D, textDistance);
@@ -161,7 +161,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
                 ix = 0D;
                 u = 0D;
                 v = 0.5D;
-                Color4I col = isCreative ? CREATIVE_COLOR : barrel.getTier().color;
+                Color4I col = infinite ? CREATIVE_COLOR : barrel.getTier().color;
                 buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(col.red(), col.green(), col.blue(), a).endVertex();
                 buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(col.red(), col.green(), col.blue(), a).endVertex();
                 buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(col.red(), col.green(), col.blue(), a).endVertex();

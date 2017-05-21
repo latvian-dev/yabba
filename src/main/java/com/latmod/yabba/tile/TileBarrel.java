@@ -212,21 +212,21 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
         if(cachedItemName == null)
         {
             ItemStack is = barrel.getStackInSlot(0);
-            cachedItemName = is.isItemDamaged() ? "" : is.getDisplayName();
+            cachedItemName = is.isEmpty() ? "" : is.getDisplayName();
         }
 
         return cachedItemName;
     }
 
-    public String getItemDisplayCount(boolean sneaking)
+    public String getItemDisplayCount(boolean sneaking, boolean creative, boolean infinite)
     {
-        if(barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+        if(creative)
         {
             return "INF";
         }
         else if(sneaking)
         {
-            return barrel.getItemCount() + " / " + barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
+            return infinite ? Integer.toString(barrel.getItemCount()) : (barrel.getItemCount() + " / " + barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0)));
         }
         else if(cachedItemCount == null)
         {

@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class GuiSelectSkin extends GuiBase
 {
-    public static final IDrawableObject PURPLE_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x223300FF)).setLineColor(Color4I.BLACK);
+    public static final IDrawableObject PURPLE_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x228060FF)).setLineColor(Color4I.BLACK);
     public static final IDrawableObject BUTTON_GREEN = new TexturelessRectangle(Color4I.NONE).setLineColor(new Color4I(false, 0xFF007F0E));
 
     private class Skin extends Button
