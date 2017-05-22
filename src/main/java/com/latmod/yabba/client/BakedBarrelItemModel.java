@@ -1,8 +1,6 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
-import com.latmod.yabba.block.BlockBarrel;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -20,17 +18,15 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BarrelVariantBakedModel implements IPerspectiveAwareModel
+public class BakedBarrelItemModel implements IPerspectiveAwareModel
 {
     private final TextureAtlasSprite particle;
-    private final List<List<BakedQuad>> quads;
-    private final List<BakedQuad> noStateQuads;
+    private final List<BakedQuad> quads;
 
-    public BarrelVariantBakedModel(TextureAtlasSprite p, List<List<BakedQuad>> q, List<BakedQuad> nsq)
+    public BakedBarrelItemModel(TextureAtlasSprite p, List<BakedQuad> q)
     {
         particle = p;
         quads = q;
-        noStateQuads = nsq;
     }
 
     @Override
@@ -42,12 +38,7 @@ public class BarrelVariantBakedModel implements IPerspectiveAwareModel
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
     {
-        if(state != null)
-        {
-            return quads.get(state.getValue(BlockBarrel.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
-        }
-
-        return noStateQuads;
+        return quads;
     }
 
     @Override

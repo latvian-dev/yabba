@@ -21,7 +21,7 @@ public class YabbaModels implements ICustomModelLoader
     @Override
     public IModel loadModel(ResourceLocation modelLocation) throws Exception
     {
-        return new BarrelModel(((ModelResourceLocation) modelLocation).getVariant());
+        return new BarrelModel();
     }
 
     @Override

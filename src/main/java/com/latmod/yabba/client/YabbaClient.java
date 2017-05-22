@@ -4,9 +4,8 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.YabbaRegistry;
-import com.latmod.yabba.api.IBarrelModel;
-import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.Tier;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
 import com.latmod.yabba.tile.TileBarrel;
@@ -16,13 +15,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author LatvianModder
@@ -35,21 +30,12 @@ public class YabbaClient extends YabbaCommon
     public void preInit()
     {
         super.preInit();
-        ModelLoader.setCustomStateMapper(YabbaItems.BARREL, new StateMap.Builder().ignore(BlockHorizontal.FACING).build());
+        ModelLoader.setCustomStateMapper(YabbaItems.BARREL, new StateMap.Builder().ignore(BlockHorizontal.FACING, BlockBarrel.MODEL, BlockBarrel.SKIN).build());
         ModelLoaderRegistry.registerLoader(new YabbaModels());
         Item barrelItem = Item.getItemFromBlock(YabbaItems.BARREL);
-        List<ResourceLocation> variants = new ArrayList<>();
-
-        for(IBarrelModel model : YabbaRegistry.ALL_MODELS)
-        {
-            for(IBarrelSkin skin : YabbaRegistry.ALL_SKINS)
-            {
-                variants.add(new ModelResourceLocation(YabbaItems.BARREL.getRegistryName(), "model=" + model.getName() + ",skin=" + skin.getName()));
-            }
-        }
-
-        ModelLoader.registerItemVariants(barrelItem, variants.toArray(new ResourceLocation[variants.size()]));
-        ModelLoader.setCustomMeshDefinition(barrelItem, new BarrelItemMeshDefinition(YabbaItems.BARREL.getRegistryName()));
+        ModelResourceLocation barrelItemModel = new ModelResourceLocation(YabbaItems.BARREL.getRegistryName(), "normal");
+        ModelLoader.registerItemVariants(barrelItem, barrelItemModel);
+        ModelLoader.setCustomMeshDefinition(barrelItem, stack -> barrelItemModel);
 
         registerModel(Item.getItemFromBlock(YabbaItems.ANTIBARREL), 0, "antibarrel", "inventory");
 
