@@ -47,7 +47,9 @@ public class ModelBarrel extends ModelBase
         TextureAtlasSprite frontSprite = spriteSet.get(EnumFacing.NORTH);
 
         // Band
+        model.setUVLocked(false);
         model.addCube(0F, 0F, 0F, 16F, 16F, 16F, new SpriteSet(TEXTURES_BAND, textureAtlas));
+        model.setUVLocked(true);
 
         /// Top H
         model.addCube(2F, 15F, 2F, 14F, 16F, 14F, spriteSet.exclude(EnumFacing.DOWN));
