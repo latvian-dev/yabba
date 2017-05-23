@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +48,12 @@ public class Yabba
     public void onInit(FMLInitializationEvent event)
     {
         PROXY.init();
+    }
+
+    @Mod.EventHandler
+    public void onPostInit(FMLPostInitializationEvent event)
+    {
+        PROXY.postInit();
     }
 
     @Mod.EventHandler

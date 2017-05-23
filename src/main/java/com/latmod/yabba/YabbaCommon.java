@@ -4,18 +4,22 @@ import com.feed_the_beast.ftbl.lib.EmptyCapStorage;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.RecipeUtils;
+import com.latmod.yabba.api.BarrelModelCommonData;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.Tier;
+import com.latmod.yabba.api.events.YabbaModelDataEvent;
 import com.latmod.yabba.block.RecipeBarrelUpgrade;
-import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.EnumUpgrade;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -23,10 +27,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.RecipeSorter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author LatvianModder
  */
-public class YabbaCommon
+public class YabbaCommon implements YabbaModelDataEvent.YabbaModelDataRegistry
 {
     @CapabilityInject(IBarrel.class)
     public static Capability<IBarrel> BARREL_CAPABILITY;
@@ -36,9 +43,13 @@ public class YabbaCommon
 
     public static final YabbaCreativeTab TAB = new YabbaCreativeTab();
 
+    private static final Map<String, BarrelModelCommonData> DATA_MAP = new HashMap<>();
+    public static final String DEFAULT_MODEL_ID = "barrel";
+    public static final IBlockState DEFAULT_SKIN_STATE = Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.OAK);
+    public static final String DEFAULT_SKIN_ID = LMUtils.getName(DEFAULT_SKIN_STATE);
+
     public void preInit()
     {
-        YabbaRegistry.INSTANCE.sendEvent();
         CapabilityManager.INSTANCE.register(IUpgrade.class, new EmptyCapStorage<>(), () -> EnumUpgrade.BLANK);
         CapabilityManager.INSTANCE.register(IBarrel.class, new EmptyCapStorage<>(), () -> null);
 
@@ -67,14 +78,14 @@ public class YabbaCommon
 
         if(YabbaConfig.CRAFTING_BARREL_EASY_RECIPE.getBoolean())
         {
-            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE.getName(), YabbaRegistry.DEFAULT_SKIN.getName(), Tier.WOOD),
+            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(DEFAULT_MODEL_ID, DEFAULT_SKIN_ID, Tier.WOOD),
                     "U", "C",
                     'U', blankUpgrade,
                     'C', ODItems.CHEST_WOOD);
         }
         else
         {
-            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(ModelBarrel.INSTANCE.getName(), YabbaRegistry.DEFAULT_SKIN.getName(), Tier.WOOD),
+            RecipeUtils.addRecipe(YabbaItems.BARREL.createStack(DEFAULT_MODEL_ID, DEFAULT_SKIN_ID, Tier.WOOD),
                     " U ", "SCS", " P ",
                     'U', blankUpgrade,
                     'C', ODItems.CHEST_WOOD,
@@ -128,11 +139,28 @@ public class YabbaCommon
                 'C', ODItems.CHEST_WOOD);
     }
 
+    public void postInit()
+    {
+        MinecraftForge.EVENT_BUS.post(new YabbaModelDataEvent(this));
+    }
+
     public void openModelGui()
     {
     }
 
     public void openSkinGui()
     {
+    }
+
+    @Override
+    public void addModelData(String id, BarrelModelCommonData data)
+    {
+        DATA_MAP.put(id, data);
+    }
+
+    public static BarrelModelCommonData getModelData(String id)
+    {
+        BarrelModelCommonData data = DATA_MAP.get(id);
+        return data == null ? BarrelModelCommonData.DEFAULT : data;
     }
 }

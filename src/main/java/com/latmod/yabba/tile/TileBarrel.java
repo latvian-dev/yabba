@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
@@ -34,6 +33,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
@@ -93,7 +93,12 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
     @Override
     public IBlockState createState(IBlockState state)
     {
-        return state.withProperty(BlockBarrel.MODEL, YabbaRegistry.INSTANCE.getModel(barrel.getModel()).getName()).withProperty(BlockBarrel.SKIN, YabbaRegistry.INSTANCE.getSkin(barrel.getSkin()).getName());
+        if(state instanceof IExtendedBlockState)
+        {
+            return ((IExtendedBlockState) state).withProperty(BlockBarrel.MODEL, barrel.getModel()).withProperty(BlockBarrel.SKIN, barrel.getSkin());
+        }
+
+        return state;
     }
 
     @Override

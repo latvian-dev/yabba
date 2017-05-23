@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.tile.TileBarrel;
@@ -75,7 +74,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
         GlStateManager.depthMask(true);
 
         boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
-        IBarrelModel model = YabbaRegistry.INSTANCE.getModel(barrel.getModel());
+        IBarrelModel model = YabbaClient.getModel(barrel.getModel());
 
         if(mouseOver || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
         {

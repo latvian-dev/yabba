@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.IconSet;
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
 import com.google.common.base.Function;
+import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -21,12 +22,11 @@ import java.util.List;
  */
 public class ModelBarrel extends ModelBase
 {
-    public static final ModelBarrel INSTANCE = new ModelBarrel();
     private static final IconSet TEXTURES_BAND = new IconSet("north=yabba:blocks/barrel_band_window,south&east&west=yabba:blocks/barrel_band");
 
     public ModelBarrel()
     {
-        super("barrel");
+        super(YabbaCommon.DEFAULT_MODEL_ID);
     }
 
     @Override

@@ -12,8 +12,8 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectSkin;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -167,7 +167,7 @@ public class GuiSelectSkin extends GuiBase
         scrollBar.background = PURPLE_BACKGROUND;
         scrollBar.slider = PURPLE_BACKGROUND;
 
-        for(IBarrelSkin s : YabbaRegistry.ALL_SKINS)
+        for(IBarrelSkin s : YabbaClient.ALL_SKINS)
         {
             allSkins.add(new Skin(s));
         }

@@ -1,17 +1,15 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
-import com.feed_the_beast.ftbl.lib.util.BlockPropertyString;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.item.ItemBlockBarrel;
-import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -55,17 +53,15 @@ public class BlockBarrel extends BlockBarrelBase
 {
     public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
     public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-    public static BlockPropertyString MODEL;
-    public static BlockPropertyString SKIN;
+    public static UnlistedPropertyString MODEL = UnlistedPropertyString.create("model", LMUtils.alwaysTruePredicate());
+    public static UnlistedPropertyString SKIN = UnlistedPropertyString.create("skin", LMUtils.alwaysTruePredicate());
 
     public BlockBarrel()
     {
         super("barrel", Material.WOOD, MapColor.WOOD);
         setDefaultState(blockState.getBaseState()
                 .withProperty(ROTATION, EnumRotation.NORMAL)
-                .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH)
-                .withProperty(MODEL, ModelBarrel.INSTANCE.getName())
-                .withProperty(SKIN, YabbaRegistry.DEFAULT_SKIN.getName()));
+                .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
         setHardness(2F);
     }
 
@@ -144,7 +140,7 @@ public class BlockBarrel extends BlockBarrelBase
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
     {
-        list.add(createStack(ModelBarrel.INSTANCE.getName(), YabbaRegistry.DEFAULT_SKIN.getName(), Tier.WOOD));
+        list.add(createStack(YabbaCommon.DEFAULT_MODEL_ID, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD));
     }
 
     @Override
@@ -156,7 +152,7 @@ public class BlockBarrel extends BlockBarrelBase
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION, MODEL, SKIN}, new IUnlistedProperty[] { });
+        return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION}, new IUnlistedProperty[] {MODEL, SKIN});
     }
 
     @Override
@@ -174,7 +170,7 @@ public class BlockBarrel extends BlockBarrelBase
 
     @Override
     @Deprecated
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         TileEntity tile = worldIn.getTileEntity(pos);
 
@@ -211,13 +207,6 @@ public class BlockBarrel extends BlockBarrelBase
         }
 
         return 8F;
-    }
-
-    @Override
-    public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity)
-    {
-        IBlockState parent = YabbaRegistry.INSTANCE.getSkin(state.getValue(SKIN)).getState();
-        return parent.getBlock().getSoundType(parent, world, pos, entity);
     }
 
     @Override
@@ -322,7 +311,7 @@ public class BlockBarrel extends BlockBarrelBase
         if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
         {
             IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            return YabbaRegistry.INSTANCE.getModel(barrel.getModel()).getAABB(state, world, pos, barrel);
+            return YabbaCommon.getModelData(barrel.getModel()).getAABB(state, world, pos, barrel);
         }
 
         return FULL_BLOCK_AABB;

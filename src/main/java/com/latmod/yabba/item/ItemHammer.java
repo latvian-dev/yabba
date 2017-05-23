@@ -5,7 +5,6 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
-import com.latmod.yabba.models.ModelBarrel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +30,7 @@ public class ItemHammer extends ItemYabba
 {
     private static String getModel(ItemStack stack)
     {
-        return stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelModel") : ModelBarrel.INSTANCE.getName();
+        return stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelModel") : YabbaCommon.DEFAULT_MODEL_ID;
     }
 
     public static void setModel(ItemStack stack, String modelId)

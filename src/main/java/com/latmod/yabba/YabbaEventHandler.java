@@ -3,9 +3,11 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
+import com.latmod.yabba.api.BarrelModelCommonData;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
+import com.latmod.yabba.api.events.YabbaModelDataEvent;
 import com.latmod.yabba.api.events.YabbaModelsEvent;
 import com.latmod.yabba.api.events.YabbaSkinsEvent;
 import com.latmod.yabba.models.ModelCrate;
@@ -24,6 +26,8 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -31,6 +35,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class YabbaEventHandler
 {
     @SubscribeEvent
+    public static void addModelData(YabbaModelDataEvent event)
+    {
+        YabbaModelDataEvent.YabbaModelDataRegistry reg = event.getRegistry();
+
+        reg.addModelData("cover", new BarrelModelCommonData.Panel(0.125F));
+        reg.addModelData("panel", new BarrelModelCommonData.Panel(0.25F));
+        reg.addModelData("slab", new BarrelModelCommonData.Panel(0.5F));
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void addModels(YabbaModelsEvent event)
     {
         YabbaModelsEvent.YabbaModelRegistry reg = event.getRegistry();
@@ -44,6 +59,7 @@ public class YabbaEventHandler
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void addSkins(YabbaSkinsEvent event)
     {
         YabbaSkinsEvent.YabbaSkinRegistry reg = event.getRegistry();

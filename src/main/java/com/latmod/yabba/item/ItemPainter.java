@@ -3,9 +3,9 @@ package com.latmod.yabba.item;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
+import com.latmod.yabba.client.YabbaClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +31,7 @@ public class ItemPainter extends ItemYabba
 {
     private static String getSkin(ItemStack stack)
     {
-        return stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelSkin") : YabbaRegistry.DEFAULT_SKIN.getName();
+        return stack.hasTagCompound() ? stack.getTagCompound().getString("BarrelSkin") : YabbaCommon.DEFAULT_SKIN_ID;
     }
 
     public static void setSkin(ItemStack stack, String skinId)
@@ -119,7 +119,7 @@ public class ItemPainter extends ItemYabba
     @SideOnly(Side.CLIENT)
     public static String getSkinTooltip(String skin)
     {
-        return "Skin: " + StringUtils.translate(YabbaRegistry.INSTANCE.getSkin(skin).getUnlocalizedName());
+        return "Skin: " + StringUtils.translate(YabbaClient.getSkin(skin).getUnlocalizedName());
     }
 
     @Override

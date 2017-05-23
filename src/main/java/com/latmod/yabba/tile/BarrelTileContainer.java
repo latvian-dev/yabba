@@ -1,8 +1,7 @@
 package com.latmod.yabba.tile;
 
-import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.Tier;
-import com.latmod.yabba.models.ModelBarrel;
 import com.latmod.yabba.util.Barrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,8 +22,8 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
     private int itemCount;
     private NBTTagCompound upgrades;
     private NBTTagList upgradeNames;
-    private String skin = YabbaRegistry.DEFAULT_SKIN.getName();
-    private String model = ModelBarrel.INSTANCE.getName();
+    private String model = YabbaCommon.DEFAULT_MODEL_ID;
+    private String skin = YabbaCommon.DEFAULT_SKIN_ID;
 
     @Override
     public NBTTagCompound serializeNBT()

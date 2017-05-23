@@ -2,19 +2,12 @@ package com.latmod.yabba.models;
 
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.common.base.Function;
-import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelSkin;
-import com.latmod.yabba.block.BlockBarrel;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,13 +21,11 @@ import java.util.List;
 public class ModelPanel extends ModelBase
 {
     private final float height;
-    private final AxisAlignedBB[] boxes;
 
     public ModelPanel(String id, float h)
     {
         super(id);
         height = h;
-        boxes = MathUtils.getRotatedBoxes(new AxisAlignedBB(0D, 1D - height, 0D, 1D, 1D, 1D));
     }
 
     @Override
@@ -73,11 +64,5 @@ public class ModelPanel extends ModelBase
     public float getItemDistance()
     {
         return 1F - height - 0.01F;
-    }
-
-    @Override
-    public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
-    {
-        return boxes[BlockBarrel.normalizeFacing(state).getIndex()];
     }
 }

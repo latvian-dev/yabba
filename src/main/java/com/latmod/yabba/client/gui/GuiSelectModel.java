@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.latmod.yabba.YabbaRegistry;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectModel;
 
@@ -32,7 +31,7 @@ public class GuiSelectModel extends GuiBase
         {
             super(2 + (i % 5) * 35, 2 + (i / 5) * 35, 34, 34);
             index = i;
-            model = index >= YabbaRegistry.ALL_MODELS.size() ? "" : YabbaRegistry.ALL_MODELS.get(index).getName();
+            model = index >= YabbaClient.ALL_MODELS.size() ? "" : YabbaClient.ALL_MODELS.get(index).getName();
 
             if(!model.isEmpty())
             {
@@ -95,7 +94,7 @@ public class GuiSelectModel extends GuiBase
     @Override
     public void drawBackground()
     {
-        skin = (int) ((System.currentTimeMillis() / 1000L) % YabbaRegistry.ALL_SKINS.size());
+        skin = (int) ((System.currentTimeMillis() / 1000L) % YabbaClient.ALL_SKINS.size());
         super.drawBackground();
     }
 }

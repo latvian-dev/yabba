@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -56,10 +57,11 @@ public class BakedBarrelBlockModel implements IPerspectiveAwareModel
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
+    public List<BakedQuad> getQuads(@Nullable IBlockState state0, @Nullable EnumFacing side, long rand)
     {
-        if(state != null)
+        if(state0 instanceof IExtendedBlockState)
         {
+            IExtendedBlockState state = (IExtendedBlockState) state0;
             BarrelModelVariant value = map.get(new BarrelModelKey(state.getValue(BlockBarrel.MODEL), state.getValue(BlockBarrel.SKIN)));
 
             if(value != null)

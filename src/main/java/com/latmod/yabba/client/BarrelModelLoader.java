@@ -1,16 +1,24 @@
 package com.latmod.yabba.client;
 
 import com.google.common.base.Function;
-import com.latmod.yabba.YabbaRegistry;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
@@ -25,20 +33,64 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class BarrelModel implements IModel
+public class BarrelModelLoader implements IModel, ICustomModelLoader
 {
-    public Collection<ResourceLocation> textures;
+    public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(Yabba.MOD_ID + ":barrel#normal");
 
-    public BarrelModel()
+    public final Collection<ResourceLocation> textures;
+
+    public BarrelModelLoader()
     {
         textures = new HashSet<>();
+    }
 
-        for(IBarrelModel model : YabbaRegistry.ALL_MODELS)
+    public enum StateMapper implements IStateMapper
+    {
+        INSTANCE;
+
+        @Override
+        public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
+        {
+            Map<IBlockState, ModelResourceLocation> map = new HashMap<>();
+
+            for(IBlockState state : blockIn.getBlockState().getValidStates())
+            {
+                map.put(state, MODEL_LOCATION);
+            }
+
+            return map;
+        }
+    }
+
+    public static void loadFor(Block block)
+    {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, MODEL_LOCATION);
+        ModelLoader.setCustomStateMapper(block, StateMapper.INSTANCE);
+    }
+
+    @Override
+    public boolean accepts(ResourceLocation modelLocation)
+    {
+        return modelLocation.getResourceDomain().equals(Yabba.MOD_ID) && modelLocation.getResourcePath().equals("barrel");
+    }
+
+    @Override
+    public IModel loadModel(ResourceLocation modelLocation) throws Exception
+    {
+        return this;
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager)
+    {
+        textures.clear();
+
+        for(IBarrelModel model : YabbaClient.ALL_MODELS)
         {
             textures.addAll(model.getExtraTextures());
         }
 
-        for(IBarrelSkin skin : YabbaRegistry.ALL_SKINS)
+        for(IBarrelSkin skin : YabbaClient.ALL_SKINS)
         {
             textures.addAll(skin.getTextures().getTextures());
         }
@@ -62,9 +114,9 @@ public class BarrelModel implements IModel
         TextureAtlasSprite particle = bakedTextureGetter.apply(new ResourceLocation("blocks/planks_oak"));
         Map<BarrelModelKey, BarrelModelVariant> map = new HashMap<>();
 
-        for(IBarrelModel model : YabbaRegistry.ALL_MODELS)
+        for(IBarrelModel model : YabbaClient.ALL_MODELS)
         {
-            for(IBarrelSkin skin : YabbaRegistry.ALL_SKINS)
+            for(IBarrelSkin skin : YabbaClient.ALL_SKINS)
             {
                 List<List<BakedQuad>> quads = new ArrayList<>(ModelRotation.values().length);
 
