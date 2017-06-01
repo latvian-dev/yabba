@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public class BarrelModelKey extends ResourceLocation
 {
+    public static final BarrelModelKey DEFAULT = new BarrelModelKey(YabbaClient.DEFAULT_MODEL_ID, YabbaClient.DEFAULT_SKIN_ID);
+
     public BarrelModelKey(IBarrelModel m, IBarrelSkin s)
     {
         this(m.getName(), s.getName());

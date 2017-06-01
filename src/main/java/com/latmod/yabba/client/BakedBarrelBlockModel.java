@@ -40,6 +40,11 @@ public class BakedBarrelBlockModel implements IPerspectiveAwareModel
         {
             IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
             BarrelModelVariant v = map.get(new BarrelModelKey(barrel.getModel(), barrel.getSkin()));
+            if(v == null)
+            {
+                v = map.get(BarrelModelKey.DEFAULT);
+            }
+
             return v == null ? originalModel : v.itemModel;
         }
     };
