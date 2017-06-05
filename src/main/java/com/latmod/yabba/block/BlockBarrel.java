@@ -169,6 +169,12 @@ public class BlockBarrel extends BlockBarrelBase
     }
 
     @Override
+    public int damageDropped(IBlockState state)
+    {
+        return 0;
+    }
+
+    @Override
     @Deprecated
     public IBlockState getExtendedState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {

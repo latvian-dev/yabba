@@ -19,14 +19,13 @@ public class BlockYabba extends Block implements IBlockWithItem
         super(blockMaterialIn, blockMapColorIn);
         setRegistryName(Yabba.MOD_ID + ':' + id);
         setUnlocalizedName(Yabba.MOD_ID + '.' + id);
-        setHardness(1.8F);
-        setResistance(3F);
         setCreativeTab(YabbaCommon.TAB);
+        setHardness(1.8F);
     }
 
     @Override
     public ItemBlock createItemBlock()
     {
-        return new ItemBlockBase(this, false);
+        return new ItemBlockBase(this);
     }
 }
