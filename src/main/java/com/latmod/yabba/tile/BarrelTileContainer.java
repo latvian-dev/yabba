@@ -16,168 +16,168 @@ import javax.annotation.Nullable;
  */
 public abstract class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
 {
-    private Tier tier = Tier.WOOD;
-    private int flags;
-    private ItemStack storedItem = ItemStack.EMPTY;
-    private int itemCount;
-    private NBTTagCompound upgrades;
-    private NBTTagList upgradeNames;
-    private String model = YabbaCommon.DEFAULT_MODEL_ID;
-    private String skin = YabbaCommon.DEFAULT_SKIN_ID;
+	private Tier tier = Tier.WOOD;
+	private int flags;
+	private ItemStack storedItem = ItemStack.EMPTY;
+	private int itemCount;
+	private NBTTagCompound upgrades;
+	private NBTTagList upgradeNames;
+	private String model = YabbaCommon.DEFAULT_MODEL_ID;
+	private String skin = YabbaCommon.DEFAULT_SKIN_ID;
 
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("Tier", getTier().getName());
-        nbt.setInteger("Flags", flags);
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setString("Tier", getTier().getName());
+		nbt.setInteger("Flags", flags);
 
-        if(!storedItem.isEmpty())
-        {
-            storedItem.setCount(1);
-            nbt.setTag("Item", storedItem.serializeNBT());
-            nbt.setInteger("Count", getItemCount());
-        }
+		if (!storedItem.isEmpty())
+		{
+			storedItem.setCount(1);
+			nbt.setTag("Item", storedItem.serializeNBT());
+			nbt.setInteger("Count", getItemCount());
+		}
 
-        if(upgrades != null && !upgrades.hasNoTags())
-        {
-            nbt.setTag("Upgrades", upgrades);
-        }
+		if (upgrades != null && !upgrades.hasNoTags())
+		{
+			nbt.setTag("Upgrades", upgrades);
+		}
 
-        nbt.setString("Model", getModel());
-        nbt.setString("Skin", getSkin());
+		nbt.setString("Model", getModel());
+		nbt.setString("Skin", getSkin());
 
-        if(upgradeNames != null && !upgradeNames.hasNoTags())
-        {
-            nbt.setTag("UpgradeNames", upgradeNames);
-        }
+		if (upgradeNames != null && !upgradeNames.hasNoTags())
+		{
+			nbt.setTag("UpgradeNames", upgradeNames);
+		}
 
-        return nbt;
-    }
+		return nbt;
+	}
 
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
-        tier = Tier.getFromName(nbt.getString("Tier"));
-        flags = nbt.getInteger("Flags");
-        storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
-        itemCount = storedItem.isEmpty() ? 0 : nbt.getInteger("Count");
-        upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
-        model = nbt.getString("Model");
-        skin = nbt.getString("Skin");
-        upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		tier = Tier.getFromName(nbt.getString("Tier"));
+		flags = nbt.getInteger("Flags");
+		storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
+		itemCount = storedItem.isEmpty() ? 0 : nbt.getInteger("Count");
+		upgrades = nbt.hasKey("Upgrades") ? nbt.getCompoundTag("Upgrades") : null;
+		model = nbt.getString("Model");
+		skin = nbt.getString("Skin");
+		upgradeNames = nbt.hasKey("UpgradeNames") ? nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING) : null;
 
-        if(getFlag(FLAG_IS_CREATIVE))
-        {
-            itemCount = tier.getMaxItems(this, getStackInSlot(0)) / 2;
-        }
-    }
+		if (getFlag(FLAG_IS_CREATIVE))
+		{
+			itemCount = tier.getMaxItems(this, getStackInSlot(0)) / 2;
+		}
+	}
 
-    @Override
-    public ItemStack getStackInSlot(int slot)
-    {
-        int count = getItemCount();
-        if(count > 0)
-        {
-            storedItem.setCount(count);
-        }
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		int count = getItemCount();
+		if (count > 0)
+		{
+			storedItem.setCount(count);
+		}
 
-        return storedItem;
-    }
+		return storedItem;
+	}
 
-    @Override
-    public Tier getTier()
-    {
-        return tier == null ? Tier.WOOD : tier;
-    }
+	@Override
+	public Tier getTier()
+	{
+		return tier == null ? Tier.WOOD : tier;
+	}
 
-    @Override
-    public int getFlags()
-    {
-        return flags;
-    }
+	@Override
+	public int getFlags()
+	{
+		return flags;
+	}
 
-    @Override
-    public int getItemCount()
-    {
-        return itemCount;
-    }
+	@Override
+	public int getItemCount()
+	{
+		return itemCount;
+	}
 
-    @Override
-    public NBTTagCompound getUpgradeNBT()
-    {
-        if(upgrades == null)
-        {
-            upgrades = new NBTTagCompound();
-        }
+	@Override
+	public NBTTagCompound getUpgradeNBT()
+	{
+		if (upgrades == null)
+		{
+			upgrades = new NBTTagCompound();
+		}
 
-        return upgrades;
-    }
+		return upgrades;
+	}
 
-    @Override
-    public String getSkin()
-    {
-        return skin;
-    }
+	@Override
+	public String getSkin()
+	{
+		return skin;
+	}
 
-    @Override
-    public String getModel()
-    {
-        return model;
-    }
+	@Override
+	public String getModel()
+	{
+		return model;
+	}
 
-    @Nullable
-    @Override
-    public NBTTagList getUpgradeNames()
-    {
-        return upgradeNames;
-    }
+	@Nullable
+	@Override
+	public NBTTagList getUpgradeNames()
+	{
+		return upgradeNames;
+	}
 
-    @Override
-    public void setStackInSlot(int slot, ItemStack stack)
-    {
-        storedItem = (stack == null || stack.isEmpty()) ? ItemStack.EMPTY : stack;
-    }
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack)
+	{
+		storedItem = (stack == null || stack.isEmpty()) ? ItemStack.EMPTY : stack;
+	}
 
-    @Override
-    public void setTier(Tier t)
-    {
-        tier = t;
-    }
+	@Override
+	public void setTier(Tier t)
+	{
+		tier = t;
+	}
 
-    @Override
-    public void setFlags(int f)
-    {
-        flags = f;
-    }
+	@Override
+	public void setFlags(int f)
+	{
+		flags = f;
+	}
 
-    @Override
-    public void setItemCount(int v)
-    {
-        itemCount = v;
-    }
+	@Override
+	public void setItemCount(int v)
+	{
+		itemCount = v;
+	}
 
-    @Override
-    public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
-    {
-        upgrades = nbt;
-    }
+	@Override
+	public void setUpgradeNBT(@Nullable NBTTagCompound nbt)
+	{
+		upgrades = nbt;
+	}
 
-    @Override
-    public void setSkin(String v)
-    {
-        skin = v;
-    }
+	@Override
+	public void setSkin(String v)
+	{
+		skin = v;
+	}
 
-    @Override
-    public void setModel(String m)
-    {
-        model = m;
-    }
+	@Override
+	public void setModel(String m)
+	{
+		model = m;
+	}
 
-    @Override
-    public void setUpgradeNames(@Nullable NBTTagList nbt)
-    {
-        upgradeNames = nbt;
-    }
+	@Override
+	public void setUpgradeNames(@Nullable NBTTagList nbt)
+	{
+		upgradeNames = nbt;
+	}
 }

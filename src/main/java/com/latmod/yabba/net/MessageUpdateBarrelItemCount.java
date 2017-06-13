@@ -15,49 +15,49 @@ import net.minecraft.util.math.BlockPos;
  */
 public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateBarrelItemCount>
 {
-    private BlockPos pos;
-    private int itemCount;
+	private BlockPos pos;
+	private int itemCount;
 
-    public MessageUpdateBarrelItemCount()
-    {
-    }
+	public MessageUpdateBarrelItemCount()
+	{
+	}
 
-    public MessageUpdateBarrelItemCount(BlockPos p, int c)
-    {
-        pos = p;
-        itemCount = c;
-    }
+	public MessageUpdateBarrelItemCount(BlockPos p, int c)
+	{
+		pos = p;
+		itemCount = c;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return YabbaNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return YabbaNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        pos = NetUtils.readPos(buf);
-        itemCount = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		pos = NetUtils.readPos(buf);
+		itemCount = buf.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        NetUtils.writePos(buf, pos);
-        buf.writeInt(itemCount);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		NetUtils.writePos(buf, pos);
+		buf.writeInt(itemCount);
+	}
 
-    @Override
-    public void onMessage(MessageUpdateBarrelItemCount message, EntityPlayer player)
-    {
-        TileEntity tile = player.world.getTileEntity(message.pos);
+	@Override
+	public void onMessage(MessageUpdateBarrelItemCount message, EntityPlayer player)
+	{
+		TileEntity tile = player.world.getTileEntity(message.pos);
 
-        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-        {
-            IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            barrel.setItemCount(message.itemCount);
-            barrel.clearCachedData();
-        }
-    }
+		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+		{
+			IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			barrel.setItemCount(message.itemCount);
+			barrel.clearCachedData();
+		}
+	}
 }

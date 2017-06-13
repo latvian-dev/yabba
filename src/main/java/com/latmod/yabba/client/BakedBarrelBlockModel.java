@@ -31,87 +31,87 @@ import java.util.Map;
  */
 public class BakedBarrelBlockModel implements IPerspectiveAwareModel
 {
-    private final TextureAtlasSprite particle;
-    private final Map<BarrelModelKey, BarrelModelVariant> map;
-    private final ItemOverrideList itemOverrideList = new ItemOverrideList(new ArrayList<>())
-    {
-        @Override
-        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
-        {
-            IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            BarrelModelVariant v = map.get(new BarrelModelKey(barrel.getModel(), barrel.getSkin()));
-            if(v == null)
-            {
-                v = map.get(BarrelModelKey.DEFAULT);
-            }
+	private final TextureAtlasSprite particle;
+	private final Map<BarrelModelKey, BarrelModelVariant> map;
+	private final ItemOverrideList itemOverrideList = new ItemOverrideList(new ArrayList<>())
+	{
+		@Override
+		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
+		{
+			IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			BarrelModelVariant v = map.get(new BarrelModelKey(barrel.getModel(), barrel.getSkin()));
+			if (v == null)
+			{
+				v = map.get(BarrelModelKey.DEFAULT);
+			}
 
-            return v == null ? originalModel : v.itemModel;
-        }
-    };
+			return v == null ? originalModel : v.itemModel;
+		}
+	};
 
-    public BakedBarrelBlockModel(TextureAtlasSprite p, Map<BarrelModelKey, BarrelModelVariant> m)
-    {
-        particle = p;
-        map = m;
-    }
+	public BakedBarrelBlockModel(TextureAtlasSprite p, Map<BarrelModelKey, BarrelModelVariant> m)
+	{
+		particle = p;
+		map = m;
+	}
 
-    @Override
-    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
-    {
-        return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, ModelBuilder.TRANSFORM_MAP, cameraTransformType);
-    }
+	@Override
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
+	{
+		return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, ModelBuilder.TRANSFORM_MAP, cameraTransformType);
+	}
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state0, @Nullable EnumFacing side, long rand)
-    {
-        if(state0 instanceof IExtendedBlockState)
-        {
-            IExtendedBlockState state = (IExtendedBlockState) state0;
-            BarrelModelVariant value = map.get(new BarrelModelKey(state.getValue(BlockBarrel.MODEL), state.getValue(BlockBarrel.SKIN)));
+	@Override
+	public List<BakedQuad> getQuads(@Nullable IBlockState state0, @Nullable EnumFacing side, long rand)
+	{
+		if (state0 instanceof IExtendedBlockState)
+		{
+			IExtendedBlockState state = (IExtendedBlockState) state0;
+			BarrelModelVariant value = map.get(new BarrelModelKey(state.getValue(BlockBarrel.MODEL), state.getValue(BlockBarrel.SKIN)));
 
-            if(value != null)
-            {
-                return value.getQuads(state.getValue(BlockBarrel.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
-            }
-        }
+			if (value != null)
+			{
+				return value.getQuads(state.getValue(BlockBarrel.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
+			}
+		}
 
-        return Collections.emptyList();
-    }
+		return Collections.emptyList();
+	}
 
-    @Override
-    public boolean isAmbientOcclusion()
-    {
-        return true;
-    }
+	@Override
+	public boolean isAmbientOcclusion()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isGui3d()
-    {
-        return true;
-    }
+	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isBuiltInRenderer()
-    {
-        return false;
-    }
+	@Override
+	public boolean isBuiltInRenderer()
+	{
+		return false;
+	}
 
-    @Override
-    public TextureAtlasSprite getParticleTexture()
-    {
-        return particle;
-    }
+	@Override
+	public TextureAtlasSprite getParticleTexture()
+	{
+		return particle;
+	}
 
-    @Deprecated
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms()
-    {
-        return ItemCameraTransforms.DEFAULT;
-    }
+	@Deprecated
+	@Override
+	public ItemCameraTransforms getItemCameraTransforms()
+	{
+		return ItemCameraTransforms.DEFAULT;
+	}
 
-    @Override
-    public ItemOverrideList getOverrides()
-    {
-        return itemOverrideList;
-    }
+	@Override
+	public ItemOverrideList getOverrides()
+	{
+		return itemOverrideList;
+	}
 }

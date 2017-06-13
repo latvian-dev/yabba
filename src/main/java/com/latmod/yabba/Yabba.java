@@ -17,48 +17,48 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author LatvianModder
  */
-@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, acceptedMinecraftVersions = "[1.10,1.12)", dependencies = "required-after:ftbl;after:*")
+@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:ftbl;after:*")
 public class Yabba
 {
-    public static final String MOD_ID = "yabba";
+	public static final String MOD_ID = "yabba";
 
-    @Mod.Instance(Yabba.MOD_ID)
-    public static Yabba INST;
+	@Mod.Instance(Yabba.MOD_ID)
+	public static Yabba INST;
 
-    @SidedProxy(serverSide = "com.latmod.yabba.YabbaCommon", clientSide = "com.latmod.yabba.client.YabbaClient")
-    public static YabbaCommon PROXY;
+	@SidedProxy(serverSide = "com.latmod.yabba.YabbaCommon", clientSide = "com.latmod.yabba.client.YabbaClient")
+	public static YabbaCommon PROXY;
 
-    public static final Logger LOGGER = LogManager.getLogger("YABBA");
+	public static final Logger LOGGER = LogManager.getLogger("YABBA");
 
-    @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent event)
-    {
-        MinecraftForge.EVENT_BUS.register(YabbaEventHandler.class);
+	@Mod.EventHandler
+	public void onPreInit(FMLPreInitializationEvent event)
+	{
+		MinecraftForge.EVENT_BUS.register(YabbaEventHandler.class);
 
-        if(Loader.isModLoaded("forestry"))
-        {
-            MinecraftForge.EVENT_BUS.register(ForestryIntegration.class);
-        }
+		if (Loader.isModLoaded("forestry"))
+		{
+			MinecraftForge.EVENT_BUS.register(ForestryIntegration.class);
+		}
 
-        YabbaNetHandler.init();
-        PROXY.preInit();
-    }
+		YabbaNetHandler.init();
+		PROXY.preInit();
+	}
 
-    @Mod.EventHandler
-    public void onInit(FMLInitializationEvent event)
-    {
-        PROXY.init();
-    }
+	@Mod.EventHandler
+	public void onInit(FMLInitializationEvent event)
+	{
+		PROXY.init();
+	}
 
-    @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent event)
-    {
-        PROXY.postInit();
-    }
+	@Mod.EventHandler
+	public void onPostInit(FMLPostInitializationEvent event)
+	{
+		PROXY.postInit();
+	}
 
-    @Mod.EventHandler
-    public void serverStopped(FMLServerStoppedEvent event)
-    {
-        BlockBarrel.LAST_CLICK_MAP.clear();
-    }
+	@Mod.EventHandler
+	public void serverStopped(FMLServerStoppedEvent event)
+	{
+		BlockBarrel.LAST_CLICK_MAP.clear();
+	}
 }

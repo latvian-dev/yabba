@@ -12,40 +12,40 @@ import javax.annotation.Nullable;
  */
 public interface IBarrelModifiable extends IBarrel, IItemHandlerModifiable
 {
-    void setTier(Tier tier);
+	void setTier(Tier tier);
 
-    void setFlags(int flags);
+	void setFlags(int flags);
 
-    void setFlag(int flag, boolean v);
+	void setFlag(int flag, boolean v);
 
-    void setItemCount(int v);
+	void setItemCount(int v);
 
-    void setModel(String model);
+	void setModel(String model);
 
-    void setSkin(String skin);
+	void setSkin(String skin);
 
-    void setUpgradeNBT(@Nullable NBTTagCompound nbt);
+	void setUpgradeNBT(@Nullable NBTTagCompound nbt);
 
-    void setUpgradeData(String upgrade, @Nullable NBTBase v);
+	void setUpgradeData(String upgrade, @Nullable NBTBase v);
 
-    void setUpgradeNames(@Nullable NBTTagList nbt);
+	void setUpgradeNames(@Nullable NBTTagList nbt);
 
-    void addUpgradeName(String name);
+	void addUpgradeName(String name);
 
-    void markBarrelDirty();
+	void markBarrelDirty();
 
-    void clearCachedData();
+	void clearCachedData();
 
-    default void copyFrom(IBarrel barrel)
-    {
-        setTier(barrel.getTier());
-        setFlags(barrel.getFlags());
-        setItemCount(barrel.getItemCount());
-        setStackInSlot(0, barrel.getStackInSlot(0));
-        setModel(barrel.getModel());
-        setSkin(barrel.getSkin());
-        setUpgradeNBT(barrel.getUpgradeNBT().copy());
-        NBTTagList upgradeNames = barrel.getUpgradeNames();
-        setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
-    }
+	default void copyFrom(IBarrel barrel)
+	{
+		setTier(barrel.getTier());
+		setFlags(barrel.getFlags());
+		setItemCount(barrel.getItemCount());
+		setStackInSlot(0, barrel.getStackInSlot(0));
+		setModel(barrel.getModel());
+		setSkin(barrel.getSkin());
+		setUpgradeNBT(barrel.getUpgradeNBT().copy());
+		NBTTagList upgradeNames = barrel.getUpgradeNames();
+		setUpgradeNames(upgradeNames == null ? null : upgradeNames.copy());
+	}
 }

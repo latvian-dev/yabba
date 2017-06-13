@@ -13,31 +13,31 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class YabbaCreateConfigEvent extends Event
 {
-    private final TileEntity tile;
-    private final IBarrelModifiable barrel;
-    private final IConfigTree settings;
+	private final TileEntity tile;
+	private final IBarrelModifiable barrel;
+	private final IConfigTree settings;
 
-    public YabbaCreateConfigEvent(TileEntity te, IBarrelModifiable b, IConfigTree m)
-    {
-        tile = te;
-        barrel = b;
-        settings = m;
-    }
+	public YabbaCreateConfigEvent(TileEntity te, IBarrelModifiable b, IConfigTree m)
+	{
+		tile = te;
+		barrel = b;
+		settings = m;
+	}
 
-    public TileEntity getTile()
-    {
-        return tile;
-    }
+	public TileEntity getTile()
+	{
+		return tile;
+	}
 
-    public IBarrelModifiable getBarrel()
-    {
-        return barrel;
-    }
+	public IBarrelModifiable getBarrel()
+	{
+		return barrel;
+	}
 
-    public IConfigKey add(String group, String id, IConfigValue value)
-    {
-        ConfigKey key = new ConfigKey(id, value.copy(), group, "barrel_config");
-        settings.add(key, value);
-        return key;
-    }
+	public IConfigKey add(String group, String id, IConfigValue value)
+	{
+		ConfigKey key = new ConfigKey(id, value.copy(), group, "barrel_config");
+		settings.add(key, value);
+		return key;
+	}
 }

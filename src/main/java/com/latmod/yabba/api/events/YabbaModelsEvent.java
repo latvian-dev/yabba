@@ -8,20 +8,20 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class YabbaModelsEvent extends Event
 {
-    public interface YabbaModelRegistry
-    {
-        void addModel(IBarrelModel model);
-    }
+	public interface YabbaModelRegistry
+	{
+		void addModel(IBarrelModel model);
+	}
 
-    private final YabbaModelRegistry registry;
+	private final YabbaModelRegistry registry;
 
-    public YabbaModelsEvent(YabbaModelRegistry reg)
-    {
-        registry = reg;
-    }
+	public YabbaModelsEvent(YabbaModelRegistry reg)
+	{
+		registry = reg;
+	}
 
-    public YabbaModelRegistry getRegistry()
-    {
-        return registry;
-    }
+	public YabbaModelRegistry getRegistry()
+	{
+		return registry;
+	}
 }

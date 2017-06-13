@@ -9,9 +9,9 @@ import net.minecraft.util.IStringSerializable;
  */
 public interface IBarrelSkin extends IStringSerializable
 {
-    IBlockState getState();
+	IBlockState getState();
 
-    IconSet getTextures();
+	IconSet getTextures();
 
-    String getUnlocalizedName();
+	String getUnlocalizedName();
 }

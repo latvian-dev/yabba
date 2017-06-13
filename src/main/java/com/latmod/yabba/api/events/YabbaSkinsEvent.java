@@ -10,32 +10,32 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class YabbaSkinsEvent extends Event
 {
-    public interface YabbaSkinRegistry
-    {
-        void addSkin(IBarrelSkin skin);
+	public interface YabbaSkinRegistry
+	{
+		void addSkin(IBarrelSkin skin);
 
-        IBarrelSkin addSkin(IBlockState state, String icons, String uname);
+		IBarrelSkin addSkin(IBlockState state, String icons, String uname);
 
-        default IBarrelSkin addSkin(IBlockState state, String icons)
-        {
-            return addSkin(state, icons, "");
-        }
+		default IBarrelSkin addSkin(IBlockState state, String icons)
+		{
+			return addSkin(state, icons, "");
+		}
 
-        default IBarrelSkin addSkin(Block block, String icons)
-        {
-            return addSkin(block.getDefaultState(), icons);
-        }
-    }
+		default IBarrelSkin addSkin(Block block, String icons)
+		{
+			return addSkin(block.getDefaultState(), icons);
+		}
+	}
 
-    private final YabbaSkinRegistry registry;
+	private final YabbaSkinRegistry registry;
 
-    public YabbaSkinsEvent(YabbaSkinRegistry reg)
-    {
-        registry = reg;
-    }
+	public YabbaSkinsEvent(YabbaSkinRegistry reg)
+	{
+		registry = reg;
+	}
 
-    public YabbaSkinRegistry getRegistry()
-    {
-        return registry;
-    }
+	public YabbaSkinRegistry getRegistry()
+	{
+		return registry;
+	}
 }

@@ -8,13 +8,13 @@ import com.latmod.yabba.Yabba;
  */
 public class YabbaNetHandler
 {
-    static final NetworkWrapper NET = NetworkWrapper.newWrapper(Yabba.MOD_ID);
+	static final NetworkWrapper NET = NetworkWrapper.newWrapper(Yabba.MOD_ID);
 
-    public static void init()
-    {
-        int id = 0;
-        NET.register(++id, new MessageUpdateBarrelItemCount());
-        NET.register(++id, new MessageSelectModel());
-        NET.register(++id, new MessageSelectSkin());
-    }
+	public static void init()
+	{
+		int id = 0;
+		NET.register(++id, new MessageUpdateBarrelItemCount());
+		NET.register(++id, new MessageSelectModel());
+		NET.register(++id, new MessageSelectSkin());
+	}
 }

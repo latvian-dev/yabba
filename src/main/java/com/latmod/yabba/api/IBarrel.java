@@ -11,34 +11,34 @@ import javax.annotation.Nullable;
  */
 public interface IBarrel extends IItemHandler
 {
-    int FLAG_LOCKED = 1;
-    int FLAG_VOID_ITEMS = 1 << 1;
-    int FLAG_DISABLE_ORE_DICTIONARY = 1 << 2;
-    int FLAG_IS_CREATIVE = 1 << 3;
-    int FLAG_INFINITE_CAPACITY = 1 << 4;
-    int FLAG_OBSIDIAN_SHELL = 1 << 5;
-    int FLAG_REDSTONE_OUT = 1 << 6;
-    int FLAG_HOPPER = 1 << 7;
-    int FLAG_HOPPER_ENDER = 1 << 8;
-    int FLAG_ALWAYS_DISPLAY_DATA = 1 << 9;
-    int FLAG_DISPLAY_BAR = 1 << 10;
+	int FLAG_LOCKED = 1;
+	int FLAG_VOID_ITEMS = 1 << 1;
+	int FLAG_DISABLE_ORE_DICTIONARY = 1 << 2;
+	int FLAG_IS_CREATIVE = 1 << 3;
+	int FLAG_INFINITE_CAPACITY = 1 << 4;
+	int FLAG_OBSIDIAN_SHELL = 1 << 5;
+	int FLAG_REDSTONE_OUT = 1 << 6;
+	int FLAG_HOPPER = 1 << 7;
+	int FLAG_HOPPER_ENDER = 1 << 8;
+	int FLAG_ALWAYS_DISPLAY_DATA = 1 << 9;
+	int FLAG_DISPLAY_BAR = 1 << 10;
 
-    Tier getTier();
+	Tier getTier();
 
-    int getFlags();
+	int getFlags();
 
-    boolean getFlag(int flag);
+	boolean getFlag(int flag);
 
-    int getItemCount();
+	int getItemCount();
 
-    String getModel();
+	String getModel();
 
-    String getSkin();
+	String getSkin();
 
-    NBTTagCompound getUpgradeNBT();
+	NBTTagCompound getUpgradeNBT();
 
-    @Nullable
-    NBTTagList getUpgradeNames();
+	@Nullable
+	NBTTagList getUpgradeNames();
 
-    int getFreeSpace();
+	int getFreeSpace();
 }

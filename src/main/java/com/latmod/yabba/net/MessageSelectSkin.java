@@ -14,43 +14,43 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
 {
-    private String skinId;
+	private String skinId;
 
-    public MessageSelectSkin()
-    {
-    }
+	public MessageSelectSkin()
+	{
+	}
 
-    public MessageSelectSkin(String id)
-    {
-        skinId = id;
-    }
+	public MessageSelectSkin(String id)
+	{
+		skinId = id;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return YabbaNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return YabbaNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        skinId = ByteBufUtils.readUTF8String(buf);
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		skinId = ByteBufUtils.readUTF8String(buf);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        ByteBufUtils.writeUTF8String(buf, skinId);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		ByteBufUtils.writeUTF8String(buf, skinId);
+	}
 
-    @Override
-    public void onMessage(MessageSelectSkin message, EntityPlayer player)
-    {
-        ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+	@Override
+	public void onMessage(MessageSelectSkin message, EntityPlayer player)
+	{
+		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
-        if(!stack.isEmpty() && stack.getItem() instanceof ItemPainter)
-        {
-            ItemPainter.setSkin(stack, message.skinId);
-        }
-    }
+		if (!stack.isEmpty() && stack.getItem() instanceof ItemPainter)
+		{
+			ItemPainter.setSkin(stack, message.skinId);
+		}
+	}
 }

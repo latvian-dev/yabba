@@ -12,16 +12,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class ForestryIntegration
 {
-    @SubscribeEvent
-    public static void onRegistryEvent(YabbaSkinsEvent event)
-    {
-        for(IWoodType type : TreeManager.woodAccess.getRegisteredWoodTypes())
-        {
-            if(!(type instanceof EnumVanillaWoodType))
-            {
-                event.getRegistry().addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.PLANKS, false), "all=" + type.getPlankTexture());
-                event.getRegistry().addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.LOG, false), "up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture());
-            }
-        }
-    }
+	@SubscribeEvent
+	public static void onRegistryEvent(YabbaSkinsEvent event)
+	{
+		for (IWoodType type : TreeManager.woodAccess.getRegisteredWoodTypes())
+		{
+			if (!(type instanceof EnumVanillaWoodType))
+			{
+				event.getRegistry().addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.PLANKS, false), "all=" + type.getPlankTexture());
+				event.getRegistry().addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.LOG, false), "up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture());
+			}
+		}
+	}
 }

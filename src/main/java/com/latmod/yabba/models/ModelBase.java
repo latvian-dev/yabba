@@ -8,8 +8,8 @@ import com.latmod.yabba.api.IBarrelModel;
  */
 public abstract class ModelBase extends FinalIDObject implements IBarrelModel
 {
-    public ModelBase(String id)
-    {
-        super(id);
-    }
+	public ModelBase(String id)
+	{
+		super(id);
+	}
 }

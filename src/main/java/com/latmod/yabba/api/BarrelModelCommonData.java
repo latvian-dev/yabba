@@ -13,26 +13,26 @@ import net.minecraft.world.IBlockAccess;
  */
 public class BarrelModelCommonData
 {
-    public static final BarrelModelCommonData DEFAULT = new BarrelModelCommonData();
+	public static final BarrelModelCommonData DEFAULT = new BarrelModelCommonData();
 
-    public static class Panel extends BarrelModelCommonData
-    {
-        private final AxisAlignedBB[] boxes;
+	public static class Panel extends BarrelModelCommonData
+	{
+		private final AxisAlignedBB[] boxes;
 
-        public Panel(float height)
-        {
-            boxes = MathUtils.getRotatedBoxes(new AxisAlignedBB(0D, 1D - height, 0D, 1D, 1D, 1D));
-        }
+		public Panel(float height)
+		{
+			boxes = MathUtils.getRotatedBoxes(new AxisAlignedBB(0D, 1D - height, 0D, 1D, 1D, 1D));
+		}
 
-        @Override
-        public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
-        {
-            return boxes[BlockBarrel.normalizeFacing(state).getIndex()];
-        }
-    }
+		@Override
+		public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
+		{
+			return boxes[BlockBarrel.normalizeFacing(state).getIndex()];
+		}
+	}
 
-    public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
-    {
-        return Block.FULL_BLOCK_AABB;
-    }
+	public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
+	{
+		return Block.FULL_BLOCK_AABB;
+	}
 }

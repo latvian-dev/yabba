@@ -12,36 +12,36 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public enum FTBLibIntegration implements IFTBLibPlugin
 {
-    @FTBLibPlugin
-    INSTANCE;
+	@FTBLibPlugin
+	INSTANCE;
 
-    /**
-     * @author LatvianModder
-     */
-    public static FTBLibAPI API;
+	/**
+	 * @author LatvianModder
+	 */
+	public static FTBLibAPI API;
 
-    @Override
-    public void init(FTBLibAPI api)
-    {
-        API = api;
-        MinecraftForge.EVENT_BUS.register(FTBLibIntegration.class);
-    }
+	@Override
+	public void init(FTBLibAPI api)
+	{
+		API = api;
+		MinecraftForge.EVENT_BUS.register(FTBLibIntegration.class);
+	}
 
-    @SubscribeEvent
-    public static void registerCommon(FTBLibRegistryEvent event)
-    {
-        YabbaConfig.init(event.getRegistry());
-    }
+	@SubscribeEvent
+	public static void registerCommon(FTBLibRegistryEvent event)
+	{
+		YabbaConfig.init(event.getRegistry());
+	}
 
-    @SubscribeEvent
-    public static void registerClient(FTBLibClientRegistryEvent event)
-    {
-        YabbaConfig.initClient(event.getRegistry());
-    }
+	@SubscribeEvent
+	public static void registerClient(FTBLibClientRegistryEvent event)
+	{
+		YabbaConfig.initClient(event.getRegistry());
+	}
 
-    @SubscribeEvent
-    public static void configLoaded(ConfigLoadedEvent event)
-    {
-        Barrel.clearCache();
-    }
+	@SubscribeEvent
+	public static void configLoaded(ConfigLoadedEvent event)
+	{
+		Barrel.clearCache();
+	}
 }

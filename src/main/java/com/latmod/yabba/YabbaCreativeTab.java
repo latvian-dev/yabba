@@ -9,14 +9,14 @@ import net.minecraft.item.ItemStack;
  */
 public class YabbaCreativeTab extends CreativeTabs
 {
-    public YabbaCreativeTab()
-    {
-        super(Yabba.MOD_ID);
-    }
+	public YabbaCreativeTab()
+	{
+		super(Yabba.MOD_ID);
+	}
 
-    @Override
-    public ItemStack getTabIconItem()
-    {
-        return new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
-    }
+	@Override
+	public ItemStack getTabIconItem()
+	{
+		return new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
+	}
 }

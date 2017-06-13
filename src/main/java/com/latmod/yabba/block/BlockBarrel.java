@@ -20,7 +20,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -51,275 +50,275 @@ import java.util.UUID;
  */
 public class BlockBarrel extends BlockBarrelBase
 {
-    public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
-    public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-    public static UnlistedPropertyString MODEL = UnlistedPropertyString.create("model", LMUtils.alwaysTruePredicate());
-    public static UnlistedPropertyString SKIN = UnlistedPropertyString.create("skin", LMUtils.alwaysTruePredicate());
+	public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
+	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
+	public static UnlistedPropertyString MODEL = UnlistedPropertyString.create("model", LMUtils.alwaysTruePredicate());
+	public static UnlistedPropertyString SKIN = UnlistedPropertyString.create("skin", LMUtils.alwaysTruePredicate());
 
-    public BlockBarrel()
-    {
-        super("barrel", Material.WOOD, MapColor.WOOD);
-        setDefaultState(blockState.getBaseState()
-                .withProperty(ROTATION, EnumRotation.NORMAL)
-                .withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
-        setHardness(2F);
-    }
+	public BlockBarrel()
+	{
+		super("barrel", Material.WOOD, MapColor.WOOD);
+		setDefaultState(blockState.getBaseState()
+				.withProperty(ROTATION, EnumRotation.NORMAL)
+				.withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		setHardness(2F);
+	}
 
-    @Override
-    public ItemBlock createItemBlock()
-    {
-        return new ItemBlockBarrel(this);
-    }
+	@Override
+	public ItemBlock createItemBlock()
+	{
+		return new ItemBlockBarrel(this);
+	}
 
-    public static EnumFacing normalizeFacing(IBlockState state)
-    {
-        EnumRotation rotation = state.getValue(ROTATION);
+	public static EnumFacing normalizeFacing(IBlockState state)
+	{
+		EnumRotation rotation = state.getValue(ROTATION);
 
-        if(rotation == EnumRotation.FACING_DOWN)
-        {
-            return EnumFacing.DOWN;
-        }
-        else if(rotation == EnumRotation.FACING_UP)
-        {
-            return EnumFacing.UP;
-        }
+		if (rotation == EnumRotation.FACING_DOWN)
+		{
+			return EnumFacing.DOWN;
+		}
+		else if (rotation == EnumRotation.FACING_UP)
+		{
+			return EnumFacing.UP;
+		}
 
-        return state.getValue(BlockHorizontal.FACING);
-    }
+		return state.getValue(BlockHorizontal.FACING);
+	}
 
-    @Override
-    public void dropItem(ItemStack itemStack, @Nullable TileEntity tile)
-    {
-        if(tile instanceof TileBarrel)
-        {
-            IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            ((IBarrelModifiable) itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
-        }
-    }
+	@Override
+	public void dropItem(ItemStack itemStack, @Nullable TileEntity tile)
+	{
+		if (tile instanceof TileBarrel)
+		{
+			IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			((IBarrelModifiable) itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
+		}
+	}
 
-    @Override
-    public void placeFromItem(ItemStack stack, @Nullable TileEntity tile)
-    {
-        if(tile instanceof TileBarrel && stack.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-        {
-            IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            barrel.copyFrom(stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null));
-            tile.markDirty();
-        }
-    }
+	@Override
+	public void placeFromItem(ItemStack stack, @Nullable TileEntity tile)
+	{
+		if (tile instanceof TileBarrel && stack.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+		{
+			IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			barrel.copyFrom(stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null));
+			tile.markDirty();
+		}
+	}
 
-    public ItemStack createStack(String model, String skin, Tier tier)
-    {
-        ItemStack stack = new ItemStack(this);
-        IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-        barrel.setTier(tier);
-        barrel.setFlags(0);
-        barrel.setModel(model);
-        barrel.setSkin(skin);
-        barrel.setItemCount(0);
-        return stack;
-    }
+	public ItemStack createStack(String model, String skin, Tier tier)
+	{
+		ItemStack stack = new ItemStack(this);
+		IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		barrel.setTier(tier);
+		barrel.setFlags(0);
+		barrel.setModel(model);
+		barrel.setSkin(skin);
+		barrel.setItemCount(0);
+		return stack;
+	}
 
-    @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
-        TileEntity te = world.getTileEntity(pos);
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+	{
+		TileEntity te = world.getTileEntity(pos);
 
-        if(te != null && te.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-        {
-            IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            ItemStack stack = createStack(barrel.getModel(), barrel.getSkin(), barrel.getTier());
-            ((IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
-            return stack;
-        }
+		if (te != null && te.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+		{
+			IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			ItemStack stack = createStack(barrel.getModel(), barrel.getSkin(), barrel.getTier());
+			((IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
+			return stack;
+		}
 
-        return super.getPickBlock(state, target, world, pos, player);
-    }
+		return super.getPickBlock(state, target, world, pos, player);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        list.add(createStack(YabbaCommon.DEFAULT_MODEL_ID, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD));
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
+	{
+		list.add(createStack(YabbaCommon.DEFAULT_MODEL_ID, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD));
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
-        return new TileBarrel();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		return new TileBarrel();
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION}, new IUnlistedProperty[] {MODEL, SKIN});
-    }
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION}, new IUnlistedProperty[] {MODEL, SKIN});
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta)).withProperty(ROTATION, EnumRotation.VALUES[(meta >> 2) & 3]);
-    }
+	@Override
+	@Deprecated
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta)).withProperty(ROTATION, EnumRotation.VALUES[(meta >> 2) & 3]);
+	}
 
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return (state.getValue(ROTATION).ordinal() << 2) | state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
-    }
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return (state.getValue(ROTATION).ordinal() << 2) | state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+	}
 
-    @Override
-    public int damageDropped(IBlockState state)
-    {
-        return 0;
-    }
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return 0;
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
-    {
-        TileEntity tile = worldIn.getTileEntity(pos);
+	@Override
+	@Deprecated
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		TileEntity tile = worldIn.getTileEntity(pos);
 
-        if(tile instanceof TileBarrel)
-        {
-            return ((TileBarrel) tile).createState(state);
-        }
+		if (tile instanceof TileBarrel)
+		{
+			return ((TileBarrel) tile).createState(state);
+		}
 
-        return state;
-    }
+		return state;
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState withRotation(IBlockState state, Rotation rot)
-    {
-        return state.withProperty(BlockHorizontal.FACING, rot.rotate(state.getValue(BlockHorizontal.FACING)));
-    }
+	@Override
+	@Deprecated
+	public IBlockState withRotation(IBlockState state, Rotation rot)
+	{
+		return state.withProperty(BlockHorizontal.FACING, rot.rotate(state.getValue(BlockHorizontal.FACING)));
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-    {
-        return state.withRotation(mirrorIn.toRotation(state.getValue(BlockHorizontal.FACING)));
-    }
+	@Override
+	@Deprecated
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+	{
+		return state.withRotation(mirrorIn.toRotation(state.getValue(BlockHorizontal.FACING)));
+	}
 
-    @Override
-    public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
-    {
-        TileEntity tile = world.getTileEntity(pos);
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
+	{
+		TileEntity tile = world.getTileEntity(pos);
 
-        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
-        {
-            return Float.MAX_VALUE;
-        }
+		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
+		{
+			return Float.MAX_VALUE;
+		}
 
-        return 8F;
-    }
+		return 8F;
+	}
 
-    @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
-    {
-        //IBlockState parent = state.getValue(SKIN).getParentState();
-        //return parent.getBlock().canRenderInLayer(parent, layer);
-        return layer == BlockRenderLayer.CUTOUT;
-    }
+	@Override
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
+	{
+		//IBlockState parent = state.getValue(SKIN).getParentState();
+		//return parent.getBlock().canRenderInLayer(parent, layer);
+		return layer == BlockRenderLayer.CUTOUT;
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        return getDefaultState().withProperty(ROTATION, EnumRotation.getRotationFromEntity(pos, placer)).withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
-    }
+	@Override
+	@Deprecated
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		return getDefaultState().withProperty(ROTATION, EnumRotation.getRotationFromEntity(pos, placer)).withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
+	}
 
-    @Override
-    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
-    {
-        if(worldIn.isRemote || playerIn.capabilities.isCreativeMode)
-        {
-            return;
-        }
+	@Override
+	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+	{
+		if (worldIn.isRemote || playerIn.capabilities.isCreativeMode)
+		{
+			return;
+		}
 
-        Long l = BlockBarrel.LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
-        long time = worldIn.getTotalWorldTime();
+		Long l = BlockBarrel.LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+		long time = worldIn.getTotalWorldTime();
 
-        if(l != null && (time - l) < 3)
-        {
-            return;
-        }
+		if (l != null && (time - l) < 3)
+		{
+			return;
+		}
 
-        BlockBarrel.LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+		BlockBarrel.LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
 
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if(tileEntity instanceof TileBarrel)
-        {
-            ((TileBarrel) tileEntity).onLeftClick(playerIn);
-        }
-    }
+		if (tileEntity instanceof TileBarrel)
+		{
+			((TileBarrel) tileEntity).onLeftClick(playerIn);
+		}
+	}
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        ItemStack heldItem = playerIn.getHeldItem(hand);
-        if(side != BlockBarrel.normalizeFacing(state) && (heldItem.isEmpty() || heldItem.getItem() instanceof ItemBlockBarrel))
-        {
-            return false;
-        }
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		if (side != BlockBarrel.normalizeFacing(state) && (heldItem.isEmpty() || heldItem.getItem() instanceof ItemBlockBarrel))
+		{
+			return false;
+		}
 
-        if(!worldIn.isRemote)
-        {
-            TileEntity tile = worldIn.getTileEntity(pos);
+		if (!worldIn.isRemote)
+		{
+			TileEntity tile = worldIn.getTileEntity(pos);
 
-            if(tile instanceof TileBarrel)
-            {
-                Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
-                long time = worldIn.getTotalWorldTime();
-                ((TileBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
+			if (tile instanceof TileBarrel)
+			{
+				Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+				long time = worldIn.getTotalWorldTime();
+				((TileBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
 
-                if(heldItem.isEmpty() || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
-                {
-                    LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
-                }
-            }
-        }
+				if (heldItem.isEmpty() || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+				{
+					LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+				}
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
-    {
-        TileEntity tile = world.getTileEntity(pos);
-        return tile instanceof TileBarrel && ((TileBarrel) tile).canConnectRedstone(side);
-    }
+	@Override
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		return tile instanceof TileBarrel && ((TileBarrel) tile).canConnectRedstone(side);
+	}
 
-    @Override
-    @Deprecated
-    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
-        TileEntity tile = blockAccess.getTileEntity(pos);
-        return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
-    }
+	@Override
+	@Deprecated
+	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+	{
+		TileEntity tile = blockAccess.getTileEntity(pos);
+		return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
+	}
 
-    @Override
-    @Deprecated
-    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
-        TileEntity tile = blockAccess.getTileEntity(pos);
-        return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
-    }
+	@Override
+	@Deprecated
+	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+	{
+		TileEntity tile = blockAccess.getTileEntity(pos);
+		return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
+	}
 
-    @Override
-    @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
-        TileEntity tile = world.getTileEntity(pos);
+	@Override
+	@Deprecated
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
 
-        if(tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-        {
-            IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-            return YabbaCommon.getModelData(barrel.getModel()).getAABB(state, world, pos, barrel);
-        }
+		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+		{
+			IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			return YabbaCommon.getModelData(barrel.getModel()).getAABB(state, world, pos, barrel);
+		}
 
-        return FULL_BLOCK_AABB;
-    }
+		return FULL_BLOCK_AABB;
+	}
 }

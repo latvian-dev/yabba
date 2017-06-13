@@ -9,10 +9,10 @@ import net.minecraft.item.Item;
  */
 public class ItemYabba extends Item
 {
-    public ItemYabba(String id)
-    {
-        setRegistryName(Yabba.MOD_ID + ':' + id);
-        setUnlocalizedName(Yabba.MOD_ID + '.' + id);
-        setCreativeTab(YabbaCommon.TAB);
-    }
+	public ItemYabba(String id)
+	{
+		setRegistryName(Yabba.MOD_ID + ':' + id);
+		setUnlocalizedName(Yabba.MOD_ID + '.' + id);
+		setCreativeTab(YabbaCommon.TAB);
+	}
 }
