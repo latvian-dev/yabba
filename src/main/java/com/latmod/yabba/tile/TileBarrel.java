@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
@@ -29,7 +30,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -394,7 +394,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 				{
 					IConfigTree tree = new ConfigTree();
 					MinecraftForge.EVENT_BUS.post(new YabbaCreateConfigEvent(this, barrel, tree));
-					FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentTranslation(getBlockType().getUnlocalizedName() + ".name"), tree)
+					FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(StringUtils.translation(getBlockType().getUnlocalizedName() + ".name"), tree)
 					{
 						@Override
 						public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
