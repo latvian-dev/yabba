@@ -13,11 +13,11 @@ public class BarrelModelKey extends ResourceLocation
 
 	public BarrelModelKey(IBarrelModel m, IBarrelSkin s)
 	{
-		this(m.getName(), s.getName());
+		super(m.getName(), s.getName());
 	}
 
 	public BarrelModelKey(String m, String s)
 	{
-		super(m, s);
+		this(YabbaClient.getModel(m), YabbaClient.getSkin(s));
 	}
 }

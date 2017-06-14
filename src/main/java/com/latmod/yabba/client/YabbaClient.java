@@ -128,13 +128,13 @@ public class YabbaClient extends YabbaCommon implements YabbaModelsEvent.YabbaMo
 
 	public static IBarrelSkin getSkin(String id)
 	{
-		IBarrelSkin skin = SKINS.get(id);
+		IBarrelSkin skin = id.isEmpty() ? null : SKINS.get(id);
 		return skin == null ? DEFAULT_SKIN : skin;
 	}
 
 	public static IBarrelModel getModel(String id)
 	{
-		IBarrelModel model = MODELS.get(id);
+		IBarrelModel model = id.isEmpty() ? null : MODELS.get(id);
 		return model == null ? DEFAULT_MODEL : model;
 	}
 }
