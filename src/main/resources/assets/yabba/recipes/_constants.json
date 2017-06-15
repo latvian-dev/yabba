@@ -1,0 +1,6 @@
+[
+	{
+		"name": "blank_upgrade",
+		"ingredient": [{"item": "yabba:upgrade", "data": 0}]
+	}
+]

@@ -58,9 +58,7 @@ public class BlockBarrel extends BlockBarrelBase
 	public BlockBarrel()
 	{
 		super("barrel", Material.WOOD, MapColor.WOOD);
-		setDefaultState(blockState.getBaseState()
-				.withProperty(ROTATION, EnumRotation.NORMAL)
-				.withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 		setHardness(2F);
 	}
 

@@ -1,22 +1,69 @@
 package com.latmod.yabba.block;
 
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
  */
-public class RecipeBarrelUpgrade implements IRecipe
+public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 {
+	public static class IngredientBarrel extends Ingredient
+	{
+		protected IngredientBarrel()
+		{
+			super(1);
+			func_193365_a()[0] = new ItemStack(YabbaItems.BARREL);
+		}
+
+		@Override
+		public boolean apply(@Nullable ItemStack stack)
+		{
+			return stack != null && stack.hasCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		}
+	}
+
+	public static class IngredientUpgrade extends Ingredient
+	{
+		protected IngredientUpgrade()
+		{
+			super(1);
+			func_193365_a()[0] = EnumUpgrade.BLANK.item();
+		}
+
+		@Override
+		public boolean apply(@Nullable ItemStack stack)
+		{
+			return stack != null && stack.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null);
+		}
+	}
+
 	private ItemStack barrelStack, upgradeStack;
 	private World worldObj;
+	private NonNullList<Ingredient> ingredients;
+
+	public RecipeBarrelUpgrade()
+	{
+		ingredients = NonNullList.func_193580_a(null, new IngredientBarrel(), new IngredientUpgrade());
+	}
+
+	@Override
+	public NonNullList<Ingredient> func_192400_c()
+	{
+		return ingredients;
+	}
 
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn)
@@ -115,6 +162,6 @@ public class RecipeBarrelUpgrade implements IRecipe
 	@Override
 	public String func_193358_e()
 	{
-		return Yabba.MOD_ID + ":upgrade_barrel";
+		return getRegistryName().toString();
 	}
 }

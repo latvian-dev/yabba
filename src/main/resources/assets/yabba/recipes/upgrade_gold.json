@@ -1,0 +1,16 @@
+{
+	"type": "forge:ore_shaped",
+	"result": {
+		"item": "yabba:upgrade",
+		"data": 2
+	},
+	"pattern": [
+		"III",
+		"IUI",
+		"III"
+	],
+	"key": {
+		"U": [{"item": "#blank_upgrade"}],
+		"I": [{"type": "forge:ore_dict", "ore": "ingotGold"}]
+	}
+}

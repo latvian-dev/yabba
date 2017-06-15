@@ -1,0 +1,11 @@
+{
+	"type": "forge:ore_shapeless",
+	"result": {
+		"item": "yabba:upgrade",
+		"data": 12
+	},
+	"ingredients": [
+		[{"item": "#blank_upgrade"}],
+		[{"item": "minecraft:comparator"}]
+	]
+}

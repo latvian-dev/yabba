@@ -62,9 +62,12 @@ public class ItemUpgrade extends ItemYabba
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		for (EnumUpgrade type : EnumUpgrade.VALUES)
+		if (func_194125_a(tab))
 		{
-			list.add(new ItemStack(this, 1, type.metadata));
+			for (EnumUpgrade type : EnumUpgrade.VALUES)
+			{
+				list.add(new ItemStack(this, 1, type.metadata));
+			}
 		}
 	}
 

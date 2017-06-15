@@ -10,6 +10,7 @@ import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.api.events.YabbaModelDataEvent;
 import com.latmod.yabba.api.events.YabbaModelsEvent;
 import com.latmod.yabba.api.events.YabbaSkinsEvent;
+import com.latmod.yabba.block.RecipeBarrelUpgrade;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
@@ -23,8 +24,10 @@ import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -168,5 +171,11 @@ public class YabbaEventHandler
 			event.add(group, "down", PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperDown"), v -> barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) (v ? 1 : 0)))));
 			event.add(group, "collect", PropertyBool.create(false, () -> barrel.getUpgradeNBT().getBoolean("HopperCollect"), v -> barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) (v ? 1 : 0)))));
 		}
+	}
+
+	@SubscribeEvent
+	public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
+	{
+		event.getRegistry().register(new RecipeBarrelUpgrade().setRegistryName(Yabba.MOD_ID + ":upgrade_barrel"));
 	}
 }

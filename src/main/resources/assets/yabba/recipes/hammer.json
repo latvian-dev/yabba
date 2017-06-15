@@ -1,0 +1,16 @@
+{
+	"type": "forge:ore_shaped",
+	"result": {
+		"item": "yabba:hammer"
+	},
+	"pattern": [
+		"WUW",
+		" I ",
+		" I "
+	],
+	"key": {
+		"U": [{"item": "#blank_upgrade"}],
+		"W": [{"item": "minecraft:wool", "data": 0}],
+		"I": [{"type": "forge:ore_dict", "ore": "ingotIron"}]
+	}
+}
