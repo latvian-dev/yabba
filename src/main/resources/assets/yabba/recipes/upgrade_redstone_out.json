@@ -5,7 +5,7 @@
 		"data": 12
 	},
 	"ingredients": [
-		[{"item": "#blank_upgrade"}],
-		[{"item": "minecraft:comparator"}]
+		{"item": "#blank_upgrade"},
+		{"item": "minecraft:comparator"}
 	]
 }

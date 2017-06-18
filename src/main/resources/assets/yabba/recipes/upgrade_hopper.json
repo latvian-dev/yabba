@@ -5,7 +5,7 @@
 		"data": 13
 	},
 	"ingredients": [
-		[{"item": "#blank_upgrade"}],
-		[{"item": "minecraft:hopper"}]
+		{"item": "#blank_upgrade"},
+		{"item": "minecraft:hopper"}
 	]
 }

@@ -5,7 +5,7 @@
 		"data": 4
 	},
 	"ingredients": [
-		[{"item": "#blank_upgrade"}],
-		[{"type": "forge:ore_dict", "ore": "netherStar"}]
+		{"item": "#blank_upgrade"},
+		{"type": "forge:ore_dict", "ore": "netherStar"}
 	]
 }

@@ -1,6 +1,7 @@
 package com.latmod.yabba.tile;
 
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.util.Barrel;
 import net.minecraft.item.ItemStack;
@@ -8,13 +9,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
  */
-public abstract class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>
+public abstract class BarrelTileContainer extends Barrel implements INBTSerializable<NBTTagCompound>, IDeepStorageUnit
 {
 	private Tier tier = Tier.WOOD;
 	private int flags;
@@ -70,6 +72,11 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
 		if (getFlag(FLAG_IS_CREATIVE))
 		{
 			itemCount = tier.getMaxItems(this, getStackInSlot(0)) / 2;
+		}
+
+		if (itemCount > 0)
+		{
+			storedItem.setCount(itemCount);
 		}
 	}
 
@@ -179,5 +186,71 @@ public abstract class BarrelTileContainer extends Barrel implements INBTSerializ
 	public void setUpgradeNames(@Nullable NBTTagList nbt)
 	{
 		upgradeNames = nbt;
+	}
+
+	@Override
+	public ItemStack getStoredItemType()
+	{
+		return storedItem;
+	}
+
+	@Override
+	public void setStoredItemCount(int amount)
+	{
+		if (amount != getItemCount() && !getFlag(IBarrel.FLAG_IS_CREATIVE))
+		{
+			boolean wasEmpty = getItemCount() == 0;
+
+			if (amount > 0 && getFlag(IBarrel.FLAG_VOID_ITEMS))
+			{
+				int max = getTier().getMaxItems(this, getStackInSlot(0));
+
+				if (amount > max)
+				{
+					amount = max;
+				}
+			}
+
+			setItemCount(amount);
+
+			if (amount == 0 && !getFlag(IBarrel.FLAG_LOCKED))
+			{
+				setStackInSlot(0, ItemStack.EMPTY);
+			}
+
+			if (wasEmpty != (amount == 0))
+			{
+				markBarrelDirty();
+			}
+		}
+	}
+
+	@Override
+	public void setStoredItemType(ItemStack type, int amount)
+	{
+		if (amount != getItemCount() && !getFlag(IBarrel.FLAG_IS_CREATIVE))
+		{
+			boolean wasEmpty = getItemCount() == 0;
+			setItemCount(amount);
+
+			if (amount == 0 && !getFlag(IBarrel.FLAG_LOCKED))
+			{
+				type = ItemStack.EMPTY;
+			}
+
+			setStackInSlot(0, type);
+
+			if (wasEmpty != (amount == 0))
+			{
+				markBarrelDirty();
+			}
+		}
+	}
+
+	@Override
+	public int getMaxStoredCount()
+	{
+		int i = getTier().getMaxItems(this, getStackInSlot(0));
+		return i + (getFlag(IBarrel.FLAG_VOID_ITEMS) ? 256 : 0);
 	}
 }

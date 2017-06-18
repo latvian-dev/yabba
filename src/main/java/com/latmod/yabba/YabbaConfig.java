@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.EnumTristate;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyByte;
 import com.feed_the_beast.ftbl.lib.config.PropertyColor;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyList;
@@ -20,9 +19,6 @@ import java.io.File;
  */
 public class YabbaConfig
 {
-	public static final PropertyByte CRAFTING_UPGRADE_STACK_SIZE = new PropertyByte(16, 0, 64).setUnsigned();
-	public static final PropertyBool CRAFTING_BARREL_EASY_RECIPE = new PropertyBool(true);
-
 	public static final PropertyList ALLOWED_ORE_PREFIXES = new PropertyList(PropertyString.ID);
 	public static final PropertyBool SNEAK_LEFT_CLICK_EXTRACTS_STACK = new PropertyBool(true);
 
@@ -56,9 +52,6 @@ public class YabbaConfig
 		reg.addConfig(group, "iron", Tier.IRON.maxItemStacks);
 		reg.addConfig(group, "gold", Tier.GOLD.maxItemStacks);
 		reg.addConfig(group, "diamond", Tier.DIAMOND.maxItemStacks);
-		group = Yabba.MOD_ID + ".crafting";
-		reg.addConfig(group, "upgrade_stack_size", CRAFTING_UPGRADE_STACK_SIZE);
-		reg.addConfig(group, "barrel_easy_recipe", CRAFTING_BARREL_EASY_RECIPE);
 	}
 
 	public static void initClient(IFTBLibClientRegistry reg)

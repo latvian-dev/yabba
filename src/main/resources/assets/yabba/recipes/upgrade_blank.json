@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"result": {
-		"item": "yabba:upgrade",
+		"item": "upgrade",
 		"data": 0,
 		"count": 16
 	},
@@ -11,8 +11,8 @@
 		"SSS"
 	],
 	"key": {
-		"S": [{"type": "forge:ore_dict", "ore": "slabWood"}],
-		"I": [{"item": "minecraft:iron_bars"}],
-		"C": [{"type": "forge:ore_dict", "ore": "chestWood"}]
+		"S": {"type": "forge:ore_dict", "ore": "slabWood"},
+		"I": {"item": "minecraft:iron_bars"},
+		"C": {"item": "#chest"}
 	}
 }

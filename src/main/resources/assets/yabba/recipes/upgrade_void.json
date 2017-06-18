@@ -5,7 +5,7 @@
 		"data": 15
 	},
 	"ingredients": [
-		[{"item": "#blank_upgrade"}],
-		[{"type": "forge:ore_dict", "ore": "dyeBlack"}]
+		{"item": "#blank_upgrade"},
+		{"type": "forge:ore_dict", "ore": "dyeBlack"}
 	]
 }

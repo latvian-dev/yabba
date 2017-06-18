@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"result": {
-		"item": "yabba:antibarrel"
+		"item": "antibarrel"
 	},
 	"pattern": [
 		"NQN",
@@ -9,9 +9,9 @@
 		"NCN"
 	],
 	"key": {
-		"N": [{"type": "forge:ore_dict", "ore": "ingotBrickNether"}],
-		"Q": [{"type": "forge:ore_dict", "ore": "blockQuartz"}],
-		"O": [{"type": "forge:ore_dict", "ore": "obsidian"}],
-		"C": [{"type": "forge:ore_dict", "ore": "chestWood"}]
+		"N": {"type": "forge:ore_dict", "ore": "ingotBrickNether"},
+		"Q": {"type": "forge:ore_dict", "ore": "blockQuartz"},
+		"O": {"type": "forge:ore_dict", "ore": "obsidian"},
+		"C": {"item": "#chest"}
 	}
 }

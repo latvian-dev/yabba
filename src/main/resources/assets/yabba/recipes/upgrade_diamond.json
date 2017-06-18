@@ -5,8 +5,8 @@
 		"data": 3
 	},
 	"ingredients": [
-		[{"item": "#blank_upgrade"}],
-		[{"type": "forge:ore_dict", "ore": "gemDiamond"}],
-		[{"type": "forge:ore_dict", "ore": "gemDiamond"}]
+		{"item": "#blank_upgrade"},
+		{"type": "forge:ore_dict", "ore": "gemDiamond"},
+		{"type": "forge:ore_dict", "ore": "gemDiamond"}
 	]
 }

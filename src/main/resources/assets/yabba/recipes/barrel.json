@@ -4,7 +4,7 @@
 		"item": "yabba:barrel"
 	},
 	"ingredients": [
-		[{"item": "#blank_upgrade"}],
-		[{"type": "forge:ore_dict", "ore": "chestWood"}]
+		{"item": "#blank_upgrade"},
+		{"item": "#chest"}
 	]
 }

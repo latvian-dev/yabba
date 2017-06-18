@@ -104,14 +104,13 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 	@Override
 	public void onUpdatePacket()
 	{
-		super.onUpdatePacket();
 		prevItemCount = -1;
 	}
 
 	@Override
 	public void update()
 	{
-		if (prevItemCount != barrel.getItemCount())
+		if (prevItemCount == -1 || prevItemCount != barrel.getItemCount())
 		{
 			if (prevItemCount == -1)
 			{
@@ -468,67 +467,25 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 	@Override
 	public ItemStack getStoredItemType()
 	{
-		return barrel.getStackInSlot(0);
+		return barrel.getStoredItemType();
 	}
 
 	@Override
 	public void setStoredItemCount(int amount)
 	{
-		if (amount != barrel.getItemCount() && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
-		{
-			boolean wasEmpty = barrel.getItemCount() == 0;
-
-			if (amount > 0 && barrel.getFlag(IBarrel.FLAG_VOID_ITEMS))
-			{
-				int max = barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
-
-				if (amount > max)
-				{
-					amount = max;
-				}
-			}
-
-			barrel.setItemCount(amount);
-
-			if (amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
-			{
-				barrel.setStackInSlot(0, ItemStack.EMPTY);
-			}
-
-			if (wasEmpty != (amount == 0))
-			{
-				barrel.markBarrelDirty();
-			}
-		}
+		barrel.setStoredItemCount(amount);
 	}
 
 	@Override
 	public void setStoredItemType(ItemStack type, int amount)
 	{
-		if (amount != barrel.getItemCount() && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
-		{
-			boolean wasEmpty = barrel.getItemCount() == 0;
-			barrel.setItemCount(amount);
-
-			if (amount == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
-			{
-				type = ItemStack.EMPTY;
-			}
-
-			barrel.setStackInSlot(0, type);
-
-			if (wasEmpty != (amount == 0))
-			{
-				barrel.markBarrelDirty();
-			}
-		}
+		barrel.setStoredItemType(type, amount);
 	}
 
 	@Override
 	public int getMaxStoredCount()
 	{
-		int i = barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0));
-		return i + (barrel.getFlag(IBarrel.FLAG_VOID_ITEMS) ? 256 : 0);
+		return barrel.getMaxStoredCount();
 	}
 
 	public boolean canConnectRedstone(@Nullable EnumFacing facing)

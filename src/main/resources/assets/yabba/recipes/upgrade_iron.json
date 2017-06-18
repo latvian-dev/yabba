@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"result": {
-		"item": "yabba:upgrade",
+		"item": "upgrade",
 		"data": 1
 	},
 	"pattern": [
@@ -10,7 +10,7 @@
 		"III"
 	],
 	"key": {
-		"U": [{"item": "#blank_upgrade"}],
-		"I": [{"type": "forge:ore_dict", "ore": "ingotIron"}]
+		"U": {"item": "#blank_upgrade"},
+		"I": {"item": "#iron"}
 	}
 }

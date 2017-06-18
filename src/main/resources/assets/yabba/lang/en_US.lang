@@ -24,7 +24,6 @@ tile.yabba.antibarrel.name=AntiBarrel
 
 # Config
 config_group.yabba.name=YABBA
-config_group.yabba.crafting.name=Crafting
 config_group.yabba.tier.name=Tier
 config_group.yabba.tier.item.name=Item
 
@@ -42,8 +41,6 @@ config.yabba.tier.item.iron.name=Iron
 config.yabba.tier.item.gold.name=Gold
 config.yabba.tier.item.diamond.name=Diamond
 config.yabba.tier.item.infinity.name=Infinity
-config.yabba.crafting.upgrade_stack_size.name=Upgrade Stack Size
-config.yabba.crafting.barrel_easy_recipe.name=Easy Barrel Recipe
 
 barrel_config.yabba.disable_ore_items.name=Disable Ore Items
 barrel_config.yabba.always_display_data.name=Always Display Data

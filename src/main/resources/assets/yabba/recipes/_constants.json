@@ -1,6 +1,14 @@
 [
 	{
 		"name": "blank_upgrade",
-		"ingredient": [{"item": "yabba:upgrade", "data": 0}]
+		"ingredient": {"item": "upgrade", "data": 0}
+	},
+	{
+		"name": "iron",
+		"ingredient": {"type": "forge:ore_dict", "ore": "ingotIron"}
+	},
+	{
+		"name": "chest",
+		"ingredient": {"type": "forge:ore_dict", "ore": "chestWood"}
 	}
 ]
