@@ -18,6 +18,9 @@ item.yabba.upgrade.void=Void Items
 item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer
 
+lang.yabba.model=Model: %s
+lang.yabba.skin=Skin: %s
+
 # Blocks
 tile.yabba.barrel.name=Item Barrel
 tile.yabba.antibarrel.name=AntiBarrel

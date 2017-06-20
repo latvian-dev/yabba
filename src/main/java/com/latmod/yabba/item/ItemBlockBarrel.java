@@ -36,7 +36,7 @@ public class ItemBlockBarrel extends ItemBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 

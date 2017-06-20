@@ -3,6 +3,7 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -75,19 +76,16 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		super.readFromNBT(nbt);
-		barrel.deserializeNBT(nbt.getCompoundTag("Barrel"));
-		barrel.clearCachedData();
+		nbt.setTag("Barrel", barrel.serializeNBT());
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		super.writeToNBT(nbt);
-		nbt.setTag("Barrel", barrel.serializeNBT());
-		return nbt;
+		barrel.deserializeNBT(nbt.getCompoundTag("Barrel"));
+		barrel.clearCachedData();
 	}
 
 	@Override
@@ -166,7 +164,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 
 				for (EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, aabb, null))
 				{
-					ItemStack stack = barrel.insertItem(0, item.getEntityItem().copy(), false);
+					ItemStack stack = barrel.insertItem(0, item.getItem().copy(), false);
 
 					if (stack.isEmpty())
 					{
@@ -174,7 +172,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 					}
 					else
 					{
-						item.setEntityItemStack(stack);
+						item.setItem(stack);
 					}
 				}
 			}

@@ -25,7 +25,7 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 		protected IngredientBarrel()
 		{
 			super(1);
-			func_193365_a()[0] = new ItemStack(YabbaItems.BARREL);
+			getMatchingStacks()[0] = new ItemStack(YabbaItems.BARREL);
 		}
 
 		@Override
@@ -40,7 +40,7 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 		protected IngredientUpgrade()
 		{
 			super(1);
-			func_193365_a()[0] = EnumUpgrade.BLANK.item();
+			getMatchingStacks()[0] = EnumUpgrade.BLANK.item();
 		}
 
 		@Override
@@ -56,11 +56,11 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 
 	public RecipeBarrelUpgrade()
 	{
-		ingredients = NonNullList.func_193580_a(null, new IngredientBarrel(), new IngredientUpgrade());
+		ingredients = NonNullList.from(null, new IngredientBarrel(), new IngredientUpgrade());
 	}
 
 	@Override
-	public NonNullList<Ingredient> func_192400_c()
+	public NonNullList<Ingredient> getIngredients()
 	{
 		return ingredients;
 	}
@@ -134,7 +134,7 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 	}
 
 	@Override
-	public boolean func_194133_a(int w, int h)
+	public boolean canFit(int w, int h)
 	{
 		return w * h >= 2;
 	}
@@ -160,7 +160,7 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 	}
 
 	@Override
-	public String func_193358_e()
+	public String getGroup()
 	{
 		return getRegistryName().toString();
 	}

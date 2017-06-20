@@ -1,8 +1,7 @@
 {
 	"type": "forge:ore_shaped",
-	"result": {
-		"item": "hammer"
-	},
+	"group": "yabba:barrel",
+	"result": {"item": "hammer"},
 	"pattern": [
 		"WUW",
 		" I ",

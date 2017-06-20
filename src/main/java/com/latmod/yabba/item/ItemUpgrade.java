@@ -62,7 +62,7 @@ public class ItemUpgrade extends ItemYabba
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		if (func_194125_a(tab))
+		if (isInCreativeTab(tab))
 		{
 			for (EnumUpgrade type : EnumUpgrade.VALUES)
 			{
@@ -73,7 +73,7 @@ public class ItemUpgrade extends ItemYabba
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		tooltip.add(StringUtils.translate(EnumUpgrade.getFromMeta(stack.getMetadata()).uname));
 	}

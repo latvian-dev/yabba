@@ -1,10 +1,7 @@
 {
 	"type": "forge:ore_shaped",
-	"result": {
-		"item": "upgrade",
-		"data": 0,
-		"count": 16
-	},
+	"group": "yabba:barrel_upgrade",
+	"result": {"item": "upgrade", "data": 0, "count": 16},
 	"pattern": [
 		"SSS",
 		"ICI",

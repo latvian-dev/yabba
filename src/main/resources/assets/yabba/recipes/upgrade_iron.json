@@ -1,9 +1,7 @@
 {
 	"type": "forge:ore_shaped",
-	"result": {
-		"item": "upgrade",
-		"data": 1
-	},
+	"group": "yabba:barrel_upgrade",
+	"result": {"item": "upgrade", "data": 1},
 	"pattern": [
 		"III",
 		"IUI",

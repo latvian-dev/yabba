@@ -1,5 +1,6 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,24 +47,24 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		super.writeToNBT(nbt);
-		NBTTagList list = new NBTTagList();
-
-		for (ItemStack is : items)
+		if (type.save || !items.isEmpty())
 		{
-			list.appendTag(is.serializeNBT());
-		}
+			NBTTagList list = new NBTTagList();
 
-		nbt.setTag("Inv", list);
-		return nbt;
+			for (ItemStack is : items)
+			{
+				list.appendTag(is.serializeNBT());
+			}
+
+			nbt.setTag("Inv", list);
+		}
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		super.readFromNBT(nbt);
 		items.clear();
 
 		NBTTagList list = nbt.getTagList("Inv", Constants.NBT.TAG_COMPOUND);

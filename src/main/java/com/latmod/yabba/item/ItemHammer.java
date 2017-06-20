@@ -119,12 +119,12 @@ public class ItemHammer extends ItemYabba
 	@SideOnly(Side.CLIENT)
 	public static String getModelTooltip(String model)
 	{
-		return "Model: " + StringUtils.translate("yabba.model." + model);
+		return StringUtils.translate("lang.yabba.model", StringUtils.translate("yabba.model." + model));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		tooltip.add(getModelTooltip(getModel(stack)));
 	}

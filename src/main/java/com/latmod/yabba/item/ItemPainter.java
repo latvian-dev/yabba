@@ -120,12 +120,12 @@ public class ItemPainter extends ItemYabba
 	@SideOnly(Side.CLIENT)
 	public static String getSkinTooltip(String skin)
 	{
-		return "Skin: " + StringUtils.translate(YabbaClient.getSkin(skin).getUnlocalizedName());
+		return StringUtils.translate("lang.yabba.skin", StringUtils.translate(YabbaClient.getSkin(skin).getUnlocalizedName()));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		tooltip.add(getSkinTooltip(getSkin(stack)));
 	}

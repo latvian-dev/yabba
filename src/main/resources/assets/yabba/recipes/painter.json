@@ -1,8 +1,7 @@
 {
 	"type": "forge:ore_shaped",
-	"result": {
-		"item": "painter"
-	},
+	"group": "yabba:barrel",
+	"result": {"item": "painter"},
 	"pattern": [
 		"WWU",
 		" I ",

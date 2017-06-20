@@ -32,7 +32,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 	private static final Color4I CREATIVE_COLOR = new Color4I(false, 0xFFFF00DC);
 
 	@Override
-	public void func_192841_a(TileBarrel te, double x, double y, double z, float partialTicks, int destroyStage, float p_192841_10_)
+	public void render(TileBarrel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if (te.isInvalid())
 		{

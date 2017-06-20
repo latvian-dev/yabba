@@ -1,9 +1,7 @@
 {
 	"type": "forge:ore_shapeless",
-	"result": {
-		"item": "yabba:upgrade",
-		"data": 3
-	},
+	"group": "yabba:barrel_upgrade",
+	"result": {"item": "upgrade", "data": 3},
 	"ingredients": [
 		{"item": "#blank_upgrade"},
 		{"type": "forge:ore_dict", "ore": "gemDiamond"},
