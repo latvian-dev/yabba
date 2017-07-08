@@ -17,6 +17,6 @@ public class YabbaCreativeTab extends CreativeTabs
 	@Override
 	public ItemStack getTabIconItem()
 	{
-		return new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
+		return new ItemStack(YabbaCommon.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
 	}
 }

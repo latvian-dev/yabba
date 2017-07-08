@@ -1,6 +1,6 @@
 {
 	"type": "forge:ore_shapeless",
-	"group": "yabba:barrel_upgrade",
+	"group": "yabba:upgrade_redstone_out",
 	"result": {"item": "upgrade", "data": 12},
 	"ingredients": [
 		{"item": "#blank_upgrade"},

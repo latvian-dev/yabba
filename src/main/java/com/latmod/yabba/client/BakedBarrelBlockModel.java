@@ -1,6 +1,5 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.block.BlockBarrel;
@@ -15,12 +14,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +25,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class BakedBarrelBlockModel implements IPerspectiveAwareModel
+public class BakedBarrelBlockModel implements IBakedModel
 {
 	private final TextureAtlasSprite particle;
 	private final Map<BarrelModelKey, BarrelModelVariant> map;
@@ -53,12 +49,6 @@ public class BakedBarrelBlockModel implements IPerspectiveAwareModel
 	{
 		particle = p;
 		map = m;
-	}
-
-	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
-	{
-		return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, ModelBuilder.TRANSFORM_MAP, cameraTransformType);
 	}
 
 	@Override

@@ -6,8 +6,11 @@ import com.latmod.yabba.api.BarrelModelCommonData;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.events.YabbaModelDataEvent;
-import com.latmod.yabba.tile.TileAntibarrel;
-import com.latmod.yabba.tile.TileBarrel;
+import com.latmod.yabba.block.BlockAntibarrel;
+import com.latmod.yabba.block.BlockBarrel;
+import com.latmod.yabba.item.ItemHammer;
+import com.latmod.yabba.item.ItemPainter;
+import com.latmod.yabba.item.ItemUpgrade;
 import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
@@ -26,6 +29,21 @@ import java.util.Map;
  */
 public class YabbaCommon implements YabbaModelDataEvent.YabbaModelDataRegistry
 {
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":barrel")
+	public static BlockBarrel BARREL;
+
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":antibarrel")
+	public static BlockAntibarrel ANTIBARREL;
+
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":upgrade")
+	public static ItemUpgrade UPGRADE;
+
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":painter")
+	public static ItemPainter PAINTER;
+
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":hammer")
+	public static ItemHammer HAMMER;
+
 	@CapabilityInject(IBarrel.class)
 	public static Capability<IBarrel> BARREL_CAPABILITY;
 
@@ -43,15 +61,6 @@ public class YabbaCommon implements YabbaModelDataEvent.YabbaModelDataRegistry
 	{
 		CapabilityManager.INSTANCE.register(IUpgrade.class, new EmptyCapStorage<>(), () -> EnumUpgrade.BLANK);
 		CapabilityManager.INSTANCE.register(IBarrel.class, new EmptyCapStorage<>(), () -> null);
-
-		LMUtils.register(YabbaItems.UPGRADE);
-		LMUtils.register(YabbaItems.PAINTER);
-		LMUtils.register(YabbaItems.HAMMER);
-		LMUtils.register(YabbaItems.BARREL);
-		LMUtils.register(YabbaItems.ANTIBARREL);
-
-		GameRegistry.registerTileEntity(TileBarrel.class, Yabba.MOD_ID + ".barrel");
-		GameRegistry.registerTileEntity(TileAntibarrel.class, Yabba.MOD_ID + ".antibarrel");
 	}
 
 	public void init()
@@ -68,6 +77,10 @@ public class YabbaCommon implements YabbaModelDataEvent.YabbaModelDataRegistry
 	}
 
 	public void openSkinGui()
+	{
+	}
+
+	public void loadModelsAndSkins()
 	{
 	}
 

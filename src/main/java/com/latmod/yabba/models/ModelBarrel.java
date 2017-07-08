@@ -3,7 +3,6 @@ package com.latmod.yabba.models;
 import com.feed_the_beast.ftbl.lib.IconSet;
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
-import com.google.common.base.Function;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -17,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder

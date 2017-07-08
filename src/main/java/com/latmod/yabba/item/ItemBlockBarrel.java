@@ -1,12 +1,12 @@
 package com.latmod.yabba.item;
 
+import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.Tier;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemBlockBarrel extends ItemBlock
+public class ItemBlockBarrel extends ItemBlockBase
 {
 	public ItemBlockBarrel(Block block)
 	{

@@ -1,7 +1,6 @@
 package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.inventory.InventoryCrafting;
@@ -10,8 +9,8 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +24,7 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 		protected IngredientBarrel()
 		{
 			super(1);
-			getMatchingStacks()[0] = new ItemStack(YabbaItems.BARREL);
+			getMatchingStacks()[0] = new ItemStack(YabbaCommon.BARREL);
 		}
 
 		@Override

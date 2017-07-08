@@ -1,6 +1,5 @@
 package com.latmod.yabba.client;
 
-import com.google.common.base.Function;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.api.IBarrelSkin;
@@ -26,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -36,13 +35,6 @@ import java.util.Map;
 public class BarrelModelLoader implements IModel, ICustomModelLoader
 {
 	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(Yabba.MOD_ID + ":barrel#normal");
-
-	public final Collection<ResourceLocation> textures;
-
-	public BarrelModelLoader()
-	{
-		textures = new HashSet<>();
-	}
 
 	public enum StateMapper implements IStateMapper
 	{
@@ -83,17 +75,7 @@ public class BarrelModelLoader implements IModel, ICustomModelLoader
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
-		textures.clear();
-
-		for (IBarrelModel model : YabbaClient.ALL_MODELS)
-		{
-			textures.addAll(model.getExtraTextures());
-		}
-
-		for (IBarrelSkin skin : YabbaClient.ALL_SKINS)
-		{
-			textures.addAll(skin.getTextures().getTextures());
-		}
+		Yabba.PROXY.loadModelsAndSkins();
 	}
 
 	@Override
@@ -105,7 +87,7 @@ public class BarrelModelLoader implements IModel, ICustomModelLoader
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		return textures;
+		return YabbaClient.TEXTURES;
 	}
 
 	@Override

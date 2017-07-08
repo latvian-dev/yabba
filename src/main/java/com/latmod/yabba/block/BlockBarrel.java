@@ -3,6 +3,7 @@ package com.latmod.yabba.block;
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
+import com.google.common.base.Preconditions;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
@@ -20,7 +21,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -60,12 +60,6 @@ public class BlockBarrel extends BlockBarrelBase
 		super("barrel", Material.WOOD, MapColor.WOOD);
 		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 		setHardness(2F);
-	}
-
-	@Override
-	public ItemBlock createItemBlock()
-	{
-		return new ItemBlockBarrel(this);
 	}
 
 	public static EnumFacing normalizeFacing(IBlockState state)
@@ -109,6 +103,7 @@ public class BlockBarrel extends BlockBarrelBase
 	{
 		ItemStack stack = new ItemStack(this);
 		IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		Preconditions.checkNotNull(barrel);
 		barrel.setTier(tier);
 		barrel.setFlags(0);
 		barrel.setModel(model);

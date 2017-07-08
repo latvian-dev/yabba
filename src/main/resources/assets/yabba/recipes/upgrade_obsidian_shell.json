@@ -1,6 +1,6 @@
 {
 	"type": "forge:ore_shaped",
-	"group": "yabba:barrel_upgrade",
+	"group": "yabba:upgrade_obsidian_shell",
 	"result": {"item": "upgrade", "data": 11},
 	"pattern": [
 		" I ",

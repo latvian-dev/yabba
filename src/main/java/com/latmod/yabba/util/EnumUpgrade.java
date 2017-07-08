@@ -1,6 +1,6 @@
 package com.latmod.yabba.util;
 
-import com.latmod.yabba.YabbaItems;
+import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.IBarrel;
 import com.latmod.yabba.api.IBarrelModifiable;
 import com.latmod.yabba.api.IUpgrade;
@@ -48,7 +48,7 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 
 	public ItemStack item()
 	{
-		return new ItemStack(YabbaItems.UPGRADE, 1, metadata);
+		return new ItemStack(YabbaCommon.UPGRADE, 1, metadata);
 	}
 
 	public static EnumUpgrade getFromMeta(int meta)

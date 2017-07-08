@@ -1,6 +1,6 @@
 {
 	"type": "forge:ore_shaped",
-	"group": "yabba:barrel_upgrade",
+	"group": "yabba:upgrade_tier",
 	"result": {"item": "upgrade", "data": 1},
 	"pattern": [
 		"III",

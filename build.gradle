@@ -22,26 +22,19 @@ compileJava {
 }
 
 minecraft {
-	version = "1.12-14.21.0.2339"
+	version = "1.12-14.21.1.2397"
 	runDir = "run"
-	mappings = "snapshot_20170617"
+	mappings = "snapshot_20170624"
 }
 
 repositories {
-	ivy {
-		name "LatMod"
-		artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
-	}
-	maven {
-		url "http://dvs1.progwml6.com/files/maven"
-	}
-	maven {
-		url = "http://maven.ic2.player.to/"
-	}
+	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
+	maven { url "http://dvs1.progwml6.com/files/maven" }
+	maven { url = "http://maven.ic2.player.to/" }
 }
 
 dependencies {
-	compile 'LatMod:FTBLib:4.0.2:api'
+	compile 'com.latmod.mods:FTBLib:4.0.3:api'
 	deobfCompile "mezz.jei:jei_1.10.2:3.14.2.401:api"
 	deobfCompile "net.sengir.forestry:forestry_1.10.2:5.2.16.347:api"
 }
