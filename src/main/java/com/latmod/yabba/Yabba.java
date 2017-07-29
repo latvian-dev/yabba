@@ -1,10 +1,13 @@
 package com.latmod.yabba;
 
 import com.latmod.yabba.block.BlockBarrel;
+import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.net.YabbaNetHandler;
+import com.latmod.yabba.util.EnumUpgrade;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
@@ -27,17 +30,20 @@ public class Yabba
 
 	public static final Logger LOGGER = LogManager.getLogger("YABBA");
 
+	public static final CreativeTabs TAB = new CreativeTabs(MOD_ID)
+	{
+		@Override
+		public ItemStack getTabIconItem()
+		{
+			return new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
+		}
+	};
+
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
 		YabbaNetHandler.init();
 		PROXY.preInit();
-	}
-
-	@Mod.EventHandler
-	public void onInit(FMLInitializationEvent event)
-	{
-		PROXY.init();
 	}
 
 	@Mod.EventHandler

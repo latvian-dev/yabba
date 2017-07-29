@@ -1,12 +1,11 @@
 package com.latmod.yabba.api.events;
 
 import com.latmod.yabba.api.IBarrelModel;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * @author LatvianModder
  */
-public class YabbaModelsEvent extends Event
+public class YabbaModelsEvent extends YabbaEvent
 {
 	public interface YabbaModelRegistry
 	{

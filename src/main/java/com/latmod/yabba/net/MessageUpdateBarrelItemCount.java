@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.api.Barrel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -55,7 +55,7 @@ public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateB
 
 		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
 		{
-			IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 			barrel.setItemCount(message.itemCount);
 			barrel.clearCachedData();
 		}

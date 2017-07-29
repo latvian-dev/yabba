@@ -3,12 +3,11 @@ package com.latmod.yabba.api.events;
 import com.latmod.yabba.api.IBarrelSkin;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * @author LatvianModder
  */
-public class YabbaSkinsEvent extends Event
+public class YabbaSkinsEvent extends YabbaEvent
 {
 	public interface YabbaSkinRegistry
 	{

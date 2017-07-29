@@ -1,7 +1,6 @@
 package com.latmod.yabba.item;
 
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaCommon;
 import net.minecraft.item.Item;
 
 /**
@@ -13,6 +12,6 @@ public class ItemYabba extends Item
 	{
 		setRegistryName(Yabba.MOD_ID + ':' + id);
 		setUnlocalizedName(Yabba.MOD_ID + '.' + id);
-		setCreativeTab(YabbaCommon.TAB);
+		setCreativeTab(Yabba.TAB);
 	}
 }

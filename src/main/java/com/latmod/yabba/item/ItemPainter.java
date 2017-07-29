@@ -3,7 +3,7 @@ package com.latmod.yabba.item;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.client.YabbaClient;
 import net.minecraft.client.util.ITooltipFlag;
@@ -57,7 +57,7 @@ public class ItemPainter extends ItemYabba
 		}
 
 		@Override
-		public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
+		public boolean applyOn(Barrel barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
 		{
 			String skin = getSkin(upgradeItem);
 
@@ -69,7 +69,7 @@ public class ItemPainter extends ItemYabba
 			if (!simulate)
 			{
 				barrel.setSkin(skin);
-				barrel.markBarrelDirty();
+				barrel.markBarrelDirty(true);
 			}
 
 			return true;

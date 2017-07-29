@@ -3,7 +3,7 @@ package com.latmod.yabba.item;
 import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.api.Tier;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -29,6 +29,21 @@ public class ItemBlockBarrel extends ItemBlockBase
 	}
 
 	@Override
+	@Nullable
+	public NBTTagCompound getNBTShareTag(ItemStack stack)
+	{
+		NBTTagCompound nbt = stack.getTagCompound();
+
+		if (nbt != null && nbt.hasKey("Update"))
+		{
+			nbt.removeTag("Update");
+			nbt.setTag("Barrel", stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null).serializeNBT());
+		}
+
+		return nbt;
+	}
+
+	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
 	{
 		return new BarrelItemData(stack);
@@ -38,22 +53,22 @@ public class ItemBlockBarrel extends ItemBlockBase
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		Barrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
 		tooltip.add(ItemHammer.getModelTooltip(barrel.getModel()));
 		tooltip.add(ItemPainter.getSkinTooltip(barrel.getSkin()));
 
 		Tier tier = barrel.getTier();
-		ItemStack stack1 = barrel.getStackInSlot(0);
+		ItemStack stack1 = barrel.getStoredItemType();
 
 		if (!stack1.isEmpty())
 		{
 			tooltip.add("Item: " + stack1.getDisplayName());
 		}
 
-		if (!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+		if (!barrel.getFlag(Barrel.FLAG_IS_CREATIVE))
 		{
-			if (barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
+			if (barrel.getFlag(Barrel.FLAG_INFINITE_CAPACITY))
 			{
 				tooltip.add(barrel.getItemCount() + " items");
 			}

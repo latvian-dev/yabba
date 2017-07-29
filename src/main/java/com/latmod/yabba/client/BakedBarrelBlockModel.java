@@ -1,7 +1,8 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.block.BlockBarrel;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
@@ -15,8 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +37,7 @@ public class BakedBarrelBlockModel implements IBakedModel
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
 		{
-			IBarrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			Barrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 			BarrelModelVariant v = map.get(new BarrelModelKey(barrel.getModel(), barrel.getSkin()));
 			if (v == null)
 			{
@@ -103,5 +106,11 @@ public class BakedBarrelBlockModel implements IBakedModel
 	public ItemOverrideList getOverrides()
 	{
 		return itemOverrideList;
+	}
+
+	@Override
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
+	{
+		return ModelBuilder.handlePerspective(this, cameraTransformType);
 	}
 }

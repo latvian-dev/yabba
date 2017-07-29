@@ -1,61 +1,36 @@
 package com.latmod.yabba.client;
 
-import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaCommon;
+import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.events.YabbaModelsEvent;
 import com.latmod.yabba.api.events.YabbaSkinsEvent;
 import com.latmod.yabba.models.ModelCrate;
 import com.latmod.yabba.models.ModelPanel;
 import com.latmod.yabba.models.ModelSolid;
 import com.latmod.yabba.models.ModelSolidBorders;
-import com.latmod.yabba.tile.TileBarrel;
-import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockConcretePowder;
 import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = Yabba.MOD_ID, value = Side.CLIENT)
+@EventHandler(Side.CLIENT)
 public class YabbaClientEventHandler
 {
 	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent event)
+	public static void registerClient(FTBLibClientRegistryEvent event)
 	{
-		ModelLoaderRegistry.registerLoader(new BarrelModelLoader());
-		BarrelModelLoader.loadFor(YabbaCommon.BARREL);
-
-		registerModel(Item.getItemFromBlock(YabbaCommon.ANTIBARREL), 0, "antibarrel", "inventory");
-
-		for (EnumUpgrade type : EnumUpgrade.VALUES)
-		{
-			registerModel(YabbaCommon.UPGRADE, type.metadata, "upgrade/" + type.getName(), "inventory");
-		}
-
-		registerModel(YabbaCommon.PAINTER, 0, "painter", "inventory");
-		registerModel(YabbaCommon.HAMMER, 0, "hammer", "inventory");
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, new RenderBarrel());
-	}
-
-	private static void registerModel(Item item, int meta, String id, String v)
-	{
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Yabba.MOD_ID + ':' + id + '#' + v));
+		YabbaConfig.initClient(event.getRegistry());
 	}
 
 	@SubscribeEvent
@@ -153,6 +128,8 @@ public class YabbaClientEventHandler
 		{
 			reg.addSkin(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/hardened_clay_stained_" + dye.getName());
 			reg.addSkin(Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/wool_colored_" + dye.getName());
+			reg.addSkin(Blocks.CONCRETE.getDefaultState().withProperty(BlockColored.COLOR, dye), "all=blocks/concrete_" + dye.getName());
+			reg.addSkin(Blocks.CONCRETE_POWDER.getDefaultState().withProperty(BlockConcretePowder.COLOR, dye), "all=blocks/concrete_powder_" + dye.getName());
 		}
 	}
 }

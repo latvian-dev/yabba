@@ -34,9 +34,9 @@ public enum Tier implements IStringSerializable
 		return name;
 	}
 
-	public int getMaxItems(IBarrel barrel, ItemStack itemStack)
+	public int getMaxItems(Barrel barrel, ItemStack itemStack)
 	{
-		if (barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
+		if (barrel.getFlag(Barrel.FLAG_INFINITE_CAPACITY))
 		{
 			return 2000000000;
 		}

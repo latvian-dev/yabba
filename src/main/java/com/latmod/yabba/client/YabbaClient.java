@@ -9,14 +9,26 @@ import com.latmod.yabba.api.IBarrelSkin;
 import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.api.events.YabbaModelsEvent;
 import com.latmod.yabba.api.events.YabbaSkinsEvent;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
+import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.models.ModelBarrel;
+import com.latmod.yabba.tile.TileBarrel;
 import com.latmod.yabba.util.BarrelSkin;
+import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -29,6 +41,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
+@Mod.EventBusSubscriber(modid = Yabba.MOD_ID, value = Side.CLIENT)
 public class YabbaClient extends YabbaCommon implements YabbaModelsEvent.YabbaModelRegistry, YabbaSkinsEvent.YabbaSkinRegistry
 {
 	public static final Collection<ResourceLocation> TEXTURES = new HashSet<>();
@@ -40,6 +53,30 @@ public class YabbaClient extends YabbaCommon implements YabbaModelsEvent.YabbaMo
 	private static final IBarrelModel DEFAULT_MODEL = new ModelBarrel();
 	private static final IBarrelSkin DEFAULT_SKIN = new BarrelSkin(false, DEFAULT_SKIN_STATE, new IconSet("all=blocks/planks_oak"), "");
 
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent event)
+	{
+		ModelLoaderRegistry.registerLoader(new BarrelModelLoader());
+		BarrelModelLoader.loadFor(YabbaItems.BARREL);
+
+		registerModel(Item.getItemFromBlock(YabbaItems.ANTIBARREL), 0, "antibarrel", "inventory");
+
+		for (EnumUpgrade type : EnumUpgrade.VALUES)
+		{
+			registerModel(YabbaItems.UPGRADE, type.metadata, "upgrade/" + type.getName(), "inventory");
+		}
+
+		registerModel(YabbaItems.PAINTER, 0, "painter", "inventory");
+		registerModel(YabbaItems.HAMMER, 0, "hammer", "inventory");
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, new RenderBarrel());
+	}
+
+	private static void registerModel(Item item, int meta, String id, String v)
+	{
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Yabba.MOD_ID + ':' + id + '#' + v));
+	}
+
 	@Override
 	public void loadModelsAndSkins()
 	{
@@ -49,13 +86,13 @@ public class YabbaClient extends YabbaCommon implements YabbaModelsEvent.YabbaMo
 		SKINS.clear();
 		ALL_SKINS.clear();
 
-		MinecraftForge.EVENT_BUS.post(new YabbaModelsEvent(this));
+		new YabbaModelsEvent(this).post();
 		addModel(DEFAULT_MODEL);
 		ALL_MODELS.addAll(MODELS.values());
 		ALL_MODELS.sort(StringUtils.ID_COMPARATOR);
 		Yabba.LOGGER.info("Models: " + ALL_MODELS.size());
 
-		MinecraftForge.EVENT_BUS.post(new YabbaSkinsEvent(this));
+		new YabbaSkinsEvent(this).post();
 		addSkin(DEFAULT_SKIN);
 		ALL_SKINS.addAll(SKINS.values());
 		ALL_SKINS.sort(StringUtils.ID_COMPARATOR);
@@ -67,7 +104,7 @@ public class YabbaClient extends YabbaCommon implements YabbaModelsEvent.YabbaMo
 		{
 			for (int s = 0; s < ALL_SKINS.size(); s++)
 			{
-				STACKS_FOR_GUI[m][s] = BARREL.createStack(ALL_MODELS.get(m).getName(), ALL_SKINS.get(s).getName(), Tier.WOOD);
+				STACKS_FOR_GUI[m][s] = BlockBarrel.createStack(ALL_MODELS.get(m).getName(), ALL_SKINS.get(s).getName(), Tier.WOOD);
 			}
 		}
 	}

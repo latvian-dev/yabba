@@ -1,6 +1,6 @@
 package com.latmod.yabba.util;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumRedstoneCompMode implements IStringSerializable
@@ -15,13 +15,7 @@ public enum EnumRedstoneCompMode implements IStringSerializable
 	/**
 	 * @author LatvianModder
 	 */
-	public static final EnumRedstoneCompMode[] VALUES = values();
-	public static final EnumNameMap<EnumRedstoneCompMode> NAME_MAP = new EnumNameMap<>(VALUES, false);
-
-	public static EnumRedstoneCompMode getMode(int mode)
-	{
-		return (mode < 0 || mode >= VALUES.length) ? EQUAL : VALUES[mode];
-	}
+	public static final NameMap<EnumRedstoneCompMode> NAME_MAP = NameMap.create(GREATER_THAN_OR_EQUAL, values());
 
 	private final String name;
 

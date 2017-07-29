@@ -25,13 +25,13 @@ public class BarrelModelCommonData
 		}
 
 		@Override
-		public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
+		public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, Barrel barrel)
 		{
 			return boxes[BlockBarrel.normalizeFacing(state).getIndex()];
 		}
 	}
 
-	public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, IBarrel barrel)
+	public AxisAlignedBB getAABB(IBlockState state, IBlockAccess world, BlockPos pos, Barrel barrel)
 	{
 		return Block.FULL_BLOCK_AABB;
 	}

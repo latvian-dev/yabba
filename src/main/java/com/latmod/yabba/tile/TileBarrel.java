@@ -1,5 +1,6 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
@@ -9,10 +10,9 @@ import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonObject;
-import com.latmod.yabba.FTBLibIntegration;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
@@ -32,7 +32,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -47,19 +46,22 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 {
 	public static final double BUTTON_SIZE = 0.24D;
 
-	private BarrelTileContainer barrel;
+	private Barrel barrel;
 	private String cachedItemName, cachedItemCount;
 	private float cachedRotationX, cachedRotationY;
 	private int prevItemCount = -1;
 
 	public TileBarrel()
 	{
-		barrel = new BarrelTileContainer()
+		barrel = new Barrel()
 		{
 			@Override
-			public void markBarrelDirty()
+			public void markBarrelDirty(boolean majorChange)
 			{
-				prevItemCount = -1;
+				if (majorChange)
+				{
+					prevItemCount = -1;
+				}
 			}
 
 			@Override
@@ -120,7 +122,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 				new MessageUpdateBarrelItemCount(pos, barrel.getItemCount()).sendToAllAround(world.provider.getDimension(), pos, 300D);
 			}
 
-			if (barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+			if (barrel.getFlag(Barrel.FLAG_REDSTONE_OUT))
 			{
 				world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
 			}
@@ -128,9 +130,9 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 			prevItemCount = barrel.getItemCount();
 		}
 
-		if (!world.isRemote && barrel.getFlag(IBarrel.FLAG_HOPPER) && (world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
+		if (!world.isRemote && barrel.getFlag(Barrel.FLAG_HOPPER) && (world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
 		{
-			boolean ender = barrel.getFlag(IBarrel.FLAG_HOPPER_ENDER);
+			boolean ender = barrel.getFlag(Barrel.FLAG_HOPPER_ENDER);
 			int maxItems = ender ? 64 : 1;
 
 			if (barrel.getItemCount() > 0 && barrel.getUpgradeNBT().getBoolean("HopperDown"))
@@ -213,7 +215,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 	{
 		if (cachedItemName == null)
 		{
-			ItemStack is = barrel.getStackInSlot(0);
+			ItemStack is = barrel.getStoredItemType();
 			cachedItemName = is.isEmpty() ? "" : is.getDisplayName();
 		}
 
@@ -228,11 +230,11 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 		}
 		else if (sneaking)
 		{
-			return infinite ? Integer.toString(barrel.getItemCount()) : (barrel.getItemCount() + " / " + barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0)));
+			return infinite ? Integer.toString(barrel.getItemCount()) : (barrel.getItemCount() + " / " + barrel.getTier().getMaxItems(barrel, barrel.getStoredItemType()));
 		}
 		else if (cachedItemCount == null)
 		{
-			ItemStack is = barrel.getStackInSlot(0);
+			ItemStack is = barrel.getStoredItemType();
 			int max = is.isEmpty() ? 64 : is.getMaxStackSize();
 			int c = barrel.getItemCount();
 
@@ -290,11 +292,11 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 
 	public void onLeftClick(EntityPlayer playerIn)
 	{
-		ItemStack storedItem = barrel.getStackInSlot(0);
-		if (!storedItem.isEmpty() && barrel.getItemCount() == 0 && (barrel.getFlags() & IBarrel.FLAG_LOCKED) == 0)
+		ItemStack storedItem = barrel.getStoredItemType();
+		if (!storedItem.isEmpty() && barrel.getItemCount() == 0 && (barrel.getFlags() & Barrel.FLAG_LOCKED) == 0)
 		{
-			barrel.setStackInSlot(0, ItemStack.EMPTY);
-			barrel.markBarrelDirty();
+			barrel.setStoredItemType(ItemStack.EMPTY, 0);
+			barrel.markBarrelDirty(true);
 			return;
 		}
 
@@ -341,7 +343,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 	{
 		if (deltaClickTime <= 8)
 		{
-			if (!barrel.getStackInSlot(0).isEmpty())
+			if (!barrel.getStoredItemType().isEmpty())
 			{
 				for (int i = 0; i < playerIn.inventory.mainInventory.size(); i++)
 				{
@@ -390,28 +392,28 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 				if (x < BUTTON_SIZE)
 				{
 					IConfigTree tree = new ConfigTree();
-					MinecraftForge.EVENT_BUS.post(new YabbaCreateConfigEvent(this, barrel, tree));
-					FTBLibIntegration.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(StringUtils.translation(getBlockType().getUnlocalizedName() + ".name"), tree)
+					new YabbaCreateConfigEvent(this, barrel, tree).post();
+					FTBLibAPI.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(StringUtils.translation(getBlockType().getUnlocalizedName() + ".name"), tree)
 					{
 						@Override
 						public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
 						{
 							super.saveConfig(sender, nbt, json);
-							barrel.markBarrelDirty();
+							barrel.markBarrelDirty(true);
 						}
 					});
 				}
-				else if (x > 1D - BUTTON_SIZE && !barrel.getFlag(IBarrel.FLAG_IS_CREATIVE))
+				else if (x > 1D - BUTTON_SIZE && !barrel.getFlag(Barrel.FLAG_IS_CREATIVE))
 				{
-					barrel.setFlag(IBarrel.FLAG_LOCKED, !barrel.getFlag(IBarrel.FLAG_LOCKED));
+					barrel.setFlag(Barrel.FLAG_LOCKED, !barrel.getFlag(Barrel.FLAG_LOCKED));
 
-					if (!barrel.getStackInSlot(0).isEmpty() && barrel.getItemCount() == 0 && !barrel.getFlag(IBarrel.FLAG_LOCKED))
+					if (!barrel.getStoredItemType().isEmpty() && barrel.getItemCount() == 0 && !barrel.getFlag(Barrel.FLAG_LOCKED))
 					{
-						barrel.setStackInSlot(0, ItemStack.EMPTY);
+						barrel.setStoredItemType(ItemStack.EMPTY, 0);
 					}
 				}
 
-				barrel.markBarrelDirty();
+				barrel.markBarrelDirty(true);
 				return;
 			}
 
@@ -433,7 +435,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 						heldItem.shrink(1);
 					}
 
-					barrel.markBarrelDirty();
+					barrel.markBarrelDirty(true);
 				}
 			}
 			else
@@ -442,7 +444,7 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 			}
 		}
 
-		barrel.markBarrelDirty();
+		barrel.markBarrelDirty(true);
 	}
 
 	private static float getX(EnumFacing facing, float hitX, float hitZ)
@@ -488,16 +490,16 @@ public class TileBarrel extends TileBase implements ITickable, IDeepStorageUnit
 
 	public boolean canConnectRedstone(@Nullable EnumFacing facing)
 	{
-		return barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT);
+		return barrel.getFlag(Barrel.FLAG_REDSTONE_OUT);
 	}
 
 	public int redstoneOutput(EnumFacing facing)
 	{
-		if (barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+		if (barrel.getFlag(Barrel.FLAG_REDSTONE_OUT))
 		{
 			int stored = barrel.getItemCount();
 			int count = barrel.getUpgradeNBT().getInteger("RedstoneItemCount");
-			return EnumRedstoneCompMode.getMode(barrel.getUpgradeNBT().getByte("RedstoneMode")).matchesCount(stored, count) ? 15 : 0;
+			return EnumRedstoneCompMode.NAME_MAP.get(barrel.getUpgradeNBT().getByte("RedstoneMode")).matchesCount(stored, count) ? 15 : 0;
 		}
 
 		////return !((Boolean)blockState.getValue(POWERED)).booleanValue() ? 0 : (blockState.getValue(FACING) == side ? 15 : 0);

@@ -1,7 +1,7 @@
 package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,7 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 		protected IngredientBarrel()
 		{
 			super(1);
-			getMatchingStacks()[0] = new ItemStack(YabbaCommon.BARREL);
+			getMatchingStacks()[0] = new ItemStack(YabbaItems.BARREL);
 		}
 
 		@Override
@@ -121,14 +121,14 @@ public class RecipeBarrelUpgrade extends IForgeRegistryEntry.Impl<IRecipe> imple
 			}
 		}
 
-		return upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) barrelStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, true);
+		return upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn(barrelStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, true);
 	}
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
 		ItemStack output = ItemHandlerHelper.copyStackWithSize(barrelStack, 1);
-		upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn((IBarrelModifiable) output.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, false);
+		upgradeStack.getCapability(YabbaCommon.UPGRADE_CAPABILITY, null).applyOn(output.getCapability(YabbaCommon.BARREL_CAPABILITY, null), worldObj, upgradeStack, false);
 		return output;
 	}
 

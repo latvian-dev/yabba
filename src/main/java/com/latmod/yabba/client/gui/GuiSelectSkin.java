@@ -3,6 +3,7 @@ package com.latmod.yabba.client.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -64,8 +65,8 @@ public class GuiSelectSkin extends GuiBase
 			int ay = getAY();
 			(gui.isMouseOver(this) ? BUTTON_GREEN : GuiSelectModel.BUTTON_BACKGROUND).draw(ax, ay, width, height, Color4I.NONE);
 
-			gui.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(spriteName);
+			FTBLibClient.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			TextureAtlasSprite sprite = FTBLibClient.MC.getTextureMapBlocks().getAtlasSprite(spriteName);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

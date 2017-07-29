@@ -1,16 +1,15 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.api.IBarrel;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.api.IBarrelModel;
 import com.latmod.yabba.tile.TileBarrel;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -39,18 +38,17 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 			return;
 		}
 
-		IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		Barrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 
 		if (barrel == null)
 		{
 			return;
 		}
 
-		ItemStack stack = barrel.getStackInSlot(0);
-		boolean hasStack = !stack.isEmpty() && (barrel.getItemCount() > 0 || barrel.getFlag(IBarrel.FLAG_LOCKED));
-		Minecraft mc = Minecraft.getMinecraft();
+		ItemStack stack = barrel.getStoredItemType();
+		boolean hasStack = !stack.isEmpty() && (barrel.getItemCount() > 0 || barrel.getFlag(Barrel.FLAG_LOCKED));
 
-		boolean isSneaking = mc.player.isSneaking();
+		boolean isSneaking = FTBLibClient.MC.player.isSneaking();
 
 		if (!hasStack && !isSneaking)
 		{
@@ -73,20 +71,20 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.depthMask(true);
 
-		boolean mouseOver = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos().equals(te.getPos());
+		boolean mouseOver = FTBLibClient.MC.objectMouseOver != null && FTBLibClient.MC.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && FTBLibClient.MC.objectMouseOver.getBlockPos().equals(te.getPos());
 		IBarrelModel model = YabbaClient.getModel(barrel.getModel());
 
-		if (mouseOver || barrel.getFlag(IBarrel.FLAG_ALWAYS_DISPLAY_DATA))
+		if (mouseOver || barrel.getFlag(Barrel.FLAG_ALWAYS_DISPLAY_DATA))
 		{
-			boolean isCreative = barrel.getFlag(IBarrel.FLAG_IS_CREATIVE);
+			boolean isCreative = barrel.getFlag(Barrel.FLAG_IS_CREATIVE);
 			float textDistance = model.getTextDistance();
-			boolean infinite = isCreative || barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY);
+			boolean infinite = isCreative || barrel.getFlag(Barrel.FLAG_INFINITE_CAPACITY);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 
 			if (hasStack)
 			{
-				if (!infinite && !isSneaking && barrel.getFlag(IBarrel.FLAG_DISPLAY_BAR))
+				if (!infinite && !isSneaking && barrel.getFlag(Barrel.FLAG_DISPLAY_BAR))
 				{
 					GlStateManager.pushMatrix();
 					GlStateManager.disableTexture2D();
@@ -97,7 +95,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 					double by = 0.0625D;
 					double bw = 1D - bx * 2D;
 					double bh = 0.15D;
-					double filled = MathHelper.clamp(barrel.getItemCount() / (double) barrel.getTier().getMaxItems(barrel, barrel.getStackInSlot(0)), 0D, 1D);
+					double filled = MathHelper.clamp(barrel.getItemCount() / (double) barrel.getTier().getMaxItems(barrel, barrel.getStoredItemType()), 0D, 1D);
 
 					int a = YabbaConfig.BAR_COLOR_ALPHA.getInt();
 					rect(buffer, bx, by, textDistance, b, bh, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
@@ -136,7 +134,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 			{
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0D, 0D, textDistance);
-				mc.getTextureManager().bindTexture(TEXTURE_SETTINGS);
+				FTBLibClient.MC.getTextureManager().bindTexture(TEXTURE_SETTINGS);
 				GlStateManager.enableTexture2D();
 				GlStateManager.color(1F, 1F, 1F, 1F);
 
@@ -146,7 +144,7 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 				double is = TileBarrel.BUTTON_SIZE;
 				double ix = 1F - is;
 				double iy = 0.5D - is / 2D;
-				double u = isCreative ? 0.5D : (barrel.getFlag(IBarrel.FLAG_LOCKED) ? 0D : 0.5D);
+				double u = isCreative ? 0.5D : (barrel.getFlag(Barrel.FLAG_LOCKED) ? 0D : 0.5D);
 				double v = isCreative ? 0.5D : 0D;
 
 				buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(255, 255, 255, a).endVertex();
@@ -175,23 +173,22 @@ public class RenderBarrel extends TileEntitySpecialRenderer<TileBarrel>
 			GlStateManager.translate(0.5F, 0.5F, model.getItemDistance());
 			GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
-			RenderItem itemRender = mc.getRenderItem();
-			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+			FTBLibClient.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			FTBLibClient.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 			GlStateManager.enableRescaleNormal();
 			GlStateManager.enableAlpha();
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			IBakedModel bakedmodel = itemRender.getItemModelWithOverrides(stack, null, mc.player);
+			IBakedModel bakedmodel = FTBLibClient.MC.getRenderItem().getItemModelWithOverrides(stack, null, FTBLibClient.MC.player);
 			bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-			itemRender.renderItem(stack, bakedmodel);
+			FTBLibClient.MC.getRenderItem().renderItem(stack, bakedmodel);
 			GlStateManager.disableAlpha();
 			GlStateManager.disableRescaleNormal();
 			GlStateManager.disableLighting();
-			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+			FTBLibClient.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			FTBLibClient.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 
 			GlStateManager.popMatrix();
 		}

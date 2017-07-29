@@ -1,13 +1,10 @@
 package com.latmod.yabba.util;
 
-import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.api.IUpgrade;
 import com.latmod.yabba.api.Tier;
+import com.latmod.yabba.item.YabbaItems;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 
@@ -48,7 +45,7 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 
 	public ItemStack item()
 	{
-		return new ItemStack(YabbaCommon.UPGRADE, 1, metadata);
+		return new ItemStack(YabbaItems.UPGRADE, 1, metadata);
 	}
 
 	public static EnumUpgrade getFromMeta(int meta)
@@ -65,7 +62,7 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 	}
 
 	@Override
-	public boolean applyOn(IBarrelModifiable barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
+	public boolean applyOn(Barrel barrel, World worldIn, ItemStack upgradeItem, boolean simulate)
 	{
 		switch (this)
 		{
@@ -107,11 +104,11 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 			}
 			case NETHER_STAR_UPGRADE:
 			{
-				if (!barrel.getFlag(IBarrel.FLAG_INFINITE_CAPACITY))
+				if (!barrel.getFlag(Barrel.FLAG_INFINITE_CAPACITY))
 				{
 					if (!simulate)
 					{
-						barrel.setFlag(IBarrel.FLAG_INFINITE_CAPACITY, true);
+						barrel.setFlag(Barrel.FLAG_INFINITE_CAPACITY, true);
 						barrel.addUpgradeName(NETHER_STAR_UPGRADE.uname);
 					}
 					return true;
@@ -120,14 +117,14 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 			}
 			case CREATIVE:
 			{
-				if (!barrel.getFlag(IBarrel.FLAG_IS_CREATIVE) && !barrel.getStackInSlot(0).isEmpty())
+				if (!barrel.getFlag(Barrel.FLAG_IS_CREATIVE) && !barrel.getStoredItemType().isEmpty())
 				{
 					if (!simulate)
 					{
 						barrel.setItemCount(1000000000);
-						barrel.setFlag(IBarrel.FLAG_IS_CREATIVE, true);
-						barrel.setFlag(IBarrel.FLAG_INFINITE_CAPACITY, true);
-						barrel.setFlag(IBarrel.FLAG_LOCKED, false);
+						barrel.setFlag(Barrel.FLAG_IS_CREATIVE, true);
+						barrel.setFlag(Barrel.FLAG_INFINITE_CAPACITY, true);
+						barrel.setFlag(Barrel.FLAG_LOCKED, false);
 						barrel.addUpgradeName(CREATIVE.uname);
 					}
 					return true;
@@ -136,11 +133,11 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 			}
 			case OBSIDIAN_SHELL:
 			{
-				if (!barrel.getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
+				if (!barrel.getFlag(Barrel.FLAG_OBSIDIAN_SHELL))
 				{
 					if (!simulate)
 					{
-						barrel.setFlag(IBarrel.FLAG_OBSIDIAN_SHELL, true);
+						barrel.setFlag(Barrel.FLAG_OBSIDIAN_SHELL, true);
 						barrel.addUpgradeName(OBSIDIAN_SHELL.uname);
 					}
 					return true;
@@ -149,13 +146,13 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 			}
 			case REDSTONE_OUT:
 			{
-				if (!barrel.getFlag(IBarrel.FLAG_REDSTONE_OUT))
+				if (!barrel.getFlag(Barrel.FLAG_REDSTONE_OUT))
 				{
 					if (!simulate)
 					{
-						barrel.setFlag(IBarrel.FLAG_REDSTONE_OUT, true);
-						barrel.setUpgradeData("RedstoneMode", new NBTTagByte((byte) 0));
-						barrel.setUpgradeData("RedstoneItemCount", new NBTTagInt(0));
+						barrel.setFlag(Barrel.FLAG_REDSTONE_OUT, true);
+						barrel.getUpgradeNBT().setByte("RedstoneMode", (byte) 0);
+						barrel.getUpgradeNBT().setInteger("RedstoneItemCount", 0);
 						barrel.addUpgradeName(REDSTONE_OUT.uname);
 					}
 					return true;
@@ -164,14 +161,14 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 			}
 			case HOPPER:
 			{
-				if (!barrel.getFlag(IBarrel.FLAG_HOPPER))
+				if (!barrel.getFlag(Barrel.FLAG_HOPPER))
 				{
 					if (!simulate)
 					{
-						barrel.setFlag(IBarrel.FLAG_HOPPER, true);
-						barrel.setUpgradeData("HopperUp", new NBTTagByte((byte) 1));
-						barrel.setUpgradeData("HopperDown", new NBTTagByte((byte) 1));
-						barrel.setUpgradeData("HopperCollect", new NBTTagByte((byte) 0));
+						barrel.setFlag(Barrel.FLAG_HOPPER, true);
+						barrel.getUpgradeNBT().setBoolean("HopperUp", true);
+						barrel.getUpgradeNBT().setBoolean("HopperDown", true);
+						barrel.getUpgradeNBT().setBoolean("HopperCollect", false);
 						barrel.addUpgradeName(HOPPER.uname);
 					}
 					return true;
@@ -180,11 +177,11 @@ public enum EnumUpgrade implements IUpgrade, IStringSerializable
 			}
 			case VOID:
 			{
-				if (!barrel.getFlag(IBarrel.FLAG_VOID_ITEMS))
+				if (!barrel.getFlag(Barrel.FLAG_VOID_ITEMS))
 				{
 					if (!simulate)
 					{
-						barrel.setFlag(IBarrel.FLAG_VOID_ITEMS, true);
+						barrel.setFlag(Barrel.FLAG_VOID_ITEMS, true);
 						barrel.addUpgradeName(VOID.uname);
 					}
 					return true;

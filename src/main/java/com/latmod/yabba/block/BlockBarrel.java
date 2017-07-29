@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
 import com.google.common.base.Preconditions;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.IBarrel;
-import com.latmod.yabba.api.IBarrelModifiable;
+import com.latmod.yabba.api.Barrel;
 import com.latmod.yabba.api.Tier;
 import com.latmod.yabba.item.ItemBlockBarrel;
+import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.MapColor;
@@ -83,8 +83,8 @@ public class BlockBarrel extends BlockBarrelBase
 	{
 		if (tile instanceof TileBarrel)
 		{
-			IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-			((IBarrelModifiable) itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
+			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null).copyFrom(barrel);
 		}
 	}
 
@@ -93,16 +93,16 @@ public class BlockBarrel extends BlockBarrelBase
 	{
 		if (tile instanceof TileBarrel && stack.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
 		{
-			IBarrelModifiable barrel = (IBarrelModifiable) tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 			barrel.copyFrom(stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null));
 			tile.markDirty();
 		}
 	}
 
-	public ItemStack createStack(String model, String skin, Tier tier)
+	public static ItemStack createStack(String model, String skin, Tier tier)
 	{
-		ItemStack stack = new ItemStack(this);
-		IBarrelModifiable barrel = (IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		ItemStack stack = new ItemStack(YabbaItems.BARREL);
+		Barrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 		Preconditions.checkNotNull(barrel);
 		barrel.setTier(tier);
 		barrel.setFlags(0);
@@ -119,9 +119,9 @@ public class BlockBarrel extends BlockBarrelBase
 
 		if (te != null && te.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
 		{
-			IBarrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			Barrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 			ItemStack stack = createStack(barrel.getModel(), barrel.getSkin(), barrel.getTier());
-			((IBarrelModifiable) stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null)).copyFrom(barrel);
+			stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null).copyFrom(barrel);
 			return stack;
 		}
 
@@ -199,7 +199,7 @@ public class BlockBarrel extends BlockBarrelBase
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(IBarrel.FLAG_OBSIDIAN_SHELL))
+		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(Barrel.FLAG_OBSIDIAN_SHELL))
 		{
 			return Float.MAX_VALUE;
 		}
@@ -308,7 +308,7 @@ public class BlockBarrel extends BlockBarrelBase
 
 		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
 		{
-			IBarrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
 			return YabbaCommon.getModelData(barrel.getModel()).getAABB(state, world, pos, barrel);
 		}
 

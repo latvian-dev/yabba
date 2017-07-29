@@ -59,7 +59,7 @@ public class GuiSelectModel extends GuiBase
 
 			if (!model.isEmpty())
 			{
-				GuiHelper.drawItem(gui.mc.getRenderItem(), YabbaClient.STACKS_FOR_GUI[index][skin], ax + 1D, ay + 1D, 2D, 2D, false);
+				GuiHelper.drawItem(YabbaClient.STACKS_FOR_GUI[index][skin], ax + 1D, ay + 1D, 2D, 2D, false, Color4I.NONE);
 			}
 		}
 	}
