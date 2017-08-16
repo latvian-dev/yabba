@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shapeless",
 	"group": "yabba:upgrade_redstone_out",
-	"result": {"item": "upgrade", "data": 12},
+	"result": {"item": "upgrade_redstone_out"},
 	"ingredients": [
 		{"item": "#blank_upgrade"},
 		{"item": "minecraft:comparator"}

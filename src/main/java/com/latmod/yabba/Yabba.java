@@ -1,9 +1,8 @@
 package com.latmod.yabba;
 
-import com.latmod.yabba.block.BlockBarrel;
+import com.latmod.yabba.block.BlockStorageBarrelBase;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.net.YabbaNetHandler;
-import com.latmod.yabba.util.EnumUpgrade;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -35,7 +34,7 @@ public class Yabba
 		@Override
 		public ItemStack getTabIconItem()
 		{
-			return new ItemStack(YabbaItems.UPGRADE, 1, EnumUpgrade.BLANK.metadata);
+			return new ItemStack(YabbaItems.UPGRADE_BLANK);
 		}
 	};
 
@@ -55,6 +54,6 @@ public class Yabba
 	@Mod.EventHandler
 	public void serverStopped(FMLServerStoppedEvent event)
 	{
-		BlockBarrel.LAST_CLICK_MAP.clear();
+		BlockStorageBarrelBase.LAST_CLICK_MAP.clear();
 	}
 }

@@ -2,25 +2,26 @@ package com.latmod.yabba.net;
 
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.latmod.yabba.item.ItemHammer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * @author LatvianModder
  */
 public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 {
-	private String modelId;
+	private ResourceLocation modelId;
 
 	public MessageSelectModel()
 	{
 	}
 
-	public MessageSelectModel(String id)
+	public MessageSelectModel(ResourceLocation id)
 	{
 		modelId = id;
 	}
@@ -34,13 +35,13 @@ public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		modelId = ByteBufUtils.readUTF8String(buf);
+		modelId = NetUtils.readResourceLocation(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		ByteBufUtils.writeUTF8String(buf, modelId);
+		NetUtils.writeResourceLocation(buf, modelId);
 	}
 
 	@Override

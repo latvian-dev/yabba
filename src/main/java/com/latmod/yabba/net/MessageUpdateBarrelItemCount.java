@@ -3,8 +3,7 @@ package com.latmod.yabba.net;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.Barrel;
+import com.latmod.yabba.tile.TileItemBarrel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -53,9 +52,9 @@ public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateB
 	{
 		TileEntity tile = player.world.getTileEntity(message.pos);
 
-		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+		if (tile instanceof TileItemBarrel)
 		{
-			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+			TileItemBarrel barrel = (TileItemBarrel) tile;
 			barrel.setItemCount(message.itemCount);
 			barrel.clearCachedData();
 		}

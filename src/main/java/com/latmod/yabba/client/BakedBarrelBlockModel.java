@@ -1,9 +1,7 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
-import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.Barrel;
-import com.latmod.yabba.block.BlockBarrel;
+import com.latmod.yabba.block.BlockStorageBarrelBase;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -32,16 +30,16 @@ public class BakedBarrelBlockModel implements IBakedModel
 {
 	private final TextureAtlasSprite particle;
 	private final Map<BarrelModelKey, BarrelModelVariant> map;
+	private final BarrelModelVariant defaultModelVariant;
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(new ArrayList<>())
 	{
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
 		{
-			Barrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-			BarrelModelVariant v = map.get(new BarrelModelKey(barrel.getModel(), barrel.getSkin()));
+			BarrelModelVariant v = stack.hasTagCompound() ? map.get(BarrelModelKey.get(stack.getTagCompound().getString("Model"), stack.getTagCompound().getString("Skin"))) : defaultModelVariant;
 			if (v == null)
 			{
-				v = map.get(BarrelModelKey.DEFAULT);
+				v = defaultModelVariant;
 			}
 
 			return v == null ? originalModel : v.itemModel;
@@ -52,19 +50,19 @@ public class BakedBarrelBlockModel implements IBakedModel
 	{
 		particle = p;
 		map = m;
+		defaultModelVariant = map.get(BarrelModelKey.DEFAULT);
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(@Nullable IBlockState state0, @Nullable EnumFacing side, long rand)
+	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
-		if (state0 instanceof IExtendedBlockState)
+		if (state instanceof IExtendedBlockState)
 		{
-			IExtendedBlockState state = (IExtendedBlockState) state0;
-			BarrelModelVariant value = map.get(new BarrelModelKey(state.getValue(BlockBarrel.MODEL), state.getValue(BlockBarrel.SKIN)));
+			BarrelModelVariant value = map.get(BarrelModelKey.get((IExtendedBlockState) state));
 
 			if (value != null)
 			{
-				return value.getQuads(state.getValue(BlockBarrel.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
+				return value.getQuads(state.getValue(BlockStorageBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
 			}
 		}
 

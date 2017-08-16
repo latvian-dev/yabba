@@ -4,31 +4,23 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
-import com.latmod.yabba.api.Barrel;
-import net.minecraft.tileentity.TileEntity;
+import com.latmod.yabba.tile.TileBarrelBase;
 
 /**
  * @author LatvianModder
  */
 public class YabbaCreateConfigEvent extends YabbaEvent
 {
-	private final TileEntity tile;
-	private final Barrel barrel;
+	private final TileBarrelBase barrel;
 	private final IConfigTree settings;
 
-	public YabbaCreateConfigEvent(TileEntity te, Barrel b, IConfigTree m)
+	public YabbaCreateConfigEvent(TileBarrelBase b, IConfigTree m)
 	{
-		tile = te;
 		barrel = b;
 		settings = m;
 	}
 
-	public TileEntity getTile()
-	{
-		return tile;
-	}
-
-	public Barrel getBarrel()
+	public TileBarrelBase getBarrel()
 	{
 		return barrel;
 	}

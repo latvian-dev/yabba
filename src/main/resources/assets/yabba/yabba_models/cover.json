@@ -1,0 +1,18 @@
+{
+	"model": [
+		{
+			"shape": "cube",
+			"texture": "skin",
+			"from": [0, 0, 0.875],
+			"size": [1, 1, 0.125]
+		}
+	],
+	"item_model": [
+		{
+			"shape": "cube",
+			"texture": "skin",
+			"center": [0, 0, 0.5],
+			"size": [1, 1, 0.125]
+		}
+	]
+}

@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"group": "yabba:upgrade_obsidian_shell",
-	"result": {"item": "upgrade", "data": 11},
+	"result": {"item": "upgrade_obsidian_shell"},
 	"pattern": [
 		" I ",
 		"IUI",

@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectModel;
 
@@ -19,33 +19,33 @@ import java.util.List;
  */
 public class GuiSelectModel extends GuiBase
 {
-	public static final IDrawableObject GUI_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x22000000)).setLineColor(Color4I.BLACK).setRoundEdges(true);
+	public static final IDrawableObject GUI_BACKGROUND = new TexturelessRectangle(0x22000000).setLineColor(Color4I.BLACK).setRoundEdges(true);
 	public static final IDrawableObject BUTTON_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(Color4I.BLACK);
 
 	private class ButtonModel extends Button
 	{
-		private final String model;
+		private final BarrelModel model;
 		private final int index;
 
 		public ButtonModel(int i)
 		{
 			super(2 + (i % 5) * 35, 2 + (i / 5) * 35, 34, 34);
 			index = i;
-			model = index >= YabbaClient.ALL_MODELS.size() ? "" : YabbaClient.ALL_MODELS.get(index).getName();
+			model = index >= YabbaClient.ALL_MODELS.size() ? null : YabbaClient.ALL_MODELS.get(index);
 
-			if (!model.isEmpty())
+			if (model != null)
 			{
-				setTitle(StringUtils.translate("yabba.model." + model));
+				setTitle(model.toString());
 			}
 		}
 
 		@Override
 		public void onClicked(GuiBase gui, IMouseButton button)
 		{
-			if (!model.isEmpty())
+			if (model != null)
 			{
 				GuiHelper.playClickSound();
-				new MessageSelectModel(model).sendToServer();
+				new MessageSelectModel(model.id).sendToServer();
 				gui.closeGui();
 			}
 		}
@@ -57,7 +57,7 @@ public class GuiSelectModel extends GuiBase
 			int ay = getAY();
 			BUTTON_BACKGROUND.draw(ax, ay, width, height, Color4I.NONE);
 
-			if (!model.isEmpty())
+			if (model != null)
 			{
 				GuiHelper.drawItem(YabbaClient.STACKS_FOR_GUI[index][skin], ax + 1D, ay + 1D, 2D, 2D, false, Color4I.NONE);
 			}

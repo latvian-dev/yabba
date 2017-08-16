@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"group": "yabba:upgrade_blank",
-	"result": {"item": "upgrade", "data": 0, "count": 16},
+	"result": {"item": "upgrade_blank", "count": 16},
 	"pattern": [
 		"SSS",
 		"ICI",

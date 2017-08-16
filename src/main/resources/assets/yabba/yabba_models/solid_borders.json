@@ -1,0 +1,19 @@
+{
+	"textures": {
+		"overlay": "north=yabba:blocks/barrel_solid_borders_window,all=yabba:blocks/barrel_solid_borders"
+	},
+	"model": [
+		{"add": "cube", "from": [1, 16, 1], "to": [15, 16, 15], "faces": "up"},
+		{"add": "cube", "from": [1, 0, 1], "to": [15, 0, 15], "faces": "down"},
+		{"add": "cube", "from": [0, 1, 1], "to": [0, 15, 15], "faces": "west"},
+		{"add": "cube", "from": [16, 1, 1], "to": [16, 15, 15], "faces": "east"},
+		{"add": "cube", "from": [1, 1, 16], "to": [15, 15, 16], "faces": "south"},
+		{"add": "inverted_cube", "from": [4, 4, 0], "to": [12, 12, 1]},
+		{"add": "cube", "from": [1, 1, 0], "to": [15, 4, 0], "faces": "north"},
+		{"add": "cube", "from": [1, 12, 0], "to": [15, 15, 0], "faces": "north"},
+		{"add": "cube", "from": [1, 4, 0], "to": [4, 12, 0], "faces": "north"},
+		{"add": "cube", "from": [12, 4, 0], "to": [15, 12, 0], "faces": "north"},
+		{"texture": "overlay"},
+		{"add": "cube", "from": [0, 0, 0], "to": [16, 16, 16]}
+	]
+}

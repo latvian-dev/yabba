@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"group": "yabba:upgrade_tier",
-	"result": {"item": "upgrade", "data": 2},
+	"result": {"item": "upgrade_gold_tier"},
 	"pattern": [
 		"III",
 		"IUI",

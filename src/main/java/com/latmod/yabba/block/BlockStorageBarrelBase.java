@@ -1,15 +1,13 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
-import com.google.common.base.Preconditions;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.Barrel;
-import com.latmod.yabba.api.Tier;
+import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.item.YabbaItems;
-import com.latmod.yabba.tile.TileBarrel;
+import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -28,10 +26,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -48,16 +46,67 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class BlockBarrel extends BlockBarrelBase
+public class BlockStorageBarrelBase extends BlockBarrelBase
 {
 	public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
 	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-	public static UnlistedPropertyString MODEL = UnlistedPropertyString.create("model", LMUtils.alwaysTruePredicate());
-	public static UnlistedPropertyString SKIN = UnlistedPropertyString.create("skin", LMUtils.alwaysTruePredicate());
-
-	public BlockBarrel()
+	public static final IUnlistedProperty<ResourceLocation> MODEL = new IUnlistedProperty<ResourceLocation>()
 	{
-		super("barrel", Material.WOOD, MapColor.WOOD);
+		@Override
+		public String getName()
+		{
+			return "model";
+		}
+
+		@Override
+		public boolean isValid(ResourceLocation value)
+		{
+			return true;
+		}
+
+		@Override
+		public Class<ResourceLocation> getType()
+		{
+			return ResourceLocation.class;
+		}
+
+		@Override
+		public String valueToString(ResourceLocation value)
+		{
+			return value.toString();
+		}
+	};
+
+	public static final IUnlistedProperty<IBlockState> SKIN = new IUnlistedProperty<IBlockState>()
+	{
+		@Override
+		public String getName()
+		{
+			return "skin";
+		}
+
+		@Override
+		public boolean isValid(IBlockState value)
+		{
+			return true;
+		}
+
+		@Override
+		public Class<IBlockState> getType()
+		{
+			return IBlockState.class;
+		}
+
+		@Override
+		public String valueToString(IBlockState value)
+		{
+			return CommonUtils.getNameFromState(value);
+		}
+	};
+
+	public BlockStorageBarrelBase(String id)
+	{
+		super(id, Material.WOOD, MapColor.WOOD);
 		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 		setHardness(2F);
 	}
@@ -79,66 +128,10 @@ public class BlockBarrel extends BlockBarrelBase
 	}
 
 	@Override
-	public void dropItem(ItemStack itemStack, @Nullable TileEntity tile)
-	{
-		if (tile instanceof TileBarrel)
-		{
-			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-			itemStack.getCapability(YabbaCommon.BARREL_CAPABILITY, null).copyFrom(barrel);
-		}
-	}
-
-	@Override
-	public void placeFromItem(ItemStack stack, @Nullable TileEntity tile)
-	{
-		if (tile instanceof TileBarrel && stack.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-		{
-			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-			barrel.copyFrom(stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null));
-			tile.markDirty();
-		}
-	}
-
-	public static ItemStack createStack(String model, String skin, Tier tier)
-	{
-		ItemStack stack = new ItemStack(YabbaItems.BARREL);
-		Barrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-		Preconditions.checkNotNull(barrel);
-		barrel.setTier(tier);
-		barrel.setFlags(0);
-		barrel.setModel(model);
-		barrel.setSkin(skin);
-		barrel.setItemCount(0);
-		return stack;
-	}
-
-	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-	{
-		TileEntity te = world.getTileEntity(pos);
-
-		if (te != null && te.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
-		{
-			Barrel barrel = te.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-			ItemStack stack = createStack(barrel.getModel(), barrel.getSkin(), barrel.getTier());
-			stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null).copyFrom(barrel);
-			return stack;
-		}
-
-		return super.getPickBlock(state, target, world, pos, player);
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		list.add(createStack(YabbaCommon.DEFAULT_MODEL_ID, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD));
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileBarrel();
 	}
 
 	@Override
@@ -172,9 +165,9 @@ public class BlockBarrel extends BlockBarrelBase
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 
-		if (tile instanceof TileBarrel)
+		if (tile instanceof TileItemBarrel)
 		{
-			return ((TileBarrel) tile).createState(state);
+			return ((TileItemBarrel) tile).createState(state);
 		}
 
 		return state;
@@ -195,16 +188,13 @@ public class BlockBarrel extends BlockBarrelBase
 	}
 
 	@Override
-	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
+	public void dropItem(ItemStack itemStack, @Nullable TileEntity tile)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+	}
 
-		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null) && tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null).getFlag(Barrel.FLAG_OBSIDIAN_SHELL))
-		{
-			return Float.MAX_VALUE;
-		}
-
-		return 8F;
+	@Override
+	public void placeFromItem(ItemStack stack, @Nullable TileEntity tile)
+	{
 	}
 
 	@Override
@@ -213,6 +203,28 @@ public class BlockBarrel extends BlockBarrelBase
 		//IBlockState parent = state.getValue(SKIN).getParentState();
 		//return parent.getBlock().canRenderInLayer(parent, layer);
 		return layer == BlockRenderLayer.CUTOUT;
+	}
+
+	public ItemStack createStack(ResourceLocation model, IBlockState skin, Tier tier)
+	{
+		TileBarrelBase tile = new TileBarrelBase();
+		tile.setModel(model);
+		tile.setSkin(skin);
+		tile.setTier(tier);
+		return tile.createStack(this);
+	}
+
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	{
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+		if (tileEntity instanceof TileBarrelBase)
+		{
+			return ((TileBarrelBase) tileEntity).createStack(this);
+		}
+
+		return super.getItem(worldIn, pos, state);
 	}
 
 	@Override
@@ -230,7 +242,7 @@ public class BlockBarrel extends BlockBarrelBase
 			return;
 		}
 
-		Long l = BlockBarrel.LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+		Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
 		long time = worldIn.getTotalWorldTime();
 
 		if (l != null && (time - l) < 3)
@@ -238,13 +250,13 @@ public class BlockBarrel extends BlockBarrelBase
 			return;
 		}
 
-		BlockBarrel.LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+		LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
 
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-		if (tileEntity instanceof TileBarrel)
+		if (tileEntity instanceof TileItemBarrel)
 		{
-			((TileBarrel) tileEntity).onLeftClick(playerIn);
+			((TileItemBarrel) tileEntity).onLeftClick(playerIn);
 		}
 	}
 
@@ -252,7 +264,7 @@ public class BlockBarrel extends BlockBarrelBase
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if (side != BlockBarrel.normalizeFacing(state) && (heldItem.isEmpty() || heldItem.getItem() instanceof ItemBlockBarrel))
+		if (side != normalizeFacing(state) && (heldItem.isEmpty() || heldItem.getItem() instanceof ItemBlockBarrel))
 		{
 			return false;
 		}
@@ -261,13 +273,13 @@ public class BlockBarrel extends BlockBarrelBase
 		{
 			TileEntity tile = worldIn.getTileEntity(pos);
 
-			if (tile instanceof TileBarrel)
+			if (tile instanceof TileItemBarrel)
 			{
 				Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
 				long time = worldIn.getTotalWorldTime();
-				((TileBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
+				((TileItemBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
 
-				if (heldItem.isEmpty() || !heldItem.hasCapability(YabbaCommon.UPGRADE_CAPABILITY, null))
+				if (heldItem.isEmpty() || !(heldItem.getItem() instanceof IUpgrade))
 				{
 					LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
 				}
@@ -281,7 +293,7 @@ public class BlockBarrel extends BlockBarrelBase
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileBarrel && ((TileBarrel) tile).canConnectRedstone(side);
+		return tile instanceof TileItemBarrel && ((TileItemBarrel) tile).canConnectRedstone(side);
 	}
 
 	@Override
@@ -289,7 +301,7 @@ public class BlockBarrel extends BlockBarrelBase
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = blockAccess.getTileEntity(pos);
-		return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
+		return tile instanceof TileItemBarrel ? ((TileItemBarrel) tile).redstoneOutput(side) : 0;
 	}
 
 	@Override
@@ -297,7 +309,7 @@ public class BlockBarrel extends BlockBarrelBase
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = blockAccess.getTileEntity(pos);
-		return tile instanceof TileBarrel ? ((TileBarrel) tile).redstoneOutput(side) : 0;
+		return tile instanceof TileItemBarrel ? ((TileItemBarrel) tile).redstoneOutput(side) : 0;
 	}
 
 	@Override
@@ -306,12 +318,24 @@ public class BlockBarrel extends BlockBarrelBase
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile != null && tile.hasCapability(YabbaCommon.BARREL_CAPABILITY, null))
+		if (tile instanceof TileBarrelBase)
 		{
-			Barrel barrel = tile.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
-			return YabbaCommon.getModelData(barrel.getModel()).getAABB(state, world, pos, barrel);
+			return YabbaCommon.getModelData(((TileBarrelBase) tile).model).getAABB(state);
 		}
 
 		return FULL_BLOCK_AABB;
+	}
+
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+
+		if (tile instanceof TileBarrelBase && ((TileBarrelBase) tile).hasUpgrade(YabbaItems.UPGRADE_OBSIDIAN_SHELL))
+		{
+			return Float.MAX_VALUE;
+		}
+
+		return 8F;
 	}
 }

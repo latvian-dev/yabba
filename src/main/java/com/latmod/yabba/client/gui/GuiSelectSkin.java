@@ -3,7 +3,7 @@ package com.latmod.yabba.client.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -12,8 +12,7 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.latmod.yabba.api.IBarrelSkin;
+import com.latmod.yabba.client.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectSkin;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -32,29 +31,29 @@ import java.util.List;
  */
 public class GuiSelectSkin extends GuiBase
 {
-	public static final IDrawableObject PURPLE_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x228060FF)).setLineColor(Color4I.BLACK);
-	public static final IDrawableObject BUTTON_GREEN = new TexturelessRectangle(Color4I.NONE).setLineColor(new Color4I(false, 0xFF007F0E));
+	public static final IDrawableObject PURPLE_BACKGROUND = new TexturelessRectangle(0x228060FF).setLineColor(Color4I.BLACK);
+	public static final IDrawableObject BUTTON_GREEN = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF007F0E);
 
 	private class Skin extends Button
 	{
-		private final IBarrelSkin skin;
-		private final String spriteName;
+		private final BarrelSkin skin;
 		private final String searchText;
+		private final TextureAtlasSprite sprite;
 
-		private Skin(IBarrelSkin s)
+		private Skin(BarrelSkin s)
 		{
 			super(0, 0, 18, 18);
 			skin = s;
-			String t = StringUtils.translate(s.getUnlocalizedName());
+			String t = s.toString();
 			setTitle(t);
-			spriteName = String.valueOf(skin.getTextures().getTexture(EnumFacing.NORTH));
 			searchText = t.replace(" ", "").toLowerCase();
+			sprite = skin.iconSet.getSpriteSet(ClientUtils.DEFAULT_TEXTURE_GETTER).get(EnumFacing.NORTH);
 		}
 
 		@Override
 		public void onClicked(GuiBase gui, IMouseButton button)
 		{
-			new MessageSelectSkin(skin.getName()).sendToServer();
+			new MessageSelectSkin(skin.state).sendToServer();
 			gui.closeGui();
 		}
 
@@ -65,8 +64,7 @@ public class GuiSelectSkin extends GuiBase
 			int ay = getAY();
 			(gui.isMouseOver(this) ? BUTTON_GREEN : GuiSelectModel.BUTTON_BACKGROUND).draw(ax, ay, width, height, Color4I.NONE);
 
-			FTBLibClient.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			TextureAtlasSprite sprite = FTBLibClient.MC.getTextureMapBlocks().getAtlasSprite(spriteName);
+			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -168,7 +166,7 @@ public class GuiSelectSkin extends GuiBase
 		scrollBar.background = PURPLE_BACKGROUND;
 		scrollBar.slider = PURPLE_BACKGROUND;
 
-		for (IBarrelSkin s : YabbaClient.ALL_SKINS)
+		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{
 			allSkins.add(new Skin(s));
 		}

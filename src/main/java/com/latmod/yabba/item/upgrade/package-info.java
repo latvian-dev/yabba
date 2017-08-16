@@ -1,3 +1,3 @@
 @mcp.MethodsReturnNonnullByDefault
 @javax.annotation.ParametersAreNonnullByDefault
-package com.latmod.yabba.api;
+package com.latmod.yabba.item.upgrade;

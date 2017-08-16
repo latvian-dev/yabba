@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shapeless",
 	"group": "yabba:barrel",
-	"result": {"item": "barrel"},
+	"result": {"item": "item_barrel"},
 	"ingredients": [
 		{"item": "#blank_upgrade"},
 		{"item": "#chest"}

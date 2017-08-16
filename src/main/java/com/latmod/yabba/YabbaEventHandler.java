@@ -3,20 +3,13 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.latmod.yabba.api.Barrel;
-import com.latmod.yabba.api.BarrelModelCommonData;
+import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
-import com.latmod.yabba.api.events.YabbaModelDataEvent;
-import com.latmod.yabba.api.events.YabbaSkinsEvent;
-import com.latmod.yabba.util.EnumRedstoneCompMode;
-import forestry.api.arboriculture.EnumVanillaWoodType;
-import forestry.api.arboriculture.IWoodType;
-import forestry.api.arboriculture.TreeManager;
-import forestry.api.arboriculture.WoodBlockKind;
-import net.minecraftforge.fml.common.Optional;
+import com.latmod.yabba.item.YabbaItems;
+import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
+import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -34,56 +27,41 @@ public class YabbaEventHandler
 	@SubscribeEvent
 	public static void configLoaded(ConfigLoadedEvent event)
 	{
-		Barrel.clearCache();
-	}
-
-	@SubscribeEvent
-	public static void addModelData(YabbaModelDataEvent event)
-	{
-		YabbaModelDataEvent.YabbaModelDataRegistry reg = event.getRegistry();
-
-		reg.addModelData("cover", new BarrelModelCommonData.Panel(0.125F));
-		reg.addModelData("panel", new BarrelModelCommonData.Panel(0.25F));
-		reg.addModelData("slab", new BarrelModelCommonData.Panel(0.5F));
+		TileItemBarrel.clearCache();
 	}
 
 	@SubscribeEvent
 	public static void createConfig(YabbaCreateConfigEvent event)
 	{
-		Barrel barrel = event.getBarrel();
+		TileBarrelBase barrel = event.getBarrel();
 
 		String group = Yabba.MOD_ID;
-		event.add(group, "disable_ore_items", PropertyBool.create(false, () -> barrel.getFlag(Barrel.FLAG_DISABLE_ORE_DICTIONARY), v -> barrel.setFlag(Barrel.FLAG_DISABLE_ORE_DICTIONARY, v)));
-		event.add(group, "always_display_data", PropertyBool.create(false, () -> barrel.getFlag(Barrel.FLAG_ALWAYS_DISPLAY_DATA), v -> barrel.setFlag(Barrel.FLAG_ALWAYS_DISPLAY_DATA, v)));
-		event.add(group, "display_bar", PropertyBool.create(false, () -> barrel.getFlag(Barrel.FLAG_DISPLAY_BAR), v -> barrel.setFlag(Barrel.FLAG_DISPLAY_BAR, v)));
 
-		if (barrel.getFlag(Barrel.FLAG_REDSTONE_OUT))
+		if (barrel instanceof TileItemBarrel)
+		{
+			event.add(group, "disable_ore_items", ((TileItemBarrel) barrel).disableOreItems);
+		}
+
+		event.add(group, "always_display_data", barrel.alwaysDisplayData);
+		event.add(group, "display_bar", barrel.displayBar);
+
+		DataStorage data = barrel.getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
+		if (data instanceof ItemUpgradeRedstone.Data)
 		{
 			group = Yabba.MOD_ID + ".redstone";
-			event.add(group, "mode", PropertyEnum.create(EnumRedstoneCompMode.NAME_MAP, () -> EnumRedstoneCompMode.NAME_MAP.get(barrel.getUpgradeNBT().getByte("RedstoneMode")), v -> barrel.getUpgradeNBT().setByte("RedstoneMode", (byte) v.ordinal())));
-			event.add(group, "item_count", PropertyInt.create(0, 0, Integer.MAX_VALUE, () -> barrel.getUpgradeNBT().getInteger("RedstoneItemCount"), v -> barrel.getUpgradeNBT().setInteger("RedstoneItemCount", v)));
+			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
+			event.add(group, "mode", data1.mode);
+			event.add(group, "count", data1.count);
 		}
 
-		if (barrel.getFlag(Barrel.FLAG_HOPPER))
+		data = barrel.getUpgradeData(YabbaItems.UPGRADE_HOPPER);
+		if (data instanceof ItemUpgradeHopper.Data)
 		{
 			group = Yabba.MOD_ID + ".hopper";
-			event.add(group, "up", PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperUp"), v -> barrel.getUpgradeNBT().setBoolean("HopperUp", v)));
-			event.add(group, "down", PropertyBool.create(true, () -> barrel.getUpgradeNBT().getBoolean("HopperDown"), v -> barrel.getUpgradeNBT().setBoolean("HopperDown", v)));
-			event.add(group, "collect", PropertyBool.create(false, () -> barrel.getUpgradeNBT().getBoolean("HopperCollect"), v -> barrel.getUpgradeNBT().setBoolean("HopperCollect", v)));
-		}
-	}
-
-	@SubscribeEvent
-	@Optional.Method(modid = "forestry")
-	public static void onRegistryEvent(YabbaSkinsEvent event)
-	{
-		for (IWoodType type : TreeManager.woodAccess.getRegisteredWoodTypes())
-		{
-			if (!(type instanceof EnumVanillaWoodType))
-			{
-				event.getRegistry().addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.PLANKS, false), "all=" + type.getPlankTexture());
-				event.getRegistry().addSkin(TreeManager.woodAccess.getBlock(type, WoodBlockKind.LOG, false), "up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture());
-			}
+			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
+			event.add(group, "up", data1.up);
+			event.add(group, "down", data1.down);
+			event.add(group, "collect", data1.collect);
 		}
 	}
 }

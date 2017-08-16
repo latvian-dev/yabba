@@ -1,19 +1,17 @@
 # Creative Tabs
 itemGroup.yabba=YABBA
-itemGroup.yabba.all_models=All YABBA Barrels
 
 # Items
-item.yabba.upgrade.name=Barrel Upgrade
-item.yabba.upgrade.blank=Blank
-item.yabba.upgrade.iron_upgrade=Wooden to Iron
-item.yabba.upgrade.gold_upgrade=Iron to Gold
-item.yabba.upgrade.diamond_upgrade=Gold to Diamond
-item.yabba.upgrade.nether_star_upgrade=Infinite Capacity
-item.yabba.upgrade.creative=Creative Barrel
-item.yabba.upgrade.obsidian_shell=Obsidian Shell
-item.yabba.upgrade.redstone_out=Redstone Output
-item.yabba.upgrade.hopper=Hopper
-item.yabba.upgrade.void=Void Items
+item.yabba.upgrade_blank=Blank Barrel Upgrade
+item.yabba.upgrade_iron_tier=Barrel Upgrade: Iron Tier
+item.yabba.upgrade_gold_tier=Barrel Upgrade: Gold Tier
+item.yabba.upgrade_diamond_tier=Barrel Upgrade: Diamond Tier
+item.yabba.upgrade_infinite_capacity=Barrel Upgrade: Infinite Capacity
+item.yabba.upgrade_creative=Barrel Upgrade: Creative Barrel
+item.yabba.upgrade_obsidian_shell=Barrel Upgrade: Obsidian Shell
+item.yabba.upgrade_redstone_out=Barrel Upgrade: Redstone Output
+item.yabba.upgrade_hopper=Barrel Upgrade: Hopper
+item.yabba.upgrade_void=Barrel Upgrade: Void Items
 
 item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer
@@ -22,7 +20,9 @@ lang.yabba.model=Model: %s
 lang.yabba.skin=Skin: %s
 
 # Blocks
-tile.yabba.barrel.name=Item Barrel
+tile.yabba.item_barrel.name=Item Barrel
+tile.yabba.fluid_barrel.name=Fluid Barrel
+tile.yabba.energy_barrel.name=Energy Barrel
 tile.yabba.antibarrel.name=AntiBarrel
 
 # Config
@@ -50,7 +50,7 @@ barrel_config.yabba.always_display_data.name=Always Display Data
 barrel_config.yabba.display_bar.name=Display Bar
 config_group.yabba.redstone.name=Redstone Output
 barrel_config.yabba.redstone.mode.name=Mode
-barrel_config.yabba.redstone.item_count.name=Item Count
+barrel_config.yabba.redstone.count.name=Count
 config_group.yabba.hopper.name=Hopper
 barrel_config.yabba.hopper.up.name=Up
 barrel_config.yabba.hopper.down.name=Down
@@ -60,10 +60,10 @@ barrel_config.yabba.hopper.collect.name=Collect
 yabba.guide=YABBA
 
 # Models
-yabba.model.barrel=Barrel
-yabba.model.crate=Crate
-yabba.model.solid=Solid Block
-yabba.model.solid_borders=Solid Bordered Block
-yabba.model.cover=Cover
-yabba.model.panel=Panel
-yabba.model.slab=Slab
+yabba.yabba_model.barrel=Barrel
+yabba.yabba_model.crate=Crate
+yabba.yabba_model.solid=Solid Block
+yabba.yabba_model.solid_borders=Solid Bordered Block
+yabba.yabba_model.cover=Cover
+yabba.yabba_model.panel=Panel
+yabba.yabba_model.slab=Slab

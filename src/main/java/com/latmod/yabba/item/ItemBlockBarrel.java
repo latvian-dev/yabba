@@ -1,17 +1,13 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.Barrel;
-import com.latmod.yabba.api.Tier;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,35 +25,21 @@ public class ItemBlockBarrel extends ItemBlockBase
 	}
 
 	@Override
-	@Nullable
-	public NBTTagCompound getNBTShareTag(ItemStack stack)
-	{
-		NBTTagCompound nbt = stack.getTagCompound();
-
-		if (nbt != null && nbt.hasKey("Update"))
-		{
-			nbt.removeTag("Update");
-			nbt.setTag("Barrel", stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null).serializeNBT());
-		}
-
-		return nbt;
-	}
-
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
-	{
-		return new BarrelItemData(stack);
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		Barrel barrel = stack.getCapability(YabbaCommon.BARREL_CAPABILITY, null);
+		if (!stack.hasTagCompound())
+		{
+			return;
+		}
 
-		tooltip.add(ItemHammer.getModelTooltip(barrel.getModel()));
-		tooltip.add(ItemPainter.getSkinTooltip(barrel.getSkin()));
+		String m = stack.getTagCompound().getString("Model");
+		String s = stack.getTagCompound().getString("Skin");
 
+		tooltip.add(ItemHammer.getModelTooltip(m.isEmpty() ? YabbaCommon.DEFAULT_MODEL_ID : new ResourceLocation(m)));
+		tooltip.add(ItemPainter.getSkinTooltip(s.isEmpty() ? YabbaCommon.DEFAULT_SKIN_ID : CommonUtils.getStateFromName(s)));
+
+		/*
 		Tier tier = barrel.getTier();
 		ItemStack stack1 = barrel.getStoredItemType();
 
@@ -70,7 +52,7 @@ public class ItemBlockBarrel extends ItemBlockBase
 		{
 			if (barrel.getFlag(Barrel.FLAG_INFINITE_CAPACITY))
 			{
-				tooltip.add(barrel.getItemCount() + " items");
+				tooltip.add(barrel.getItemCount() + " items"); //LANG
 			}
 			else if (!stack1.isEmpty())
 			{
@@ -82,16 +64,16 @@ public class ItemBlockBarrel extends ItemBlockBase
 			}
 		}
 
-		NBTTagList upgrades = barrel.getUpgradeNames();
+		List<ITextComponent> upgrades = barrel.getUpgradeNames();
 
-		if (upgrades != null && !upgrades.hasNoTags())
+		if (!upgrades.isEmpty())
 		{
-			tooltip.add("Upgrades:");
+			tooltip.add("Upgrades:"); //LANG
 
-			for (int i = 0; i < upgrades.tagCount(); i++)
+			for (ITextComponent component : upgrades)
 			{
-				tooltip.add("> " + StringUtils.translate(upgrades.getStringTagAt(i)));
+				tooltip.add("> " + component.getFormattedText());
 			}
-		}
+		}*/
 	}
 }
