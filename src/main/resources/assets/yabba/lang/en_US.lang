@@ -2,16 +2,16 @@
 itemGroup.yabba=YABBA
 
 # Items
-item.yabba.upgrade_blank=Blank Barrel Upgrade
-item.yabba.upgrade_iron_tier=Barrel Upgrade: Iron Tier
-item.yabba.upgrade_gold_tier=Barrel Upgrade: Gold Tier
-item.yabba.upgrade_diamond_tier=Barrel Upgrade: Diamond Tier
-item.yabba.upgrade_infinite_capacity=Barrel Upgrade: Infinite Capacity
-item.yabba.upgrade_creative=Barrel Upgrade: Creative Barrel
-item.yabba.upgrade_obsidian_shell=Barrel Upgrade: Obsidian Shell
-item.yabba.upgrade_redstone_out=Barrel Upgrade: Redstone Output
-item.yabba.upgrade_hopper=Barrel Upgrade: Hopper
-item.yabba.upgrade_void=Barrel Upgrade: Void Items
+item.yabba.upgrade_blank.name=Blank Barrel Upgrade
+item.yabba.upgrade_iron_tier.name=Barrel Upgrade: Iron Tier
+item.yabba.upgrade_gold_tier.name=Barrel Upgrade: Gold Tier
+item.yabba.upgrade_diamond_tier.name=Barrel Upgrade: Diamond Tier
+item.yabba.upgrade_infinite_capacity.name=Barrel Upgrade: Infinite Capacity
+item.yabba.upgrade_creative.name=Barrel Upgrade: Creative Barrel
+item.yabba.upgrade_obsidian_shell.name=Barrel Upgrade: Obsidian Shell
+item.yabba.upgrade_redstone_out.name=Barrel Upgrade: Redstone Output
+item.yabba.upgrade_hopper.name=Barrel Upgrade: Hopper
+item.yabba.upgrade_void.name=Barrel Upgrade: Void Items
 
 item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer
