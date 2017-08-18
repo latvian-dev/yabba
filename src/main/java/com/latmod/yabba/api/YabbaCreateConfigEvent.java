@@ -1,4 +1,4 @@
-package com.latmod.yabba.api.events;
+package com.latmod.yabba.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;

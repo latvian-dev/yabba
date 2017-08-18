@@ -1,21 +1,18 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftbl.lib.block.BlockBase;
 import com.latmod.yabba.Yabba;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 
 /**
  * @author LatvianModder
  */
-public class BlockYabba extends Block
+public class BlockYabba extends BlockBase
 {
-	public BlockYabba(String id, Material blockMaterialIn, MapColor blockMapColorIn)
+	public BlockYabba(String id, Material material, MapColor color)
 	{
-		super(blockMaterialIn, blockMapColorIn);
-		setRegistryName(Yabba.MOD_ID + ':' + id);
-		setUnlocalizedName(Yabba.MOD_ID + '.' + id);
+		super(Yabba.MOD_ID, id, material, color);
 		setCreativeTab(Yabba.TAB);
-		setHardness(1.8F);
 	}
 }

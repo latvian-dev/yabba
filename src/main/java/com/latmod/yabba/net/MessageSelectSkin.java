@@ -2,26 +2,25 @@ package com.latmod.yabba.net;
 
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.latmod.yabba.item.ItemPainter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * @author LatvianModder
  */
 public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
 {
-	private IBlockState skinId;
+	private String skinId;
 
 	public MessageSelectSkin()
 	{
 	}
 
-	public MessageSelectSkin(IBlockState id)
+	public MessageSelectSkin(String id)
 	{
 		skinId = id;
 	}
@@ -35,13 +34,13 @@ public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		skinId = NetUtils.readBlockState(buf);
+		skinId = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		NetUtils.writeBlockState(buf, skinId);
+		ByteBufUtils.writeUTF8String(buf, skinId);
 	}
 
 	@Override

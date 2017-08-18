@@ -1,8 +1,8 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.IconSet;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.latmod.yabba.Yabba;
+import com.latmod.yabba.api.BarrelSkin;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -89,14 +89,14 @@ public class BarrelModelLoader implements IModel, ICustomModelLoader
 
 		for (BarrelSkin skin : YabbaClient.ALL_SKINS)
 		{
-			skin.spriteSet = skin.iconSet.getSpriteSet(bakedTextureGetter);
+			skin.spriteSet = skin.textures.getSpriteSet(bakedTextureGetter);
 		}
 
 		for (BarrelModel model : YabbaClient.ALL_MODELS)
 		{
 			model.textureMap = new HashMap<>();
 
-			for (Map.Entry<String, IconSet> entry : model.textures.entrySet())
+			for (Map.Entry<String, TextureSet> entry : model.textures.entrySet())
 			{
 				model.textureMap.put(entry.getKey(), entry.getValue().getSpriteSet(bakedTextureGetter));
 			}
@@ -113,11 +113,6 @@ public class BarrelModelLoader implements IModel, ICustomModelLoader
 
 				List<BakedQuad> itemQuads = model.buildItemModel(format);
 				map.put(BarrelModelKey.get(model, skin), new BarrelModelVariant(quads, new BakedBarrelItemModel(particle, itemQuads.isEmpty() ? quads.get(0) : itemQuads)));
-
-				if (CommonUtils.DEV_ENV)
-				{
-					Yabba.LOGGER.info("Model/Skin: " + BarrelModelKey.get(model, skin));
-				}
 			}
 		}
 

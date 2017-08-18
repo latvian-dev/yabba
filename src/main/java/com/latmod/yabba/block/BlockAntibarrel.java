@@ -6,12 +6,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -19,7 +23,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BlockAntibarrel extends BlockBarrelBase
+public class BlockAntibarrel extends BlockYabba
 {
 	public BlockAntibarrel()
 	{
@@ -29,26 +33,52 @@ public class BlockAntibarrel extends BlockBarrelBase
 	}
 
 	@Override
-	public void dropItem(ItemStack itemStack, @Nullable TileEntity tile)
+	public boolean dropSpecial(IBlockState state)
 	{
-		if (tile instanceof TileAntibarrel)
-		{
-			NBTTagCompound nbttagcompound = tile.writeToNBT(new NBTTagCompound());
-			itemStack.setTagInfo("BlockEntityTag", nbttagcompound);
-			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-			NBTTagList nbttaglist = new NBTTagList();
-			nbttaglist.appendTag(new NBTTagString("(+NBT)"));
-			nbttagcompound1.setTag("Lore", nbttaglist);
-			itemStack.setTagInfo("display", nbttagcompound1);
-		}
+		return true;
 	}
 
 	@Override
-	public void placeFromItem(ItemStack stack, @Nullable TileEntity tile)
+	public boolean hasTileEntity(IBlockState state)
 	{
+		return true;
 	}
 
 	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		return new TileAntibarrel();
+	}
+
+	@Override
+	@Deprecated
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	@Deprecated
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	@Deprecated
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		return side != EnumFacing.DOWN;
+	}
+
+	@Override
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
+	{
+		return layer == BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced)
 	{
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
@@ -60,11 +90,5 @@ public class BlockAntibarrel extends BlockBarrelBase
 				tooltip.add(list.tagCount() + " items");
 			}
 		}
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileAntibarrel();
 	}
 }

@@ -3,12 +3,17 @@ package com.latmod.yabba.client.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.block.BlockItemBarrel;
+import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
+import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.net.MessageSelectModel;
 
 import java.util.ArrayList;
@@ -36,6 +41,7 @@ public class GuiSelectModel extends GuiBase
 			if (model != null)
 			{
 				setTitle(model.toString());
+				setIcon(new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(model.id, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD)));
 			}
 		}
 
@@ -56,15 +62,10 @@ public class GuiSelectModel extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 			BUTTON_BACKGROUND.draw(ax, ay, width, height, Color4I.NONE);
-
-			if (model != null)
-			{
-				GuiHelper.drawItem(YabbaClient.STACKS_FOR_GUI[index][skin], ax + 1D, ay + 1D, 2D, 2D, false, Color4I.NONE);
-			}
+			getIcon(gui).draw(ax + 1, ay + 1, 32, 32, Color4I.NONE);
 		}
 	}
 
-	private int skin;
 	private final List<ButtonModel> buttons;
 
 	public GuiSelectModel()
@@ -89,12 +90,5 @@ public class GuiSelectModel extends GuiBase
 	public IDrawableObject getIcon(GuiBase gui)
 	{
 		return GUI_BACKGROUND;
-	}
-
-	@Override
-	public void drawBackground()
-	{
-		skin = (int) ((System.currentTimeMillis() / 1000L) % YabbaClient.ALL_SKINS.size());
-		super.drawBackground();
 	}
 }

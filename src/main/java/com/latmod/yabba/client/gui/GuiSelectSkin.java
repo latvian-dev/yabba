@@ -12,16 +12,12 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.latmod.yabba.client.BarrelSkin;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectSkin;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +34,6 @@ public class GuiSelectSkin extends GuiBase
 	{
 		private final BarrelSkin skin;
 		private final String searchText;
-		private final TextureAtlasSprite sprite;
 
 		private Skin(BarrelSkin s)
 		{
@@ -46,15 +41,36 @@ public class GuiSelectSkin extends GuiBase
 			skin = s;
 			String t = s.toString();
 			setTitle(t);
+			setIcon(s.icon);
 			searchText = t.replace(" ", "").toLowerCase();
-			sprite = skin.iconSet.getSpriteSet(ClientUtils.DEFAULT_TEXTURE_GETTER).get(EnumFacing.NORTH);
 		}
 
 		@Override
 		public void onClicked(GuiBase gui, IMouseButton button)
 		{
-			new MessageSelectSkin(skin.state).sendToServer();
+			new MessageSelectSkin(skin.id).sendToServer();
 			gui.closeGui();
+		}
+
+		@Override
+		public void addMouseOverText(GuiBase gui, List<String> list)
+		{
+			super.addMouseOverText(gui, list);
+
+			if (ClientUtils.MC.gameSettings.advancedItemTooltips)
+			{
+				list.add(TextFormatting.DARK_GRAY + skin.id);
+
+				if (skin.state != Blocks.AIR.getDefaultState())
+				{
+					String s = CommonUtils.getNameFromState(skin.state);
+
+					if (!s.equals(skin.id))
+					{
+						list.add(TextFormatting.DARK_GRAY + s);
+					}
+				}
+			}
 		}
 
 		@Override
@@ -63,16 +79,7 @@ public class GuiSelectSkin extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 			(gui.isMouseOver(this) ? BUTTON_GREEN : GuiSelectModel.BUTTON_BACKGROUND).draw(ax, ay, width, height, Color4I.NONE);
-
-			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buffer.pos(ax + 1D, ay + 17D, 0D).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
-			buffer.pos(ax + 1D + 16D, ay + 17D, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
-			buffer.pos(ax + 1D + 16D, ay + 1D, 0D).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-			buffer.pos(ax + 1D, ay + 1D, 0D).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
-			tessellator.draw();
+			getIcon(gui).draw(ax + 1, ay + 1, 16, 16, Color4I.NONE);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
@@ -26,7 +26,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -46,63 +45,12 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class BlockStorageBarrelBase extends BlockBarrelBase
+public class BlockStorageBarrelBase extends BlockYabba
 {
 	public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
 	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-	public static final IUnlistedProperty<ResourceLocation> MODEL = new IUnlistedProperty<ResourceLocation>()
-	{
-		@Override
-		public String getName()
-		{
-			return "model";
-		}
-
-		@Override
-		public boolean isValid(ResourceLocation value)
-		{
-			return true;
-		}
-
-		@Override
-		public Class<ResourceLocation> getType()
-		{
-			return ResourceLocation.class;
-		}
-
-		@Override
-		public String valueToString(ResourceLocation value)
-		{
-			return value.toString();
-		}
-	};
-
-	public static final IUnlistedProperty<IBlockState> SKIN = new IUnlistedProperty<IBlockState>()
-	{
-		@Override
-		public String getName()
-		{
-			return "skin";
-		}
-
-		@Override
-		public boolean isValid(IBlockState value)
-		{
-			return true;
-		}
-
-		@Override
-		public Class<IBlockState> getType()
-		{
-			return IBlockState.class;
-		}
-
-		@Override
-		public String valueToString(IBlockState value)
-		{
-			return CommonUtils.getNameFromState(value);
-		}
-	};
+	public static final IUnlistedProperty<String> MODEL = UnlistedPropertyString.create("model");
+	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
 
 	public BlockStorageBarrelBase(String id)
 	{
@@ -125,6 +73,12 @@ public class BlockStorageBarrelBase extends BlockBarrelBase
 		}
 
 		return state.getValue(BlockHorizontal.FACING);
+	}
+
+	@Override
+	public boolean dropSpecial(IBlockState state)
+	{
+		return true;
 	}
 
 	@Override
@@ -160,6 +114,12 @@ public class BlockStorageBarrelBase extends BlockBarrelBase
 	}
 
 	@Override
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
+	}
+
+	@Override
 	@Deprecated
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -188,40 +148,51 @@ public class BlockStorageBarrelBase extends BlockBarrelBase
 	}
 
 	@Override
-	public void dropItem(ItemStack itemStack, @Nullable TileEntity tile)
+	@Deprecated
+	public boolean isFullCube(IBlockState state)
 	{
+		return false;
 	}
 
 	@Override
-	public void placeFromItem(ItemStack stack, @Nullable TileEntity tile)
+	@Deprecated
+	public boolean isOpaqueCube(IBlockState state)
 	{
+		return false;
+	}
+
+	@Override
+	@Deprecated
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		return side != EnumFacing.DOWN;
 	}
 
 	@Override
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
 	{
-		//IBlockState parent = state.getValue(SKIN).getParentState();
-		//return parent.getBlock().canRenderInLayer(parent, layer);
-		return layer == BlockRenderLayer.CUTOUT;
+		return true;
 	}
 
-	public ItemStack createStack(ResourceLocation model, IBlockState skin, Tier tier)
+	public ItemStack createStack(String model, String skin, Tier tier)
 	{
 		TileBarrelBase tile = new TileBarrelBase();
 		tile.setModel(model);
 		tile.setSkin(skin);
 		tile.setTier(tier);
-		return tile.createStack(this);
+		return createStack(tile);
 	}
 
 	@Override
+	@Deprecated
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
 		if (tileEntity instanceof TileBarrelBase)
 		{
-			return ((TileBarrelBase) tileEntity).createStack(this);
+			TileBarrelBase barrel = (TileBarrelBase) tileEntity;
+			return createStack(barrel.model, barrel.skin, Tier.WOOD);
 		}
 
 		return super.getItem(worldIn, pos, state);

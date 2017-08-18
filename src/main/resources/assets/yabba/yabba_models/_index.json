@@ -1,9 +1,10 @@
 [
 	"barrel",
-	"crate",
-	"solid",
-	"solid_borders",
 	"cover",
 	"panel",
-	"slab"
+	"slab",
+	"block",
+	"block_window",
+	"block_borders",
+	"crate"
 ]

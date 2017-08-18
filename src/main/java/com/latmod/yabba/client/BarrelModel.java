@@ -1,8 +1,10 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.IconSet;
+import com.feed_the_beast.ftbl.lib.TextureSet;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,9 +12,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,18 +35,11 @@ public class BarrelModel
 {
 	public static final HashSet<EnumFacing> SET_ALL_FACES = new HashSet<>(Arrays.asList(EnumFacing.VALUES));
 
-	public static HashSet<EnumFacing> parseFaces(JsonElement json)
+	public static HashSet<EnumFacing> parseFaces(JsonArray json)
 	{
-		if (!json.isJsonArray())
-		{
-			JsonArray a = new JsonArray();
-			a.add(json);
-			return parseFaces(a);
-		}
-
 		HashSet<EnumFacing> set = new HashSet<>();
 
-		for (JsonElement e : json.getAsJsonArray())
+		for (JsonElement e : json)
 		{
 			String f = e.getAsString();
 
@@ -89,6 +87,27 @@ public class BarrelModel
 		}
 
 		return Vec3d.ZERO;
+	}
+
+	public static Pair<Vec3d, Vec3d> parseVecPair(JsonElement e)
+	{
+		if (e.isJsonArray())
+		{
+			JsonArray a = e.getAsJsonArray();
+
+			if (a.size() == 6)
+			{
+				double x0 = a.get(0).getAsDouble();
+				double y0 = a.get(1).getAsDouble();
+				double z0 = a.get(2).getAsDouble();
+				double x1 = a.get(3).getAsDouble();
+				double y1 = a.get(4).getAsDouble();
+				double z1 = a.get(5).getAsDouble();
+				return Pair.of(new Vec3d(x0, y0, z0), new Vec3d(x1, y1, z1));
+			}
+		}
+
+		return Pair.of(Vec3d.ZERO, Vec3d.ZERO);
 	}
 
 	@Nullable
@@ -202,52 +221,50 @@ public class BarrelModel
 
 		public static void parseCube(Cube c, JsonObject o)
 		{
-			if (o.has("size"))
+			if (o.has("from_to"))
 			{
-				Vec3d size = parseVec(o.get("size"));
-
-				if (o.has("from"))
-				{
-					c.from = parseVec(o.get("from"));
-					c.to = c.from.add(size);
-				}
-				else if (o.has("center"))
-				{
-					size = size.scale(0.5D);
-					Vec3d center = parseVec(o.get("center"));
-					c.from = center.subtract(size);
-					c.to = center.add(size);
-				}
+				Pair<Vec3d, Vec3d> vecs = parseVecPair(o.get("from_to"));
+				c.from = vecs.getLeft();
+				c.to = vecs.getRight();
 			}
-			else
+			else if (o.has("pos_size"))
 			{
-				c.from = parseVec(o.get("from"));
-				c.to = parseVec(o.get("to"));
+				Pair<Vec3d, Vec3d> vecs = parseVecPair(o.get("pos_size"));
+				c.from = vecs.getLeft();
+				c.to = c.from.add(vecs.getRight());
+
+			}
+			else if (o.has("center_size"))
+			{
+				Pair<Vec3d, Vec3d> vecs = parseVecPair(o.get("center_size"));
+				Vec3d size = vecs.getRight().scale(0.5D);
+				c.from = vecs.getLeft().subtract(size);
+				c.to = vecs.getLeft().add(size);
 			}
 
 			c.faces = SET_ALL_FACES;
 
 			if (o.has("faces"))
 			{
-				c.faces = parseFaces(o.get("faces"));
+				c.faces = parseFaces(JsonUtils.toArray(o.get("faces")));
 			}
 			else if (o.has("faces_except"))
 			{
 				c.faces = new HashSet<>(SET_ALL_FACES);
-				c.faces.removeAll(parseFaces(o.get("faces_except")));
+				c.faces.removeAll(parseFaces(JsonUtils.toArray(o.get("faces_except"))));
 			}
 		}
 
 		@Override
 		public void apply(ModelBuilder builder, BarrelModel model)
 		{
-			float x0 = (float) (model.offset.x + from.x);
-			float y0 = (float) (model.offset.y + from.y);
-			float z0 = (float) (model.offset.z + from.z);
-			float x1 = (float) (model.offset.x + to.x);
-			float y1 = (float) (model.offset.y + to.y);
-			float z1 = (float) (model.offset.z + to.z);
-			builder.addCube(x0, y0, z0, x1, y1, z1, model.currentTexture);
+			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
+			Vector3f tov = new Vector3f((float) (model.offset.x + to.x), (float) (model.offset.y + to.y), (float) (model.offset.z + to.z));
+
+			for (EnumFacing facing : faces)
+			{
+				builder.addQuad(fromv, tov, facing, model.currentTexture.get(facing));
+			}
 		}
 	}
 
@@ -256,18 +273,18 @@ public class BarrelModel
 		@Override
 		public void apply(ModelBuilder builder, BarrelModel model)
 		{
-			float x0 = (float) (model.offset.x + from.x);
-			float y0 = (float) (model.offset.y + from.y);
-			float z0 = (float) (model.offset.z + from.z);
-			float x1 = (float) (model.offset.x + to.x);
-			float y1 = (float) (model.offset.y + to.y);
-			float z1 = (float) (model.offset.z + to.z);
-			builder.addInvertedCube(x0, y0, z0, x1, y1, z1, model.currentTexture);
+			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
+			Vector3f tov = new Vector3f((float) (model.offset.x + to.x), (float) (model.offset.y + to.y), (float) (model.offset.z + to.z));
+
+			for (EnumFacing facing : faces)
+			{
+				builder.addQuad(tov, fromv, facing, model.currentTexture.get(facing));
+			}
 		}
 	}
 
-	public final ResourceLocation id;
-	public final Map<String, IconSet> textures;
+	public final String id;
+	public final Map<String, TextureSet> textures;
 	public final List<ModelFunction> model;
 	public final List<ModelFunction> itemModel;
 	public Map<String, SpriteSet> textureMap;
@@ -276,18 +293,19 @@ public class BarrelModel
 	public final float textDistance;
 	public final float iconDistance;
 	private final String unlocalizedName;
+	public final BlockRenderLayer layer;
 
 	public BarrelModel(ResourceLocation _id, JsonObject json)
 	{
-		id = _id;
-		unlocalizedName = id.getResourceDomain() + ".yabba_model." + id.getResourcePath();
+		id = _id.toString();
+		unlocalizedName = _id.getResourceDomain() + ".yabba_model." + _id.getResourcePath();
 
 		if (json.has("textures"))
 		{
 			textures = new HashMap<>();
 			for (Map.Entry<String, JsonElement> entry : json.get("textures").getAsJsonObject().entrySet())
 			{
-				textures.put(entry.getKey(), IconSet.of(entry.getValue()));
+				textures.put(entry.getKey(), TextureSet.of(entry.getValue()));
 			}
 		}
 		else
@@ -332,8 +350,9 @@ public class BarrelModel
 			itemModel = Collections.emptyList();
 		}
 
-		textDistance = json.has("text_distance") ? json.get("text_distance").getAsFloat() : -0.005F;
-		iconDistance = json.has("icon_distance") ? json.get("icon_distance").getAsFloat() : 0.04F;
+		textDistance = (json.has("text_distance") ? json.get("text_distance").getAsFloat() : -0.08F) / 16F;
+		iconDistance = (json.has("icon_distance") ? json.get("icon_distance").getAsFloat() : 0.64F) / 16F;
+		layer = json.has("layer") ? ClientUtils.BLOCK_RENDER_LAYER_NAME_MAP.get(json.get("layer").getAsString()) : BlockRenderLayer.SOLID;
 	}
 
 	public int hashCode()
@@ -351,6 +370,7 @@ public class BarrelModel
 		{
 			return id.equals(((BarrelModel) o).id);
 		}
+
 		return false;
 	}
 
@@ -379,7 +399,7 @@ public class BarrelModel
 	{
 		if (!itemModel.isEmpty())
 		{
-			currentTexture = null;
+			currentTexture = textureMap.get("skin");
 			offset = Vec3d.ZERO;
 			ModelBuilder builder = new ModelBuilder(format, ModelRotation.X0_Y0);
 

@@ -1,7 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
-import com.latmod.yabba.api.events.ApplyUpgradeEvent;
+import com.latmod.yabba.api.ApplyUpgradeEvent;
 
 /**
  * @author LatvianModder

@@ -65,7 +65,7 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		if (mouseOver || YabbaConfig.ALWAYS_DISPLAY_DATA.get().get(barrel.alwaysDisplayData.getBoolean()))
 		{
 			boolean isCreative = barrel.hasUpgrade(YabbaItems.UPGRADE_CREATIVE);
-			float textDistance = model == null ? -0.005F : model.textDistance;
+			float textDistance = model.textDistance;
 			boolean infinite = isCreative || barrel.hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
@@ -158,7 +158,7 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		if (hasIcon)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.5F, 0.5F, model == null ? 0.04F : model.iconDistance);
+			GlStateManager.translate(0.5F, 0.5F, model.iconDistance);
 			GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
 			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

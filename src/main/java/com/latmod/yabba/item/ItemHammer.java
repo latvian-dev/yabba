@@ -2,8 +2,7 @@ package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.api.events.ApplyUpgradeEvent;
+import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +11,6 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,14 +23,14 @@ import java.util.List;
  */
 public class ItemHammer extends ItemYabba implements IUpgrade
 {
-	private static ResourceLocation getModel(ItemStack stack)
+	private static String getModel(ItemStack stack)
 	{
-		return stack.hasTagCompound() ? new ResourceLocation(stack.getTagCompound().getString("Model")) : YabbaCommon.DEFAULT_MODEL_ID;
+		return stack.hasTagCompound() ? stack.getTagCompound().getString("Model") : "";
 	}
 
-	public static void setModel(ItemStack stack, ResourceLocation modelId)
+	public static void setModel(ItemStack stack, String modelId)
 	{
-		stack.setTagInfo("Model", new NBTTagString(modelId.toString()));
+		stack.setTagInfo("Model", new NBTTagString(modelId));
 	}
 
 	public ItemHammer()
@@ -59,7 +57,7 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static String getModelTooltip(ResourceLocation model)
+	public static String getModelTooltip(String model)
 	{
 		return StringUtils.translate("lang.yabba.model", YabbaClient.getModel(model).toString());
 	}

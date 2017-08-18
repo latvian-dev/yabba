@@ -25,6 +25,8 @@ tile.yabba.fluid_barrel.name=Fluid Barrel
 tile.yabba.energy_barrel.name=Energy Barrel
 tile.yabba.antibarrel.name=AntiBarrel
 
+tile.yabba.machine.name=Machine
+
 # Config
 config_group.yabba.name=YABBA
 config_group.yabba.tier.name=Tier
@@ -61,9 +63,10 @@ yabba.guide=YABBA
 
 # Models
 yabba.yabba_model.barrel=Barrel
-yabba.yabba_model.crate=Crate
-yabba.yabba_model.solid=Solid Block
-yabba.yabba_model.solid_borders=Solid Bordered Block
 yabba.yabba_model.cover=Cover
 yabba.yabba_model.panel=Panel
 yabba.yabba_model.slab=Slab
+yabba.yabba_model.block=Block
+yabba.yabba_model.block_window=Block with Window
+yabba.yabba_model.block_borders=Bordered Block with Window
+yabba.yabba_model.crate=Crate

@@ -3,9 +3,7 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.block.BlockStorageBarrelBase;
 import com.latmod.yabba.block.Tier;
@@ -13,29 +11,21 @@ import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.util.UpgradeInst;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,9 +37,8 @@ public class TileBarrelBase extends TileBase implements ITickable
 
 	public Tier tier = Tier.WOOD;
 	public Map<Item, UpgradeInst> upgrades = new HashMap<>();
-	public List<ITextComponent> upgradeNames = new ArrayList<>();
-	public ResourceLocation model = YabbaCommon.DEFAULT_MODEL_ID;
-	public IBlockState skin = YabbaCommon.DEFAULT_SKIN_ID;
+	public String model = "";
+	public String skin = "";
 	public boolean isLocked = false;
 	public PropertyBool alwaysDisplayData = new PropertyBool(false);
 	public PropertyBool displayBar = new PropertyBool(false);
@@ -65,7 +54,10 @@ public class TileBarrelBase extends TileBase implements ITickable
 	@Override
 	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		nbt.setString("Tier", tier.getName());
+		if (tier != Tier.WOOD)
+		{
+			nbt.setString("Tier", tier.getName());
+		}
 
 		if (!upgrades.isEmpty())
 		{
@@ -87,19 +79,29 @@ public class TileBarrelBase extends TileBase implements ITickable
 			nbt.setTag("Upgrades", nbt1);
 		}
 
-		nbt.setString("Model", model.toString());
-		nbt.setString("Skin", CommonUtils.getNameFromState(skin));
-
-		if (!upgradeNames.isEmpty())
+		if (!model.isEmpty())
 		{
-			NBTTagList list = new NBTTagList();
+			nbt.setString("Model", model);
+		}
 
-			for (ITextComponent component : upgradeNames)
-			{
-				list.appendTag(new NBTTagString(JsonUtils.toJson(JsonUtils.serializeTextComponent(component))));
-			}
+		if (!skin.isEmpty())
+		{
+			nbt.setString("Skin", skin);
+		}
 
-			nbt.setTag("UpgradeNames", list);
+		if (isLocked)
+		{
+			nbt.setBoolean("Locked", true);
+		}
+
+		if (alwaysDisplayData.getBoolean())
+		{
+			nbt.setBoolean("AlwaysDisplayData", true);
+		}
+
+		if (displayBar.getBoolean())
+		{
+			nbt.setBoolean("DisplayBar", true);
 		}
 	}
 
@@ -129,28 +131,11 @@ public class TileBarrelBase extends TileBase implements ITickable
 			}
 		}
 
-		String modelId = nbt.getString("Model");
-		model = modelId.isEmpty() ? YabbaCommon.DEFAULT_MODEL_ID : new ResourceLocation(modelId);
-
-		String skinId = nbt.getString("Skin");
-		skin = skinId.isEmpty() ? YabbaCommon.DEFAULT_SKIN_ID : CommonUtils.getStateFromName(skinId);
-
-		NBTTagList list = nbt.getTagList("UpgradeNames", Constants.NBT.TAG_STRING);
-		upgradeNames = list.hasNoTags() ? Collections.emptyList() : new ArrayList<>(list.tagCount());
-
-		for (int i = 0; i < list.tagCount(); i++)
-		{
-			String s = list.getStringTagAt(i);
-
-			if (s.startsWith("{") || s.startsWith("\"") || s.startsWith("["))
-			{
-				upgradeNames.add(JsonUtils.deserializeTextComponent(JsonUtils.fromJson(s)));
-			}
-			else
-			{
-				upgradeNames.add(new TextComponentTranslation(s));
-			}
-		}
+		model = nbt.getString("Model");
+		skin = nbt.getString("Skin");
+		isLocked = nbt.getBoolean("Locked");
+		alwaysDisplayData.setBoolean(nbt.getBoolean("AlwaysDisplayData"));
+		displayBar.setBoolean(nbt.getBoolean("DisplayBar"));
 	}
 
 	@Override
@@ -267,9 +252,14 @@ public class TileBarrelBase extends TileBase implements ITickable
 		return false;
 	}
 
-	public boolean setSkin(IBlockState v)
+	public boolean setSkin(String v)
 	{
-		if (skin != v)
+		if (v.equals(YabbaCommon.DEFAULT_SKIN_ID))
+		{
+			v = "";
+		}
+
+		if (!skin.equals(v))
 		{
 			skin = v;
 			markBarrelDirty(true);
@@ -279,8 +269,13 @@ public class TileBarrelBase extends TileBase implements ITickable
 		return false;
 	}
 
-	public boolean setModel(ResourceLocation v)
+	public boolean setModel(String v)
 	{
+		if (v.equals(YabbaCommon.DEFAULT_MODEL_ID))
+		{
+			v = "";
+		}
+
 		if (!model.equals(v))
 		{
 			model = v;
@@ -341,19 +336,6 @@ public class TileBarrelBase extends TileBase implements ITickable
 		return 0;
 	}
 
-	public ItemStack createStack(Block block)
-	{
-		ItemStack stack = new ItemStack(block);
-		NBTTagCompound nbt = createItemData();
-
-		if (!nbt.hasNoTags())
-		{
-			stack.setTagInfo("BlockEntityTag", nbt);
-		}
-
-		return stack;
-	}
-
 	public String getItemDisplayName()
 	{
 		return "ERROR";
@@ -364,21 +346,9 @@ public class TileBarrelBase extends TileBase implements ITickable
 		return "ERROR";
 	}
 
-	public NBTTagCompound createItemData()
+	@Override
+	public boolean shouldDrop()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeData(nbt, EnumSaveType.SAVE);
-
-		if (!model.equals(YabbaCommon.DEFAULT_MODEL_ID))
-		{
-			nbt.setString("Model", model.toString());
-		}
-
-		if (skin != YabbaCommon.DEFAULT_SKIN_ID)
-		{
-			nbt.setInteger("Skin", Block.getStateId(skin));
-		}
-
-		return nbt;
+		return super.shouldDrop() || !skin.isEmpty() || !model.isEmpty() || !upgrades.isEmpty() || tier != Tier.WOOD || isLocked;
 	}
 }

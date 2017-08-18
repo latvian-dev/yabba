@@ -1,56 +1,39 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.latmod.yabba.YabbaCommon;
-import com.latmod.yabba.block.BlockStorageBarrelBase;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.property.IExtendedBlockState;
+import com.latmod.yabba.api.BarrelSkin;
 
 /**
  * @author LatvianModder
  */
 public class BarrelModelKey
 {
-	public static final BarrelModelKey DEFAULT = new BarrelModelKey(YabbaCommon.DEFAULT_MODEL_ID, YabbaCommon.DEFAULT_SKIN_ID);
+	public static final BarrelModelKey DEFAULT = new BarrelModelKey("", "");
 
-	public static BarrelModelKey get0(ResourceLocation m, IBlockState s)
+	public static BarrelModelKey get(String m, String s)
 	{
-		if ((s == YabbaCommon.DEFAULT_SKIN_ID || s == Blocks.AIR.getDefaultState()) && m.equals(YabbaCommon.DEFAULT_MODEL_ID))
+		if (!m.isEmpty() && m.equals(YabbaCommon.DEFAULT_MODEL_ID))
 		{
-			return DEFAULT;
+			m = "";
 		}
 
-		return new BarrelModelKey(m, s);
+		if (!s.isEmpty() && s.equals(YabbaCommon.DEFAULT_SKIN_ID))
+		{
+			s = "";
+		}
+
+		return m.isEmpty() && s.isEmpty() ? DEFAULT : new BarrelModelKey(m, s);
 	}
 
 	public static BarrelModelKey get(BarrelModel m, BarrelSkin s)
 	{
-		return get0(m.id, s.state);
+		return get(m.id, s.id);
 	}
 
-	public static BarrelModelKey get(ResourceLocation m, IBlockState s)
-	{
-		return get0(YabbaClient.getModel(m).id, YabbaClient.getSkin(s).state);
-	}
+	public final String model;
+	public final String skin;
 
-	public static BarrelModelKey get(IExtendedBlockState state)
-	{
-		return get(state.getValue(BlockStorageBarrelBase.MODEL), state.getValue(BlockStorageBarrelBase.SKIN));
-	}
-
-	public static BarrelModelKey get(String m, String s)
-	{
-		ResourceLocation model = m.isEmpty() ? YabbaCommon.DEFAULT_MODEL_ID : new ResourceLocation(m);
-		IBlockState skin = s.isEmpty() ? YabbaCommon.DEFAULT_SKIN_ID : CommonUtils.getStateFromName(s);
-		return get0(model, skin);
-	}
-
-	public final ResourceLocation model;
-	public final IBlockState skin;
-
-	private BarrelModelKey(ResourceLocation m, IBlockState s)
+	public BarrelModelKey(String m, String s)
 	{
 		model = m;
 		skin = s;
@@ -70,13 +53,13 @@ public class BarrelModelKey
 		else if (o instanceof BarrelModelKey)
 		{
 			BarrelModelKey key = (BarrelModelKey) o;
-			return skin == key.skin && model.equals(key.model);
+			return skin.equals(key.skin) && model.equals(key.model);
 		}
 		return false;
 	}
 
 	public String toString()
 	{
-		return model + ";" + CommonUtils.getNameFromState(skin) + ": " + YabbaClient.getSkin(skin);
+		return model + ";" + skin + ": " + YabbaClient.getSkin(skin);
 	}
 }

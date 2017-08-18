@@ -49,7 +49,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		if (type.save || !items.isEmpty())
+		if (type.full && !items.isEmpty())
 		{
 			NBTTagList list = new NBTTagList();
 
@@ -190,5 +190,11 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	public void markDirty()
 	{
 		sendDirtyUpdate();
+	}
+
+	@Override
+	public boolean shouldDrop()
+	{
+		return super.shouldDrop() || !items.isEmpty();
 	}
 }

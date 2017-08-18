@@ -2,9 +2,8 @@ package com.latmod.yabba;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
-import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
+import com.latmod.yabba.api.YabbaCreateConfigEvent;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
@@ -18,12 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventHandler
 public class YabbaEventHandler
 {
-	@SubscribeEvent
-	public static void registerCommon(FTBLibRegistryEvent event)
-	{
-		YabbaConfig.init(event.getRegistry());
-	}
-
 	@SubscribeEvent
 	public static void configLoaded(ConfigLoadedEvent event)
 	{

@@ -1,18 +1,10 @@
 {
+	"text_distance": 7.92,
+	"icon_distance": 7.84,
 	"model": [
-		{
-			"shape": "cube",
-			"texture": "skin",
-			"from": [0, 0, 0.5],
-			"size": [1, 1, 0.5]
-		}
+		{"add": "cube", "pos_size": [0, 0, 8, 16, 16, 8]}
 	],
 	"item_model": [
-		{
-			"shape": "cube",
-			"texture": "skin",
-			"center": [0, 0, 0.5],
-			"size": [1, 1, 0.5]
-		}
+		{"add": "cube", "center_size": [8, 8, 8, 16, 16, 8]}
 	]
 }

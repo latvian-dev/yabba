@@ -1,6 +1,6 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.latmod.yabba.api.events.ApplyUpgradeEvent;
+import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemYabba;
 

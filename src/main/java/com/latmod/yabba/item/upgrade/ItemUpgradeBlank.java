@@ -1,6 +1,6 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.latmod.yabba.api.events.ApplyUpgradeEvent;
+import com.latmod.yabba.api.ApplyUpgradeEvent;
 
 /**
  * @author LatvianModder

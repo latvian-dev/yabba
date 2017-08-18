@@ -29,10 +29,14 @@ minecraft {
 
 repositories {
 	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
+	maven { url "http://dvs1.progwml6.com/files/maven" }
+	maven { url = "http://maven.ic2.player.to/" }
 }
 
 dependencies {
 	compile 'com.latmod.mods:FTBLib:4.1.0:api'
+	deobfCompile "mezz.jei:jei_1.12.1:4.7.5.87:api"
+	deobfCompile "net.sengir.forestry:forestry_1.12:5.5.0.163:api"
 }
 
 sourceSets {

@@ -1,4 +1,4 @@
-package com.latmod.yabba.api.events;
+package com.latmod.yabba.api;
 
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.UpgradeInst;

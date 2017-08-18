@@ -1,35 +1,42 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.IconSet;
+import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.BarrelSkin;
+import com.latmod.yabba.api.YabbaSkinsEvent;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
 import com.latmod.yabba.item.YabbaItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +46,32 @@ import java.util.Map;
 public class YabbaClient extends YabbaCommon
 {
 	public static final Collection<ResourceLocation> TEXTURES = new HashSet<>();
-	private static final Map<ResourceLocation, BarrelModel> MODELS = new HashMap<>();
-	private static final Map<IBlockState, BarrelSkin> SKINS = new HashMap<>();
+	private static final Map<String, BarrelModel> MODELS = new LinkedHashMap<>();
+	private static final Map<String, BarrelSkin> SKINS = new HashMap<>();
 	public static final List<BarrelModel> ALL_MODELS = new ArrayList<>();
 	public static final List<BarrelSkin> ALL_SKINS = new ArrayList<>();
 	private static BarrelModel DEFAULT_MODEL;
 	private static BarrelSkin DEFAULT_SKIN;
-	public static ItemStack STACKS_FOR_GUI[][];
+	private static final Map<String, String> VARIABLES = new HashMap<>();
+
+	private static final YabbaSkinsEvent.Callback REGISTER_SKIN = skin ->
+	{
+		SKINS.put(skin.id, skin);
+		TEXTURES.addAll(skin.textures.getTextures());
+	};
+
+	private static String parseVariableString(String s)
+	{
+		if (!VARIABLES.isEmpty())
+		{
+			for (Map.Entry<String, String> entry : VARIABLES.entrySet())
+			{
+				s = s.replace('$' + entry.getKey(), entry.getValue());
+			}
+		}
+
+		return s;
+	}
 
 	public static void loadModelsAndSkins()
 	{
@@ -63,67 +89,105 @@ public class YabbaClient extends YabbaCommon
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_index.json")))
 				{
-					try
+					for (JsonElement element : JsonUtils.fromJson(resource).getAsJsonArray())
 					{
-						for (JsonElement element : JsonUtils.fromJson(resource).getAsJsonArray())
+						try
 						{
 							JsonObject modelFile = JsonUtils.fromJson(manager.getResource(new ResourceLocation(domain, "yabba_models/" + element.getAsString() + ".json"))).getAsJsonObject();
 							BarrelModel model = new BarrelModel(new ResourceLocation(domain, element.getAsString()), modelFile);
 							MODELS.put(model.id, model);
 
-							for (IconSet iconSet : model.textures.values())
+							for (TextureSet textureSet : model.textures.values())
 							{
-								TEXTURES.addAll(iconSet.getTextures());
+								TEXTURES.addAll(textureSet.getTextures());
 							}
 						}
-					}
-					catch (Exception ex1)
-					{
-						if (CommonUtils.DEV_ENV)
+						catch (Exception ex1)
 						{
-							ex1.printStackTrace();
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
+				if (!(ex instanceof FileNotFoundException))
+				{
+					ex.printStackTrace();
+				}
 			}
-		}
 
-		for (Block block : Block.REGISTRY)
-		{
 			try
 			{
-				NonNullList<ItemStack> stacks = NonNullList.create();
-				block.getSubBlocks(CreativeTabs.SEARCH, stacks);
-
-				for (IBlockState state : block.getBlockState().getValidStates())
+				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_skins.json")))
 				{
-					if (!block.hasTileEntity(state) && state.isFullCube())
-					{
-						Item item = block.getItemDropped(state, MathUtils.RAND, 0);
-
-						if (item != Items.AIR)
-						{
-							BarrelSkin skin = new BarrelSkin(state, new ItemStack(item, 1, block.damageDropped(state)), IconSet.of(state));
-							SKINS.put(state, skin);
-							TEXTURES.addAll(skin.iconSet.getTextures());
-						}
-					}
+					parseSkinsJson(JsonUtils.fromJson(resource).getAsJsonArray());
+					VARIABLES.clear();
 				}
 			}
 			catch (Exception ex)
 			{
-				if (CommonUtils.DEV_ENV)
+				if (!(ex instanceof FileNotFoundException))
 				{
 					ex.printStackTrace();
 				}
 			}
 		}
 
+		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values())
+		{
+			BarrelSkin skin = new BarrelSkin(fluid.getName(), TextureSet.of("all=" + fluid.getStill()));
+
+			if (fluid == FluidRegistry.WATER)
+			{
+				skin.unlocalizedName = "tile.water.name";
+			}
+			else if (fluid == FluidRegistry.LAVA)
+			{
+				skin.unlocalizedName = "tile.lava.name";
+			}
+			else
+			{
+				skin.unlocalizedName = fluid.getUnlocalizedName() + ".name";
+			}
+
+			skin.layer = BlockRenderLayer.TRANSLUCENT;
+			REGISTER_SKIN.addSkin(skin);
+		}
+
+		new YabbaSkinsEvent(REGISTER_SKIN).post();
+
+		for (BarrelSkin skin : SKINS.values())
+		{
+			if (skin.unlocalizedName.isEmpty() && skin.state != Blocks.AIR.getDefaultState())
+			{
+				try
+				{
+					skin.unlocalizedName = skin.state.getBlock().getUnlocalizedName();
+
+					String s = new ItemStack(skin.state.getBlock(), 1, skin.state.getBlock().getMetaFromState(skin.state)).getUnlocalizedName() + ".name";
+
+					if (!s.contains("tile.air"))
+					{
+						skin.unlocalizedName = s;
+					}
+				}
+				catch (Exception ex)
+				{
+				}
+			}
+
+			if (skin.unlocalizedName.isEmpty() || skin.unlocalizedName.contains("tile.air"))
+			{
+				skin.unlocalizedName = "";
+			}
+
+			if (skin.icon.isNull())
+			{
+				skin.icon = new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
+			}
+		}
+
 		ALL_MODELS.addAll(MODELS.values());
-		ALL_MODELS.sort(StringUtils.ID_COMPARATOR);
 		DEFAULT_MODEL = MODELS.get(DEFAULT_MODEL_ID);
 
 		if (DEFAULT_MODEL == null)
@@ -132,6 +196,14 @@ public class YabbaClient extends YabbaCommon
 		}
 
 		Yabba.LOGGER.info("Models: " + ALL_MODELS.size());
+
+		if (CommonUtils.DEV_ENV)
+		{
+			for (BarrelModel model : ALL_MODELS)
+			{
+				Yabba.LOGGER.info("-- " + model.id + " :: " + model);
+			}
+		}
 
 		ALL_SKINS.addAll(SKINS.values());
 		ALL_SKINS.sort(StringUtils.ID_COMPARATOR);
@@ -145,15 +217,157 @@ public class YabbaClient extends YabbaCommon
 
 		Yabba.LOGGER.info("Skins: " + ALL_SKINS.size());
 
-		STACKS_FOR_GUI = new ItemStack[ALL_MODELS.size()][ALL_SKINS.size()];
-
-		for (int m = 0; m < ALL_MODELS.size(); m++)
+		if (CommonUtils.DEV_ENV)
 		{
-			for (int s = 0; s < ALL_SKINS.size(); s++)
+			for (BarrelSkin skin : ALL_SKINS)
 			{
-				STACKS_FOR_GUI[m][s] = ((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(ALL_MODELS.get(m).id, ALL_SKINS.get(s).state, Tier.WOOD);
+				Yabba.LOGGER.info("-- " + skin.id + " :: " + skin);
 			}
 		}
+	}
+
+	private static Iterable<List<String>> getIterator(JsonElement e)
+	{
+		List<List<String>> l = new ArrayList<>();
+
+		if (e.isJsonArray())
+		{
+			for (JsonElement e1 : e.getAsJsonArray())
+			{
+				if (e1.isJsonArray())
+				{
+					List<String> list = new ArrayList<>();
+
+					for (JsonElement e2 : e1.getAsJsonArray())
+					{
+						list.add(e2.getAsString());
+					}
+
+					l.add(list);
+				}
+				else
+				{
+					l.add(Collections.singletonList(parseVariableString(e1.getAsString())));
+				}
+			}
+
+			return l;
+		}
+
+		String s = parseVariableString(e.getAsString());
+
+		if (s.contains(".."))
+		{
+			String[] s1 = s.split("..");
+			int min = Integer.parseInt(s1[0]);
+			int max = Integer.parseInt(s1[1]);
+
+			for (int i = min; i <= max; i++)
+			{
+				l.add(Collections.singletonList(Integer.toString(i)));
+			}
+
+			return l;
+		}
+
+		String[] s1 = s.split("#");
+		Block block = Block.REGISTRY.getObject(new ResourceLocation(s1[0]));
+		IProperty<?> property = block.getBlockState().getProperty(s1[1]);
+		if (property != null)
+		{
+			for (Object o : property.getAllowedValues())
+			{
+				l.add(Collections.singletonList(property.getName(CommonUtils.cast(o))));
+			}
+		}
+
+		return l;
+	}
+
+	private static void parseSkinsJson(JsonArray array)
+	{
+		for (JsonElement element : array)
+		{
+			try
+			{
+				if (!element.isJsonObject())
+				{
+					continue;
+				}
+
+				JsonObject json = element.getAsJsonObject();
+
+				if (json.has("add"))
+				{
+					ResourceLocation id = new ResourceLocation(parseVariableString(json.get("add").getAsString()));
+					TextureSet textures;
+
+					if (json.has("textures"))
+					{
+						textures = TextureSet.of(parseVariableString(json.get("textures").getAsString()));
+					}
+					else
+					{
+						textures = TextureSet.of("all=" + id.getResourceDomain() + ":blocks/" + id.getResourcePath());
+					}
+
+					BarrelSkin skin = new BarrelSkin(id.toString(), textures);
+
+					if (json.has("lang"))
+					{
+						skin.unlocalizedName = json.get("lang").getAsString();
+					}
+
+					if (json.has("icon"))
+					{
+						skin.icon = ImageProvider.get(json.get("icon"));
+					}
+
+					if (json.has("layer"))
+					{
+						skin.layer = ClientUtils.BLOCK_RENDER_LAYER_NAME_MAP.get(json.get("layer").getAsString());
+					}
+
+					skin.state = CommonUtils.getStateFromName(json.has("state") ? parseVariableString(json.get("state").getAsString()) : skin.id);
+					REGISTER_SKIN.addSkin(skin);
+				}
+				else if (json.has("set"))
+				{
+					VARIABLES.put(parseVariableString(json.get("set").getAsString()), parseVariableString(json.get("value").getAsString()));
+				}
+				else if (json.has("for"))
+				{
+					JsonArray a = json.get("for").getAsJsonArray();
+
+					if (a.size() == 3)
+					{
+						String key = a.get(0).getAsString();
+
+						for (List<String> value : getIterator(a.get(1)))
+						{
+							if (value.size() == 1)
+							{
+								VARIABLES.put(key, parseVariableString(value.get(0)));
+							}
+							else
+							{
+								for (int i = 0; i < value.size(); i++)
+								{
+									VARIABLES.put(key + "" + i, parseVariableString(value.get(i)));
+								}
+							}
+
+							parseSkinsJson(JsonUtils.toArray(a.get(2)));
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+
 	}
 
 	@Override
@@ -168,13 +382,13 @@ public class YabbaClient extends YabbaCommon
 		new GuiSelectSkin().openGui();
 	}
 
-	public static BarrelSkin getSkin(IBlockState id)
+	public static BarrelSkin getSkin(String id)
 	{
 		BarrelSkin skin = SKINS.get(id);
 		return skin == null ? DEFAULT_SKIN : skin;
 	}
 
-	public static BarrelModel getModel(ResourceLocation id)
+	public static BarrelModel getModel(String id)
 	{
 		BarrelModel model = MODELS.get(id);
 		return model == null ? DEFAULT_MODEL : model;

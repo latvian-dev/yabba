@@ -12,8 +12,8 @@ import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.api.events.ApplyUpgradeEvent;
-import com.latmod.yabba.api.events.YabbaCreateConfigEvent;
+import com.latmod.yabba.api.ApplyUpgradeEvent;
+import com.latmod.yabba.api.YabbaCreateConfigEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
@@ -622,5 +622,11 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		}
 
 		return 0;
+	}
+
+	@Override
+	public boolean shouldDrop()
+	{
+		return super.shouldDrop() || itemCount > 0 || !storedItem.isEmpty() || disableOreItems.getBoolean();
 	}
 }
