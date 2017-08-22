@@ -32,6 +32,40 @@
 	{
 		"for": [
 			"v", [
+				["", ""],
+				["mossy_", "_mossy"],
+				["cracked_", "_cracked"],
+				["chiseled_", "_carved"]
+			],
+			{"add": "minecraft:$v0stonebrick", "textures": "all=blocks/stonebrick$v1", "state": "minecraft:stonebrick[variant=$v0stonebrick]"}
+		]
+	},
+	{
+		"for": [
+			"v", [
+				["", "normal"],
+				["chiseled_", "carved"],
+				["smooth_", "smooth"]
+			],
+			[
+				{"add": "minecraft:$v0sandstone", "textures": "up=blocks/sandstone_top,down=blocks/sandstone_bottom,all=blocks/sandstone_$v1", "state": "minecraft:sandstone[type=$v0sandstone]"},
+				{"add": "minecraft:$v0red_sandstone", "textures": "up=blocks/red_sandstone_top,down=blocks/red_sandstone_bottom,all=blocks/red_sandstone_$v1", "state": "minecraft:red_sandstone[type=$v0red_sandstone]"}
+			]
+		]
+	},
+	{
+		"for": [
+			"v", [
+				["prismarine", "prismarine_rough"],
+				["prismarine_bricks", "prismarine_bricks"],
+				["dark_prismarine", "prismarine_dark"]
+			],
+			{"add": "minecraft:$v0", "textures": "all=blocks/$v1", "state": "minecraft:prismarine[variant=$v0]"}
+		]
+	},
+	{
+		"for": [
+			"v", [
 				"cobblestone",
 				"dirt",
 				"sand",
@@ -45,7 +79,13 @@
 				"glowstone",
 				"magma",
 				"netherrack",
-				"beacon"
+				"beacon",
+				"purpur_block",
+				"purpur_pillar",
+				"sea_lantern",
+				"soul_sand",
+				"sponge",
+				"clay"
 			],
 			{"add": "minecraft:$v"}
 		]
@@ -69,7 +109,10 @@
 				"redstone",
 				"emerald"
 			],
-			{"add": "minecraft:$v_block"}
+			[
+				{"add": "minecraft:$v_block"},
+				{"add": "minecraft:$v_ore"}
+			]
 		]
 	},
 	{
@@ -80,31 +123,43 @@
 				{"add": "minecraft:$c_concrete", "textures": "all=blocks/concrete_$c", "state": "minecraft:concrete[color=$c]"},
 				{"add": "minecraft:$c_concrete_powder", "textures": "all=blocks/concrete_powder_$c", "state": "minecraft:concrete_powder[color=$c]"},
 				{"add": "minecraft:$c_stained_glass", "textures": "all=blocks/glass_$c", "state": "minecraft:stained_glass[color=$c]", "layer": "translucent"},
-				{"add": "minecraft:$c_glazed_terracotta", "textures": "all=blocks/glazed_terracotta_$c"}
+				{"add": "minecraft:$c_glazed_terracotta", "textures": "all=blocks/glazed_terracotta_$c"},
+				{"add": "minecraft:$c_shulker_box", "textures": "all=blocks/shulker_top_$c"}
 			]
 		]
 	},
+	{"add": "minecraft:quartz_block", "textures": "all=blocks/quartz_block_side"},
+	{"add": "minecraft:quartz_ore"},
 	{"add": "minecraft:glass", "layer": "cutout"},
 	{"add": "minecraft:web", "layer": "cutout"},
 	{"add": "minecraft:portal", "lang": "tile.portal.name", "layer": "translucent"},
 	{"add": "minecraft:mossy_cobblestone", "textures": "all=blocks/cobblestone_mossy"},
 	{"add": "minecraft:red_sand", "textures": "all=blocks/red_sand", "state": "minecraft:sand[variant=red_sand]"},
 	{"add": "minecraft:brick_block", "textures": "all=blocks/brick"},
-	{"add": "minecraft:prismarine", "textures": "all=blocks/prismarine_bricks"},
 	{"add": "minecraft:melon_block", "textures": "up&down=minecraft:blocks/melon_top,all=minecraft:blocks/melon_side"},
 	{"add": "minecraft:pumpkin", "textures": "up&down=blocks/pumpkin_top,all=blocks/pumpkin_side"},
 	{"add": "minecraft:ice", "layer": "translucent"},
 	{"add": "minecraft:ice_packed", "state": "minecraft:packed_ice"},
 	{"add": "minecraft:noteblock", "textures": "all=blocks/jukebox_side"},
-	{"add": "minecraft:quartz_block", "textures": "all=blocks/quartz_block_lines_top"},
+	{"add": "minecraft:quartz_block_chiseled", "textures": "all=blocks/quartz_block_chiseled_top", "state": "minecraft:quartz_block[variant=chiseled]"},
+	{"add": "minecraft:quartz_block_pillar", "textures": "up&down=blocks/quartz_block_lines_top,all=blocks/quartz_block_lines", "state": "minecraft:quartz_block[variant=lines_y]"},
+	{"add": "minecraft:quartz_block_lines", "textures": "all=blocks/quartz_block_lines_top", "state": "minecraft:quartz_block[variant=lines_y]"},
 	{"add": "minecraft:bone_block", "textures": "up&down=blocks/bone_block_top,all=blocks/bone_block_side"},
 	{"add": "minecraft:hay_block", "textures": "up&down=blocks/hay_block_top,all=blocks/hay_block_side"},
 	{"add": "minecraft:bookshelf", "textures": "up&down=blocks/planks_oak,all=blocks/bookshelf"},
 	{"add": "minecraft:red_mushroom", "textures": "all=blocks/mushroom_block_skin_red", "state": "minecraft:red_mushroom_block"},
 	{"add": "minecraft:brown_mushroom", "textures": "all=blocks/mushroom_block_skin_brown", "state": "minecraft:brown_mushroom_block"},
 	{"add": "minecraft:daylight_detector", "textures": "up&down=blocks/daylight_detector_top,all=blocks/daylight_detector_side"},
+	{"add": "minecraft:daylight_detector_top", "textures": "all=blocks/daylight_detector_side", "state": "minecraft:daylight_detector"},
 	{"add": "minecraft:machine", "textures": "all=blocks/furnace_top", "lang": "tile.yabba.machine.name"},
 	{"add": "minecraft:machine_sides", "textures": "up&down=blocks/furnace_top,all=blocks/furnace_side", "lang": "tile.yabba.machine.name"},
 	{"add": "minecraft:stone_slab", "textures": "all=blocks/stone_slab_top", "state": "minecraft:stone_slab"},
-	{"add": "minecraft:stone_slab_sides", "textures": "up&down=blocks/stone_slab_top,all=blocks/stone_slab_side", "state": "minecraft:stone_slab"}
+	{"add": "minecraft:stone_slab_sides", "textures": "up&down=blocks/stone_slab_top,all=blocks/stone_slab_side", "state": "minecraft:stone_slab"},
+	{"add": "minecraft:crafting_table", "textures": "up=blocks/crafting_table_top,bottom=blocks/planks_oak,east&south=blocks/crafting_table_side,north&west=blocks/crafting_table_front"},
+	{"add": "minecraft:crafting_table_top", "textures": "all=blocks/crafting_table_top", "state": "minecraft:crafting_table"},
+	{"add": "minecraft:slime", "layer": "translucent"},
+	{"add": "minecraft:piston", "textures": "all=blocks/piston_top_normal"},
+	{"add": "minecraft:sticky_piston", "textures": "all=blocks/piston_top_sticky"},
+	{"add": "minecraft:tnt", "textures": "down=blocks/tnt_bottom,up=blocks/tnt_top,all=blocks/tnt_side"},
+	{"add": "minecraft:enchanting_table", "textures": "all=blocks/enchanting_table_top"}
 ]

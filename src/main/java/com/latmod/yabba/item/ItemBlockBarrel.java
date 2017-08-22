@@ -4,8 +4,10 @@ import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,5 +81,11 @@ public class ItemBlockBarrel extends ItemBlockBase
 				}
 			}*/
 		}
+	}
+
+	@Override
+	public boolean renderPlacement(ItemStack stack, EntityPlayer player, RayTraceResult ray)
+	{
+		return true;
 	}
 }
