@@ -3,53 +3,42 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
+import com.latmod.yabba.block.BlockStorageBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 /**
  * @author LatvianModder
  */
-public class BarrelModelLoader implements IModel, ICustomModelLoader
+public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor, IItemColor, IStateMapper
 {
+	INSTANCE;
+
 	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(Yabba.MOD_ID + ":barrel#normal");
-
-	public enum StateMapper implements IStateMapper
-	{
-		INSTANCE;
-
-		@Override
-		public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
-		{
-			Map<IBlockState, ModelResourceLocation> map = new HashMap<>();
-
-			for (IBlockState state : blockIn.getBlockState().getValidStates())
-			{
-				map.put(state, MODEL_LOCATION);
-			}
-
-			return map;
-		}
-	}
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
@@ -85,7 +74,6 @@ public class BarrelModelLoader implements IModel, ICustomModelLoader
 	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		TextureAtlasSprite particle = bakedTextureGetter.apply(new ResourceLocation("blocks/planks_oak"));
-		Map<BarrelModelKey, BarrelModelVariant> map = new HashMap<>();
 
 		for (BarrelSkin skin : YabbaClient.ALL_SKINS)
 		{
@@ -100,22 +88,64 @@ public class BarrelModelLoader implements IModel, ICustomModelLoader
 			{
 				model.textureMap.put(entry.getKey(), entry.getValue().getSpriteSet(bakedTextureGetter));
 			}
+		}
 
-			for (BarrelSkin skin : YabbaClient.ALL_SKINS)
+		return new BakedBarrelBlockModel(particle, format);
+	}
+
+	@Override
+	public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex)
+	{
+		if (tintIndex == 0)
+		{
+			BarrelSkin skin = YabbaClient.getSkin("");
+
+			if (state instanceof IExtendedBlockState)
 			{
-				List<List<BakedQuad>> quads = new ArrayList<>(ModelRotation.values().length);
-				model.textureMap.put("skin", skin.spriteSet);
+				skin = YabbaClient.getSkin(((IExtendedBlockState) state).getValue(BlockStorageBarrelBase.SKIN));
+			}
 
-				for (ModelRotation rotation : ModelRotation.values())
-				{
-					quads.add(model.buildModel(format, rotation));
-				}
-
-				List<BakedQuad> itemQuads = model.buildItemModel(format);
-				map.put(BarrelModelKey.get(model, skin), new BarrelModelVariant(quads, new BakedBarrelItemModel(particle, itemQuads.isEmpty() ? quads.get(0) : itemQuads)));
+			if (skin.color.hasColor())
+			{
+				return skin.color.rgba();
 			}
 		}
 
-		return new BakedBarrelBlockModel(particle, map);
+		return 0xFFFFFFFF;
+	}
+
+	@Override
+	public int getColorFromItemstack(ItemStack stack, int tintIndex)
+	{
+		if (tintIndex == 0)
+		{
+			BarrelSkin skin = YabbaClient.getSkin("");
+
+			if (stack.hasTagCompound())
+			{
+				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+				skin = YabbaClient.getSkin(data.getString("Skin"));
+			}
+
+			if (skin.color.hasColor())
+			{
+				return skin.color.rgba();
+			}
+		}
+
+		return 0xFFFFFFFF;
+	}
+
+	@Override
+	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
+	{
+		Map<IBlockState, ModelResourceLocation> map = new HashMap<>();
+
+		for (IBlockState state : blockIn.getBlockState().getValidStates())
+		{
+			map.put(state, MODEL_LOCATION);
+		}
+
+		return map;
 	}
 }

@@ -12,6 +12,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
+import com.latmod.yabba.item.upgrade.ItemUpgradeInfiniteCapacity;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.TileAntibarrel;
@@ -76,7 +77,7 @@ public class YabbaItems
 				new ItemUpgradeTier("upgrade_iron_tier", Tier.IRON),
 				new ItemUpgradeTier("upgrade_gold_tier", Tier.GOLD),
 				new ItemUpgradeTier("upgrade_diamond_tier", Tier.DIAMOND),
-				new ItemUpgrade("upgrade_infinite_capacity"),
+				new ItemUpgradeInfiniteCapacity("upgrade_infinite_capacity"),
 				new ItemUpgradeCreative("upgrade_creative"),
 				new ItemUpgrade("upgrade_obsidian_shell"),
 				new ItemUpgradeRedstone("upgrade_redstone_out"),
@@ -90,9 +91,9 @@ public class YabbaItems
 	@SideOnly(Side.CLIENT)
 	public static void registerModels(ModelRegistryEvent event)
 	{
-		ModelLoaderRegistry.registerLoader(new BarrelModelLoader());
+		ModelLoaderRegistry.registerLoader(BarrelModelLoader.INSTANCE);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ITEM_BARREL), 0, BarrelModelLoader.MODEL_LOCATION);
-		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.StateMapper.INSTANCE);
+		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.INSTANCE);
 
 		ClientUtils.registerModel(ANTIBARREL);
 		ClientUtils.registerModel(UPGRADE_BLANK);

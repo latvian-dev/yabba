@@ -27,9 +27,11 @@ public class ForestryIntegration
 			{
 				BarrelSkin skin = new BarrelSkin(MOD_ID + ":planks_" + type.getName(), TextureSet.of("all=" + type.getPlankTexture()));
 				skin.state = TreeManager.woodAccess.getBlock(type, WoodBlockKind.PLANKS, false);
+				skin.displayName = TreeManager.woodAccess.getStack(type, WoodBlockKind.PLANKS, false).getDisplayName();
 				event.addSkin(skin);
 				skin = new BarrelSkin(MOD_ID + ":log_" + type.getName(), TextureSet.of("up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture()));
 				skin.state = TreeManager.woodAccess.getBlock(type, WoodBlockKind.LOG, false);
+				skin.displayName = TreeManager.woodAccess.getStack(type, WoodBlockKind.LOG, false).getDisplayName();
 				event.addSkin(skin);
 			}
 		}

@@ -1,40 +1,32 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
-import com.google.gson.JsonObject;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.api.YabbaCreateConfigEvent;
-import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
-import com.latmod.yabba.net.MessageUpdateBarrelItemCount;
-import com.latmod.yabba.util.UpgradeInst;
+import com.latmod.yabba.net.MessageUpdateItemBarrelCount;
 import gnu.trove.map.hash.TIntByteHashMap;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -42,6 +34,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -109,11 +102,24 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 	public ItemStack storedItem = ItemStack.EMPTY;
 	public int itemCount = 0;
-	public PropertyBool disableOreItems = new PropertyBool(false);
+	private String cachedItemName, cachedItemCount;
+	private int prevItemCount = -1;
+	private final PropertyBool disableOreItems = new PropertyBool(false);
 
-	public TileItemBarrel()
+	@Override
+	public void markBarrelDirty(boolean majorChange)
 	{
-		clearCachedData();
+		super.markBarrelDirty(majorChange);
+		prevItemCount = -1;
+	}
+
+	@Override
+	public void updateContainingBlockInfo()
+	{
+		super.updateContainingBlockInfo();
+		cachedItemName = null;
+		cachedItemCount = null;
+		prevItemCount = -1;
 	}
 
 	@Override
@@ -146,17 +152,13 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	{
 		super.readData(nbt, type);
 
-		storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
-		itemCount = storedItem.isEmpty() ? 0 : nbt.getInteger("Count");
-
-		if (hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+		if (nbt.hasKey("Item"))
 		{
-			itemCount = tier.getMaxItems(this, storedItem) / 2;
+			setStoredItemType(new ItemStack(nbt.getCompoundTag("Item")), nbt.getInteger("Count"));
 		}
-
-		if (itemCount > 0)
+		else
 		{
-			storedItem.setCount(itemCount);
+			setStoredItemType(ItemStack.EMPTY, 0);
 		}
 	}
 
@@ -172,7 +174,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 			if (!world.isRemote)
 			{
-				new MessageUpdateBarrelItemCount(pos, itemCount).sendToAllAround(world.provider.getDimension(), pos, 300D);
+				new MessageUpdateItemBarrelCount(pos, itemCount).sendToAllAround(world.provider.getDimension(), pos, 300D);
 			}
 
 			if (hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT))
@@ -255,7 +257,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		}
 		else if (sneaking)
 		{
-			return infinite ? Integer.toString(itemCount) : (itemCount + " / " + tier.getMaxItems(this, storedItem));
+			return infinite ? Integer.toString(itemCount) : (itemCount + " / " + getMaxItems(storedItem));
 		}
 		else if (cachedItemCount == null)
 		{
@@ -294,12 +296,17 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	@Override
 	public ItemStack getStoredItemType()
 	{
-		if (itemCount > 0)
+		return ItemHandlerHelper.copyStackWithSize(storedItem, itemCount);
+	}
+
+	public int getMaxItems(ItemStack stack)
+	{
+		if (hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY))
 		{
-			storedItem.setCount(itemCount);
+			return 2000000000;
 		}
 
-		return storedItem;
+		return tier.maxItemStacks.getInt() * (stack.isEmpty() ? 1 : stack.getMaxStackSize());
 	}
 
 	@Override
@@ -318,6 +325,15 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 			type = ItemStack.EMPTY;
 			amount = 0;
 		}
+		else
+		{
+			type = ItemHandlerHelper.copyStackWithSize(type, 1);
+
+			if (hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+			{
+				amount = 1000000000;
+			}
+		}
 
 		storedItem = type;
 		itemCount = amount;
@@ -327,7 +343,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	@Override
 	public int getMaxStoredCount()
 	{
-		return tier.getMaxItems(this, storedItem) + (hasUpgrade(YabbaItems.UPGRADE_VOID) ? 256 : 0);
+		return getMaxItems(storedItem) + (hasUpgrade(YabbaItems.UPGRADE_VOID) ? 256 : 0);
 	}
 
 	@Override
@@ -367,7 +383,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 		if (itemCount > 0)
 		{
-			capacity = tier.getMaxItems(this, storedItem);
+			capacity = getMaxItems(storedItem);
 
 			if (itemCount >= capacity)
 			{
@@ -376,7 +392,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		}
 		else
 		{
-			capacity = tier.getMaxItems(this, stack);
+			capacity = getMaxItems(stack);
 		}
 
 		if (canInsert)
@@ -390,8 +406,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 					if (storedItem.isEmpty())
 					{
 						//TODO: Check me
-						setStoredItemType(ItemHandlerHelper.copyStackWithSize(stack, 1), 0);
-						markBarrelDirty(true);
+						setStoredItemType(stack, 1);
 					}
 
 					setItemCount(itemCount + size);
@@ -428,7 +443,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		{
 			setItemCount(itemCount - stack.getCount());
 
-			if (itemCount - stack.getCount() <= 0 && !isLocked)
+			if (itemCount - stack.getCount() <= 0 && !isLocked.getBoolean())
 			{
 				setStoredItemType(ItemStack.EMPTY, 0);
 			}
@@ -440,18 +455,57 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return tier.getMaxItems(this, storedItem);
+		return 64;
 	}
 
 	public int getFreeSpace()
 	{
-		return tier.getMaxItems(this, storedItem) - itemCount;
+		return getMaxItems(storedItem) - itemCount;
 	}
 
-	public void onLeftClick(EntityPlayer playerIn)
+	@Override
+	public void addItem(EntityPlayer player, EnumHand hand)
+	{
+		ItemStack heldItem = player.getHeldItem(hand);
+		heldItem.setCount(insertItem(0, heldItem, false).getCount());
+	}
+
+	@Override
+	public void addAllItems(EntityPlayer player, EnumHand hand)
+	{
+		if (storedItem.isEmpty())
+		{
+			if (player.getHeldItem(hand).isEmpty())
+			{
+				return;
+			}
+
+			addItem(player, hand);
+		}
+
+		for (int i = 0; i < player.inventory.mainInventory.size(); i++)
+		{
+			ItemStack stack0 = player.inventory.mainInventory.get(i);
+			ItemStack is = insertItem(0, stack0, false);
+			stack0 = player.inventory.mainInventory.get(i);
+
+			if (is != stack0)
+			{
+				stack0.setCount(is.getCount());
+
+				if (stack0.isEmpty())
+				{
+					player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void removeItem(EntityPlayer player, boolean removeStack)
 	{
 		ItemStack storedItem = getStoredItemType();
-		if (!storedItem.isEmpty() && itemCount == 0 && !isLocked)
+		if (!storedItem.isEmpty() && itemCount == 0 && !isLocked.getBoolean())
 		{
 			setStoredItemType(ItemStack.EMPTY, 0);
 			markBarrelDirty(true);
@@ -462,7 +516,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		{
 			int size;
 
-			if (YabbaConfig.SNEAK_LEFT_CLICK_EXTRACTS_STACK.getBoolean() == playerIn.isSneaking())
+			if (removeStack)
 			{
 				size = storedItem.getMaxStackSize();
 			}
@@ -475,21 +529,21 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 			if (!stack.isEmpty())
 			{
-				if (playerIn.inventory.addItemStackToInventory(stack))
+				if (player.inventory.addItemStackToInventory(stack))
 				{
-					playerIn.inventory.markDirty();
+					player.inventory.markDirty();
 
-					if (playerIn.openContainer != null)
+					if (player.openContainer != null)
 					{
-						playerIn.openContainer.detectAndSendChanges();
+						player.openContainer.detectAndSendChanges();
 					}
 				}
 				else
 				{
-					EntityItem ei = new EntityItem(playerIn.world, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
+					EntityItem ei = new EntityItem(player.world, player.posX, player.posY, player.posZ, stack);
 					ei.motionX = ei.motionY = ei.motionZ = 0D;
 					ei.setPickupDelay(0);
-					playerIn.world.spawnEntity(ei);
+					player.world.spawnEntity(ei);
 				}
 			}
 			//return !playerIn.isSneaking();
@@ -497,118 +551,50 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		//return getItemCount() > 0;
 	}
 
-	public void onRightClick(EntityPlayer playerIn, IBlockState state, EnumHand hand, float hitX, float hitY, float hitZ, EnumFacing facing, long deltaClickTime)
+	@Override
+	public void createConfig(YabbaCreateConfigEvent event)
 	{
-		if (deltaClickTime <= 8)
+		super.createConfig(event);
+		String group = Yabba.MOD_ID;
+		event.add(group, "disable_ore_items", disableOreItems);
+
+		if (!hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
 		{
-			if (!getStoredItemType().isEmpty())
-			{
-				for (int i = 0; i < playerIn.inventory.mainInventory.size(); i++)
-				{
-					ItemStack stack0 = playerIn.inventory.mainInventory.get(i);
-					ItemStack is = insertItem(0, stack0, false);
-					stack0 = playerIn.inventory.mainInventory.get(i);
+			event.add(group, "locked", isLocked);
+		}
+	}
 
-					if (is != stack0)
-					{
-						stack0.setCount(is.getCount());
-
-						if (stack0.isEmpty())
-						{
-							playerIn.inventory.mainInventory.set(i, ItemStack.EMPTY);
-						}
-					}
-				}
-			}
-
-			playerIn.inventory.markDirty();
-
-			if (playerIn.openContainer != null)
-			{
-				playerIn.openContainer.detectAndSendChanges();
-			}
-
-			return;
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(List<String> tooltip, ITooltipFlag flagIn)
+	{
+		if (isLocked.getBoolean())
+		{
+			tooltip.add(StringUtils.translate("barrel_config.yabba.locked.name"));
 		}
 
-		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if (heldItem.isEmpty())
+		if (!storedItem.isEmpty())
 		{
-			if (playerIn.isSneaking())
-			{
-				float x;
-
-				if (facing == EnumFacing.UP || facing == EnumFacing.DOWN)
-				{
-					x = getX(state.getValue(BlockHorizontal.FACING), hitX, hitZ);
-				}
-				else
-				{
-					x = getX(facing, hitX, hitZ);
-				}
-
-				if (x < BUTTON_SIZE)
-				{
-					IConfigTree tree = new ConfigTree();
-					new YabbaCreateConfigEvent(this, tree).post();
-					FTBLibAPI.API.editServerConfig((EntityPlayerMP) playerIn, null, new BasicConfigContainer(new TextComponentTranslation(getBlockType().getUnlocalizedName() + ".name"), tree)
-					{
-						@Override
-						public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-						{
-							super.saveConfig(sender, nbt, json);
-							markBarrelDirty(true);
-						}
-					});
-				}
-				else if (x > 1D - BUTTON_SIZE && !hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
-				{
-					isLocked = !isLocked;
-
-					if (!getStoredItemType().isEmpty() && itemCount == 0 && !isLocked)
-					{
-						setStoredItemType(ItemStack.EMPTY, 0);
-					}
-				}
-
-				markBarrelDirty(true);
-				return;
-			}
-
-			playerIn.inventory.markDirty();
-
-			if (playerIn.openContainer != null)
-			{
-				playerIn.openContainer.detectAndSendChanges();
-			}
+			tooltip.add("Item: " + storedItem.getDisplayName()); //LANG
 		}
-		else
+
+		if (!hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
 		{
-			if (heldItem.getItem() instanceof IUpgrade)
+			if (hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY))
 			{
-				if (!hasUpgrade(heldItem.getItem()))
-				{
-					ApplyUpgradeEvent event = new ApplyUpgradeEvent(false, this, new UpgradeInst(heldItem), playerIn, hand, facing);
-
-					if (event.getUpgrade().getUpgrade().applyOn(event))
-					{
-						if (event.consumeItem())
-						{
-							heldItem.shrink(1);
-						}
-
-						upgrades.put(heldItem.getItem(), event.getUpgrade());
-						markBarrelDirty(true);
-					}
-				}
+				tooltip.add(itemCount + " items"); //LANG
+			}
+			else if (!storedItem.isEmpty())
+			{
+				tooltip.add(itemCount + " / " + getMaxItems(storedItem));
 			}
 			else
 			{
-				heldItem.setCount(insertItem(0, heldItem, false).getCount());
+				tooltip.add("Max " + tier.maxItemStacks.getInt() + " stacks"); //LANG
 			}
 		}
 
-		markBarrelDirty(true);
+		super.addInformation(tooltip, flagIn);
 	}
 
 	@Override

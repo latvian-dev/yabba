@@ -2,6 +2,7 @@ package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
+import com.latmod.yabba.api.RemoveUpgradeEvent;
 
 /**
  * @author LatvianModder
@@ -9,6 +10,10 @@ import com.latmod.yabba.api.ApplyUpgradeEvent;
 public interface IUpgrade
 {
 	boolean applyOn(ApplyUpgradeEvent event);
+
+	default void onRemoved(RemoveUpgradeEvent event)
+	{
+	}
 
 	default DataStorage createBarrelUpgradeData()
 	{

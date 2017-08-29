@@ -1,5 +1,6 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
@@ -29,7 +30,9 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -135,22 +138,30 @@ public class YabbaClient extends YabbaCommon
 
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values())
 		{
-			BarrelSkin skin = new BarrelSkin(fluid.getName(), TextureSet.of("all=" + fluid.getStill()));
+			FluidStack stack = new FluidStack(fluid, 1000);
+			BarrelSkin skin = new BarrelSkin(fluid.getName(), TextureSet.of("all=" + fluid.getStill(stack)));
 
 			if (fluid == FluidRegistry.WATER)
 			{
-				skin.unlocalizedName = "tile.water.name";
+				skin.displayName = StringUtils.translate("tile.water.name");
 			}
 			else if (fluid == FluidRegistry.LAVA)
 			{
-				skin.unlocalizedName = "tile.lava.name";
+				skin.displayName = StringUtils.translate("tile.lava.name");
 			}
 			else
 			{
-				skin.unlocalizedName = fluid.getUnlocalizedName() + ".name";
+				skin.displayName = StringUtils.translate(fluid.getUnlocalizedName(stack) + ".name");
 			}
 
 			skin.layer = BlockRenderLayer.TRANSLUCENT;
+			skin.color = Color4I.rgba(fluid.getColor(stack));
+
+			if (skin.color.equals(Color4I.WHITE))
+			{
+				skin.color = Color4I.NONE;
+			}
+
 			REGISTER_SKIN.addSkin(skin);
 		}
 
@@ -158,27 +169,20 @@ public class YabbaClient extends YabbaCommon
 
 		for (BarrelSkin skin : SKINS.values())
 		{
-			if (skin.unlocalizedName.isEmpty() && skin.state != Blocks.AIR.getDefaultState())
+			if (skin.displayName.isEmpty() && skin.state != Blocks.AIR.getDefaultState())
 			{
 				try
 				{
-					skin.unlocalizedName = skin.state.getBlock().getUnlocalizedName();
-
-					String s = new ItemStack(skin.state.getBlock(), 1, skin.state.getBlock().getMetaFromState(skin.state)).getUnlocalizedName() + ".name";
-
-					if (!s.contains("tile.air"))
-					{
-						skin.unlocalizedName = s;
-					}
+					skin.displayName = new ItemStack(skin.state.getBlock(), 1, skin.state.getBlock().getMetaFromState(skin.state)).getDisplayName();
 				}
 				catch (Exception ex)
 				{
 				}
 			}
 
-			if (skin.unlocalizedName.isEmpty() || skin.unlocalizedName.contains("tile.air"))
+			if (skin.displayName.isEmpty() || skin.displayName.contains("air"))
 			{
-				skin.unlocalizedName = "";
+				skin.displayName = "";
 			}
 
 			if (skin.icon.isNull())
@@ -313,9 +317,9 @@ public class YabbaClient extends YabbaCommon
 
 					BarrelSkin skin = new BarrelSkin(id.toString(), textures);
 
-					if (json.has("lang"))
+					if (json.has("name"))
 					{
-						skin.unlocalizedName = json.get("lang").getAsString();
+						skin.displayName = JsonUtils.deserializeTextComponent(json.get("name")).getFormattedText();
 					}
 
 					if (json.has("icon"))
@@ -326,6 +330,11 @@ public class YabbaClient extends YabbaCommon
 					if (json.has("layer"))
 					{
 						skin.layer = ClientUtils.BLOCK_RENDER_LAYER_NAME_MAP.get(json.get("layer").getAsString());
+					}
+
+					if (json.has("color"))
+					{
+						skin.color = Color4I.fromJson(json.get("color"));
 					}
 
 					skin.state = CommonUtils.getStateFromName(json.has("state") ? parseVariableString(json.get("state").getAsString()) : skin.id);
@@ -371,6 +380,14 @@ public class YabbaClient extends YabbaCommon
 	}
 
 	@Override
+	public void postInit()
+	{
+		super.postInit();
+		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
+		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
+	}
+
+	@Override
 	public void openModelGui()
 	{
 		new GuiSelectModel().openGui();
@@ -382,14 +399,24 @@ public class YabbaClient extends YabbaCommon
 		new GuiSelectSkin().openGui();
 	}
 
-	public static BarrelSkin getSkin(String id)
+	public static BarrelSkin getSkin(@Nullable String id)
 	{
+		if (id == null || id.isEmpty())
+		{
+			return DEFAULT_SKIN;
+		}
+
 		BarrelSkin skin = SKINS.get(id);
 		return skin == null ? DEFAULT_SKIN : skin;
 	}
 
-	public static BarrelModel getModel(String id)
+	public static BarrelModel getModel(@Nullable String id)
 	{
+		if (id == null || id.isEmpty())
+		{
+			return DEFAULT_MODEL;
+		}
+
 		BarrelModel model = MODELS.get(id);
 		return model == null ? DEFAULT_MODEL : model;
 	}

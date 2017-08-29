@@ -1,10 +1,10 @@
 package com.latmod.yabba.api;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
@@ -20,8 +20,9 @@ public class BarrelSkin
 	public IDrawableObject icon = ImageProvider.NULL;
 	public SpriteSet spriteSet;
 	public IBlockState state = Blocks.AIR.getDefaultState();
-	public String unlocalizedName = "";
+	public String displayName = "";
 	public BlockRenderLayer layer = BlockRenderLayer.SOLID;
+	public Color4I color = Color4I.NONE;
 
 	public BarrelSkin(String _id, TextureSet _textures)
 	{
@@ -50,6 +51,6 @@ public class BarrelSkin
 
 	public String toString()
 	{
-		return unlocalizedName.isEmpty() ? id : StringUtils.translate(unlocalizedName);
+		return displayName.isEmpty() ? id : displayName;
 	}
 }

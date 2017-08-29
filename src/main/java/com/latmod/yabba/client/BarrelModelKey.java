@@ -3,6 +3,8 @@ package com.latmod.yabba.client;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.BarrelSkin;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
@@ -10,14 +12,14 @@ public class BarrelModelKey
 {
 	public static final BarrelModelKey DEFAULT = new BarrelModelKey("", "");
 
-	public static BarrelModelKey get(String m, String s)
+	public static BarrelModelKey get(@Nullable String m, @Nullable String s)
 	{
-		if (!m.isEmpty() && m.equals(YabbaCommon.DEFAULT_MODEL_ID))
+		if (m == null || !m.isEmpty() && m.equals(YabbaCommon.DEFAULT_MODEL_ID))
 		{
 			m = "";
 		}
 
-		if (!s.isEmpty() && s.equals(YabbaCommon.DEFAULT_SKIN_ID))
+		if (s == null || !s.isEmpty() && s.equals(YabbaCommon.DEFAULT_SKIN_ID))
 		{
 			s = "";
 		}
@@ -33,7 +35,7 @@ public class BarrelModelKey
 	public final String model;
 	public final String skin;
 
-	public BarrelModelKey(String m, String s)
+	private BarrelModelKey(String m, String s)
 	{
 		model = m;
 		skin = s;

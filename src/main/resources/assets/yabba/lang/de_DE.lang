@@ -3,17 +3,17 @@ itemGroup.yabba=YABBA
 itemGroup.yabba.all_models=Alle YABBA-Fässer
 
 # Items
-item.yabba.upgrade.name=Fassupgrade
-item.yabba.upgrade.blank=Leer
-item.yabba.upgrade.iron_upgrade=Holz zu Eisen
-item.yabba.upgrade.gold_upgrade=Eisen zu Gold
-item.yabba.upgrade.diamond_upgrade=Gold zu Diamant
-item.yabba.upgrade.nether_star_upgrade=Unendliche Kapazität
-item.yabba.upgrade.creative=Kreativfass
-item.yabba.upgrade.obsidian_shell=Obsidianhülle
-item.yabba.upgrade.redstone_out=Redstone-Output
-item.yabba.upgrade.hopper=Trichter
-item.yabba.upgrade.void=Gegenstände löschen
+item.yabba.upgrade.desc=Fassupgrade
+item.yabba.upgrade_blank.name=Leer
+item.yabba.upgrade_iron_tier.name=Holz zu Eisen
+item.yabba.upgrade_gold_tier.name=Eisen zu Gold
+item.yabba.upgrade_diamond_tier.name=Gold zu Diamant
+item.yabba.upgrade_infinite_capacity.name=Unendliche Kapazität
+item.yabba.upgrade_creative.name=Kreativfass
+item.yabba.upgrade_obsidian_shell.name=Obsidianhülle
+item.yabba.upgrade_redstone_out.name=Redstone-Output
+item.yabba.upgrade_hopper.name=Trichter
+item.yabba.upgrade_void.name=Gegenstände löschen
 
 item.yabba.painter.name=Fassbemaler
 item.yabba.hammer.name=Fasshammer

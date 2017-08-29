@@ -1,19 +1,18 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.tile.TileBarrelBase;
-import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.opengl.GL11;
@@ -23,8 +22,20 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRenderer<T>
 {
-	private static final ResourceLocation TEXTURE_SETTINGS = new ResourceLocation(Yabba.MOD_ID, "textures/blocks/barrel_settings.png");
-	private static final Color4I CREATIVE_COLOR = Color4I.rgb(0xFF00DC);
+	private static final CachedVertexData ICON_SETTINGS[] = new CachedVertexData[5];
+
+	static
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			ICON_SETTINGS[i] = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			ICON_SETTINGS[i].color.set(i == 4 ? Color4I.rgb(0xFF00DC) : Tier.NAME_MAP.get(i).color);
+			ICON_SETTINGS[i].pos(-0.5D, -0.5D, 0D).tex(0, 0);
+			ICON_SETTINGS[i].pos(-0.5D, +0.5D, 0D).tex(0, 1);
+			ICON_SETTINGS[i].pos(+0.5D, +0.5D, 0D).tex(1, 1);
+			ICON_SETTINGS[i].pos(+0.5D, -0.5D, 0D).tex(1, 0);
+		}
+	}
 
 	@Override
 	public void render(T barrel, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -36,6 +47,8 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 
 		boolean hasIcon = hasIcon(barrel);
 		boolean isSneaking = ClientUtils.MC.player.isSneaking();
+		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
+		boolean mouseOver = ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK && ray.getBlockPos().equals(barrel.getPos());
 
 		if (!hasIcon && !isSneaking)
 		{
@@ -58,17 +71,15 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.depthMask(true);
 
-		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
-		boolean mouseOver = ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK && ray.getBlockPos().equals(barrel.getPos());
 		BarrelModel model = YabbaClient.getModel(barrel.model);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
 
 		if (mouseOver || YabbaConfig.ALWAYS_DISPLAY_DATA.get().get(barrel.alwaysDisplayData.getBoolean()))
 		{
 			boolean isCreative = barrel.hasUpgrade(YabbaItems.UPGRADE_CREATIVE);
 			float textDistance = model.textDistance;
 			boolean infinite = isCreative || barrel.hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY);
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
 
 			if (hasIcon)
 			{
@@ -115,42 +126,6 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 				float f1 = 1F / (float) Math.max((sw1 + 10), 64);
 				GlStateManager.scale(f1, f1, 1F);
 				getFontRenderer().drawString(s2, -sw1 / 2, 0, 0xFFFFFFFF);
-				GlStateManager.popMatrix();
-			}
-
-			if (isSneaking && mouseOver)
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.translate(0D, 0D, textDistance);
-				ClientUtils.MC.getTextureManager().bindTexture(TEXTURE_SETTINGS);
-				GlStateManager.enableTexture2D();
-				GlStateManager.color(1F, 1F, 1F, 1F);
-
-				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-				int a = 255;
-
-				double is = TileItemBarrel.BUTTON_SIZE;
-				double ix = 1F - is;
-				double iy = 0.5D - is / 2D;
-				double u = isCreative ? 0.5D : (barrel.isLocked ? 0D : 0.5D);
-				double v = isCreative ? 0.5D : 0D;
-
-				buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(255, 255, 255, a).endVertex();
-				buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(255, 255, 255, a).endVertex();
-				buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(255, 255, 255, a).endVertex();
-				buffer.pos(ix, iy, 0D).tex(u, v).color(255, 255, 255, a).endVertex();
-
-				ix = 0D;
-				u = 0D;
-				v = 0.5D;
-				Color4I col = infinite ? CREATIVE_COLOR : barrel.tier.color;
-				buffer.pos(ix, iy + is, 0D).tex(u, v + 0.5D).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-				buffer.pos(ix + is, iy + is, 0D).tex(u + 0.5D, v + 0.5D).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-				buffer.pos(ix + is, iy, 0D).tex(u + 0.5D, v).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-				buffer.pos(ix, iy, 0D).tex(u, v).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-
-				tessellator.draw();
-
 				GlStateManager.popMatrix();
 			}
 		}

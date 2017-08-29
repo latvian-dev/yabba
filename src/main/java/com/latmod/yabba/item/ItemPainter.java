@@ -73,7 +73,7 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{
-		if (!event.simulate() && event.getBarrel().setSkin(getSkin(event.getUpgrade().getStack())))
+		if (!event.simulate() && event.getBarrel().setSkin(getSkin(event.getHeldItem())))
 		{
 			event.setConsumeItem(false);
 		}

@@ -4,9 +4,6 @@ import com.feed_the_beast.ftbl.api.IWithMetadata;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.latmod.yabba.item.YabbaItems;
-import com.latmod.yabba.tile.TileBarrelBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nullable;
@@ -60,15 +57,5 @@ public enum Tier implements IStringSerializable, IWithMetadata
 			default:
 				return null;
 		}
-	}
-
-	public int getMaxItems(TileBarrelBase barrel, ItemStack itemStack)
-	{
-		if (barrel.hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY))
-		{
-			return 2000000000;
-		}
-
-		return maxItemStacks.getInt() * (itemStack.isEmpty() ? 1 : itemStack.getMaxStackSize());
 	}
 }

@@ -68,7 +68,7 @@ public class ItemUpgradeRedstone extends ItemUpgrade
 		@Override
 		public void serializeNBT(NBTTagCompound nbt, EnumSaveType type)
 		{
-			Mode.NAME_MAP.writeToNBT(nbt, "Mode", type, mode);
+			Mode.NAME_MAP.writeToNBT(nbt, "Mode", type, mode.getValue());
 			nbt.setInteger("Count", count.getInt());
 		}
 

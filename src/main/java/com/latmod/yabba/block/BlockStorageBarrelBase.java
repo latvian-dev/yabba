@@ -3,11 +3,13 @@ package com.latmod.yabba.block;
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
 import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.tile.TileBarrelBase;
-import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -125,9 +127,9 @@ public class BlockStorageBarrelBase extends BlockYabba
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 
-		if (tile instanceof TileItemBarrel)
+		if (tile instanceof TileBarrelBase)
 		{
-			return ((TileItemBarrel) tile).createState(state);
+			return ((TileBarrelBase) tile).createState(state);
 		}
 
 		return state;
@@ -225,9 +227,16 @@ public class BlockStorageBarrelBase extends BlockYabba
 
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-		if (tileEntity instanceof TileItemBarrel)
+		if (tileEntity instanceof TileBarrelBase)
 		{
-			((TileItemBarrel) tileEntity).onLeftClick(playerIn);
+			((TileBarrelBase) tileEntity).removeItem(playerIn, playerIn.isSneaking() == YabbaConfig.SNEAK_LEFT_CLICK_EXTRACTS_STACK.getBoolean());
+
+			playerIn.inventory.markDirty();
+
+			if (playerIn.openContainer != null)
+			{
+				playerIn.openContainer.detectAndSendChanges();
+			}
 		}
 	}
 
@@ -235,7 +244,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if (side != normalizeFacing(state) && (heldItem.isEmpty() || heldItem.getItem() instanceof ItemBlockBarrel))
+		if (heldItem.getItem() instanceof ItemBlockBarrel)
 		{
 			return false;
 		}
@@ -244,15 +253,66 @@ public class BlockStorageBarrelBase extends BlockYabba
 		{
 			TileEntity tile = worldIn.getTileEntity(pos);
 
-			if (tile instanceof TileItemBarrel)
+			if (tile instanceof TileBarrelBase)
 			{
-				Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
-				long time = worldIn.getTotalWorldTime();
-				((TileItemBarrel) tile).onRightClick(playerIn, state, hand, hitX, hitY, hitZ, side, l == null ? Long.MAX_VALUE : (time - l));
+				TileBarrelBase barrel = (TileBarrelBase) tile;
 
-				if (heldItem.isEmpty() || !(heldItem.getItem() instanceof IUpgrade))
+				Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+
+				if (l == null)
 				{
-					LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+					l = 0L;
+				}
+
+				ItemStack handItem = playerIn.getHeldItem(hand);
+
+				if (handItem.isEmpty() && playerIn.isSneaking())
+				{
+					barrel.displayConfig(playerIn);
+				}
+				else if (handItem.getItem() instanceof IUpgrade)
+				{
+					if (!barrel.hasUpgrade(heldItem.getItem()))
+					{
+						ApplyUpgradeEvent event = new ApplyUpgradeEvent(false, barrel, new UpgradeInst(heldItem.getItem()), playerIn, hand, side);
+
+						if (event.getUpgrade().getUpgrade().applyOn(event))
+						{
+							if (event.consumeItem())
+							{
+								heldItem.shrink(1);
+							}
+
+							barrel.upgrades.put(heldItem.getItem(), event.getUpgrade());
+						}
+					}
+				}
+				else
+				{
+					long time = worldIn.getTotalWorldTime();
+
+					if (time - l <= 8L)
+					{
+						barrel.addAllItems(playerIn, hand);
+					}
+					else if (!heldItem.isEmpty())
+					{
+						barrel.addItem(playerIn, hand);
+					}
+
+					barrel.markBarrelDirty(true);
+
+					playerIn.inventory.markDirty();
+
+					if (playerIn.openContainer != null)
+					{
+						playerIn.openContainer.detectAndSendChanges();
+					}
+
+					//if (heldItem.isEmpty())
+					{
+						LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+					}
 				}
 			}
 		}
@@ -264,7 +324,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileItemBarrel && ((TileItemBarrel) tile).canConnectRedstone(side);
+		return tile instanceof TileBarrelBase && ((TileBarrelBase) tile).canConnectRedstone(side);
 	}
 
 	@Override
@@ -272,7 +332,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = blockAccess.getTileEntity(pos);
-		return tile instanceof TileItemBarrel ? ((TileItemBarrel) tile).redstoneOutput(side) : 0;
+		return tile instanceof TileBarrelBase ? ((TileBarrelBase) tile).redstoneOutput(side) : 0;
 	}
 
 	@Override
@@ -280,7 +340,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = blockAccess.getTileEntity(pos);
-		return tile instanceof TileItemBarrel ? ((TileItemBarrel) tile).redstoneOutput(side) : 0;
+		return tile instanceof TileBarrelBase ? ((TileBarrelBase) tile).redstoneOutput(side) : 0;
 	}
 
 	@Override

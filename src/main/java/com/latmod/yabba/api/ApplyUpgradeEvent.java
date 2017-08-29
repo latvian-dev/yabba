@@ -3,6 +3,7 @@ package com.latmod.yabba.api;
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
@@ -63,6 +64,11 @@ public class ApplyUpgradeEvent
 	public EnumFacing getFacing()
 	{
 		return facing;
+	}
+
+	public ItemStack getHeldItem()
+	{
+		return player.getHeldItem(hand);
 	}
 
 	public void setConsumeItem(boolean consume)

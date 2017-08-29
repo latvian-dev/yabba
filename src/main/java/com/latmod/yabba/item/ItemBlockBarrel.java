@@ -1,12 +1,12 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
-import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.client.YabbaClient;
+import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,57 +29,18 @@ public class ItemBlockBarrel extends ItemBlockBase
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		String m = "", s = "";
-		NBTTagCompound data = null;
-
-		if (stack.hasTagCompound())
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
 		{
-			data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-			m = data.getString("Model");
-			s = data.getString("Skin");
+			TileBarrelBase barrel = (TileBarrelBase) block.createTileEntity(worldIn, block.getDefaultState());
+			barrel.readFromNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+			tooltip.add(ItemHammer.getModelTooltip(barrel.model));
+			tooltip.add(ItemPainter.getSkinTooltip(barrel.skin));
+			barrel.addInformation(tooltip, flagIn);
 		}
-
-		tooltip.add(ItemHammer.getModelTooltip(m));
-		tooltip.add(ItemPainter.getSkinTooltip(s));
-
-		if (data != null && !data.hasNoTags())
+		else
 		{
-			TileItemBarrel barrel = new TileItemBarrel();
-			barrel.readFromNBT(data);
-
-			if (!barrel.storedItem.isEmpty())
-			{
-				tooltip.add("Item: " + barrel.storedItem.getDisplayName()); //LANG
-			}
-
-			if (!barrel.hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
-			{
-				if (barrel.hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY))
-				{
-					tooltip.add(barrel.itemCount + " items"); //LANG
-				}
-				else if (!barrel.storedItem.isEmpty())
-				{
-					tooltip.add(barrel.itemCount + " / " + barrel.tier.getMaxItems(barrel, barrel.storedItem));
-				}
-				else
-				{
-					tooltip.add("Max " + barrel.tier.maxItemStacks.getInt() + " stacks"); //LANG
-				}
-			}
-			
-			/*
-			List<ITextComponent> upgrades = barrel.getUpgradeNames();
-
-			if (!upgrades.isEmpty())
-			{
-				tooltip.add("Upgrades:"); //LANG
-
-				for (ITextComponent component : upgrades)
-				{
-					tooltip.add("> " + component.getFormattedText());
-				}
-			}*/
+			tooltip.add(ItemHammer.getModelTooltip(YabbaClient.DEFAULT_MODEL_ID));
+			tooltip.add(ItemPainter.getSkinTooltip(YabbaClient.DEFAULT_SKIN_ID));
 		}
 	}
 

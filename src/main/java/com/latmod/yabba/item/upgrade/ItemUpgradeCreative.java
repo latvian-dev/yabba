@@ -4,7 +4,6 @@ import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.tile.TileItemBarrel;
-import net.minecraft.item.ItemStack;
 
 /**
  * @author LatvianModder
@@ -28,8 +27,8 @@ public class ItemUpgradeCreative extends ItemUpgrade
 				((TileItemBarrel) barrel).setItemCount(1000000000);
 			}
 
-			barrel.addUpgrade(new ItemStack(YabbaItems.UPGRADE_INFINITE_CAPACITY), false);
-			barrel.isLocked = false;
+			barrel.addUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY, false);
+			barrel.isLocked.setBoolean(false);
 		}
 
 		return true;

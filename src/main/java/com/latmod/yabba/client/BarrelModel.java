@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.latmod.yabba.api.BarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -154,7 +155,7 @@ public class BarrelModel
 
 	public interface ModelFunction
 	{
-		void apply(ModelBuilder builder, BarrelModel model);
+		void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin);
 	}
 
 	public enum SetUvlock implements ModelFunction
@@ -163,7 +164,7 @@ public class BarrelModel
 		FALSE;
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
 		{
 			builder.setUVLocked(this == TRUE);
 		}
@@ -175,7 +176,7 @@ public class BarrelModel
 		FALSE;
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
 		{
 			builder.setShade(this == TRUE);
 		}
@@ -191,7 +192,7 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
 		{
 			model.currentTexture = model.textureMap.get(tex);
 		}
@@ -207,7 +208,7 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
 		{
 			model.offset = off;
 		}
@@ -256,8 +257,15 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
 		{
+			if (faces.isEmpty())
+			{
+				return;
+			}
+
+			builder.setTintIndex((skin.color.hasColor() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
+
 			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
 			Vector3f tov = new Vector3f((float) (model.offset.x + to.x), (float) (model.offset.y + to.y), (float) (model.offset.z + to.z));
 
@@ -271,8 +279,15 @@ public class BarrelModel
 	public static class InvertedCube extends Cube
 	{
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
 		{
+			if (faces.isEmpty())
+			{
+				return;
+			}
+
+			builder.setTintIndex((skin.color.hasColor() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
+
 			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
 			Vector3f tov = new Vector3f((float) (model.offset.x + to.x), (float) (model.offset.y + to.y), (float) (model.offset.z + to.z));
 
@@ -379,7 +394,7 @@ public class BarrelModel
 		return StringUtils.translate(unlocalizedName);
 	}
 
-	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation)
+	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin)
 	{
 		currentTexture = textureMap.get("skin");
 		offset = Vec3d.ZERO;
@@ -387,7 +402,7 @@ public class BarrelModel
 
 		for (ModelFunction func : model)
 		{
-			func.apply(builder, this);
+			func.apply(builder, this, skin);
 		}
 
 		currentTexture = null;
@@ -395,7 +410,7 @@ public class BarrelModel
 		return builder.getQuads();
 	}
 
-	public List<BakedQuad> buildItemModel(VertexFormat format)
+	public List<BakedQuad> buildItemModel(VertexFormat format, BarrelSkin skin)
 	{
 		if (!itemModel.isEmpty())
 		{
@@ -405,7 +420,7 @@ public class BarrelModel
 
 			for (ModelFunction func : itemModel)
 			{
-				func.apply(builder, this);
+				func.apply(builder, this, skin);
 			}
 
 			currentTexture = null;

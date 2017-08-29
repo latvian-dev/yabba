@@ -1,54 +1,68 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
+import com.google.gson.JsonObject;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.RemoveUpgradeEvent;
+import com.latmod.yabba.api.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockStorageBarrelBase;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.YabbaItems;
+import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author LatvianModder
  */
-public class TileBarrelBase extends TileBase implements ITickable
+public class TileBarrelBase extends TileBase implements ITickable, IConfigContainer
 {
-	public static final double BUTTON_SIZE = 0.24D;
-
 	public Tier tier = Tier.WOOD;
 	public Map<Item, UpgradeInst> upgrades = new HashMap<>();
 	public String model = "";
 	public String skin = "";
-	public boolean isLocked = false;
+	public PropertyBool isLocked = new PropertyBool(false);
 	public PropertyBool alwaysDisplayData = new PropertyBool(false);
 	public PropertyBool displayBar = new PropertyBool(false);
+	private IConfigTree configTree;
 
-	protected String cachedItemName, cachedItemCount;
-	protected float cachedRotationX, cachedRotationY;
-	protected int prevItemCount = -1;
+	private float cachedRotationX, cachedRotationY;
 
 	public TileBarrelBase()
 	{
+		updateContainingBlockInfo();
 	}
 
 	@Override
@@ -61,18 +75,22 @@ public class TileBarrelBase extends TileBase implements ITickable
 
 		if (!upgrades.isEmpty())
 		{
-			NBTTagList nbt1 = new NBTTagList();
+			NBTTagCompound nbt1 = new NBTTagCompound();
 
 			for (UpgradeInst inst : upgrades.values())
 			{
-				NBTTagCompound nbt2 = new NBTTagCompound();
-				nbt2.setTag("Item", inst.getStack().serializeNBT());
+				ResourceLocation id = Item.REGISTRY.getNameForObject(inst.getItem());
 
-				if (!inst.getData().isEmpty())
+				if (id != null)
 				{
-					NBTTagCompound nbt3 = new NBTTagCompound();
-					inst.getData().serializeNBT(nbt3, type);
-					nbt2.setTag("Data", nbt3);
+					NBTTagCompound nbt2 = new NBTTagCompound();
+
+					if (!inst.getData().isEmpty())
+					{
+						inst.getData().serializeNBT(nbt2, type);
+					}
+
+					nbt1.setTag(id.toString(), nbt2);
 				}
 			}
 
@@ -89,7 +107,7 @@ public class TileBarrelBase extends TileBase implements ITickable
 			nbt.setString("Skin", skin);
 		}
 
-		if (isLocked)
+		if (isLocked.getBoolean())
 		{
 			nbt.setBoolean("Locked", true);
 		}
@@ -111,29 +129,28 @@ public class TileBarrelBase extends TileBase implements ITickable
 		tier = Tier.NAME_MAP.get(nbt.getString("Tier"));
 
 		upgrades.clear();
-		NBTTagList upgradeTag = nbt.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
+		NBTTagCompound upgradeTag = nbt.getCompoundTag("Upgrades");
 
-		for (int i = 0; i < upgradeTag.tagCount(); i++)
+		for (String s : upgradeTag.getKeySet())
 		{
-			NBTTagCompound nbt1 = upgradeTag.getCompoundTagAt(i);
-			ItemStack stack = new ItemStack(nbt1.getCompoundTag("Item"));
+			Item item = Item.REGISTRY.getObject(new ResourceLocation(s));
 
-			if (stack.getItem() instanceof IUpgrade)
+			if (item instanceof IUpgrade)
 			{
-				UpgradeInst inst = new UpgradeInst(stack);
+				UpgradeInst inst = new UpgradeInst(item);
 
 				if (!inst.getData().isEmpty())
 				{
-					inst.getData().deserializeNBT(nbt, type);
+					inst.getData().deserializeNBT(upgradeTag.getCompoundTag(s), type);
 				}
 
-				upgrades.put(stack.getItem(), inst);
+				upgrades.put(item, inst);
 			}
 		}
 
 		model = nbt.getString("Model");
 		skin = nbt.getString("Skin");
-		isLocked = nbt.getBoolean("Locked");
+		isLocked.setBoolean(nbt.getBoolean("Locked"));
 		alwaysDisplayData.setBoolean(nbt.getBoolean("AlwaysDisplayData"));
 		displayBar.setBoolean(nbt.getBoolean("DisplayBar"));
 	}
@@ -153,14 +170,14 @@ public class TileBarrelBase extends TileBase implements ITickable
 	{
 		if (majorChange)
 		{
-			prevItemCount = -1;
+			updateContainingBlockInfo();
 		}
 	}
 
-	public void clearCachedData()
+	@Override
+	public void updateContainingBlockInfo()
 	{
-		cachedItemName = null;
-		cachedItemCount = null;
+		super.updateContainingBlockInfo();
 		cachedRotationX = -1F;
 		cachedRotationY = -1F;
 	}
@@ -168,7 +185,7 @@ public class TileBarrelBase extends TileBase implements ITickable
 	@Override
 	public void onUpdatePacket()
 	{
-		prevItemCount = -1;
+		updateContainingBlockInfo();
 	}
 
 	@Override
@@ -179,7 +196,7 @@ public class TileBarrelBase extends TileBase implements ITickable
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
 	{
-		clearCachedData();
+		updateContainingBlockInfo();
 		return oldState.getBlock() != newSate.getBlock();
 	}
 
@@ -193,7 +210,7 @@ public class TileBarrelBase extends TileBase implements ITickable
 	{
 		if (cachedRotationX == -1F)
 		{
-			IBlockState state = world.getBlockState(pos);
+			IBlockState state = getBlockState();
 
 			if (!(state.getBlock() instanceof BlockStorageBarrelBase))
 			{
@@ -210,7 +227,7 @@ public class TileBarrelBase extends TileBase implements ITickable
 	{
 		if (cachedRotationY == -1F)
 		{
-			IBlockState state = world.getBlockState(pos);
+			IBlockState state = getBlockState();
 
 			if (!(state.getBlock() instanceof BlockStorageBarrelBase))
 			{
@@ -221,23 +238,6 @@ public class TileBarrelBase extends TileBase implements ITickable
 		}
 
 		return cachedRotationY;
-	}
-
-	public static float getX(EnumFacing facing, float hitX, float hitZ)
-	{
-		switch (facing)
-		{
-			case EAST:
-				return 1F - hitZ;
-			case WEST:
-				return hitZ;
-			case NORTH:
-				return 1F - hitX;
-			case SOUTH:
-				return hitX;
-			default:
-				return 0.5F;
-		}
 	}
 
 	public boolean setTier(Tier t)
@@ -288,7 +288,8 @@ public class TileBarrelBase extends TileBase implements ITickable
 
 	public DataStorage getUpgradeData(Item upgrade)
 	{
-		return DataStorage.EMPTY;
+		UpgradeInst inst = upgrades.get(upgrade);
+		return inst == null ? DataStorage.EMPTY : inst.getData();
 	}
 
 	public boolean hasUpgrade(Item upgrade)
@@ -302,7 +303,9 @@ public class TileBarrelBase extends TileBase implements ITickable
 		{
 			if (!simulate)
 			{
-				upgrades.remove(upgrade);
+				UpgradeInst inst = upgrades.remove(upgrade);
+				inst.getUpgrade().onRemoved(new RemoveUpgradeEvent(this, inst));
+				markBarrelDirty(true);
 			}
 
 			return true;
@@ -311,13 +314,14 @@ public class TileBarrelBase extends TileBase implements ITickable
 		return false;
 	}
 
-	public boolean addUpgrade(ItemStack upgrade, boolean simulate)
+	public boolean addUpgrade(Item upgrade, boolean simulate)
 	{
-		if (upgrade.getItem() instanceof IUpgrade && !hasUpgrade(upgrade.getItem()))
+		if (upgrade instanceof IUpgrade && !hasUpgrade(upgrade))
 		{
 			if (!simulate)
 			{
-				upgrades.put(upgrade.getItem(), new UpgradeInst(upgrade));
+				upgrades.put(upgrade, new UpgradeInst(upgrade));
+				markBarrelDirty(true);
 			}
 
 			return true;
@@ -349,6 +353,92 @@ public class TileBarrelBase extends TileBase implements ITickable
 	@Override
 	public boolean shouldDrop()
 	{
-		return super.shouldDrop() || !skin.isEmpty() || !model.isEmpty() || !upgrades.isEmpty() || tier != Tier.WOOD || isLocked;
+		return super.shouldDrop() || !skin.isEmpty() || !model.isEmpty() || !upgrades.isEmpty() || tier != Tier.WOOD || isLocked.getBoolean();
+	}
+
+	public void addItem(EntityPlayer player, EnumHand hand)
+	{
+	}
+
+	public void addAllItems(EntityPlayer player, EnumHand hand)
+	{
+	}
+
+	public void removeItem(EntityPlayer player, boolean stack)
+	{
+	}
+
+	@Override
+	public IConfigTree getConfigTree()
+	{
+		return configTree;
+	}
+
+	@Override
+	public ITextComponent getTitle()
+	{
+		return getDisplayName();
+	}
+
+	@Override
+	public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+	{
+		if (configTree != null)
+		{
+			configTree.fromJson(json);
+			configTree = null;
+		}
+
+		markBarrelDirty(true);
+	}
+
+	public void createConfig(YabbaCreateConfigEvent event)
+	{
+		String group = Yabba.MOD_ID;
+
+		event.add(group, "always_display_data", alwaysDisplayData);
+		event.add(group, "display_bar", displayBar);
+
+		DataStorage data = getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
+		if (data instanceof ItemUpgradeRedstone.Data)
+		{
+			group = Yabba.MOD_ID + ".redstone";
+			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
+			event.add(group, "mode", data1.mode);
+			event.add(group, "count", data1.count);
+		}
+
+		data = getUpgradeData(YabbaItems.UPGRADE_HOPPER);
+		if (data instanceof ItemUpgradeHopper.Data)
+		{
+			group = Yabba.MOD_ID + ".hopper";
+			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
+			event.add(group, "up", data1.up);
+			event.add(group, "down", data1.down);
+			event.add(group, "collect", data1.collect);
+		}
+	}
+
+	public final void displayConfig(EntityPlayer player)
+	{
+		configTree = new ConfigTree();
+		YabbaCreateConfigEvent event = new YabbaCreateConfigEvent(this, configTree, player);
+		event.post();
+		createConfig(event);
+		FTBLibAPI.API.editServerConfig((EntityPlayerMP) player, null, this);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void addInformation(List<String> tooltip, ITooltipFlag flagIn)
+	{
+		if (!upgrades.isEmpty())
+		{
+			tooltip.add("Upgrades:"); //LANG
+
+			for (UpgradeInst upgrade : upgrades.values())
+			{
+				tooltip.add("> " + upgrade.getStack().getDisplayName());
+			}
+		}
 	}
 }

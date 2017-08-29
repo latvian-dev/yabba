@@ -2,27 +2,28 @@ package com.latmod.yabba.util;
 
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.latmod.yabba.item.IUpgrade;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
  * @author LatvianModder
  */
 public class UpgradeInst
 {
-	private final ItemStack stack;
+	private final Item item;
 	private final DataStorage data;
+	private final ItemStack stack;
 
-	public UpgradeInst(ItemStack _stack)
+	public UpgradeInst(Item _item)
 	{
-		stack = ItemHandlerHelper.copyStackWithSize(_stack, 1);
-		stack.setCount(1);
+		item = _item;
 		data = getUpgrade().createBarrelUpgradeData();
+		stack = new ItemStack(item);
 	}
 
-	public ItemStack getStack()
+	public Item getItem()
 	{
-		return stack;
+		return item;
 	}
 
 	public DataStorage getData()
@@ -32,6 +33,11 @@ public class UpgradeInst
 
 	public IUpgrade getUpgrade()
 	{
-		return (IUpgrade) stack.getItem();
+		return (IUpgrade) item;
+	}
+
+	public ItemStack getStack()
+	{
+		return stack;
 	}
 }

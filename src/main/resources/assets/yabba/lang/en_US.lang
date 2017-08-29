@@ -2,16 +2,17 @@
 itemGroup.yabba=YABBA
 
 # Items
+item.yabba.upgrade.desc=Barrel Upgrade
 item.yabba.upgrade_blank.name=Blank Barrel Upgrade
-item.yabba.upgrade_iron_tier.name=Barrel Upgrade: Iron Tier
-item.yabba.upgrade_gold_tier.name=Barrel Upgrade: Gold Tier
-item.yabba.upgrade_diamond_tier.name=Barrel Upgrade: Diamond Tier
-item.yabba.upgrade_infinite_capacity.name=Barrel Upgrade: Infinite Capacity
-item.yabba.upgrade_creative.name=Barrel Upgrade: Creative Barrel
-item.yabba.upgrade_obsidian_shell.name=Barrel Upgrade: Obsidian Shell
-item.yabba.upgrade_redstone_out.name=Barrel Upgrade: Redstone Output
-item.yabba.upgrade_hopper.name=Barrel Upgrade: Hopper
-item.yabba.upgrade_void.name=Barrel Upgrade: Void Items
+item.yabba.upgrade_iron_tier.name=Iron Tier
+item.yabba.upgrade_gold_tier.name=Gold Tier
+item.yabba.upgrade_diamond_tier.name=Diamond Tier
+item.yabba.upgrade_infinite_capacity.name=Infinite Capacity
+item.yabba.upgrade_creative.name=Creative Barrel
+item.yabba.upgrade_obsidian_shell.name=Obsidian Shell
+item.yabba.upgrade_redstone_out.name=Redstone Output
+item.yabba.upgrade_hopper.name=Hopper
+item.yabba.upgrade_void.name=Void Items
 
 item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer
@@ -47,6 +48,7 @@ config.yabba.tier.item.gold.name=Gold
 config.yabba.tier.item.diamond.name=Diamond
 config.yabba.tier.item.infinity.name=Infinity
 
+barrel_config.yabba.locked.name=Locked
 barrel_config.yabba.disable_ore_items.name=Disable Ore Items
 barrel_config.yabba.always_display_data.name=Always Display Data
 barrel_config.yabba.display_bar.name=Display Bar

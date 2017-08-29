@@ -9,7 +9,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +23,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,38 +32,65 @@ import java.util.Map;
  */
 public class BakedBarrelBlockModel extends ModelBase
 {
+	private final VertexFormat format;
 	private final Map<BarrelModelKey, BarrelModelVariant> map;
-	private final BarrelModelVariant defaultModelVariant;
+	private BarrelModelVariant defaultModelVariant;
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(new ArrayList<>())
 	{
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
 		{
+			BarrelModelKey key = BarrelModelKey.DEFAULT;
+
 			if (stack.hasTagCompound())
 			{
 				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-				BarrelModelKey key = BarrelModelKey.get(data.getString("Model"), data.getString("Skin"));
-
-				if (key != BarrelModelKey.DEFAULT)
-				{
-					BarrelModelVariant v = map.get(key);
-
-					if (v != null)
-					{
-						return v.itemModel;
-					}
-				}
+				key = BarrelModelKey.get(data.getString("Model"), data.getString("Skin"));
 			}
 
-			return defaultModelVariant.itemModel;
+			return get(key).itemModel;
 		}
 	};
 
-	public BakedBarrelBlockModel(TextureAtlasSprite p, Map<BarrelModelKey, BarrelModelVariant> m)
+	public BakedBarrelBlockModel(TextureAtlasSprite p, VertexFormat f)
 	{
 		super(p);
-		map = m;
-		defaultModelVariant = map.get(BarrelModelKey.DEFAULT);
+		format = f;
+		map = new HashMap<>();
+	}
+
+	private BarrelModelVariant get(BarrelModelKey key)
+	{
+		if (key == BarrelModelKey.DEFAULT && defaultModelVariant != null)
+		{
+			return defaultModelVariant;
+		}
+
+		BarrelModelVariant variant = map.get(key);
+
+		if (variant == null)
+		{
+			List<List<BakedQuad>> quads = new ArrayList<>(ModelRotation.values().length);
+			BarrelModel model = YabbaClient.getModel(key.model);
+			BarrelSkin skin = YabbaClient.getSkin(key.skin);
+			model.textureMap.put("skin", skin.spriteSet);
+
+			for (ModelRotation rotation : ModelRotation.values())
+			{
+				quads.add(model.buildModel(format, rotation, skin));
+			}
+
+			List<BakedQuad> itemQuads = model.buildItemModel(format, skin);
+			variant = new BarrelModelVariant(quads, new BakedBarrelItemModel(getParticleTexture(), itemQuads.isEmpty() ? quads.get(0) : itemQuads));
+			map.put(key, variant);
+
+			if (key == BarrelModelKey.DEFAULT)
+			{
+				defaultModelVariant = variant;
+			}
+		}
+
+		return variant;
 	}
 
 	@Override
@@ -71,11 +101,10 @@ public class BakedBarrelBlockModel extends ModelBase
 			IExtendedBlockState statex = (IExtendedBlockState) state;
 			BarrelModel model = YabbaClient.getModel(statex.getValue(BlockStorageBarrelBase.MODEL));
 			BarrelSkin skin = YabbaClient.getSkin(statex.getValue(BlockStorageBarrelBase.SKIN));
-			BarrelModelVariant value = map.get(BarrelModelKey.get(model.id, skin.id));
 
-			if (value != null && MinecraftForgeClient.getRenderLayer() == ClientUtils.getStrongest(model.layer, skin.layer))
+			if (MinecraftForgeClient.getRenderLayer() == ClientUtils.getStrongest(model.layer, skin.layer))
 			{
-				return value.getQuads(state.getValue(BlockStorageBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
+				return get(BarrelModelKey.get(model.id, skin.id)).getQuads(state.getValue(BlockStorageBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
 			}
 		}
 

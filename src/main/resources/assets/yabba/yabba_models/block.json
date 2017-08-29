@@ -1,4 +1,5 @@
 {
+	"icon_distance": -0.08,
 	"model": [
 		{"add": "cube", "from_to": [0, 0, 0, 16, 16, 16]}
 	]

@@ -12,19 +12,19 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author LatvianModder
  */
-public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateBarrelItemCount>
+public class MessageUpdateItemBarrelCount extends MessageToClient<MessageUpdateItemBarrelCount>
 {
 	private BlockPos pos;
-	private int itemCount;
+	private int count;
 
-	public MessageUpdateBarrelItemCount()
+	public MessageUpdateItemBarrelCount()
 	{
 	}
 
-	public MessageUpdateBarrelItemCount(BlockPos p, int c)
+	public MessageUpdateItemBarrelCount(BlockPos p, int c)
 	{
 		pos = p;
-		itemCount = c;
+		count = c;
 	}
 
 	@Override
@@ -37,26 +37,26 @@ public class MessageUpdateBarrelItemCount extends MessageToClient<MessageUpdateB
 	public void fromBytes(ByteBuf buf)
 	{
 		pos = NetUtils.readPos(buf);
-		itemCount = buf.readInt();
+		count = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		NetUtils.writePos(buf, pos);
-		buf.writeInt(itemCount);
+		buf.writeInt(count);
 	}
 
 	@Override
-	public void onMessage(MessageUpdateBarrelItemCount message, EntityPlayer player)
+	public void onMessage(MessageUpdateItemBarrelCount message, EntityPlayer player)
 	{
 		TileEntity tile = player.world.getTileEntity(message.pos);
 
 		if (tile instanceof TileItemBarrel)
 		{
 			TileItemBarrel barrel = (TileItemBarrel) tile;
-			barrel.setItemCount(message.itemCount);
-			barrel.clearCachedData();
+			barrel.setItemCount(message.count);
+			barrel.updateContainingBlockInfo();
 		}
 	}
 }
