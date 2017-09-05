@@ -19,16 +19,8 @@ public class ItemUpgradeTier extends ItemUpgrade
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{
-		if (event.getBarrel().tier == tier.getPrevious())
-		{
-			if (!event.simulate())
-			{
-				event.getBarrel().setTier(tier);
-			}
+		event.setAddUpgrade(false);
+		return event.getBarrel().tier == tier.getPrevious() && event.getBarrel().setTier(tier, event.simulate());
 
-			return true;
-		}
-
-		return false;
 	}
 }

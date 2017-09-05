@@ -32,7 +32,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,30 +138,32 @@ public class YabbaClient extends YabbaCommon
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values())
 		{
 			FluidStack stack = new FluidStack(fluid, 1000);
-			BarrelSkin skin = new BarrelSkin(fluid.getName(), TextureSet.of("all=" + fluid.getStill(stack)));
+			String displayName = stack.getLocalizedName();
+			Color4I color = Color4I.rgba(fluid.getColor(stack));
 
-			if (fluid == FluidRegistry.WATER)
+			if (color.equals(Color4I.WHITE))
 			{
-				skin.displayName = StringUtils.translate("tile.water.name");
-			}
-			else if (fluid == FluidRegistry.LAVA)
-			{
-				skin.displayName = StringUtils.translate("tile.lava.name");
-			}
-			else
-			{
-				skin.displayName = StringUtils.translate(fluid.getUnlocalizedName(stack) + ".name");
+				color = Color4I.NONE;
 			}
 
+			ResourceLocation still = fluid.getStill(stack);
+
+			BarrelSkin skin = new BarrelSkin(fluid.getName() + "_still", TextureSet.of("all=" + still));
+			skin.displayName = StringUtils.translate("lang.fluid.still", displayName);
+			skin.color = color;
 			skin.layer = BlockRenderLayer.TRANSLUCENT;
-			skin.color = Color4I.rgba(fluid.getColor(stack));
-
-			if (skin.color.equals(Color4I.WHITE))
-			{
-				skin.color = Color4I.NONE;
-			}
-
 			REGISTER_SKIN.addSkin(skin);
+
+			ResourceLocation flowing = fluid.getFlowing(stack);
+
+			if (!still.equals(flowing))
+			{
+				skin = new BarrelSkin(fluid.getName() + "_flowing", TextureSet.of("up&down=" + still + ",all=" + flowing));
+				skin.displayName = StringUtils.translate("lang.fluid.flowing", displayName);
+				skin.color = color;
+				skin.layer = BlockRenderLayer.TRANSLUCENT;
+				REGISTER_SKIN.addSkin(skin);
+			}
 		}
 
 		new YabbaSkinsEvent(REGISTER_SKIN).post();
@@ -380,6 +381,13 @@ public class YabbaClient extends YabbaCommon
 	}
 
 	@Override
+	public void preInit()
+	{
+		super.preInit();
+		YabbaClientConfig.sync();
+	}
+
+	@Override
 	public void postInit()
 	{
 		super.postInit();
@@ -399,9 +407,9 @@ public class YabbaClient extends YabbaCommon
 		new GuiSelectSkin().openGui();
 	}
 
-	public static BarrelSkin getSkin(@Nullable String id)
+	public static BarrelSkin getSkin(String id)
 	{
-		if (id == null || id.isEmpty())
+		if (id.isEmpty())
 		{
 			return DEFAULT_SKIN;
 		}
@@ -410,9 +418,9 @@ public class YabbaClient extends YabbaCommon
 		return skin == null ? DEFAULT_SKIN : skin;
 	}
 
-	public static BarrelModel getModel(@Nullable String id)
+	public static BarrelModel getModel(String id)
 	{
-		if (id == null || id.isEmpty())
+		if (id.isEmpty())
 		{
 			return DEFAULT_MODEL;
 		}

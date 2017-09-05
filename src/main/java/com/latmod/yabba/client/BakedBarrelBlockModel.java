@@ -2,6 +2,7 @@ package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ModelBase;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockStorageBarrelBase;
 import net.minecraft.block.BlockHorizontal;
@@ -99,8 +100,8 @@ public class BakedBarrelBlockModel extends ModelBase
 		if (state instanceof IExtendedBlockState)
 		{
 			IExtendedBlockState statex = (IExtendedBlockState) state;
-			BarrelModel model = YabbaClient.getModel(statex.getValue(BlockStorageBarrelBase.MODEL));
-			BarrelSkin skin = YabbaClient.getSkin(statex.getValue(BlockStorageBarrelBase.SKIN));
+			BarrelModel model = YabbaClient.getModel(StringUtils.emptyIfNull(statex.getValue(BlockStorageBarrelBase.MODEL)));
+			BarrelSkin skin = YabbaClient.getSkin(StringUtils.emptyIfNull(statex.getValue(BlockStorageBarrelBase.SKIN)));
 
 			if (MinecraftForgeClient.getRenderLayer() == ClientUtils.getStrongest(model.layer, skin.layer))
 			{

@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.RemoveUpgradeEvent;
 import com.latmod.yabba.api.YabbaCreateConfigEvent;
 import com.latmod.yabba.block.BlockStorageBarrelBase;
@@ -155,6 +156,11 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 		displayBar.setBoolean(nbt.getBoolean("DisplayBar"));
 	}
 
+	public BarrelType getType()
+	{
+		throw new IllegalStateException("Missing barrel type!");
+	}
+
 	@Override
 	public IBlockState createState(IBlockState state)
 	{
@@ -240,19 +246,23 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 		return cachedRotationY;
 	}
 
-	public boolean setTier(Tier t)
+	public boolean setTier(Tier t, boolean simulate)
 	{
 		if (tier != t)
 		{
-			tier = t;
-			markBarrelDirty(true);
+			if (!simulate)
+			{
+				tier = t;
+				markBarrelDirty(true);
+			}
+
 			return true;
 		}
 
 		return false;
 	}
 
-	public boolean setSkin(String v)
+	public boolean setSkin(String v, boolean simulate)
 	{
 		if (v.equals(YabbaCommon.DEFAULT_SKIN_ID))
 		{
@@ -261,15 +271,19 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 
 		if (!skin.equals(v))
 		{
-			skin = v;
-			markBarrelDirty(true);
+			if (!simulate)
+			{
+				skin = v;
+				markBarrelDirty(true);
+			}
+
 			return true;
 		}
 
 		return false;
 	}
 
-	public boolean setModel(String v)
+	public boolean setModel(String v, boolean simulate)
 	{
 		if (v.equals(YabbaCommon.DEFAULT_MODEL_ID))
 		{
@@ -278,8 +292,12 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 
 		if (!model.equals(v))
 		{
-			model = v;
-			markBarrelDirty(true);
+			if (!simulate)
+			{
+				model = v;
+				markBarrelDirty(true);
+			}
+
 			return true;
 		}
 

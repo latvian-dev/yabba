@@ -3,7 +3,6 @@ package com.latmod.yabba.block;
 import com.feed_the_beast.ftbl.api.IWithMetadata;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.NameMap;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nullable;
@@ -13,22 +12,24 @@ import javax.annotation.Nullable;
  */
 public enum Tier implements IStringSerializable, IWithMetadata
 {
-	WOOD("wood", 0xC69569, 64),
-	IRON("iron", 0xD8D8D8, 256),
-	GOLD("gold", 0xFCD803, 1024),
-	DIAMOND("dmd", 0x00FFFF, 4096);
+	WOOD("wood", 0xC69569),
+	IRON("iron", 0xD8D8D8),
+	GOLD("gold", 0xFCD803),
+	DIAMOND("diamond", 0x00FFFF),
+	STAR("star", 0xAFC9D8),
+	CREATIVE("creative", 0xFF00FF);
 
+	public static final int MAX_STACKS = 2000000000;
 	public static final NameMap<Tier> NAME_MAP = NameMap.create(WOOD, values());
 
 	private final String name;
-	public final PropertyInt maxItemStacks;
+	public int maxItemStacks = MAX_STACKS;
 	public final Color4I color;
 
-	Tier(String n, int c, int i)
+	Tier(String n, int c)
 	{
 		name = n;
 		color = Color4I.rgb(c);
-		maxItemStacks = new PropertyInt(i, 1, Integer.MAX_VALUE);
 	}
 
 	@Override
@@ -43,6 +44,16 @@ public enum Tier implements IStringSerializable, IWithMetadata
 		return ordinal();
 	}
 
+	public boolean creative()
+	{
+		return this == CREATIVE;
+	}
+
+	public boolean infiniteCapacity()
+	{
+		return this == STAR || this == CREATIVE;
+	}
+
 	@Nullable
 	public Tier getPrevious()
 	{
@@ -54,6 +65,10 @@ public enum Tier implements IStringSerializable, IWithMetadata
 				return IRON;
 			case DIAMOND:
 				return GOLD;
+			case STAR:
+				return DIAMOND;
+			case CREATIVE:
+				return STAR;
 			default:
 				return null;
 		}

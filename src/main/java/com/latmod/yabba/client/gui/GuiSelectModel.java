@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModel;
@@ -41,7 +40,7 @@ public class GuiSelectModel extends GuiBase
 			if (model != null)
 			{
 				setTitle(model.toString());
-				setIcon(new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(model.id, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD)));
+				setIcon(new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(model.id, "", Tier.WOOD)));
 			}
 		}
 

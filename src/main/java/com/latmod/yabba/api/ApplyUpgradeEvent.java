@@ -20,6 +20,7 @@ public class ApplyUpgradeEvent
 	private final EnumHand hand;
 	private final EnumFacing facing;
 	private boolean consumeItem = true;
+	private boolean addUpgrade = true;
 
 	public ApplyUpgradeEvent(boolean s, TileBarrelBase b, UpgradeInst u, EntityPlayer p, EnumHand h, EnumFacing f)
 	{
@@ -79,5 +80,15 @@ public class ApplyUpgradeEvent
 	public boolean consumeItem()
 	{
 		return consumeItem;
+	}
+
+	public void setAddUpgrade(boolean add)
+	{
+		addUpgrade = add;
+	}
+
+	public boolean addUpgrade()
+	{
+		return addUpgrade;
 	}
 }

@@ -3,6 +3,7 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
+import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.util.BarrelModelCustomData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -22,6 +23,8 @@ public class YabbaCommon
 
 	public void preInit()
 	{
+		YabbaConfig.sync();
+		YabbaNetHandler.init();
 	}
 
 	public void postInit()

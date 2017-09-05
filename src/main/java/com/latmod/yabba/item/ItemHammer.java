@@ -72,11 +72,8 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{
-		if (!event.simulate() && event.getBarrel().setModel(getModel(event.getHeldItem())))
-		{
-			event.setConsumeItem(false);
-		}
-
-		return false;
+		event.setConsumeItem(false);
+		event.setAddUpgrade(false);
+		return event.getBarrel().setModel(getModel(event.getHeldItem()), event.simulate());
 	}
 }

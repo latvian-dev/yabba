@@ -2,7 +2,6 @@ package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,7 +25,7 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 {
 	private static String getSkin(ItemStack stack)
 	{
-		return stack.hasTagCompound() ? stack.getTagCompound().getString("Skin") : YabbaCommon.DEFAULT_SKIN_ID;
+		return stack.hasTagCompound() ? stack.getTagCompound().getString("Skin") : "";
 	}
 
 	public static void setSkin(ItemStack stack, String skinId)
@@ -73,11 +72,8 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{
-		if (!event.simulate() && event.getBarrel().setSkin(getSkin(event.getHeldItem())))
-		{
-			event.setConsumeItem(false);
-		}
-
-		return false;
+		event.setConsumeItem(false);
+		event.setAddUpgrade(false);
+		return event.getBarrel().setSkin(getSkin(event.getHeldItem()), event.simulate());
 	}
 }

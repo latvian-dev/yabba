@@ -1,7 +1,6 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
-import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -39,8 +38,8 @@ public class ItemBlockBarrel extends ItemBlockBase
 		}
 		else
 		{
-			tooltip.add(ItemHammer.getModelTooltip(YabbaClient.DEFAULT_MODEL_ID));
-			tooltip.add(ItemPainter.getSkinTooltip(YabbaClient.DEFAULT_SKIN_ID));
+			tooltip.add(ItemHammer.getModelTooltip(""));
+			tooltip.add(ItemPainter.getSkinTooltip(""));
 		}
 	}
 

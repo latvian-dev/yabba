@@ -35,7 +35,7 @@ public class YabbaCreateConfigEvent extends YabbaEvent
 
 	public IConfigKey add(String group, String id, IConfigValue value)
 	{
-		ConfigKey key = new ConfigKey(id, value.copy(), group, "barrel_config");
+		ConfigKey key = new ConfigKey(id, value.copy(), group);
 		settings.add(key, value);
 		return key;
 	}

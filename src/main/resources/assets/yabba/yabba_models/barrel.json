@@ -4,15 +4,13 @@
 		"band": "north=yabba:blocks/barrel_band_window,south&east&west=yabba:blocks/barrel_band"
 	},
 	"model": [
-		{"add": "cube", "from_to": [2, 15, 2, 14, 16, 14], "faces_except": "down"},
-		{"add": "cube", "from_to": [1, 13, 1, 15, 15, 15], "faces_except": "down"},
 		{"add": "cube", "from_to": [0, 12, 0, 16, 13, 16], "faces_except": "y"},
 		{"add": "cube", "from_to": [0, 13, 0, 16, 13, 1], "faces": "up"},
 		{"add": "cube", "from_to": [0, 13, 15, 16, 13, 16], "faces": "up"},
 		{"add": "cube", "from_to": [0, 13, 1, 1, 13, 15], "faces": "up"},
 		{"add": "cube", "from_to": [15, 13, 1, 16, 13, 15], "faces": "up"},
 		{"add": "cube", "from_to": [0, 6, 0, 16, 10, 16], "faces_except": ["y", "north"]},
-		{"add": "inverted_cube", "from_to": [4, 4, 0, 12, 12, 1], "faces_except": "south"},
+		{"add": "inverted_cube", "from_to": [4, 4, 0, 12, 12, 1], "faces_except": "z"},
 		{"add": "cube", "from_to": [0, 6, 0, 4, 10, 0], "faces": "north"},
 		{"add": "cube", "from_to": [12, 6, 0, 16, 10, 0], "faces": "north"},
 		{"add": "cube", "from_to": [0, 3, 0, 16, 3, 1], "faces": "down"},
@@ -20,8 +18,8 @@
 		{"add": "cube", "from_to": [0, 3, 1, 1, 3, 15], "faces": "down"},
 		{"add": "cube", "from_to": [15, 3, 1, 16, 3, 15], "faces": "down"},
 		{"add": "cube", "from_to": [0, 3, 0, 16, 4, 16], "faces_except": "y"},
-		{"add": "cube", "from_to": [1, 1, 1, 15, 3, 15], "faces_except": "up"},
-		{"add": "cube", "from_to": [2, 0, 2, 14, 1, 14], "faces_except": "up"},
+		{"add": "cube", "from_to": [1, 1, 1, 15, 15, 15]},
+		{"add": "cube", "from_to": [2, 0, 2, 14, 16, 14]},
 		{"texture": "band"},
 		{"uvlock": false},
 		{"add": "cube", "from_to": [0, 0, 0, 16, 16, 16]}

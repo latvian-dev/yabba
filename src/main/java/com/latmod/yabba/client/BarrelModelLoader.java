@@ -1,6 +1,8 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.TextureSet;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockStorageBarrelBase;
@@ -98,16 +100,18 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 	{
 		if (tintIndex == 0)
 		{
-			BarrelSkin skin = YabbaClient.getSkin("");
+			String id = "";
 
 			if (state instanceof IExtendedBlockState)
 			{
-				skin = YabbaClient.getSkin(((IExtendedBlockState) state).getValue(BlockStorageBarrelBase.SKIN));
+				id = StringUtils.emptyIfNull(((IExtendedBlockState) state).getValue(BlockStorageBarrelBase.SKIN));
 			}
 
-			if (skin.color.hasColor())
+			Color4I color = YabbaClient.getSkin(id).color;
+
+			if (color.hasColor())
 			{
-				return skin.color.rgba();
+				return color.rgba();
 			}
 		}
 
@@ -119,17 +123,19 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 	{
 		if (tintIndex == 0)
 		{
-			BarrelSkin skin = YabbaClient.getSkin("");
+			String id = "";
 
 			if (stack.hasTagCompound())
 			{
 				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-				skin = YabbaClient.getSkin(data.getString("Skin"));
+				id = data.getString("Skin");
 			}
 
-			if (skin.color.hasColor())
+			Color4I color = YabbaClient.getSkin(id).color;
+
+			if (color.hasColor())
 			{
-				return skin.color.rgba();
+				return color.rgba();
 			}
 		}
 

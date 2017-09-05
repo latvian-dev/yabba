@@ -2,7 +2,6 @@ package com.latmod.yabba;
 
 import com.latmod.yabba.block.BlockStorageBarrelBase;
 import com.latmod.yabba.item.YabbaItems;
-import com.latmod.yabba.net.YabbaNetHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -16,10 +15,11 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author LatvianModder
  */
-@Mod(modid = Yabba.MOD_ID, name = "YABBA", useMetadata = true, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:ftbl")
+@Mod(modid = Yabba.MOD_ID, name = Yabba.MOD_NAME, useMetadata = true, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:ftbl")
 public class Yabba
 {
 	public static final String MOD_ID = "yabba";
+	public static final String MOD_NAME = "YABBA";
 
 	@Mod.Instance(Yabba.MOD_ID)
 	public static Yabba INST;
@@ -41,7 +41,6 @@ public class Yabba
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
-		YabbaNetHandler.init();
 		PROXY.preInit();
 	}
 

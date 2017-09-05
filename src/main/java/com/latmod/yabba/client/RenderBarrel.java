@@ -3,9 +3,7 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -75,15 +73,15 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
-		if (mouseOver || YabbaConfig.ALWAYS_DISPLAY_DATA.get().get(barrel.alwaysDisplayData.getBoolean()))
+		if (mouseOver || YabbaClientConfig.general.always_display_data.get(barrel.alwaysDisplayData.getBoolean()))
 		{
-			boolean isCreative = barrel.hasUpgrade(YabbaItems.UPGRADE_CREATIVE);
+			boolean isCreative = barrel.tier.creative();
 			float textDistance = model.textDistance;
-			boolean infinite = isCreative || barrel.hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY);
+			boolean infinite = isCreative || barrel.tier.infiniteCapacity();
 
 			if (hasIcon)
 			{
-				if (!infinite && !isSneaking && YabbaConfig.DISPLAY_BAR.get().get(barrel.displayBar.getBoolean()))
+				if (!infinite && !isSneaking && YabbaClientConfig.general.display_bar.get(barrel.displayBar.getBoolean()))
 				{
 					GlStateManager.pushMatrix();
 					GlStateManager.disableTexture2D();
@@ -96,13 +94,16 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 					double bh = 0.15D;
 					double filled = MathHelper.clamp(getFilled(barrel), 0D, 1D);
 
-					int a = YabbaConfig.BAR_COLOR_ALPHA.getInt();
-					rect(buffer, bx, by, textDistance, b, bh, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
-					rect(buffer, 1D - b - bx, by, textDistance, b, bh, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
-					rect(buffer, bx + b, by, textDistance, bw - b2, b, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
-					rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, YabbaConfig.BAR_COLOR_BORDER.getColor(), a);
-					rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, YabbaConfig.BAR_COLOR_FREE.getColor(), a);
-					rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, YabbaConfig.BAR_COLOR_FILLED.getColor(), a);
+					int a = YabbaClientConfig.bar_color.alpha;
+					Color4I colBorder = YabbaClientConfig.bar_color.border.getColor();
+					Color4I colFree = YabbaClientConfig.bar_color.free.getColor();
+					Color4I colFilled = YabbaClientConfig.bar_color.filled.getColor();
+					rect(buffer, bx, by, textDistance, b, bh, colBorder, a);
+					rect(buffer, 1D - b - bx, by, textDistance, b, bh, colBorder, a);
+					rect(buffer, bx + b, by, textDistance, bw - b2, b, colBorder, a);
+					rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, colBorder, a);
+					rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, colFree, a);
+					rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, colFilled, a);
 					tessellator.draw();
 					GlStateManager.enableTexture2D();
 					GlStateManager.popMatrix();

@@ -87,7 +87,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		list.add(createStack(YabbaCommon.DEFAULT_MODEL_ID, YabbaCommon.DEFAULT_SKIN_ID, Tier.WOOD));
+		list.add(createStack("", "", Tier.WOOD));
 	}
 
 	@Override
@@ -179,9 +179,9 @@ public class BlockStorageBarrelBase extends BlockYabba
 	public ItemStack createStack(String model, String skin, Tier tier)
 	{
 		TileBarrelBase tile = new TileBarrelBase();
-		tile.setModel(model);
-		tile.setSkin(skin);
-		tile.setTier(tier);
+		tile.setModel(model, false);
+		tile.setSkin(skin, false);
+		tile.setTier(tier, false);
 		return createStack(tile);
 	}
 
@@ -229,7 +229,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 
 		if (tileEntity instanceof TileBarrelBase)
 		{
-			((TileBarrelBase) tileEntity).removeItem(playerIn, playerIn.isSneaking() == YabbaConfig.SNEAK_LEFT_CLICK_EXTRACTS_STACK.getBoolean());
+			((TileBarrelBase) tileEntity).removeItem(playerIn, playerIn.isSneaking() == YabbaConfig.general.sneak_left_click_extracts_stack);
 
 			playerIn.inventory.markDirty();
 
@@ -283,7 +283,10 @@ public class BlockStorageBarrelBase extends BlockYabba
 								heldItem.shrink(1);
 							}
 
-							barrel.upgrades.put(heldItem.getItem(), event.getUpgrade());
+							if (event.addUpgrade())
+							{
+								barrel.upgrades.put(heldItem.getItem(), event.getUpgrade());
+							}
 						}
 					}
 				}

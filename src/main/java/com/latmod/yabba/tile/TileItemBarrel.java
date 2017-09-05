@@ -1,6 +1,5 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -9,7 +8,9 @@ import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.YabbaCreateConfigEvent;
+import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
@@ -59,9 +60,9 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 			String name = OreDictionary.getOreName(id);
 
-			for (IConfigValue v : YabbaConfig.ALLOWED_ORE_PREFIXES.getList())
+			for (String v : YabbaConfig.general.allowed_ore_prefixes)
 			{
-				if (name.startsWith(v.getString()))
+				if (name.startsWith(v))
 				{
 					b = 1;
 					break;
@@ -105,6 +106,12 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	private String cachedItemName, cachedItemCount;
 	private int prevItemCount = -1;
 	private final PropertyBool disableOreItems = new PropertyBool(false);
+
+	@Override
+	public BarrelType getType()
+	{
+		return BarrelType.ITEM;
+	}
 
 	@Override
 	public void markBarrelDirty(boolean majorChange)
@@ -301,12 +308,12 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 	public int getMaxItems(ItemStack stack)
 	{
-		if (hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY))
+		if (tier.infiniteCapacity())
 		{
-			return 2000000000;
+			return Tier.MAX_STACKS;
 		}
 
-		return tier.maxItemStacks.getInt() * (stack.isEmpty() ? 1 : stack.getMaxStackSize());
+		return tier.maxItemStacks * (stack.isEmpty() ? 1 : stack.getMaxStackSize());
 	}
 
 	@Override
@@ -329,9 +336,9 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		{
 			type = ItemHandlerHelper.copyStackWithSize(type, 1);
 
-			if (hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+			if (tier.creative())
 			{
-				amount = 1000000000;
+				amount = Tier.MAX_STACKS / 2;
 			}
 		}
 
@@ -374,7 +381,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 		boolean storedIsEmpty = storedItem.isEmpty();
 		boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack, !disableOreItems.getBoolean());
-		if (!storedIsEmpty && hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+		if (!storedIsEmpty && tier.creative())
 		{
 			return canInsert ? ItemStack.EMPTY : stack;
 		}
@@ -432,7 +439,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 			return ItemStack.EMPTY;
 		}
 
-		if (hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+		if (tier.creative())
 		{
 			return ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(amount, itemCount));
 		}
@@ -475,12 +482,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	{
 		if (storedItem.isEmpty())
 		{
-			if (player.getHeldItem(hand).isEmpty())
-			{
-				return;
-			}
-
-			addItem(player, hand);
+			return;
 		}
 
 		for (int i = 0; i < player.inventory.mainInventory.size(); i++)
@@ -558,7 +560,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		String group = Yabba.MOD_ID;
 		event.add(group, "disable_ore_items", disableOreItems);
 
-		if (!hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+		if (!tier.creative())
 		{
 			event.add(group, "locked", isLocked);
 		}
@@ -578,9 +580,9 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 			tooltip.add("Item: " + storedItem.getDisplayName()); //LANG
 		}
 
-		if (!hasUpgrade(YabbaItems.UPGRADE_CREATIVE))
+		if (!tier.creative())
 		{
-			if (hasUpgrade(YabbaItems.UPGRADE_INFINITE_CAPACITY))
+			if (tier.infiniteCapacity())
 			{
 				tooltip.add(itemCount + " items"); //LANG
 			}
@@ -590,7 +592,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 			}
 			else
 			{
-				tooltip.add("Max " + tier.maxItemStacks.getInt() + " stacks"); //LANG
+				tooltip.add("Max " + tier.maxItemStacks + " stacks"); //LANG
 			}
 		}
 

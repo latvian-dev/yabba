@@ -12,7 +12,6 @@ import com.latmod.yabba.item.upgrade.ItemUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
-import com.latmod.yabba.item.upgrade.ItemUpgradeInfiniteCapacity;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.TileAntibarrel;
@@ -46,7 +45,7 @@ public class YabbaItems
 	public static final Item UPGRADE_IRON_TIER = Items.AIR;
 	public static final Item UPGRADE_GOLD_TIER = Items.AIR;
 	public static final Item UPGRADE_DIAMOND_TIER = Items.AIR;
-	public static final Item UPGRADE_INFINITE_CAPACITY = Items.AIR;
+	public static final Item UPGRADE_STAR_TIER = Items.AIR;
 	public static final Item UPGRADE_CREATIVE = Items.AIR;
 	public static final Item UPGRADE_OBSIDIAN_SHELL = Items.AIR;
 	public static final Item UPGRADE_REDSTONE_OUT = Items.AIR;
@@ -77,7 +76,7 @@ public class YabbaItems
 				new ItemUpgradeTier("upgrade_iron_tier", Tier.IRON),
 				new ItemUpgradeTier("upgrade_gold_tier", Tier.GOLD),
 				new ItemUpgradeTier("upgrade_diamond_tier", Tier.DIAMOND),
-				new ItemUpgradeInfiniteCapacity("upgrade_infinite_capacity"),
+				new ItemUpgradeTier("upgrade_star_tier", Tier.STAR),
 				new ItemUpgradeCreative("upgrade_creative"),
 				new ItemUpgrade("upgrade_obsidian_shell"),
 				new ItemUpgradeRedstone("upgrade_redstone_out"),
@@ -100,7 +99,7 @@ public class YabbaItems
 		ClientUtils.registerModel(UPGRADE_IRON_TIER);
 		ClientUtils.registerModel(UPGRADE_GOLD_TIER);
 		ClientUtils.registerModel(UPGRADE_DIAMOND_TIER);
-		ClientUtils.registerModel(UPGRADE_INFINITE_CAPACITY);
+		ClientUtils.registerModel(UPGRADE_STAR_TIER);
 		ClientUtils.registerModel(UPGRADE_CREATIVE);
 		ClientUtils.registerModel(UPGRADE_OBSIDIAN_SHELL);
 		ClientUtils.registerModel(UPGRADE_REDSTONE_OUT);
