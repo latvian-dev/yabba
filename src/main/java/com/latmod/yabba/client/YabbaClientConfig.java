@@ -1,23 +1,19 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
 import com.feed_the_beast.ftbl.lib.ConfigRGB;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.config.EnumTristate;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.item.YabbaItems;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = Yabba.MOD_ID, value = Side.CLIENT)
 @Config(modid = Yabba.MOD_ID + "_client", category = "config", name = "../local/client/" + Yabba.MOD_ID)
 public class YabbaClientConfig
 {
@@ -57,11 +53,5 @@ public class YabbaClientConfig
 		{
 			sync();
 		}
-	}
-
-	@SubscribeEvent
-	public static void registerClientConfig(RegisterClientConfigEvent event)
-	{
-		event.register(Yabba.MOD_ID + "_client", Yabba.MOD_NAME, new DrawableItem(new ItemStack(YabbaItems.ITEM_BARREL)));
 	}
 }
