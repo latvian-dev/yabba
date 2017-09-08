@@ -1,9 +1,8 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.config.AdvancedConfigKey;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -13,13 +12,13 @@ import net.minecraft.entity.player.EntityPlayer;
 public class YabbaCreateConfigEvent extends YabbaEvent
 {
 	private final TileBarrelBase barrel;
-	private final IConfigTree settings;
+	private final ConfigTree tree;
 	private final EntityPlayer player;
 
-	public YabbaCreateConfigEvent(TileBarrelBase b, IConfigTree m, EntityPlayer p)
+	public YabbaCreateConfigEvent(TileBarrelBase b, ConfigTree t, EntityPlayer p)
 	{
 		barrel = b;
-		settings = m;
+		tree = t;
 		player = p;
 	}
 
@@ -33,10 +32,10 @@ public class YabbaCreateConfigEvent extends YabbaEvent
 		return player;
 	}
 
-	public IConfigKey add(String group, String id, IConfigValue value)
+	public AdvancedConfigKey add(String group, String id, ConfigValue value)
 	{
-		ConfigKey key = new ConfigKey(id, value.copy(), group);
-		settings.add(key, value);
+		AdvancedConfigKey key = new AdvancedConfigKey(id, value.copy(), group);
+		tree.add(key, value);
 		return key;
 	}
 }

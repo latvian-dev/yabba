@@ -1,8 +1,8 @@
 package com.latmod.yabba.item.upgrade;
 
 import com.feed_the_beast.ftbl.lib.NameMap;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
+import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigInt;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import net.minecraft.nbt.NBTTagCompound;
@@ -62,8 +62,8 @@ public class ItemUpgradeRedstone extends ItemUpgrade
 
 	public static class Data extends DataStorage
 	{
-		public PropertyEnum<Mode> mode = new PropertyEnum<>(Mode.NAME_MAP);
-		public PropertyInt count = new PropertyInt(1);
+		public ConfigEnum<Mode> mode = new ConfigEnum<>(Mode.NAME_MAP);
+		public ConfigInt count = new ConfigInt(1);
 
 		@Override
 		public void serializeNBT(NBTTagCompound nbt, EnumSaveType type)

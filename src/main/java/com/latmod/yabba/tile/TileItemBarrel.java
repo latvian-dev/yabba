@@ -1,6 +1,6 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
@@ -105,7 +105,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	public int itemCount = 0;
 	private String cachedItemName, cachedItemCount;
 	private int prevItemCount = -1;
-	private final PropertyBool disableOreItems = new PropertyBool(false);
+	private final ConfigBoolean disableOreItems = new ConfigBoolean(false);
 
 	@Override
 	public BarrelType getType()

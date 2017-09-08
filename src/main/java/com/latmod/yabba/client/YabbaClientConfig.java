@@ -1,6 +1,6 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.ConfigRGB;
+import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
 import com.feed_the_beast.ftbl.lib.config.EnumTristate;
 import com.latmod.yabba.Yabba;
 import net.minecraftforge.common.config.Config;
@@ -30,9 +30,9 @@ public class YabbaClientConfig
 
 	public static class YabbaBarColor
 	{
-		public ConfigRGB border = new ConfigRGB(0xFF3FD2FF);
-		public ConfigRGB free = new ConfigRGB(0xFF5BF77F);
-		public ConfigRGB filled = new ConfigRGB(0xFFFF635B);
+		public final ConfigRGB border = new ConfigRGB(0xFF3FD2FF);
+		public final ConfigRGB free = new ConfigRGB(0xFF5BF77F);
+		public final ConfigRGB filled = new ConfigRGB(0xFFFF635B);
 
 		@Config.RangeInt(min = 1, max = 255)
 		public int alpha = 85;

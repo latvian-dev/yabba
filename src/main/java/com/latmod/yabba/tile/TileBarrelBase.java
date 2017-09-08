@@ -1,10 +1,9 @@
 package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
@@ -34,7 +33,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,16 +46,15 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class TileBarrelBase extends TileBase implements ITickable, IConfigContainer
+public class TileBarrelBase extends TileBase implements ITickable, IConfigCallback
 {
 	public Tier tier = Tier.WOOD;
 	public Map<Item, UpgradeInst> upgrades = new HashMap<>();
 	public String model = "";
 	public String skin = "";
-	public PropertyBool isLocked = new PropertyBool(false);
-	public PropertyBool alwaysDisplayData = new PropertyBool(false);
-	public PropertyBool displayBar = new PropertyBool(false);
-	private IConfigTree configTree;
+	public ConfigBoolean isLocked = new ConfigBoolean(false);
+	public ConfigBoolean alwaysDisplayData = new ConfigBoolean(false);
+	public ConfigBoolean displayBar = new ConfigBoolean(false);
 
 	private float cachedRotationX, cachedRotationY;
 
@@ -387,26 +384,9 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 	}
 
 	@Override
-	public IConfigTree getConfigTree()
+	public void saveConfig(ConfigTree tree, ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
 	{
-		return configTree;
-	}
-
-	@Override
-	public ITextComponent getTitle()
-	{
-		return getDisplayName();
-	}
-
-	@Override
-	public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-	{
-		if (configTree != null)
-		{
-			configTree.fromJson(json);
-			configTree = null;
-		}
-
+		tree.fromJson(json);
 		markBarrelDirty(true);
 	}
 
@@ -414,8 +394,8 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 	{
 		String group = Yabba.MOD_ID;
 
-		event.add(group, "always_display_data", alwaysDisplayData);
-		event.add(group, "display_bar", displayBar);
+		event.add(group, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.config.general.always_display_data");
+		event.add(group, "display_bar", displayBar).setNameLangKey("yabba_client.config.general.display_bar");
 
 		DataStorage data = getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
 		if (data instanceof ItemUpgradeRedstone.Data)
@@ -439,11 +419,11 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigContai
 
 	public final void displayConfig(EntityPlayer player)
 	{
-		configTree = new ConfigTree();
+		ConfigTree configTree = new ConfigTree();
 		YabbaCreateConfigEvent event = new YabbaCreateConfigEvent(this, configTree, player);
 		event.post();
 		createConfig(event);
-		FTBLibAPI.API.editServerConfig((EntityPlayerMP) player, null, this);
+		FTBLibAPI.API.editServerConfig((EntityPlayerMP) player, configTree, getDisplayName(), null, this);
 	}
 
 	@SideOnly(Side.CLIENT)

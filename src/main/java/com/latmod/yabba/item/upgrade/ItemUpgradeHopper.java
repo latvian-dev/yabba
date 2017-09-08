@@ -1,6 +1,6 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,9 +12,9 @@ public class ItemUpgradeHopper extends ItemUpgrade
 {
 	public static class Data extends DataStorage
 	{
-		public PropertyBool down = new PropertyBool(true);
-		public PropertyBool up = new PropertyBool(true);
-		public PropertyBool collect = new PropertyBool(false);
+		public ConfigBoolean down = new ConfigBoolean(true);
+		public ConfigBoolean up = new ConfigBoolean(true);
+		public ConfigBoolean collect = new ConfigBoolean(false);
 
 		@Override
 		public void serializeNBT(NBTTagCompound nbt, EnumSaveType type)
