@@ -1,10 +1,8 @@
 package com.latmod.yabba.client.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -12,6 +10,8 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
@@ -27,8 +27,8 @@ import java.util.List;
  */
 public class GuiSelectSkin extends GuiBase
 {
-	public static final IDrawableObject PURPLE_BACKGROUND = new TexturelessRectangle(0x228060FF).setLineColor(Color4I.BLACK);
-	public static final IDrawableObject BUTTON_GREEN = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF007F0E);
+	public static final Icon PURPLE_BACKGROUND = new TexturelessRectangle(0x228060FF).setLineColor(Color4I.BLACK);
+	public static final Icon BUTTON_GREEN = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF007F0E);
 
 	private class Skin extends Button
 	{
@@ -46,7 +46,7 @@ public class GuiSelectSkin extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			new MessageSelectSkin(skin.id).sendToServer();
 			gui.closeGui();
@@ -161,7 +161,7 @@ public class GuiSelectSkin extends GuiBase
 
 		skinsPanel.addFlags(Panel.FLAG_DEFAULTS);
 
-		scrollBar = new PanelScrollBar(173, 19, 18, 113, 12, skinsPanel)
+		scrollBar = new PanelScrollBar(173, 19, 18, 113, 0, skinsPanel)
 		{
 			@Override
 			public boolean shouldRender(GuiBase gui)
@@ -186,7 +186,7 @@ public class GuiSelectSkin extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return GuiSelectModel.GUI_BACKGROUND;
 	}

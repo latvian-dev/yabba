@@ -1,13 +1,15 @@
-package com.latmod.yabba.item;
+package com.latmod.yabba;
 
 import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.block.BlockAntibarrel;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModelLoader;
 import com.latmod.yabba.client.RenderItemBarrel;
+import com.latmod.yabba.item.ItemBlockBarrel;
+import com.latmod.yabba.item.ItemHammer;
+import com.latmod.yabba.item.ItemPainter;
 import com.latmod.yabba.item.upgrade.ItemUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;

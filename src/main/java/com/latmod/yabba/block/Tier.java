@@ -1,6 +1,5 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftbl.api.IWithMetadata;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
@@ -10,7 +9,7 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public enum Tier implements IStringSerializable, IWithMetadata
+public enum Tier implements IStringSerializable
 {
 	WOOD("wood", 0xC69569),
 	IRON("iron", 0xD8D8D8),
@@ -36,12 +35,6 @@ public enum Tier implements IStringSerializable, IWithMetadata
 	public String getName()
 	{
 		return name;
-	}
-
-	@Override
-	public int getMetadata()
-	{
-		return ordinal();
 	}
 
 	public boolean creative()

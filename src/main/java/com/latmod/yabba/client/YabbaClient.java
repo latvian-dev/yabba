@@ -3,8 +3,8 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -13,13 +13,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
+import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.api.YabbaSkinsEvent;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.gui.GuiSelectModel;
 import com.latmod.yabba.client.gui.GuiSelectSkin;
-import com.latmod.yabba.item.YabbaItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.resources.IResource;
@@ -186,7 +186,7 @@ public class YabbaClient extends YabbaCommon
 				skin.displayName = "";
 			}
 
-			if (skin.icon.isNull())
+			if (skin.icon.isEmpty())
 			{
 				skin.icon = new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
 			}
@@ -325,7 +325,7 @@ public class YabbaClient extends YabbaCommon
 
 					if (json.has("icon"))
 					{
-						skin.icon = ImageProvider.get(json.get("icon"));
+						skin.icon = Icon.getIcon(json.get("icon"));
 					}
 
 					if (json.has("layer"))

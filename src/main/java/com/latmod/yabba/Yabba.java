@@ -1,7 +1,6 @@
 package com.latmod.yabba;
 
 import com.latmod.yabba.block.BlockStorageBarrelBase;
-import com.latmod.yabba.item.YabbaItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;

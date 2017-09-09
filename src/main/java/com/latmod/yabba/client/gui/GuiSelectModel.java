@@ -1,18 +1,18 @@
 package com.latmod.yabba.client.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
+import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
-import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.net.MessageSelectModel;
 
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class GuiSelectModel extends GuiBase
 {
-	public static final IDrawableObject GUI_BACKGROUND = new TexturelessRectangle(0x22000000).setLineColor(Color4I.BLACK).setRoundEdges(true);
-	public static final IDrawableObject BUTTON_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(Color4I.BLACK);
+	public static final Icon GUI_BACKGROUND = new TexturelessRectangle(0x22000000).setLineColor(Color4I.BLACK).setRoundEdges(true);
+	public static final Icon BUTTON_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(Color4I.BLACK);
 
 	private class ButtonModel extends Button
 	{
@@ -45,7 +45,7 @@ public class GuiSelectModel extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			if (model != null)
 			{
@@ -86,7 +86,7 @@ public class GuiSelectModel extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return GUI_BACKGROUND;
 	}

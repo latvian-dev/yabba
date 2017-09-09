@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.lib.block.EnumRotation;
 import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
-import com.latmod.yabba.item.YabbaItems;
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.block.BlockHorizontal;
@@ -215,7 +215,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 			return;
 		}
 
-		Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+		Long l = LAST_CLICK_MAP.get(playerIn.getUniqueID());
 		long time = worldIn.getTotalWorldTime();
 
 		if (l != null && (time - l) < 3)
@@ -223,7 +223,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 			return;
 		}
 
-		LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+		LAST_CLICK_MAP.put(playerIn.getUniqueID(), time);
 
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
