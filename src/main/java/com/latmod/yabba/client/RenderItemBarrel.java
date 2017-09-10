@@ -27,8 +27,8 @@ public class RenderItemBarrel extends RenderBarrel<TileItemBarrel>
 	@Override
 	public void renderIcon(TileItemBarrel barrel)
 	{
+		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(barrel.storedItem, barrel.getWorld(), ClientUtils.MC.player);
 		GlStateManager.scale(0.4F, -0.4F, -0.02F);
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(barrel.storedItem, null, ClientUtils.MC.player);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		ClientUtils.MC.getRenderItem().renderItem(barrel.storedItem, bakedmodel);
 	}

@@ -294,7 +294,16 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		if (itemCount != v)
 		{
 			itemCount = v;
-			markBarrelDirty(false);
+
+			if (itemCount <= 0 && !isLocked.getBoolean() && !storedItem.isEmpty())
+			{
+				setStoredItemType(ItemStack.EMPTY, 0);
+			}
+			else
+			{
+				markBarrelDirty(false);
+			}
+
 			return true;
 		}
 
@@ -326,7 +335,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	@Override
 	public void setStoredItemType(ItemStack type, int amount)
 	{
-		boolean wasEmpty = itemCount == 0;
+		boolean wasEmpty = itemCount <= 0;
 
 		if (amount <= 0 || type == null || type.isEmpty())
 		{
@@ -413,11 +422,12 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 				{
 					if (storedItem.isEmpty())
 					{
-						//TODO: Check me
-						setStoredItemType(stack, 1);
+						setStoredItemType(stack, size);
 					}
-
-					setItemCount(itemCount + size);
+					else
+					{
+						setItemCount(itemCount + size);
+					}
 				}
 			}
 
@@ -442,7 +452,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 
 		if (tier.creative())
 		{
-			return ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(amount, itemCount));
+			return ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(amount, storedItem.getMaxStackSize()));
 		}
 
 		ItemStack stack = ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(Math.min(amount, itemCount), storedItem.getMaxStackSize()));
@@ -450,11 +460,6 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		if (!simulate)
 		{
 			setItemCount(itemCount - stack.getCount());
-
-			if (itemCount - stack.getCount() <= 0 && !isLocked.getBoolean())
-			{
-				setStoredItemType(ItemStack.EMPTY, 0);
-			}
 		}
 
 		return stack;
