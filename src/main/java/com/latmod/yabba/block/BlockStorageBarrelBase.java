@@ -285,7 +285,7 @@ public class BlockStorageBarrelBase extends BlockYabba
 
 							if (event.addUpgrade())
 							{
-								barrel.upgrades.put(heldItem.getItem(), event.getUpgrade());
+								barrel.upgrades.put(event.getUpgrade().getItem(), event.getUpgrade());
 							}
 
 							barrel.markBarrelDirty(true);
