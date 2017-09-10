@@ -287,6 +287,8 @@ public class BlockStorageBarrelBase extends BlockYabba
 							{
 								barrel.upgrades.put(heldItem.getItem(), event.getUpgrade());
 							}
+
+							barrel.markBarrelDirty(true);
 						}
 					}
 				}

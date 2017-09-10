@@ -135,8 +135,6 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0.5F, 0.5F, model.iconDistance);
-			GlStateManager.scale(0.4F, -0.4F, -0.015F);
-
 			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 			GlStateManager.enableRescaleNormal();

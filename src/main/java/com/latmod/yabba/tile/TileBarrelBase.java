@@ -2,7 +2,7 @@ package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
@@ -13,7 +13,7 @@ import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.RemoveUpgradeEvent;
-import com.latmod.yabba.api.YabbaCreateConfigEvent;
+import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.block.BlockStorageBarrelBase;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.IUpgrade;
@@ -33,6 +33,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
@@ -384,46 +385,49 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	}
 
 	@Override
-	public void saveConfig(ConfigTree tree, ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+	public void saveConfig(ConfigGroup group, ICommandSender sender, JsonObject json)
 	{
-		tree.fromJson(json);
+		group.fromJson(json);
 		markBarrelDirty(true);
 	}
 
-	public void createConfig(YabbaCreateConfigEvent event)
+	public void createConfig(YabbaConfigEvent event)
 	{
 		String group = Yabba.MOD_ID;
 
-		event.add(group, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.config.general.always_display_data");
-		event.add(group, "display_bar", displayBar).setNameLangKey("yabba_client.config.general.display_bar");
+		event.getConfig().add(group, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.config.general.always_display_data");
+		event.getConfig().add(group, "display_bar", displayBar).setNameLangKey("yabba_client.config.general.display_bar");
 
 		DataStorage data = getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
 		if (data instanceof ItemUpgradeRedstone.Data)
 		{
 			group = Yabba.MOD_ID + ".redstone";
+			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getUnlocalizedName() + ".name"));
 			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
-			event.add(group, "mode", data1.mode);
-			event.add(group, "count", data1.count);
+			event.getConfig().add(group, "mode", data1.mode);
+			event.getConfig().add(group, "count", data1.count);
 		}
 
 		data = getUpgradeData(YabbaItems.UPGRADE_HOPPER);
 		if (data instanceof ItemUpgradeHopper.Data)
 		{
 			group = Yabba.MOD_ID + ".hopper";
+			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getUnlocalizedName() + ".name"));
 			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
-			event.add(group, "up", data1.up);
-			event.add(group, "down", data1.down);
-			event.add(group, "collect", data1.collect);
+			event.getConfig().add(group, "up", data1.up);
+			event.getConfig().add(group, "down", data1.down);
+			event.getConfig().add(group, "collect", data1.collect);
 		}
 	}
 
 	public final void displayConfig(EntityPlayer player)
 	{
-		ConfigTree configTree = new ConfigTree();
-		YabbaCreateConfigEvent event = new YabbaCreateConfigEvent(this, configTree, player);
+		ConfigGroup configGroup = new ConfigGroup(getDisplayName());
+		configGroup.setSupergroup("barrel_config");
+		YabbaConfigEvent event = new YabbaConfigEvent(this, configGroup, player);
 		event.post();
 		createConfig(event);
-		FTBLibAPI.API.editServerConfig((EntityPlayerMP) player, configTree, getDisplayName(), null, this);
+		FTBLibAPI.API.editServerConfig((EntityPlayerMP) player, configGroup, this);
 	}
 
 	@SideOnly(Side.CLIENT)

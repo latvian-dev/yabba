@@ -51,15 +51,13 @@ yabba.config.tier.gold=Gold
 yabba.config.tier.diamond=Diamond
 yabba.config.tier.max_item_stacks=Max Item Stacks
 
-yabba.locked=Locked
-yabba.disable_ore_items=Disable Ore Items
-yabba.redstone=Redstone Output
-yabba.redstone.mode=Mode
-yabba.redstone.count=Count
-yabba.hopper=Hopper
-yabba.hopper.up=Up
-yabba.hopper.down=Down
-yabba.hopper.collect=Collect
+barrel_config.yabba.locked=Locked
+barrel_config.yabba.disable_ore_items=Disable Ore Items
+barrel_config.yabba.redstone.mode=Mode
+barrel_config.yabba.redstone.count=Count
+barrel_config.yabba.hopper.up=Up
+barrel_config.yabba.hopper.down=Down
+barrel_config.yabba.hopper.collect=Collect
 
 # Guide
 yabba.guide=YABBA

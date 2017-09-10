@@ -10,7 +10,7 @@ import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelType;
-import com.latmod.yabba.api.YabbaCreateConfigEvent;
+import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
@@ -25,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -554,15 +555,16 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	}
 
 	@Override
-	public void createConfig(YabbaCreateConfigEvent event)
+	public void createConfig(YabbaConfigEvent event)
 	{
 		super.createConfig(event);
 		String group = Yabba.MOD_ID;
-		event.add(group, "disable_ore_items", disableOreItems);
+		event.getConfig().setGroupName(group, new TextComponentString(Yabba.MOD_NAME));
+		event.getConfig().add(group, "disable_ore_items", disableOreItems);
 
 		if (!tier.creative())
 		{
-			event.add(group, "locked", isLocked);
+			event.getConfig().add(group, "locked", isLocked);
 		}
 	}
 
@@ -572,7 +574,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	{
 		if (isLocked.getBoolean())
 		{
-			tooltip.add(StringUtils.translate("barrel_config.yabba.locked.name"));
+			tooltip.add(StringUtils.translate("barrel_config.yabba.locked"));
 		}
 
 		if (!storedItem.isEmpty())
