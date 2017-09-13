@@ -25,17 +25,30 @@ public class ItemUpgradeCreative extends ItemUpgrade
 			return false;
 		}
 
+		switch (event.getBarrel().getType())
+		{
+			case ITEM:
+				if (((TileItemBarrel) event.getBarrel()).itemCount <= 0)
+				{
+					return false;
+				}
+				break;
+			default:
+				return false;
+		}
+
 		boolean simulate = event.simulate();
 		if (event.getBarrel().setTier(Tier.CREATIVE, simulate))
 		{
 			if (!simulate)
 			{
+				event.getBarrel().isLocked.setBoolean(false);
+
 				if (event.getBarrel().getType() == BarrelType.ITEM)
 				{
-					((TileItemBarrel) event.getBarrel()).setItemCount(1000000000);
+					TileItemBarrel itemBarrel = (TileItemBarrel) event.getBarrel();
+					itemBarrel.setStoredItemType(itemBarrel.storedItem, 1);
 				}
-
-				event.getBarrel().isLocked.setBoolean(false);
 			}
 
 			return true;

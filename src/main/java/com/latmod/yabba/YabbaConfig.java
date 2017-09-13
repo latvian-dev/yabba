@@ -36,7 +36,7 @@ public class YabbaConfig
 
 		private static class TierCategoryBase
 		{
-			@Config.RangeInt(min = 1, max = Tier.MAX_STACKS)
+			@Config.RangeInt(min = 1, max = 1000000)
 			@Config.LangKey("yabba.config.tier.max_item_stacks")
 			public int max_item_stacks;
 

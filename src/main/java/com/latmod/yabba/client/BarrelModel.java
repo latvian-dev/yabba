@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -271,6 +272,9 @@ public class BarrelModel
 
 			for (EnumFacing facing : faces)
 			{
+				Preconditions.checkNotNull(builder);
+				Preconditions.checkNotNull(model);
+				Preconditions.checkNotNull(model.currentTexture);
 				builder.addQuad(fromv, tov, facing, model.currentTexture.get(facing));
 			}
 		}
@@ -397,6 +401,12 @@ public class BarrelModel
 	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin)
 	{
 		currentTexture = textureMap.get("skin");
+
+		if (currentTexture == null || currentTexture == SpriteSet.EMPTY)
+		{
+			return Collections.emptyList();
+		}
+
 		offset = Vec3d.ZERO;
 		ModelBuilder builder = new ModelBuilder(format, rotation);
 
@@ -405,7 +415,7 @@ public class BarrelModel
 			func.apply(builder, this, skin);
 		}
 
-		currentTexture = null;
+		currentTexture = SpriteSet.EMPTY;
 		offset = Vec3d.ZERO;
 		return builder.getQuads();
 	}
@@ -415,6 +425,12 @@ public class BarrelModel
 		if (!itemModel.isEmpty())
 		{
 			currentTexture = textureMap.get("skin");
+
+			if (currentTexture == null || currentTexture == SpriteSet.EMPTY)
+			{
+				return Collections.emptyList();
+			}
+
 			offset = Vec3d.ZERO;
 			ModelBuilder builder = new ModelBuilder(format, ModelRotation.X0_Y0);
 
@@ -423,7 +439,7 @@ public class BarrelModel
 				func.apply(builder, this, skin);
 			}
 
-			currentTexture = null;
+			currentTexture = SpriteSet.EMPTY;
 			offset = Vec3d.ZERO;
 			return builder.getQuads();
 		}

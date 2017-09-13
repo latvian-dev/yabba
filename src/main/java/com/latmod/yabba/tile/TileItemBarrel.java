@@ -1,11 +1,13 @@
 package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.DataStorage;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
@@ -17,6 +19,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.net.MessageUpdateItemBarrelCount;
 import gnu.trove.map.hash.TIntByteHashMap;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -33,7 +36,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -42,7 +44,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, IItemHandlerModifiable
+public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifiable
 {
 	private static final TIntByteHashMap ALLOWED_ORE_NAME_CACHE = new TIntByteHashMap();
 
@@ -107,6 +109,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	private String cachedItemName, cachedItemCount;
 	private int prevItemCount = -1;
 	private final ConfigBoolean disableOreItems = new ConfigBoolean(false);
+	private int cachedSlotCount = -1;
 
 	@Override
 	public BarrelType getType()
@@ -128,6 +131,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		cachedItemName = null;
 		cachedItemCount = null;
 		prevItemCount = -1;
+		cachedSlotCount = -1;
 	}
 
 	@Override
@@ -294,6 +298,7 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		if (itemCount != v)
 		{
 			itemCount = v;
+			cachedSlotCount = -1;
 
 			if (itemCount <= 0 && !isLocked.getBoolean() && !storedItem.isEmpty())
 			{
@@ -310,75 +315,124 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 		return false;
 	}
 
-	@Override
-	public ItemStack getStoredItemType()
-	{
-		return ItemHandlerHelper.copyStackWithSize(storedItem, itemCount);
-	}
-
 	public int getMaxItems(ItemStack stack)
 	{
 		if (tier.infiniteCapacity())
 		{
-			return Tier.MAX_STACKS;
+			return Tier.MAX_ITEMS;
 		}
 
 		return tier.maxItemStacks * (stack.isEmpty() ? 1 : stack.getMaxStackSize());
 	}
 
-	@Override
-	public void setStoredItemCount(int amount)
-	{
-		setStoredItemType(storedItem, amount);
-	}
-
-	@Override
 	public void setStoredItemType(ItemStack type, int amount)
 	{
 		boolean wasEmpty = itemCount <= 0;
 
-		if (amount <= 0 || type == null || type.isEmpty())
+		if (type.isEmpty())
 		{
 			type = ItemStack.EMPTY;
-			amount = 0;
 		}
-		else
+
+		if (amount <= 0)
+		{
+			amount = 0;
+
+			if (!isLocked.getBoolean())
+			{
+				type = ItemStack.EMPTY;
+			}
+		}
+
+		if (!type.isEmpty())
 		{
 			type = ItemHandlerHelper.copyStackWithSize(type, 1);
 
 			if (tier.creative())
 			{
-				amount = Tier.MAX_STACKS / 2;
+				amount = Tier.MAX_ITEMS / 2;
 			}
 		}
 
 		storedItem = type;
 		itemCount = amount;
+		cachedSlotCount = -1;
 		markBarrelDirty(wasEmpty != (amount == 0));
-	}
-
-	@Override
-	public int getMaxStoredCount()
-	{
-		return getMaxItems(storedItem) + (hasUpgrade(YabbaItems.UPGRADE_VOID) ? 256 : 0);
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		return getStoredItemType();
+		if (itemCount <= 0)
+		{
+			return ItemStack.EMPTY;
+		}
+
+		int maxStack = storedItem.getMaxStackSize();
+
+		if (tier.creative())
+		{
+			return ItemHandlerHelper.copyStackWithSize(storedItem, maxStack);
+		}
+
+		int slotCount = getSlots();
+
+		if (slot >= slotCount - 1)
+		{
+			return ItemStack.EMPTY;
+		}
+		else if (slot < slotCount - 2)
+		{
+			return ItemHandlerHelper.copyStackWithSize(storedItem, maxStack);
+		}
+
+		int stackSize = itemCount % maxStack;
+
+		if (stackSize == 0)
+		{
+			stackSize = maxStack;
+		}
+
+		return ItemHandlerHelper.copyStackWithSize(storedItem, stackSize);
 	}
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
-		setStoredItemType(stack, stack.getCount());
+		if (storedItem.isEmpty())
+		{
+			setStoredItemType(stack, stack.getCount());
+		}
+		else
+		{
+			//TODO: Check me
+			itemCount += stack.getCount() - getStackInSlot(slot).getCount();
+			markBarrelDirty(false);
+		}
 	}
 
 	@Override
 	public int getSlots()
 	{
-		return 1;
+		if (cachedSlotCount == -1)
+		{
+			if (itemCount <= 0)
+			{
+				return 1;
+			}
+
+			int count1 = itemCount;
+			int maxStack = storedItem.getMaxStackSize();
+			cachedSlotCount = 1;
+
+			while (count1 > 0)
+			{
+				count1 -= maxStack;
+				cachedSlotCount++;
+			}
+		}
+
+		return cachedSlotCount;
 	}
 
 	@Override
@@ -512,7 +566,6 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 	@Override
 	public void removeItem(EntityPlayer player, boolean removeStack)
 	{
-		ItemStack storedItem = getStoredItemType();
 		if (!storedItem.isEmpty() && itemCount == 0 && !isLocked.getBoolean())
 		{
 			setStoredItemType(ItemStack.EMPTY, 0);
@@ -557,6 +610,13 @@ public class TileItemBarrel extends TileBarrelBase implements IDeepStorageUnit, 
 			//return !playerIn.isSneaking();
 		}
 		//return getItemCount() > 0;
+	}
+
+	@Override
+	public void saveConfig(ConfigGroup group, ICommandSender sender, JsonObject json)
+	{
+		super.saveConfig(group, sender, json);
+		setStoredItemType(storedItem, itemCount);
 	}
 
 	@Override

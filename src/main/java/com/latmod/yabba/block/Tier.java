@@ -18,11 +18,11 @@ public enum Tier implements IStringSerializable
 	STAR("star", 0xAFC9D8),
 	CREATIVE("creative", 0xFF00FF);
 
-	public static final int MAX_STACKS = 2000000000;
+	public static final int MAX_ITEMS = 2000000000;
 	public static final NameMap<Tier> NAME_MAP = NameMap.create(WOOD, values());
 
 	private final String name;
-	public int maxItemStacks = MAX_STACKS;
+	public int maxItemStacks = MAX_ITEMS / 64;
 	public final Color4I color;
 
 	Tier(String n, int c)

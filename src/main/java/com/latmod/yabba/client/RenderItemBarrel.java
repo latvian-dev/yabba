@@ -15,6 +15,11 @@ public class RenderItemBarrel extends RenderBarrel<TileItemBarrel>
 	@Override
 	public double getFilled(TileItemBarrel barrel)
 	{
+		if (barrel.itemCount <= 0)
+		{
+			return 0D;
+		}
+
 		return barrel.itemCount / (double) barrel.getMaxItems(barrel.storedItem);
 	}
 
