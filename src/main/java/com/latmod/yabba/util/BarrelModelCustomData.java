@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.yabba.block.BlockStorageBarrelBase;
+import com.latmod.yabba.block.BlockBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -58,6 +58,6 @@ public class BarrelModelCustomData
 
 	public AxisAlignedBB getAABB(IBlockState state)
 	{
-		return this == DEFAULT ? Block.FULL_BLOCK_AABB : boxes[BlockStorageBarrelBase.normalizeFacing(state).getIndex()];
+		return this == DEFAULT ? Block.FULL_BLOCK_AABB : boxes[BlockBarrelBase.normalizeFacing(state).getIndex()];
 	}
 }

@@ -14,7 +14,7 @@ import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.RemoveUpgradeEvent;
 import com.latmod.yabba.api.YabbaConfigEvent;
-import com.latmod.yabba.block.BlockStorageBarrelBase;
+import com.latmod.yabba.block.BlockBarrelBase;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
@@ -164,7 +164,7 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	{
 		if (state instanceof IExtendedBlockState)
 		{
-			return ((IExtendedBlockState) state).withProperty(BlockStorageBarrelBase.MODEL, model).withProperty(BlockStorageBarrelBase.SKIN, skin);
+			return ((IExtendedBlockState) state).withProperty(BlockBarrelBase.MODEL, model).withProperty(BlockBarrelBase.SKIN, skin);
 		}
 
 		return state;
@@ -216,12 +216,12 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 		{
 			IBlockState state = getBlockState();
 
-			if (!(state.getBlock() instanceof BlockStorageBarrelBase))
+			if (!(state.getBlock() instanceof BlockBarrelBase))
 			{
 				return 0F;
 			}
 
-			cachedRotationX = state.getValue(BlockStorageBarrelBase.ROTATION).ordinal() * 90F;
+			cachedRotationX = state.getValue(BlockBarrelBase.ROTATION).ordinal() * 90F;
 		}
 
 		return cachedRotationX;
@@ -233,7 +233,7 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 		{
 			IBlockState state = getBlockState();
 
-			if (!(state.getBlock() instanceof BlockStorageBarrelBase))
+			if (!(state.getBlock() instanceof BlockBarrelBase))
 			{
 				return 0F;
 			}

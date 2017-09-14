@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
-import com.latmod.yabba.block.BlockStorageBarrelBase;
+import com.latmod.yabba.block.BlockBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -104,7 +104,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 
 			if (state instanceof IExtendedBlockState)
 			{
-				id = StringUtils.emptyIfNull(((IExtendedBlockState) state).getValue(BlockStorageBarrelBase.SKIN));
+				id = StringUtils.emptyIfNull(((IExtendedBlockState) state).getValue(BlockBarrelBase.SKIN));
 			}
 
 			Color4I color = YabbaClient.getSkin(id).color;

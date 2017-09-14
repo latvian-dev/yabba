@@ -94,16 +94,15 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 					double bh = 0.15D;
 					double filled = MathHelper.clamp(getFilled(barrel), 0D, 1D);
 
-					int a = YabbaClientConfig.bar_color.alpha;
-					Color4I colBorder = YabbaClientConfig.bar_color.border.getColor();
-					Color4I colFree = YabbaClientConfig.bar_color.free.getColor();
-					Color4I colFilled = YabbaClientConfig.bar_color.filled.getColor();
-					rect(buffer, bx, by, textDistance, b, bh, colBorder, a);
-					rect(buffer, 1D - b - bx, by, textDistance, b, bh, colBorder, a);
-					rect(buffer, bx + b, by, textDistance, bw - b2, b, colBorder, a);
-					rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, colBorder, a);
-					rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, colFree, a);
-					rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, colFilled, a);
+					Color4I colBorder = YabbaClientConfig.bar_color.getBorderColor();
+					Color4I colFree = YabbaClientConfig.bar_color.getFreeColor();
+					Color4I colFilled = YabbaClientConfig.bar_color.getFilledColor();
+					rect(buffer, bx, by, textDistance, b, bh, colBorder);
+					rect(buffer, 1D - b - bx, by, textDistance, b, bh, colBorder);
+					rect(buffer, bx + b, by, textDistance, bw - b2, b, colBorder);
+					rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, colBorder);
+					rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, colFree);
+					rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, colFilled);
 					tessellator.draw();
 					GlStateManager.enableTexture2D();
 					GlStateManager.popMatrix();
@@ -161,12 +160,16 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		setLightmapDisabled(false);
 	}
 
-	private static void rect(BufferBuilder buffer, double x, double y, double z, double w, double h, Color4I col, int a)
+	private static void rect(BufferBuilder buffer, double x, double y, double z, double w, double h, Color4I col)
 	{
-		buffer.pos(x, y, z).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-		buffer.pos(x, y + h, z).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-		buffer.pos(x + w, y + h, z).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
-		buffer.pos(x + w, y, z).color(col.redi(), col.greeni(), col.bluei(), a).endVertex();
+		int r = col.redi();
+		int g = col.greeni();
+		int b = col.bluei();
+		int a = col.alphai();
+		buffer.pos(x, y, z).color(r, g, b, a).endVertex();
+		buffer.pos(x, y + h, z).color(r, g, b, a).endVertex();
+		buffer.pos(x + w, y + h, z).color(r, g, b, a).endVertex();
+		buffer.pos(x + w, y, z).color(r, g, b, a).endVertex();
 	}
 
 	public double getFilled(T barrel)

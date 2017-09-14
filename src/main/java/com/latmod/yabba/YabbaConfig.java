@@ -22,7 +22,7 @@ public class YabbaConfig
 
 	public static class General
 	{
-		public String[] allowed_ore_prefixes = {"ingot", "block", "nugget", "ore", "dust", "gem", "gear", "rod"};
+		public String[] allowed_ore_prefixes = {"ingot", "block", "nugget", "ore", "dust", "gem", "gear", "rod", "gear"};
 
 		public boolean sneak_left_click_extracts_stack = true;
 	}

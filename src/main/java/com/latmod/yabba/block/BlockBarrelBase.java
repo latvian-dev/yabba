@@ -47,14 +47,14 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class BlockStorageBarrelBase extends BlockYabba
+public class BlockBarrelBase extends BlockYabba
 {
 	public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
 	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
 	public static final IUnlistedProperty<String> MODEL = UnlistedPropertyString.create("model");
 	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
 
-	public BlockStorageBarrelBase(String id)
+	public BlockBarrelBase(String id)
 	{
 		super(id, Material.WOOD, MapColor.WOOD);
 		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
@@ -249,76 +249,66 @@ public class BlockStorageBarrelBase extends BlockYabba
 			return false;
 		}
 
-		if (!worldIn.isRemote)
+		if (worldIn.isRemote)
 		{
-			TileEntity tile = worldIn.getTileEntity(pos);
+			return true;
+		}
 
-			if (tile instanceof TileBarrelBase)
+		TileEntity tile = worldIn.getTileEntity(pos);
+
+		if (tile instanceof TileBarrelBase)
+		{
+			TileBarrelBase barrel = (TileBarrelBase) tile;
+
+			Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+
+			if (l == null)
 			{
-				TileBarrelBase barrel = (TileBarrelBase) tile;
+				l = 0L;
+			}
 
-				Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
+			ItemStack handItem = playerIn.getHeldItem(hand);
 
-				if (l == null)
+			if (playerIn.isSneaking())
+			{
+				barrel.displayConfig(playerIn);
+			}
+			else if (handItem.getItem() instanceof IUpgrade)
+			{
+				if (!barrel.hasUpgrade(heldItem.getItem()))
 				{
-					l = 0L;
-				}
+					ApplyUpgradeEvent event = new ApplyUpgradeEvent(false, barrel, new UpgradeInst(heldItem.getItem()), playerIn, hand, side);
 
-				ItemStack handItem = playerIn.getHeldItem(hand);
-
-				if (handItem.isEmpty() && playerIn.isSneaking())
-				{
-					barrel.displayConfig(playerIn);
-				}
-				else if (handItem.getItem() instanceof IUpgrade)
-				{
-					if (!barrel.hasUpgrade(heldItem.getItem()))
+					if (event.getUpgrade().getUpgrade().applyOn(event))
 					{
-						ApplyUpgradeEvent event = new ApplyUpgradeEvent(false, barrel, new UpgradeInst(heldItem.getItem()), playerIn, hand, side);
-
-						if (event.getUpgrade().getUpgrade().applyOn(event))
+						if (event.consumeItem())
 						{
-							if (event.consumeItem())
-							{
-								heldItem.shrink(1);
-							}
-
-							if (event.addUpgrade())
-							{
-								barrel.upgrades.put(event.getUpgrade().getItem(), event.getUpgrade());
-							}
-
-							barrel.markBarrelDirty(true);
+							heldItem.shrink(1);
 						}
+
+						if (event.addUpgrade())
+						{
+							barrel.upgrades.put(event.getUpgrade().getItem(), event.getUpgrade());
+						}
+
+						barrel.markBarrelDirty(true);
 					}
 				}
-				else
+			}
+			else
+			{
+				long time = worldIn.getTotalWorldTime();
+
+				if (time - l <= 8L)
 				{
-					long time = worldIn.getTotalWorldTime();
-
-					if (time - l <= 8L)
-					{
-						barrel.addAllItems(playerIn, hand);
-					}
-					else if (!heldItem.isEmpty())
-					{
-						barrel.addItem(playerIn, hand);
-					}
-
-					barrel.markBarrelDirty(true);
-
-					playerIn.inventory.markDirty();
-
-					if (playerIn.openContainer != null)
-					{
-						playerIn.openContainer.detectAndSendChanges();
-					}
-
-					//if (heldItem.isEmpty())
-					{
-						LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
-					}
+					barrel.addAllItems(playerIn, hand);
 				}
+				else if (!heldItem.isEmpty())
+				{
+					barrel.addItem(playerIn, hand);
+				}
+
+				LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
 			}
 		}
 

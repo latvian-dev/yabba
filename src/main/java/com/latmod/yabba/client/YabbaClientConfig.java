@@ -1,5 +1,6 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
 import com.feed_the_beast.ftbl.lib.config.EnumTristate;
 import com.latmod.yabba.Yabba;
@@ -36,14 +37,31 @@ public class YabbaClientConfig
 
 		@Config.RangeInt(min = 1, max = 255)
 		public int alpha = 85;
+
+		private Color4I borderColor, freeColor, filledColor;
+
+		public Color4I getBorderColor()
+		{
+			return borderColor;
+		}
+
+		public Color4I getFreeColor()
+		{
+			return freeColor;
+		}
+
+		public Color4I getFilledColor()
+		{
+			return filledColor;
+		}
 	}
 
 	public static void sync()
 	{
 		ConfigManager.sync(Yabba.MOD_ID + "_client", Config.Type.INSTANCE);
-		bar_color.border.updateColor();
-		bar_color.free.updateColor();
-		bar_color.filled.updateColor();
+		bar_color.borderColor = bar_color.border.createColor(bar_color.alpha);
+		bar_color.freeColor = bar_color.free.createColor(bar_color.alpha);
+		bar_color.filledColor = bar_color.filled.createColor(bar_color.alpha);
 	}
 
 	@SubscribeEvent

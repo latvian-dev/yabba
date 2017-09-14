@@ -1,6 +1,6 @@
 package com.latmod.yabba;
 
-import com.latmod.yabba.block.BlockStorageBarrelBase;
+import com.latmod.yabba.block.BlockBarrelBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -52,6 +52,6 @@ public class Yabba
 	@Mod.EventHandler
 	public void serverStopped(FMLServerStoppedEvent event)
 	{
-		BlockStorageBarrelBase.LAST_CLICK_MAP.clear();
+		BlockBarrelBase.LAST_CLICK_MAP.clear();
 	}
 }

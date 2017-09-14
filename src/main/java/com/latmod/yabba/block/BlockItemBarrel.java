@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 /**
  * @author LatvianModder
  */
-public class BlockItemBarrel extends BlockStorageBarrelBase
+public class BlockItemBarrel extends BlockBarrelBase
 {
 	public BlockItemBarrel()
 	{
