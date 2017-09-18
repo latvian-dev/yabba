@@ -11,11 +11,13 @@ import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
+import com.latmod.yabba.YabbaLang;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.util.UpgradeInst;
 import gnu.trove.map.hash.TIntByteHashMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.command.ICommandSender;
@@ -128,7 +130,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		super.updateContainingBlockInfo();
 		cachedItemName = null;
 		cachedItemCount = null;
-		prevItemCount = -1;
+		//prevItemCount = -1;
 		cachedSlotCount = -1;
 	}
 
@@ -198,26 +200,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public void update()
 	{
-		if (prevItemCount == -1 || prevItemCount != itemCount)
-		{
-			if (!world.isRemote)
-			{
-				sendDirtyUpdate();
-			}
-
-			if (prevItemCount == -1 || prevItemCount == 0 || itemCount == 0)
-			{
-				updateContainingBlockInfo();
-			}
-
-			if (hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT))
-			{
-				world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
-			}
-
-			prevItemCount = itemCount;
-		}
-
 		if (!world.isRemote && hasUpgrade(YabbaItems.UPGRADE_HOPPER) && (world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
 		{
 			ItemUpgradeHopper.Data data = (ItemUpgradeHopper.Data) getUpgradeData(YabbaItems.UPGRADE_HOPPER);
@@ -267,6 +249,26 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 					}
 				}
 			}
+		}
+
+		if (prevItemCount == -1 || prevItemCount != itemCount)
+		{
+			if (!world.isRemote)
+			{
+				sendDirtyUpdate();
+			}
+
+			if (prevItemCount == -1 || prevItemCount == 0 || itemCount == 0)
+			{
+				updateContainingBlockInfo();
+			}
+
+			if (hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT))
+			{
+				world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
+			}
+
+			prevItemCount = itemCount;
 		}
 	}
 
@@ -449,17 +451,11 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		{
 			if (itemCount <= 0)
 			{
-				return 1;
+				cachedSlotCount = 1;
 			}
-
-			int count1 = itemCount;
-			int maxStack = storedItem.getMaxStackSize();
-			cachedSlotCount = 1;
-
-			while (count1 > 0)
+			else
 			{
-				count1 -= maxStack;
-				cachedSlotCount++;
+				cachedSlotCount = 1 + itemCount / storedItem.getMaxStackSize();
 			}
 		}
 
@@ -645,7 +641,14 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 			if (!stack.isEmpty())
 			{
-				if (player.inventory.addItemStackToInventory(stack))
+				int slot = player.inventory.currentItem;
+
+				if (!player.inventory.getStackInSlot(slot).isEmpty())
+				{
+					slot = -1;
+				}
+
+				if (player.inventory.add(slot, stack))
 				{
 					player.inventory.markDirty();
 
@@ -656,10 +659,13 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 				}
 				else
 				{
-					EntityItem ei = new EntityItem(player.world, player.posX, player.posY, player.posZ, stack);
-					ei.motionX = ei.motionY = ei.motionZ = 0D;
-					ei.setPickupDelay(0);
-					player.world.spawnEntity(ei);
+					EntityItem entityItem = player.dropItem(stack, false);
+
+					if (entityItem != null)
+					{
+						entityItem.setNoPickupDelay();
+						entityItem.setOwner(player.getName());
+					}
 				}
 			}
 			//return !playerIn.isSneaking();
@@ -692,6 +698,8 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@SideOnly(Side.CLIENT)
 	public void addInformation(List<String> tooltip, ITooltipFlag flagIn)
 	{
+		tooltip.add(YabbaLang.TIER.translate(tier.langKey.translate()));
+
 		if (isLocked.getBoolean())
 		{
 			tooltip.add(StringUtils.translate("barrel_config.yabba.locked"));
@@ -699,26 +707,34 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (!storedItem.isEmpty())
 		{
-			tooltip.add("Item: " + storedItem.getDisplayName()); //LANG
+			tooltip.add(YabbaLang.ITEM.translate(storedItem.getDisplayName()));
 		}
 
 		if (!tier.creative())
 		{
 			if (tier.infiniteCapacity())
 			{
-				tooltip.add(itemCount + " items"); //LANG
+				tooltip.add(YabbaLang.ITEM_COUNT_INF.translate(itemCount));
 			}
 			else if (!storedItem.isEmpty())
 			{
-				tooltip.add(itemCount + " / " + getMaxItems(storedItem));
+				tooltip.add(YabbaLang.ITEM_COUNT.translate(itemCount, getMaxItems(storedItem)));
 			}
 			else
 			{
-				tooltip.add("Max " + tier.maxItemStacks + " stacks"); //LANG
+				tooltip.add(YabbaLang.ITEM_COUNT_MAX.translate(tier.maxItemStacks));
 			}
 		}
 
-		super.addInformation(tooltip, flagIn);
+		if (!upgrades.isEmpty())
+		{
+			tooltip.add(YabbaLang.UPGRADES.translate());
+
+			for (UpgradeInst upgrade : upgrades.values())
+			{
+				tooltip.add("> " + upgrade.getStack().getDisplayName());
+			}
+		}
 	}
 
 	@Override

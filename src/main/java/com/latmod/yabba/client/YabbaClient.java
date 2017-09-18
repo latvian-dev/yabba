@@ -188,7 +188,7 @@ public class YabbaClient extends YabbaCommon
 
 			if (skin.icon.isEmpty())
 			{
-				skin.icon = new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
+				skin.icon = new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
 			}
 		}
 

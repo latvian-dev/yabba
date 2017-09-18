@@ -87,7 +87,7 @@ public class BlockBarrelBase extends BlockYabba
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		list.add(createStack("", "", Tier.WOOD));
+		list.add(createStack(getDefaultState(), "", "", Tier.WOOD));
 	}
 
 	@Override
@@ -176,13 +176,13 @@ public class BlockBarrelBase extends BlockYabba
 		return true;
 	}
 
-	public ItemStack createStack(String model, String skin, Tier tier)
+	public ItemStack createStack(IBlockState state, String model, String skin, Tier tier)
 	{
 		TileBarrelBase tile = new TileBarrelBase();
 		tile.setModel(model, false);
 		tile.setSkin(skin, false);
 		tile.setTier(tier, false);
-		return createStack(tile);
+		return createStack(state, tile);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class BlockBarrelBase extends BlockYabba
 		if (tileEntity instanceof TileBarrelBase)
 		{
 			TileBarrelBase barrel = (TileBarrelBase) tileEntity;
-			return createStack(barrel.model, barrel.skin, Tier.WOOD);
+			return createStack(state, barrel.model, barrel.skin, Tier.WOOD);
 		}
 
 		return super.getItem(worldIn, pos, state);

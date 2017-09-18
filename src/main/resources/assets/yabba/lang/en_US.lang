@@ -17,8 +17,21 @@ item.yabba.upgrade_void.name=Void Items
 item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer
 
+lang.yabba.tier=Tier: %s
+lang.yabba.tier.wood=Wood
+lang.yabba.tier.iron=Iron
+lang.yabba.tier.gold=Gold
+lang.yabba.tier.diamond=Diamond
+lang.yabba.tier.star=Star
+lang.yabba.tier.creative=Creative
+
 lang.yabba.model=Model: %s
 lang.yabba.skin=Skin: %s
+lang.yabba.item=Item: %s
+lang.yabba.upgrades=Upgrades:
+lang.yabba.item_count=%d / %d items
+lang.yabba.item_count_inf=%d items
+lang.yabba.item_count_max=Max %d stacks
 
 lang.fluid.still=Still %s
 lang.fluid.flowing=Flowing %s

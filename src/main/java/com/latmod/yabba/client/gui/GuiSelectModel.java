@@ -40,7 +40,7 @@ public class GuiSelectModel extends GuiBase
 			if (model != null)
 			{
 				setTitle(model.toString());
-				setIcon(new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(model.id, "", Tier.WOOD)));
+				setIcon(new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), model.id, "", Tier.WOOD)));
 			}
 		}
 

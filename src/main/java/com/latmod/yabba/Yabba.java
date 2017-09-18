@@ -19,6 +19,7 @@ public class Yabba
 {
 	public static final String MOD_ID = "yabba";
 	public static final String MOD_NAME = "YABBA";
+	public static final String REFINED_STORAGE_ID = "refinedstorage";
 
 	@Mod.Instance(Yabba.MOD_ID)
 	public static Yabba INST;

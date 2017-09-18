@@ -433,14 +433,5 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	@SideOnly(Side.CLIENT)
 	public void addInformation(List<String> tooltip, ITooltipFlag flagIn)
 	{
-		if (!upgrades.isEmpty())
-		{
-			tooltip.add("Upgrades:"); //LANG
-
-			for (UpgradeInst upgrade : upgrades.values())
-			{
-				tooltip.add("> " + upgrade.getStack().getDisplayName());
-			}
-		}
 	}
 }
