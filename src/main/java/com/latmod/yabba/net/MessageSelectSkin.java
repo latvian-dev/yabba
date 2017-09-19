@@ -1,13 +1,13 @@
 package com.latmod.yabba.net;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.latmod.yabba.item.ItemPainter;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * @author LatvianModder
@@ -32,15 +32,15 @@ public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf)
+	public void writeData(DataOut data)
 	{
-		skinId = ByteBufUtils.readUTF8String(buf);
+		data.writeString(skinId);
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf)
+	public void readData(DataIn data)
 	{
-		ByteBufUtils.writeUTF8String(buf, skinId);
+		skinId = data.readString();
 	}
 
 	@Override
