@@ -1,5 +1,6 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.latmod.yabba.block.BlockBarrelBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author LatvianModder
  */
-@Mod(modid = Yabba.MOD_ID, name = Yabba.MOD_NAME, useMetadata = true, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:ftbl")
+@Mod(modid = Yabba.MOD_ID, name = Yabba.MOD_NAME, useMetadata = true, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:" + FTBLibFinals.MOD_ID + ";after:" + FTBLibFinals.FORESTRY)
 public class Yabba
 {
 	public static final String MOD_ID = "yabba";

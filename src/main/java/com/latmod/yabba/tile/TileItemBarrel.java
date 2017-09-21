@@ -18,7 +18,7 @@ import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.util.UpgradeInst;
-import gnu.trove.map.hash.TIntByteHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ByteOpenHashMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityItem;
@@ -47,7 +47,7 @@ import java.util.Objects;
  */
 public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifiable
 {
-	private static final TIntByteHashMap ALLOWED_ORE_NAME_CACHE = new TIntByteHashMap();
+	private static final Int2ByteOpenHashMap ALLOWED_ORE_NAME_CACHE = new Int2ByteOpenHashMap();
 
 	public static void clearCache()
 	{
