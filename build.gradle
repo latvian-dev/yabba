@@ -31,14 +31,14 @@ repositories {
 	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 	maven { url = "http://maven.ic2.player.to/" }
-	//maven { name = "refinedstorage"; url = "https://dl.bintray.com/raoulvdberge/dev/" }
+	maven { name = "refinedstorage"; url = "https://dl.bintray.com/raoulvdberge/dev/" }
 }
 
 dependencies {
 	compile 'com.latmod.mods:FTBLib:4.1.4:api'
 	deobfCompile "mezz.jei:jei_1.12.1:4.7.8.95:api"
 	deobfCompile "net.sengir.forestry:forestry_1.12.1:5.5.5.192:api"
-	//compile "refinedstorage:refinedstorage:1.5.18-1363:api"
+	compile "refinedstorage:refinedstorage:1.5.18-1363:api"
 }
 
 sourceSets {
