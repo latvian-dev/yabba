@@ -29,6 +29,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -108,7 +109,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	public ItemStack storedItem = ItemStack.EMPTY;
 	public int itemCount = 0;
 	private String cachedItemName, cachedItemCount;
-	private int prevItemCount = -1;
+	private int prevItemCount = -1, prevItemCountForNet = -1;
 	private final ConfigBoolean disableOreItems = new ConfigBoolean(false);
 	private int cachedSlotCount = -1;
 
@@ -122,6 +123,12 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	public void markBarrelDirty(boolean majorChange)
 	{
 		super.markBarrelDirty(majorChange);
+
+		if (majorChange)
+		{
+			prevItemCount = -1;
+			prevItemCountForNet = -1;
+		}
 	}
 
 	@Override
@@ -153,9 +160,14 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (type == EnumSaveType.NET_UPDATE)
 		{
-			nbt.setInteger("PrevCount", prevItemCount);
+			if (CommonUtils.DEV_ENV)
+			{
+				CommonUtils.DEV_LOGGER.info("Update @ " + pos + ": " + prevItemCountForNet + "->" + itemCount);
+			}
 
-			if (prevItemCount != -1)
+			nbt.setInteger("PrevCount", prevItemCountForNet);
+
+			if (prevItemCountForNet != -1)
 			{
 				return;
 			}
@@ -174,10 +186,11 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
 		setRawItemCount(nbt.getInteger("Count"));
+		prevItemCount = prevItemCountForNet = -1;
 
 		if (type == EnumSaveType.NET_UPDATE)
 		{
-			prevItemCount = nbt.getInteger("PrevCount");
+			prevItemCount = prevItemCountForNet = nbt.getInteger("PrevCount");
 
 			if (prevItemCount != -1)
 			{
@@ -187,19 +200,19 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		super.readData(nbt, type);
 
-		if (nbt.hasKey("Item"))
+		storedItem = nbt.hasKey("Item") ? new ItemStack(nbt.getCompoundTag("Item")) : ItemStack.EMPTY;
+
+		if (storedItem.isEmpty())
 		{
-			setStoredItemType(new ItemStack(nbt.getCompoundTag("Item")), itemCount);
-		}
-		else
-		{
-			setStoredItemType(ItemStack.EMPTY, 0);
+			storedItem = ItemStack.EMPTY;
 		}
 	}
 
 	@Override
 	public void update()
 	{
+		prevItemCountForNet = prevItemCount;
+
 		if (!world.isRemote && hasUpgrade(YabbaItems.UPGRADE_HOPPER) && (world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
 		{
 			ItemUpgradeHopper.Data data = (ItemUpgradeHopper.Data) getUpgradeData(YabbaItems.UPGRADE_HOPPER);
@@ -253,19 +266,21 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (prevItemCount == -1 || prevItemCount != itemCount)
 		{
-			if (!world.isRemote)
-			{
-				sendDirtyUpdate();
-			}
+			updateContainingBlockInfo();
 
-			if (prevItemCount == -1 || prevItemCount == 0 || itemCount == 0)
+			if (world != null)
 			{
-				updateContainingBlockInfo();
-			}
+				world.markChunkDirty(pos, this);
 
-			if (hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT))
-			{
-				world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
+				if (!world.isRemote || prevItemCount == -1)
+				{
+					world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 255);
+				}
+
+				if (hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT))
+				{
+					world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
+				}
 			}
 
 			prevItemCount = itemCount;
@@ -327,17 +342,15 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	{
 		if (itemCount != v)
 		{
+			boolean isEmpty = itemCount <= 0;
 			setRawItemCount(v);
 
 			if (itemCount <= 0 && !isLocked.getBoolean() && !storedItem.isEmpty())
 			{
 				setStoredItemType(ItemStack.EMPTY, 0);
 			}
-			else
-			{
-				markBarrelDirty(false);
-			}
 
+			markBarrelDirty(isEmpty != (itemCount <= 0));
 			return true;
 		}
 
@@ -356,7 +369,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 	public void setStoredItemType(ItemStack type, int amount)
 	{
-		prevItemCount = itemCount;
 		boolean prevEmpty = storedItem.isEmpty();
 
 		if (type.isEmpty())
@@ -405,7 +417,8 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (tier.creative())
 		{
-			return ItemHandlerHelper.copyStackWithSize(storedItem, maxStack);
+			storedItem.setCount(maxStack);
+			return storedItem;
 		}
 
 		int slotCount = getSlots();
@@ -416,7 +429,8 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		}
 		else if (slot < slotCount - 2)
 		{
-			return ItemHandlerHelper.copyStackWithSize(storedItem, maxStack);
+			storedItem.setCount(maxStack);
+			return storedItem;
 		}
 
 		int stackSize = itemCount % maxStack;
@@ -426,7 +440,8 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 			stackSize = maxStack;
 		}
 
-		return ItemHandlerHelper.copyStackWithSize(storedItem, stackSize);
+		storedItem.setCount(stackSize);
+		return storedItem;
 	}
 
 	@Override
@@ -455,7 +470,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 			}
 			else
 			{
-				cachedSlotCount = 1 + itemCount / storedItem.getMaxStackSize();
+				cachedSlotCount = 1 + MathHelper.ceil(itemCount / (double) storedItem.getMaxStackSize());
 			}
 		}
 
