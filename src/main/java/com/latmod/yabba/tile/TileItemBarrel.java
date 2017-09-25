@@ -160,11 +160,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (type == EnumSaveType.NET_UPDATE)
 		{
-			if (CommonUtils.DEV_ENV)
-			{
-				CommonUtils.DEV_LOGGER.info("Update @ " + pos + ": " + prevItemCountForNet + "->" + itemCount);
-			}
-
 			nbt.setInteger("PrevCount", prevItemCountForNet);
 
 			if (prevItemCountForNet != -1)
