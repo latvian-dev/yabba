@@ -9,10 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = System.properties['mod_version']
-if (version == null) {
-	version = "Dev"
-}
+version = "1.0.3"
 group = "com.latmod.yabba"
 archivesBaseName = "YABBA"
 
