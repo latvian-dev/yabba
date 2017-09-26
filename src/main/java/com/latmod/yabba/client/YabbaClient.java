@@ -3,8 +3,8 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -188,7 +188,7 @@ public class YabbaClient extends YabbaCommon
 
 			if (skin.icon.isEmpty())
 			{
-				skin.icon = new DrawableItem(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
+				skin.icon = new ItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
 			}
 		}
 
