@@ -9,9 +9,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.12-1.0.3"
-group = "com.latmod.yabba"
-archivesBaseName = "YABBA"
+version = "${mc_version}-${mod_version}"
+group = package_group
+archivesBaseName = mod_name
 
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
@@ -19,34 +19,26 @@ compileJava {
 }
 
 minecraft {
-	version = "1.12.1-14.22.0.2474"
+	version = "${mc_version}-${forge_version}"
 	runDir = "run"
-	mappings = "snapshot_20170908"
+	mappings = "${mappings_version}"
+
+	replace "@VERSION@", project.version
+	replaceIn "Yabba.java"
 }
 
 repositories {
 	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 	maven { url = "http://maven.ic2.player.to/" }
-	maven { name = "refinedstorage"; url = "https://dl.bintray.com/raoulvdberge/dev/" }
+	//maven { name = "refinedstorage"; url = "https://dl.bintray.com/raoulvdberge/dev/" }
 }
 
 dependencies {
-	compile 'com.latmod.mods:FTBLib:4.1.4:api'
-	deobfCompile "mezz.jei:jei_1.12.1:4.7.8.95:api"
-	deobfCompile "net.sengir.forestry:forestry_1.12.1:5.5.5.192:api"
-	compile "refinedstorage:refinedstorage:1.5.18-1363:api"
-}
-
-sourceSets {
-	main {
-		java {
-			srcDir 'src/main/java'
-		}
-		resources {
-			srcDir 'src/main/resources'
-		}
-	}
+	compile "com.latmod.mods:FTBLib:${ftblib_version}:api"
+	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
+	deobfCompile "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
+	//compile "refinedstorage:refinedstorage:${refinedstorage_version}:api"
 }
 
 task apiJar(type: Jar) {

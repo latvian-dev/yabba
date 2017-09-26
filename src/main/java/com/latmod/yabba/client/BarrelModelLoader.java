@@ -119,7 +119,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 	}
 
 	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex)
+	public int colorMultiplier(ItemStack stack, int tintIndex)
 	{
 		if (tintIndex == 0)
 		{

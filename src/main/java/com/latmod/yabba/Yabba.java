@@ -15,11 +15,12 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author LatvianModder
  */
-@Mod(modid = Yabba.MOD_ID, name = Yabba.MOD_NAME, useMetadata = true, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:" + FTBLibFinals.MOD_ID + ";after:" + FTBLibFinals.FORESTRY)
+@Mod(modid = Yabba.MOD_ID, name = Yabba.MOD_NAME, version = Yabba.VERSION, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:" + FTBLibFinals.MOD_ID + ";after:" + FTBLibFinals.FORESTRY)
 public class Yabba
 {
 	public static final String MOD_ID = "yabba";
 	public static final String MOD_NAME = "YABBA";
+	public static final String VERSION = "@VERSION@";
 	public static final String REFINED_STORAGE_ID = "refinedstorage";
 
 	@Mod.Instance(Yabba.MOD_ID)

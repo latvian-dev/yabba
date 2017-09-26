@@ -763,6 +763,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public boolean shouldDrop()
 	{
-		return super.shouldDrop() || itemCount > 0 || !storedItem.isEmpty() || disableOreItems.getBoolean();
+		return super.shouldDrop() || itemCount > 0 || disableOreItems.getBoolean();
 	}
 }

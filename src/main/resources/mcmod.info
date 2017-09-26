@@ -4,7 +4,7 @@
 		"name": "YABBA",
 		"description": "Yet Another Better Barrel Attempt",
 		"version": "${version}",
-		"mcversion": "1.12",
+		"mcversion": "${mcversion}",
 		"url": "https://minecraft.curseforge.com/projects/yabba",
 		"updateUrl": "",
 		"authorList": ["LatvianModder"],
