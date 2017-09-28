@@ -1,7 +1,0 @@
-[
-	{"id": "item_barrel", "icon": "item:yabba:item_barrel", "lang": "tile.yabba.item_barrel.name"},
-	{"id": "painter", "icon": "item:yabba:painter", "lang": "item.yabba.painter.name"},
-	{"id": "hammer", "icon": "item:yabba:hammer", "lang": "item.yabba.hammer.name"},
-	{"id": "upgrades", "icon": "item:yabba:upgrade_blank", "lang": "item.yabba.upgrade_blank.name"},
-	{"id": "antibarrel", "icon": "item:yabba:antibarrel", "lang": "tile.yabba.antibarrel.name"}
-]

@@ -30,7 +30,7 @@ public enum Tier implements IStringSerializable
 	Tier(String n, int c)
 	{
 		name = n;
-		langKey = LangKey.of("yabba.lang.tier." + n);
+		langKey = LangKey.of("lang.yabba.tier." + n);
 		color = Color4I.rgb(c);
 	}
 

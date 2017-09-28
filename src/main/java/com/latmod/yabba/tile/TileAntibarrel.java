@@ -2,6 +2,7 @@ package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
+import com.latmod.yabba.YabbaConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,8 +21,6 @@ import java.util.List;
  */
 public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 {
-	public static final int MAX_ITEMS = 32000;
-
 	private final List<ItemStack> items = new ArrayList<>();
 
 	public static boolean isValidItem(ItemStack is)
@@ -108,7 +107,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 		{
 			return ItemStack.EMPTY;
 		}
-		else if (items.size() < MAX_ITEMS && isValidItem(stack))
+		else if (items.size() < YabbaConfig.general.antibarrel_capacity && isValidItem(stack))
 		{
 			if (!simulate)
 			{

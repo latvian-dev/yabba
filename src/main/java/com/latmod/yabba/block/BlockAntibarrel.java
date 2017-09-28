@@ -1,5 +1,6 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -81,6 +82,8 @@ public class BlockAntibarrel extends BlockYabba
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced)
 	{
+		tooltip.add(StringUtils.translate("guide.yabba.antibarrel.info"));
+
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
 		{
 			NBTTagList list = stack.getTagCompound().getCompoundTag("BlockEntityTag").getTagList("Inv", Constants.NBT.TAG_COMPOUND);
