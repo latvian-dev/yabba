@@ -1,5 +1,6 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraftforge.common.config.Config;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = Yabba.MOD_ID, category = "config")
 public class YabbaConfig
 {
-	@Config.LangKey("ftbl.config.general")
+	@Config.LangKey(GuiLang.LANG_GENERAL)
 	public static final General general = new General();
 
 	public static final TierCategory tier = new TierCategory();

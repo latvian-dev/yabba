@@ -3,6 +3,7 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
 import com.feed_the_beast.ftbl.lib.config.EnumTristate;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.latmod.yabba.Yabba;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @Config(modid = Yabba.MOD_ID + "_client", category = "config", name = "../local/client/" + Yabba.MOD_ID)
 public class YabbaClientConfig
 {
-	@Config.LangKey("ftbl.config.general")
+	@Config.LangKey(GuiLang.LANG_GENERAL)
 	public static final General general = new General();
 
 	public static final YabbaBarColor bar_color = new YabbaBarColor();
