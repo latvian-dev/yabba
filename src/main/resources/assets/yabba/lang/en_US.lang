@@ -48,6 +48,7 @@ tile.yabba.machine.name=Machine
 yabba.config.general.allowed_ore_prefixes=Allowed Ore Prefixes
 yabba.config.general.sneak_left_click_extracts_stack=Sneak-Left-Click Extracts a Stack
 yabba.config.general.antibarrel_capacity=Antibarrel Capacity
+yabba.config.general.autocreate_slots=Auto-create Slots
 
 yabba_client.config.general.always_display_data=Always Display Data
 yabba_client.config.general.display_bar=Display Bar

@@ -359,7 +359,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 			return Tier.MAX_ITEMS;
 		}
 
-		return tier.maxItemStacks * (stack.isEmpty() ? 1 : stack.getMaxStackSize());
+		return tier.maxItemStacks * (stack.isEmpty() ? 64 : stack.getMaxStackSize());
 	}
 
 	public void setStoredItemType(ItemStack type, int amount)
@@ -406,6 +406,12 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		if (itemCount <= 0)
 		{
 			return ItemStack.EMPTY;
+		}
+
+		if (!YabbaConfig.general.autocreate_slots)
+		{
+			storedItem.setCount(tier.creative() ? (Tier.MAX_ITEMS / 2) : itemCount);
+			return storedItem;
 		}
 
 		int maxStack = storedItem.getMaxStackSize();
@@ -457,6 +463,11 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public int getSlots()
 	{
+		if (!YabbaConfig.general.autocreate_slots)
+		{
+			return 1;
+		}
+
 		if (cachedSlotCount == -1)
 		{
 			if (itemCount <= 0)
@@ -559,7 +570,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return 64;
+		return (YabbaConfig.general.autocreate_slots || itemCount <= 0) ? 64 : getMaxItems(storedItem);
 	}
 
 	public int getFreeSpace()

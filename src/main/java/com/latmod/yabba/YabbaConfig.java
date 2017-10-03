@@ -23,11 +23,23 @@ public class YabbaConfig
 
 	public static class General
 	{
+		@Config.Comment({
+				"Whitelist of OreDictionary prefixes that are allowed to merge inside barrel",
+				"Example: Two different copper ores can go in the same barrel and will become whichever was the original in barrel"
+		})
 		public String[] allowed_ore_prefixes = {"ingot", "block", "nugget", "ore", "dust", "gem", "gear", "rod", "gear"};
 
+		@Config.Comment("false to inverse normal behaviour - sneak-click will give you a single item, normal-click will give a stack of items")
 		public boolean sneak_left_click_extracts_stack = true;
 
+		@Config.Comment("How many items can Antibarrel store")
 		public int antibarrel_capacity = 100000;
+
+		@Config.Comment({
+				"Recommended to be true. Only adding this as config option in case something really breaks.",
+				"This config option will be removed once better mod integration is added"
+		})
+		public boolean autocreate_slots = false;
 	}
 
 	public static class TierCategory
