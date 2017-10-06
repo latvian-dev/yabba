@@ -1,8 +1,8 @@
 package com.latmod.yabba.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.api.YabbaSkinsEvent;
 import forestry.api.arboriculture.EnumVanillaWoodType;

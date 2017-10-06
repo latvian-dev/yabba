@@ -1,9 +1,9 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
 import com.feed_the_beast.ftbl.lib.config.EnumTristate;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.latmod.yabba.Yabba;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;

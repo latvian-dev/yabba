@@ -1,8 +1,8 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.client.renderer.BufferBuilder;

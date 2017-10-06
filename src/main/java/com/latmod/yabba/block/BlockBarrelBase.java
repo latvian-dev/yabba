@@ -1,7 +1,7 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftbl.lib.block.EnumRotation;
-import com.feed_the_beast.ftbl.lib.util.UnlistedPropertyString;
+import com.feed_the_beast.ftbl.lib.util.misc.UnlistedPropertyString;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;

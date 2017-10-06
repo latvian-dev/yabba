@@ -1,12 +1,11 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.google.common.base.Preconditions;
+import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
@@ -272,9 +272,9 @@ public class BarrelModel
 
 			for (EnumFacing facing : faces)
 			{
-				Preconditions.checkNotNull(builder);
-				Preconditions.checkNotNull(model);
-				Preconditions.checkNotNull(model.currentTexture);
+				Objects.requireNonNull(builder);
+				Objects.requireNonNull(model);
+				Objects.requireNonNull(model.currentTexture);
 				builder.addQuad(fromv, tov, facing, model.currentTexture.get(facing));
 			}
 		}

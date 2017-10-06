@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.tile.TileBase;
-import com.feed_the_beast.ftbl.lib.util.DataStorage;
+import com.feed_the_beast.ftbl.lib.util.misc.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;

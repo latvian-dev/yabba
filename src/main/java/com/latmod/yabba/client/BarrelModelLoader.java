@@ -1,8 +1,8 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.TextureSet;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockBarrelBase;

@@ -2,7 +2,7 @@ package com.latmod.yabba.item.upgrade;
 
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
-import com.feed_the_beast.ftbl.lib.util.DataStorage;
+import com.feed_the_beast.ftbl.lib.util.misc.DataStorage;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
