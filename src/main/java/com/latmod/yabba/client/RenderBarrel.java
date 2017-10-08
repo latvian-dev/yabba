@@ -2,7 +2,8 @@ package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -43,6 +44,22 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 			return;
 		}
 
+		if (destroyStage >= 0)
+		{
+			ClientUtils.MC.getTextureManager().bindTexture(DESTROY_STAGES[destroyStage]);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x, y, z);
+			GlStateManager.glNormal3f(0F, 1F, 0F);
+			CachedVertexData data = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			data.cube(YabbaCommon.getModelData(barrel.model).getAABB(barrel.getBlockState()));
+			data.draw(Tessellator.getInstance(), Tessellator.getInstance().getBuffer());
+			GlStateManager.popMatrix();
+		}
+		else
+		{
+			GlStateManager.color(1F, 1F, 1F, alpha);
+		}
+
 		boolean hasIcon = hasIcon(barrel);
 		boolean isSneaking = ClientUtils.MC.player.isSneaking();
 		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
@@ -61,13 +78,12 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		GlStateManager.rotate(barrel.getRotationAngleY(), 0F, 1F, 0F);
 		GlStateManager.rotate(barrel.getRotationAngleX(), 1F, 0F, 0F);
 		GlStateManager.translate(-0.5F, -0.5F, -0.5F);
-		GlStateManager.color(1F, 1F, 1F, 1F);
 		setLightmapDisabled(true);
 		GlStateManager.disableLighting();
-		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.depthMask(true);
+		GlStateManager.enableAlpha();
 
 		BarrelModel model = YabbaClient.getModel(barrel.model);
 		Tessellator tessellator = Tessellator.getInstance();
@@ -97,12 +113,12 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 					Color4I colBorder = YabbaClientConfig.bar_color.getBorderColor();
 					Color4I colFree = YabbaClientConfig.bar_color.getFreeColor();
 					Color4I colFilled = YabbaClientConfig.bar_color.getFilledColor();
-					rect(buffer, bx, by, textDistance, b, bh, colBorder);
-					rect(buffer, 1D - b - bx, by, textDistance, b, bh, colBorder);
-					rect(buffer, bx + b, by, textDistance, bw - b2, b, colBorder);
-					rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, colBorder);
-					rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, colFree);
-					rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, colFilled);
+					rect(buffer, bx, by, textDistance, b, bh, colBorder, alpha);
+					rect(buffer, 1D - b - bx, by, textDistance, b, bh, colBorder, alpha);
+					rect(buffer, bx + b, by, textDistance, bw - b2, b, colBorder, alpha);
+					rect(buffer, bx + b, by + bh - b, textDistance, bw - b2, b, colBorder, alpha);
+					rect(buffer, bx + b, by + b, textDistance, (bw - b2) * filled, bh - b2, colFree, alpha);
+					rect(buffer, bx + b + (bw - b2) * filled, by + b, textDistance, (bw - b2) * (1D - filled), bh - b2, colFilled, alpha);
 					tessellator.draw();
 					GlStateManager.enableTexture2D();
 					GlStateManager.popMatrix();
@@ -130,6 +146,8 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 			}
 		}
 
+		setLightmapDisabled(false);
+
 		if (hasIcon)
 		{
 			GlStateManager.pushMatrix();
@@ -137,13 +155,11 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 			GlStateManager.enableRescaleNormal();
-			GlStateManager.enableAlpha();
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			renderIcon(barrel);
-			GlStateManager.disableAlpha();
 			GlStateManager.disableRescaleNormal();
 			GlStateManager.disableLighting();
 			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -153,19 +169,16 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 		}
 
 		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.popMatrix();
-
-		setLightmapDisabled(false);
 	}
 
-	private static void rect(BufferBuilder buffer, double x, double y, double z, double w, double h, Color4I col)
+	private static void rect(BufferBuilder buffer, double x, double y, double z, double w, double h, Color4I col, float alpha)
 	{
 		int r = col.redi();
 		int g = col.greeni();
 		int b = col.bluei();
-		int a = col.alphai();
+		int a = (int) (col.alphai() * alpha);
 		buffer.pos(x, y, z).color(r, g, b, a).endVertex();
 		buffer.pos(x, y + h, z).color(r, g, b, a).endVertex();
 		buffer.pos(x + w, y + h, z).color(r, g, b, a).endVertex();

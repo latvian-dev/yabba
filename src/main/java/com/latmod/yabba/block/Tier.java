@@ -1,7 +1,7 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.util.LangKey;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 

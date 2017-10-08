@@ -3,6 +3,7 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ModelBuilder;
 import com.feed_the_beast.ftbl.lib.client.SpriteSet;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
@@ -265,7 +266,7 @@ public class BarrelModel
 				return;
 			}
 
-			builder.setTintIndex((skin.color.hasColor() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
+			builder.setTintIndex((!skin.color.isEmpty() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
 
 			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
 			Vector3f tov = new Vector3f((float) (model.offset.x + to.x), (float) (model.offset.y + to.y), (float) (model.offset.z + to.z));
@@ -290,7 +291,7 @@ public class BarrelModel
 				return;
 			}
 
-			builder.setTintIndex((skin.color.hasColor() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
+			builder.setTintIndex((!skin.color.isEmpty() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
 
 			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
 			Vector3f tov = new Vector3f((float) (model.offset.x + to.x), (float) (model.offset.y + to.y), (float) (model.offset.z + to.z));
@@ -313,6 +314,7 @@ public class BarrelModel
 	public final float iconDistance;
 	private final String unlocalizedName;
 	public final BlockRenderLayer layer;
+	public Icon icon = Icon.EMPTY;
 
 	public BarrelModel(ResourceLocation _id, JsonObject json)
 	{

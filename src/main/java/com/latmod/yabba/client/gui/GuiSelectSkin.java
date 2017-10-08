@@ -3,15 +3,11 @@ package com.latmod.yabba.client.gui;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
@@ -19,6 +15,7 @@ import com.latmod.yabba.net.MessageSelectSkin;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,35 +24,47 @@ import java.util.List;
  */
 public class GuiSelectSkin extends GuiBase
 {
-	public static final Icon PURPLE_BACKGROUND = new TexturelessRectangle(0x228060FF).setLineColor(Color4I.BLACK);
-	public static final Icon BUTTON_GREEN = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF007F0E);
-
 	private class Skin extends Button
 	{
 		private final BarrelSkin skin;
 		private final String searchText;
 
-		private Skin(BarrelSkin s)
+		private Skin(GuiBase gui, @Nullable BarrelSkin s)
 		{
-			super(0, 0, 18, 18);
+			super(gui, 0, 0, 20, 20);
 			skin = s;
-			String t = s.toString();
-			setTitle(t);
-			setIcon(s.icon);
-			searchText = t.replace(" ", "").toLowerCase();
+
+			if (skin != null)
+			{
+				String t = s.toString();
+				setTitle(t);
+				searchText = t.replace(" ", "").toLowerCase();
+			}
+			else
+			{
+				searchText = "";
+			}
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
-			new MessageSelectSkin(skin.id).sendToServer();
-			gui.closeGui();
+			if (skin != null)
+			{
+				new MessageSelectSkin(skin.id).sendToServer();
+				gui.closeGui();
+			}
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
-			super.addMouseOverText(gui, list);
+			if (skin == null)
+			{
+				return;
+			}
+
+			super.addMouseOverText(list);
 
 			if (ClientUtils.MC.gameSettings.advancedItemTooltips)
 			{
@@ -74,12 +83,20 @@ public class GuiSelectSkin extends GuiBase
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			int ax = getAX();
 			int ay = getAY();
-			(gui.isMouseOver(this) ? BUTTON_GREEN : GuiSelectModel.BUTTON_BACKGROUND).draw(ax, ay, width, height, Color4I.NONE);
-			getIcon(gui).draw(ax + 1, ay + 1, 16, 16, Color4I.NONE);
+
+			if (skin != null)
+			{
+				getIcon().draw(ax, ay, width, height);
+				skin.icon.draw(ax + 2, ay + 2, 16, 16);
+			}
+			else
+			{
+				gui.getTheme().getDisabledButton().draw(ax, ay, width, height);
+			}
 		}
 	}
 
@@ -92,23 +109,21 @@ public class GuiSelectSkin extends GuiBase
 	{
 		super(193, 134);
 
-		searchBar = new TextBox(2, 2, 189, 14)
+		searchBar = new TextBox(this, 2, 2, 189, 14)
 		{
 			@Override
-			public void onTextChanged(GuiBase gui)
+			public void onTextChanged()
 			{
 				skinsPanel.refreshWidgets();
 			}
 		};
 
-		searchBar.background = PURPLE_BACKGROUND;
-
-		skinsPanel = new Panel(2, 18, 171, 115)
+		skinsPanel = new Panel(this, 2, 18, 171, 115)
 		{
 			@Override
 			public void addWidgets()
 			{
-				scrollBar.setValue(GuiSelectSkin.this, 0D);
+				scrollBar.setValue(0D);
 				String search = searchBar.getText();
 
 				if (search.isEmpty())
@@ -124,7 +139,7 @@ public class GuiSelectSkin extends GuiBase
 
 					for (Skin skin : allSkins)
 					{
-						if (skin.searchText.contains(searchBar1))
+						if (!skin.searchText.isEmpty() && skin.searchText.contains(searchBar1))
 						{
 							add(skin);
 						}
@@ -137,45 +152,40 @@ public class GuiSelectSkin extends GuiBase
 			@Override
 			public void updateWidgetPositions()
 			{
-				int x = 0;
-				int y = 1;
-
-				for (Widget w : widgets)
+				for (int i = 0; i < widgets.size(); i++)
 				{
-					w.posX = x;
-					w.posY = y;
-
-					x += w.width + 1;
-
-					if (x > width)
-					{
-						x = 0;
-						y += w.height + 1;
-					}
+					Widget w = widgets.get(i);
+					w.posX = (i % 8) * 21;
+					w.posY = (i / 8) * 21;
 				}
 
-				scrollBar.setElementSize(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 19);
+				scrollBar.setElementSize(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 21);
 				scrollBar.setSrollStepFromOneElementSize(19);
 			}
 		};
 
-		skinsPanel.addFlags(Panel.FLAG_DEFAULTS);
+		skinsPanel.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(173, 19, 18, 113, 0, skinsPanel)
+		scrollBar = new PanelScrollBar(this, 173, 19, 18, 113, 0, skinsPanel)
 		{
 			@Override
-			public boolean shouldRender(GuiBase gui)
+			public boolean shouldRender()
 			{
 				return true;
 			}
 		};
 
-		scrollBar.background = PURPLE_BACKGROUND;
-		scrollBar.slider = PURPLE_BACKGROUND;
-
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{
-			allSkins.add(new Skin(s));
+			allSkins.add(new Skin(this, s));
+		}
+
+		int i = allSkins.size();
+
+		while (i % 8 != 0)
+		{
+			i++;
+			allSkins.add(new Skin(gui, null));
 		}
 	}
 
@@ -183,18 +193,5 @@ public class GuiSelectSkin extends GuiBase
 	public void addWidgets()
 	{
 		addAll(searchBar, skinsPanel, scrollBar);
-	}
-
-	@Override
-	public Icon getIcon(GuiBase gui)
-	{
-		return GuiSelectModel.GUI_BACKGROUND;
-	}
-
-	@Override
-	public void drawBackground()
-	{
-		super.drawBackground();
-		GuiHelper.drawBlankRect(posX, posY + 17, width, 1, Color4I.BLACK);
 	}
 }

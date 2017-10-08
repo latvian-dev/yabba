@@ -1,12 +1,12 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -143,7 +143,7 @@ public class YabbaClient extends YabbaCommon
 
 			if (color.equals(Color4I.WHITE))
 			{
-				color = Color4I.NONE;
+				color = Icon.EMPTY;
 			}
 
 			ResourceLocation still = fluid.getStill(stack);
@@ -228,6 +228,11 @@ public class YabbaClient extends YabbaCommon
 			{
 				Yabba.LOGGER.info("-- " + skin.id + " :: " + skin);
 			}
+		}
+
+		for (BarrelModel model : ALL_MODELS)
+		{
+			model.icon = new ItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), model.id, "", Tier.WOOD));
 		}
 	}
 
