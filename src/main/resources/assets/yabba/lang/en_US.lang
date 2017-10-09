@@ -91,6 +91,7 @@ yabba.yabba_model.cover=Cover
 yabba.yabba_model.panel=Panel
 yabba.yabba_model.slab=Slab
 yabba.yabba_model.block=Block
+yabba.yabba_model.invisible=Invisible
 yabba.yabba_model.block_window=Block with Window
 yabba.yabba_model.block_borders=Bordered Block with Window
 yabba.yabba_model.crate=Crate

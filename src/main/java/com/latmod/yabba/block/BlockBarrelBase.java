@@ -165,6 +165,14 @@ public class BlockBarrelBase extends BlockYabba
 
 	@Override
 	@Deprecated
+	@SideOnly(Side.CLIENT)
+	public boolean hasCustomBreakingProgress(IBlockState state)
+	{
+		return true;
+	}
+
+	@Override
+	@Deprecated
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return side != EnumFacing.DOWN;

@@ -132,6 +132,7 @@
 	{"add": "minecraft:quartz_ore"},
 	{"add": "minecraft:glass", "layer": "cutout"},
 	{"add": "minecraft:web", "layer": "cutout"},
+	{"add": "minecraft:iron_bars", "layer": "cutout"},
 	{"add": "minecraft:portal", "name": {"translate": "tile.portal.name"}, "layer": "translucent"},
 	{"add": "minecraft:mossy_cobblestone", "textures": "all=blocks/cobblestone_mossy"},
 	{"add": "minecraft:red_sand", "textures": "all=blocks/red_sand", "state": "minecraft:sand[variant=red_sand]"},

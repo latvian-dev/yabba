@@ -20,7 +20,6 @@ public class ItemUpgradeTier extends ItemUpgrade
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{
 		event.setAddUpgrade(false);
-		return event.getBarrel().tier == tier.getPrevious() && event.getBarrel().setTier(tier, event.simulate());
-
+		return (event.getPlayer().capabilities.isCreativeMode || event.getBarrel().tier == tier.getPrevious()) && event.getBarrel().setTier(tier, event.simulate());
 	}
 }
