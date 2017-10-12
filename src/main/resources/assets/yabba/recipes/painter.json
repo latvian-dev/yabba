@@ -9,7 +9,7 @@
 	],
 	"key": {
 		"U": {"item": "#blank_upgrade"},
-		"W": {"item": "minecraft:wool", "data": 0},
+		"W": {"item": "minecraft:wool", "data": 32767},
 		"I": {"item": "#iron"}
 	}
 }
