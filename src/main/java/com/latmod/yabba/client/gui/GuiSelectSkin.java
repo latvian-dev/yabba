@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.latmod.yabba.api.BarrelSkin;
@@ -15,7 +16,6 @@ import com.latmod.yabba.net.MessageSelectSkin;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,21 +29,13 @@ public class GuiSelectSkin extends GuiBase
 		private final BarrelSkin skin;
 		private final String searchText;
 
-		private Skin(GuiBase gui, @Nullable BarrelSkin s)
+		private Skin(GuiBase gui, BarrelSkin s)
 		{
 			super(gui, 0, 0, 20, 20);
 			skin = s;
-
-			if (skin != null)
-			{
-				String t = s.toString();
-				setTitle(t);
-				searchText = t.replace(" ", "").toLowerCase();
-			}
-			else
-			{
-				searchText = "";
-			}
+			String t = s.toString();
+			setTitle(t);
+			searchText = t.replace(" ", "").toLowerCase();
 		}
 
 		@Override
@@ -59,11 +51,6 @@ public class GuiSelectSkin extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			if (skin == null)
-			{
-				return;
-			}
-
 			super.addMouseOverText(list);
 
 			if (ClientUtils.MC.gameSettings.advancedItemTooltips)
@@ -88,15 +75,8 @@ public class GuiSelectSkin extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 
-			if (skin != null)
-			{
-				getIcon().draw(ax, ay, width, height);
-				skin.icon.draw(ax + 2, ay + 2, 16, 16);
-			}
-			else
-			{
-				gui.getTheme().getDisabledButton().draw(ax, ay, width, height);
-			}
+			getIcon().draw(ax, ay, width, height);
+			skin.icon.draw(ax + 2, ay + 2, 16, 16);
 		}
 	}
 
@@ -107,9 +87,9 @@ public class GuiSelectSkin extends GuiBase
 
 	public GuiSelectSkin()
 	{
-		super(193, 134);
+		super(211, 150);
 
-		searchBar = new TextBox(this, 2, 2, 189, 14)
+		searchBar = new TextBox(this, 8, 8, 194, 14)
 		{
 			@Override
 			public void onTextChanged()
@@ -118,7 +98,7 @@ public class GuiSelectSkin extends GuiBase
 			}
 		};
 
-		skinsPanel = new Panel(this, 2, 18, 171, 115)
+		skinsPanel = new Panel(this, 9, 29, 167, 111)
 		{
 			@Override
 			public void addWidgets()
@@ -159,14 +139,20 @@ public class GuiSelectSkin extends GuiBase
 					w.posY = (i / 8) * 21;
 				}
 
-				scrollBar.setElementSize(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 21);
+				scrollBar.setElementSize(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 20);
 				scrollBar.setSrollStepFromOneElementSize(19);
+			}
+
+			@Override
+			public Icon getIcon()
+			{
+				return gui.getTheme().getPanelBackground();
 			}
 		};
 
 		skinsPanel.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, 173, 19, 18, 113, 0, skinsPanel)
+		scrollBar = new PanelScrollBar(this, 184, 28, 18, 113, 0, skinsPanel)
 		{
 			@Override
 			public boolean shouldRender()
@@ -178,14 +164,6 @@ public class GuiSelectSkin extends GuiBase
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{
 			allSkins.add(new Skin(this, s));
-		}
-
-		int i = allSkins.size();
-
-		while (i % 8 != 0)
-		{
-			i++;
-			allSkins.add(new Skin(gui, null));
 		}
 	}
 
