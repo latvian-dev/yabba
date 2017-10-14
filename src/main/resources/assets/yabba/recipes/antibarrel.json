@@ -4,13 +4,13 @@
 	"result": {"item": "antibarrel"},
 	"pattern": [
 		"NQN",
-		"NON",
-		"NCN"
+		"NCN",
+		"NDN"
 	],
 	"key": {
 		"N": {"type": "forge:ore_dict", "ore": "ingotBrickNether"},
 		"Q": {"type": "forge:ore_dict", "ore": "blockQuartz"},
-		"O": {"type": "forge:ore_dict", "ore": "obsidian"},
-		"C": {"item": "#chest"}
+		"C": {"type": "forge:ore_dict", "ore": "chestEnder"},
+		"D": {"type": "forge:ore_dict", "ore": "gemDiamond"}
 	}
 }
