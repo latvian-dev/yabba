@@ -31,6 +31,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -186,6 +187,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		if (type == EnumSaveType.NET_UPDATE)
 		{
 			prevItemCount = prevItemCountForNet = nbt.getInteger("PrevCount");
+			cachedItemCount = null;
 
 			if (prevItemCount != -1)
 			{
@@ -201,6 +203,8 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		{
 			storedItem = ItemStack.EMPTY;
 		}
+
+		updateContainingBlockInfo();
 	}
 
 	@Override
@@ -261,10 +265,13 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (prevItemCount == -1 || prevItemCount != itemCount)
 		{
-			updateContainingBlockInfo();
-
 			if (world != null)
 			{
+				if (!world.isRemote)
+				{
+					updateContainingBlockInfo();
+				}
+
 				world.markChunkDirty(pos, this);
 
 				if (!world.isRemote || prevItemCount == -1)
@@ -287,7 +294,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	{
 		if (cachedItemName == null)
 		{
-			cachedItemName = storedItem.isEmpty() ? "" : storedItem.getDisplayName();
+			cachedItemName = storedItem.isEmpty() ? "" : TextFormatting.BOLD + storedItem.getDisplayName();
 		}
 
 		return cachedItemName;

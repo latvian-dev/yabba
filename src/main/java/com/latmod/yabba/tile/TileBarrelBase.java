@@ -187,9 +187,8 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	}
 
 	@Override
-	public void onUpdatePacket()
+	public void onUpdatePacket(EnumSaveType type)
 	{
-		updateContainingBlockInfo();
 	}
 
 	@Override
@@ -396,7 +395,11 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 		String group = Yabba.MOD_ID;
 
 		event.getConfig().add(group, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.config.general.always_display_data");
-		event.getConfig().add(group, "display_bar", displayBar).setNameLangKey("yabba_client.config.general.display_bar");
+
+		if (!tier.infiniteCapacity())
+		{
+			event.getConfig().add(group, "display_bar", displayBar).setNameLangKey("yabba_client.config.general.display_bar");
+		}
 
 		DataStorage data = getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
 		if (data instanceof ItemUpgradeRedstone.Data)
