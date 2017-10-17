@@ -13,6 +13,7 @@ item.yabba.upgrade_obsidian_shell.name=Obsidian Shell
 item.yabba.upgrade_redstone_out.name=Redstone Output
 item.yabba.upgrade_hopper.name=Hopper
 item.yabba.upgrade_void.name=Void Items
+item.yabba.upgrade_pickup.name=Collect Pickups
 
 item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer

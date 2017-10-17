@@ -53,9 +53,13 @@ public class YabbaItems
 	public static final Item UPGRADE_REDSTONE_OUT = Items.AIR;
 	public static final Item UPGRADE_HOPPER = Items.AIR;
 	public static final Item UPGRADE_VOID = Items.AIR;
+	public static final Item UPGRADE_PICKUP = Items.AIR;
 
 	public static final Item HAMMER = Items.AIR;
 	public static final Item PAINTER = Items.AIR;
+
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":item_barrel")
+	public static final Item ITEM_BARREL_ITEM = Items.AIR;
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
@@ -84,6 +88,7 @@ public class YabbaItems
 				new ItemUpgradeRedstone("upgrade_redstone_out"),
 				new ItemUpgradeHopper("upgrade_hopper"),
 				new ItemUpgrade("upgrade_void"),
+				new ItemUpgrade("upgrade_pickup"),
 				new ItemHammer(),
 				new ItemPainter());
 	}
@@ -93,7 +98,7 @@ public class YabbaItems
 	public static void registerModels(ModelRegistryEvent event)
 	{
 		ModelLoaderRegistry.registerLoader(BarrelModelLoader.INSTANCE);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ITEM_BARREL), 0, BarrelModelLoader.MODEL_LOCATION);
+		ModelLoader.setCustomModelResourceLocation(ITEM_BARREL_ITEM, 0, BarrelModelLoader.MODEL_LOCATION);
 		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.INSTANCE);
 
 		ClientUtils.registerModel(ANTIBARREL);
@@ -107,6 +112,7 @@ public class YabbaItems
 		ClientUtils.registerModel(UPGRADE_REDSTONE_OUT);
 		ClientUtils.registerModel(UPGRADE_HOPPER);
 		ClientUtils.registerModel(UPGRADE_VOID);
+		ClientUtils.registerModel(UPGRADE_PICKUP);
 		ClientUtils.registerModel(HAMMER);
 		ClientUtils.registerModel(PAINTER);
 

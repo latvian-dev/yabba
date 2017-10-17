@@ -1,0 +1,9 @@
+{
+	"type": "forge:ore_shapeless",
+	"group": "yabba:upgrade_pickup",
+	"result": {"item": "upgrade_pickup"},
+	"ingredients": [
+		{"item": "#blank_upgrade"},
+		{"type": "forge:ore_dict", "ore": "slimeball"}
+	]
+}
