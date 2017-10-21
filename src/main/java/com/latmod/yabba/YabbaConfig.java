@@ -40,6 +40,7 @@ public class YabbaConfig
 				"This config option will be removed once better mod integration is added"
 		})
 		public boolean autocreate_slots = false;
+		public int connector_update_ticks = 600;
 	}
 
 	public static class TierCategory

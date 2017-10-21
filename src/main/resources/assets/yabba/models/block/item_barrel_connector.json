@@ -1,0 +1,76 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"frame": "yabba:blocks/item_barrel_connector_frame",
+		"center": "minecraft:blocks/beacon",
+		"particle": "minecraft:blocks/planks_oak"
+	},
+	"elements": [
+		{
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [4, 4, 12, 12], "texture": "#center"},
+				"east": {"uv": [4, 4, 12, 12], "texture": "#center"},
+				"south": {"uv": [4, 4, 12, 12], "texture": "#center"},
+				"west": {"uv": [4, 4, 12, 12], "texture": "#center"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#center"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#center"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#frame"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#frame"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#frame"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#frame"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#frame"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		},
+		{
+			"from": [2, 0, 0],
+			"to": [2, 16, 16],
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		},
+		{
+			"from": [14, 0, 0],
+			"to": [14, 16, 16],
+			"faces": {
+				"west": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		},
+		{
+			"from": [0, 2, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		},
+		{
+			"from": [0, 14, 0],
+			"to": [16, 14, 16],
+			"faces": {
+				"down": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		},
+		{
+			"from": [0, 0, 2],
+			"to": [16, 16, 2],
+			"faces": {
+				"south": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		},
+		{
+			"from": [0, 0, 14],
+			"to": [16, 16, 14],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#frame"}
+			}
+		}
+	]
+}

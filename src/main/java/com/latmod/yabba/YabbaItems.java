@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.latmod.yabba.block.BlockAntibarrel;
 import com.latmod.yabba.block.BlockItemBarrel;
+import com.latmod.yabba.block.BlockItemBarrelConnector;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModelLoader;
 import com.latmod.yabba.client.RenderItemBarrel;
@@ -18,6 +19,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -41,6 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class YabbaItems
 {
 	public static final Block ITEM_BARREL = Blocks.AIR;
+	public static final Block ITEM_BARREL_CONNECTOR = Blocks.AIR;
 	public static final Block ANTIBARREL = Blocks.AIR;
 
 	public static final Item UPGRADE_BLANK = Items.AIR;
@@ -66,9 +69,11 @@ public class YabbaItems
 	{
 		event.getRegistry().registerAll(
 				new BlockItemBarrel(),
+				new BlockItemBarrelConnector(),
 				new BlockAntibarrel());
 
 		GameRegistry.registerTileEntity(TileItemBarrel.class, Yabba.MOD_ID + ":item_barrel");
+		GameRegistry.registerTileEntity(TileItemBarrelConnector.class, Yabba.MOD_ID + ":item_barrel_connector");
 		GameRegistry.registerTileEntity(TileAntibarrel.class, Yabba.MOD_ID + ":antibarrel");
 	}
 
@@ -77,6 +82,7 @@ public class YabbaItems
 	{
 		event.getRegistry().registerAll(
 				new ItemBlockBarrel(ITEM_BARREL),
+				new ItemBlockBase(ITEM_BARREL_CONNECTOR),
 				new ItemBlockBase(ANTIBARREL),
 				new ItemUpgradeBlank("upgrade_blank"),
 				new ItemUpgradeTier("upgrade_iron_tier", Tier.IRON),
@@ -101,6 +107,7 @@ public class YabbaItems
 		ModelLoader.setCustomModelResourceLocation(ITEM_BARREL_ITEM, 0, BarrelModelLoader.MODEL_LOCATION);
 		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.INSTANCE);
 
+		ClientUtils.registerModel(ITEM_BARREL_CONNECTOR);
 		ClientUtils.registerModel(ANTIBARREL);
 		ClientUtils.registerModel(UPGRADE_BLANK);
 		ClientUtils.registerModel(UPGRADE_IRON_TIER);

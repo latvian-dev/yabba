@@ -16,4 +16,5 @@ public interface YabbaLang
 	LangKey ITEM_COUNT = LangKey.of("lang.yabba.item_count", Integer.class, Integer.class);
 	LangKey ITEM_COUNT_INF = LangKey.of("lang.yabba.item_count_inf", Integer.class);
 	LangKey ITEM_COUNT_MAX = LangKey.of("lang.yabba.item_count_max", Integer.class);
+	LangKey BARREL_CONNECTOR_CONNECTED = LangKey.of("tile.yabba.item_barrel_connector.connected", Integer.class);
 }

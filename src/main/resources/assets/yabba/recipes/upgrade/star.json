@@ -1,0 +1,14 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "yabba:upgrade_tier",
+	"result": {"item": "upgrade_star_tier", "count": 8},
+	"pattern": [
+		"UUU",
+		"UNU",
+		"UUU"
+	],
+	"key": {
+		"U": {"item": "#blank_upgrade"},
+		"N": {"type": "forge:ore_dict", "ore": "netherStar"}
+	}
+}

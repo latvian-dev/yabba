@@ -39,6 +39,8 @@ lang.fluid.flowing=Flowing %s
 
 # Blocks
 tile.yabba.item_barrel.name=Item Barrel
+tile.yabba.item_barrel_connector.name=Item Barrel Connector
+tile.yabba.item_barrel_connector.connected=Connected %d barrels
 tile.yabba.fluid_barrel.name=Fluid Barrel
 tile.yabba.energy_barrel.name=Energy Barrel
 tile.yabba.antibarrel.name=AntiBarrel
@@ -50,6 +52,7 @@ yabba.config.general.allowed_ore_prefixes=Allowed Ore Prefixes
 yabba.config.general.sneak_left_click_extracts_stack=Sneak-Left-Click Extracts a Stack
 yabba.config.general.antibarrel_capacity=Antibarrel Capacity
 yabba.config.general.autocreate_slots=Auto-create Slots
+yabba.config.general.connector_update_ticks=Barrel Connector Update Ticks
 
 yabba_client.config.general.always_display_data=Always Display Data
 yabba_client.config.general.display_bar=Display Bar

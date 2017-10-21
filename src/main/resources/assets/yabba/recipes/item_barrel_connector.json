@@ -1,0 +1,16 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "yabba:item_barrel_connector",
+	"result": {"item": "item_barrel_connector"},
+	"pattern": [
+		"QUQ",
+		"EDE",
+		"QUQ"
+	],
+	"key": {
+		"U": {"item": "#blank_upgrade"},
+		"Q": {"type": "forge:ore_dict", "ore": "plankWood"},
+		"E": {"type": "forge:ore_dict", "ore": "enderpearl"},
+		"D": {"type": "forge:ore_dict", "ore": "gemDiamond"}
+	}
+}
