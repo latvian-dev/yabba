@@ -208,6 +208,28 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	}
 
 	@Override
+	public void validate()
+	{
+		super.validate();
+
+		if (world != null && !world.isRemote)
+		{
+			TileItemBarrelConnector.markAllDirty(world.provider.getDimension());
+		}
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+
+		if (world != null && !world.isRemote)
+		{
+			TileItemBarrelConnector.markAllDirty(world.provider.getDimension());
+		}
+	}
+
+	@Override
 	public void update()
 	{
 		prevItemCountForNet = prevItemCount;

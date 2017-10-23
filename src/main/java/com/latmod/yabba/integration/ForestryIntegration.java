@@ -3,6 +3,7 @@ package com.latmod.yabba.integration;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.api.YabbaSkinsEvent;
 import forestry.api.arboriculture.EnumVanillaWoodType;
@@ -20,6 +21,8 @@ public class ForestryIntegration
 	@SubscribeEvent
 	public static void registerSkins(YabbaSkinsEvent event)
 	{
+		Yabba.LOGGER.info("Loading Forestry Integration");
+
 		for (IWoodType type : TreeManager.woodAccess.getRegisteredWoodTypes())
 		{
 			if (!(type instanceof EnumVanillaWoodType))

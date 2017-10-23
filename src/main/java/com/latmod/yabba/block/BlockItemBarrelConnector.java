@@ -26,7 +26,7 @@ public class BlockItemBarrelConnector extends BlockYabba
 {
 	public BlockItemBarrelConnector()
 	{
-		super("item_barrel_connector", Material.ROCK, MapColor.QUARTZ);
+		super("item_barrel_connector", Material.WOOD, MapColor.WOOD);
 	}
 
 	@Override

@@ -29,6 +29,7 @@ minecraft {
 
 repositories {
 	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
+	ivy { name "chisel"; artifactPattern "https://addons-origin.cursecdn.com/files/${chisel_file}/[module]-[revision](-[classifier]).[ext]" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 	maven { url = "http://maven.ic2.player.to/" }
 	//maven { name = "refinedstorage"; url = "https://dl.bintray.com/raoulvdberge/dev/" }
@@ -39,6 +40,7 @@ dependencies {
 	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
 	deobfCompile "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
 	//compile "refinedstorage:refinedstorage:${refinedstorage_version}:api"
+	compile "chisel:Chisel:${chisel_version}:api"
 }
 
 task apiJar(type: Jar) {

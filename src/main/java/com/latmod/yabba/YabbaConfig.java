@@ -1,6 +1,7 @@
 package com.latmod.yabba;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraftforge.common.config.Config;
@@ -40,7 +41,7 @@ public class YabbaConfig
 				"This config option will be removed once better mod integration is added"
 		})
 		public boolean autocreate_slots = false;
-		public int connector_update_ticks = 600;
+		public int connector_update_ticks = (int) (CommonUtils.TICKS_MINUTE * 5L);
 	}
 
 	public static class TierCategory

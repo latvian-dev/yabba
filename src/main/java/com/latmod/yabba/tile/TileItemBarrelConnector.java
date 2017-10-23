@@ -16,6 +16,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,6 +24,28 @@ import java.util.List;
  */
 public class TileItemBarrelConnector extends TileBase implements IItemHandlerModifiable, ITickable
 {
+	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
+
+	public static void markAllDirty(int dimension)
+	{
+		Iterator<TileItemBarrelConnector> iterator = ALL_CONNECTORS.iterator();
+
+		while (iterator.hasNext())
+		{
+			TileItemBarrelConnector connector = iterator.next();
+
+			if (connector.isInvalid())
+			{
+				iterator.remove();
+			}
+			else if (connector.world != null && dimension == connector.world.provider.getDimension())
+			{
+				connector.markDirty();
+				System.out.println("Marked dirty!");
+			}
+		}
+	}
+
 	public final List<TileItemBarrel> linkedBarrels = new ArrayList<>();
 	private long lastUpdate = 0L;
 
@@ -49,9 +72,29 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 	}
 
 	@Override
+	public void validate()
+	{
+		super.validate();
+		ALL_CONNECTORS.add(this);
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		ALL_CONNECTORS.remove(this);
+	}
+
+	@Override
 	public void update()
 	{
 		checkIfDirty();
+	}
+
+	@Override
+	public boolean notifyBlock()
+	{
+		return false;
 	}
 
 	@Override
