@@ -41,7 +41,6 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 			else if (connector.world != null && dimension == connector.world.provider.getDimension())
 			{
 				connector.markDirty();
-				System.out.println("Marked dirty!");
 			}
 		}
 	}
