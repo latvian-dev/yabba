@@ -56,6 +56,7 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	public ConfigBoolean isLocked = new ConfigBoolean(false);
 	public ConfigBoolean alwaysDisplayData = new ConfigBoolean(false);
 	public ConfigBoolean displayBar = new ConfigBoolean(false);
+	public long lastClick;
 
 	private float cachedRotationX, cachedRotationY;
 

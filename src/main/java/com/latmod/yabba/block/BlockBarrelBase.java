@@ -40,16 +40,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author LatvianModder
  */
 public class BlockBarrelBase extends BlockYabba
 {
-	public static final Map<UUID, Long> LAST_CLICK_MAP = new HashMap<>();
 	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
 	public static final IUnlistedProperty<String> MODEL = UnlistedPropertyString.create("model");
 	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
@@ -223,20 +219,20 @@ public class BlockBarrelBase extends BlockYabba
 			return;
 		}
 
-		Long l = LAST_CLICK_MAP.get(playerIn.getUniqueID());
-		long time = worldIn.getTotalWorldTime();
-
-		if (l != null && (time - l) < 3)
-		{
-			return;
-		}
-
-		LAST_CLICK_MAP.put(playerIn.getUniqueID(), time);
-
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
 		if (tileEntity instanceof TileBarrelBase)
 		{
+			long time = worldIn.getTotalWorldTime();
+			TileBarrelBase barrel = (TileBarrelBase) tileEntity;
+
+			if (time - barrel.lastClick < 3)
+			{
+				return;
+			}
+
+			barrel.lastClick = time;
+
 			((TileBarrelBase) tileEntity).removeItem(playerIn, playerIn.isSneaking() == YabbaConfig.general.sneak_left_click_extracts_stack);
 
 			playerIn.inventory.markDirty();
@@ -267,14 +263,6 @@ public class BlockBarrelBase extends BlockYabba
 		if (tile instanceof TileBarrelBase)
 		{
 			TileBarrelBase barrel = (TileBarrelBase) tile;
-
-			Long l = LAST_CLICK_MAP.get(playerIn.getGameProfile().getId());
-
-			if (l == null)
-			{
-				l = 0L;
-			}
-
 			ItemStack handItem = playerIn.getHeldItem(hand);
 
 			if (playerIn.isSneaking())
@@ -307,7 +295,7 @@ public class BlockBarrelBase extends BlockYabba
 			{
 				long time = worldIn.getTotalWorldTime();
 
-				if (time - l <= 8L)
+				if (time - barrel.lastClick <= 8L)
 				{
 					barrel.addAllItems(playerIn, hand);
 				}
@@ -316,7 +304,7 @@ public class BlockBarrelBase extends BlockYabba
 					barrel.addItem(playerIn, hand);
 				}
 
-				LAST_CLICK_MAP.put(playerIn.getGameProfile().getId(), time);
+				barrel.lastClick = time;
 			}
 		}
 

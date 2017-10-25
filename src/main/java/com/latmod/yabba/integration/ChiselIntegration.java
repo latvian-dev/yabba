@@ -1,6 +1,7 @@
 package com.latmod.yabba.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.YabbaSkinsEvent;
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +15,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = "chisel")
+@EventHandler(requiredMods = FTBLibFinals.CHISEL)
 public class ChiselIntegration
 {
 	@SubscribeEvent
@@ -35,7 +36,7 @@ public class ChiselIntegration
 			{
 				IBlockState state = variation.getBlockState();
 
-				if (state != null && state.getBlock().getRegistryName().getResourceDomain().equals("chisel"))
+				if (state != null && state.getBlock().getRegistryName().getResourceDomain().equals(FTBLibFinals.CHISEL))
 				{
 
 				}

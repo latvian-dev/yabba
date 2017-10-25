@@ -1,14 +1,12 @@
 package com.latmod.yabba;
 
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.latmod.yabba.block.BlockBarrelBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,11 +48,5 @@ public class Yabba
 	public void onPostInit(FMLPostInitializationEvent event)
 	{
 		PROXY.postInit();
-	}
-
-	@Mod.EventHandler
-	public void serverStopped(FMLServerStoppedEvent event)
-	{
-		BlockBarrelBase.LAST_CLICK_MAP.clear();
 	}
 }
