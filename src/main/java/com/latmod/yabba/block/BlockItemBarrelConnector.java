@@ -92,7 +92,7 @@ public class BlockItemBarrelConnector extends BlockYabba
 		{
 			TileItemBarrelConnector connector = (TileItemBarrelConnector) tileEntity;
 			connector.updateLinks();
-			playerIn.sendStatusMessage(YabbaLang.BARREL_CONNECTOR_CONNECTED.textComponent(connector.linkedBarrels.size()), true);
+			playerIn.sendStatusMessage(YabbaLang.BARREL_CONNECTOR_CONNECTED.textComponent(playerIn, connector.linkedBarrels.size()), true);
 		}
 
 		return true;
