@@ -3,9 +3,9 @@
 	"group": "yabba:upgrade_tier",
 	"result": {"item": "upgrade_gold_tier"},
 	"pattern": [
-		"III",
+		" I ",
 		"IUI",
-		"III"
+		" I "
 	],
 	"key": {
 		"U": {"item": "#blank_upgrade"},

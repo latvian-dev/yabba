@@ -16,6 +16,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.item.upgrade.ItemUpgradeStone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
@@ -47,6 +48,7 @@ public class YabbaItems
 	public static final Block ANTIBARREL = Blocks.AIR;
 
 	public static final Item UPGRADE_BLANK = Items.AIR;
+	public static final Item UPGRADE_STONE_TIER = Items.AIR;
 	public static final Item UPGRADE_IRON_TIER = Items.AIR;
 	public static final Item UPGRADE_GOLD_TIER = Items.AIR;
 	public static final Item UPGRADE_DIAMOND_TIER = Items.AIR;
@@ -85,6 +87,7 @@ public class YabbaItems
 				new ItemBlockBase(ITEM_BARREL_CONNECTOR),
 				new ItemBlockBase(ANTIBARREL),
 				new ItemUpgradeBlank("upgrade_blank"),
+				new ItemUpgradeStone("upgrade_stone_tier"),
 				new ItemUpgradeTier("upgrade_iron_tier", Tier.IRON),
 				new ItemUpgradeTier("upgrade_gold_tier", Tier.GOLD),
 				new ItemUpgradeTier("upgrade_diamond_tier", Tier.DIAMOND),
@@ -110,6 +113,7 @@ public class YabbaItems
 		ClientUtils.registerModel(ITEM_BARREL_CONNECTOR);
 		ClientUtils.registerModel(ANTIBARREL);
 		ClientUtils.registerModel(UPGRADE_BLANK);
+		ClientUtils.registerModel(UPGRADE_STONE_TIER);
 		ClientUtils.registerModel(UPGRADE_IRON_TIER);
 		ClientUtils.registerModel(UPGRADE_GOLD_TIER);
 		ClientUtils.registerModel(UPGRADE_DIAMOND_TIER);

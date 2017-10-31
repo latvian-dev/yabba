@@ -4,7 +4,6 @@
 	"result": {"item": "upgrade_diamond_tier"},
 	"ingredients": [
 		{"item": "#blank_upgrade"},
-		{"type": "forge:ore_dict", "ore": "gemDiamond"},
 		{"type": "forge:ore_dict", "ore": "gemDiamond"}
 	]
 }

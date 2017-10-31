@@ -1,7 +1,7 @@
 {
 	"type": "forge:ore_shaped",
 	"group": "yabba:upgrade_tier",
-	"result": {"item": "upgrade_iron_tier"},
+	"result": {"item": "upgrade_stone_tier"},
 	"pattern": [
 		" I ",
 		"IUI",
@@ -9,6 +9,6 @@
 	],
 	"key": {
 		"U": {"item": "#blank_upgrade"},
-		"I": {"item": "#iron"}
+		"I": [{"type": "forge:ore_dict", "ore": "cobblestone"}, {"type": "ftbl:ore_dict", "ore": "stone*"}]
 	}
 }

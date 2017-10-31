@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
  */
 public enum Tier implements IStringSerializable
 {
+	STONE("stone", 0x666666),
 	WOOD("wood", 0xC69569),
 	IRON("iron", 0xD8D8D8),
 	GOLD("gold", 0xFCD803),
@@ -53,20 +54,6 @@ public enum Tier implements IStringSerializable
 	@Nullable
 	public Tier getPrevious()
 	{
-		switch (this)
-		{
-			case IRON:
-				return WOOD;
-			case GOLD:
-				return IRON;
-			case DIAMOND:
-				return GOLD;
-			case STAR:
-				return DIAMOND;
-			case CREATIVE:
-				return STAR;
-			default:
-				return null;
-		}
+		return this == STONE ? null : NAME_MAP.getPrevious(this);
 	}
 }

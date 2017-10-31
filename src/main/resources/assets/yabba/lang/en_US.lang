@@ -4,6 +4,7 @@ itemGroup.yabba=YABBA
 # Items
 item.yabba.upgrade.desc=Barrel Upgrade
 item.yabba.upgrade_blank.name=Blank Barrel Upgrade
+item.yabba.upgrade_stone_tier.name=Stone Tier
 item.yabba.upgrade_iron_tier.name=Iron Tier
 item.yabba.upgrade_gold_tier.name=Gold Tier
 item.yabba.upgrade_diamond_tier.name=Diamond Tier
@@ -19,6 +20,7 @@ item.yabba.painter.name=Barrel Painter
 item.yabba.hammer.name=Barrel Hammer
 
 lang.yabba.tier=Tier: %s
+lang.yabba.tier.stone=Stone
 lang.yabba.tier.wood=Wood
 lang.yabba.tier.iron=Iron
 lang.yabba.tier.gold=Gold
