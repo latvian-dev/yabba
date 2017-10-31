@@ -157,11 +157,17 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		nbt.setInteger("Count", itemCount);
+		if (itemCount > 0)
+		{
+			nbt.setInteger("Count", itemCount);
+		}
 
 		if (type == EnumSaveType.NET_UPDATE)
 		{
-			nbt.setInteger("PrevCount", prevItemCountForNet);
+			if (prevItemCountForNet != 0)
+			{
+				nbt.setInteger("PrevCount", prevItemCountForNet);
+			}
 
 			if (prevItemCountForNet != -1)
 			{
