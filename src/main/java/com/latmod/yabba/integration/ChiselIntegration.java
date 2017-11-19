@@ -1,26 +1,18 @@
 package com.latmod.yabba.integration;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.YabbaSkinsEvent;
-import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import team.chisel.api.carving.CarvingUtils;
-import team.chisel.api.carving.ICarvingRegistry;
-import team.chisel.api.carving.ICarvingVariation;
-
-import java.util.Objects;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = FTBLibFinals.CHISEL)
+//@EventHandler(requiredMods = FTBLibFinals.CHISEL)
 public class ChiselIntegration
 {
 	@SubscribeEvent
 	public static void registerSkins(YabbaSkinsEvent event)
 	{
+		/*
 		Yabba.LOGGER.info("Loading Chisel Integration");
 
 		ICarvingRegistry registry = CarvingUtils.getChiselRegistry();
@@ -41,7 +33,7 @@ public class ChiselIntegration
 
 				}
 			}
-		}
+		}*/
 
 		/*
 		 * BarrelSkin skin = new BarrelSkin(FTBLibFinals.FORESTRY + ":planks_" + type.getName(), TextureSet.of("all=" + type.getPlankTexture()));

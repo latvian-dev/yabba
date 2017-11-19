@@ -188,7 +188,7 @@ public class YabbaClient extends YabbaCommon
 
 			if (skin.icon.isEmpty())
 			{
-				skin.icon = new ItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
+				skin.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
 			}
 		}
 
@@ -232,7 +232,7 @@ public class YabbaClient extends YabbaCommon
 
 		for (BarrelModel model : ALL_MODELS)
 		{
-			model.icon = new ItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), model.id, "", Tier.WOOD));
+			model.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), model.id, "", Tier.WOOD));
 		}
 	}
 

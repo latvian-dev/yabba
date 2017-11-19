@@ -50,7 +50,6 @@ tile.yabba.antibarrel.name=AntiBarrel
 tile.yabba.machine.name=Machine
 
 # Config
-yabba.config.general.allowed_ore_prefixes=Allowed Ore Prefixes
 yabba.config.general.sneak_left_click_extracts_stack=Sneak-Left-Click Extracts a Stack
 yabba.config.general.antibarrel_capacity=Antibarrel Capacity
 yabba.config.general.autocreate_slots=Auto-create Slots
@@ -73,7 +72,6 @@ yabba.config.tier.diamond=Diamond
 yabba.config.tier.max_item_stacks=Max Item Stacks
 
 barrel_config.yabba.locked=Locked
-barrel_config.yabba.disable_ore_items=Disable Ore Items
 barrel_config.yabba.redstone.mode=Mode
 barrel_config.yabba.redstone.count=Count
 barrel_config.yabba.hopper.up=Up

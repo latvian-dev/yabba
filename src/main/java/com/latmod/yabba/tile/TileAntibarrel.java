@@ -194,6 +194,6 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	public boolean shouldDrop()
 	{
-		return super.shouldDrop() || !items.isEmpty();
+		return !items.isEmpty();
 	}
 }

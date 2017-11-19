@@ -369,7 +369,7 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	@Override
 	public boolean shouldDrop()
 	{
-		return super.shouldDrop() || !skin.isEmpty() || !model.isEmpty() || !upgrades.isEmpty() || tier != Tier.WOOD || isLocked.getBoolean();
+		return !skin.isEmpty() || !model.isEmpty() || !upgrades.isEmpty() || tier != Tier.WOOD || isLocked.getBoolean();
 	}
 
 	public void addItem(EntityPlayer player, EnumHand hand)

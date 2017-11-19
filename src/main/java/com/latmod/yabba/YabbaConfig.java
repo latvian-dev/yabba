@@ -3,7 +3,6 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -24,12 +23,6 @@ public class YabbaConfig
 
 	public static class General
 	{
-		@Config.Comment({
-				"Whitelist of OreDictionary prefixes that are allowed to merge inside barrel",
-				"Example: Two different copper ores can go in the same barrel and will become whichever was the original in barrel"
-		})
-		public String[] allowed_ore_prefixes = {"ingot", "block", "nugget", "ore", "dust", "gem", "gear", "rod", "gear"};
-
 		@Config.Comment("false to inverse normal behaviour - sneak-click will give you a single item, normal-click will give a stack of items")
 		public boolean sneak_left_click_extracts_stack = true;
 
@@ -78,7 +71,6 @@ public class YabbaConfig
 		tier.iron.syncWith(Tier.IRON);
 		tier.gold.syncWith(Tier.GOLD);
 		tier.diamond.syncWith(Tier.DIAMOND);
-		TileItemBarrel.clearCache();
 	}
 
 	@SubscribeEvent

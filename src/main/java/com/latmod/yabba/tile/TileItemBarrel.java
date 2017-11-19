@@ -1,6 +1,5 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -18,7 +17,6 @@ import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.util.UpgradeInst;
-import it.unimi.dsi.fastutil.ints.Int2ByteOpenHashMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityItem;
@@ -38,7 +36,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,69 +46,20 @@ import java.util.Objects;
  */
 public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifiable
 {
-	private static final Int2ByteOpenHashMap ALLOWED_ORE_NAME_CACHE = new Int2ByteOpenHashMap();
-
-	public static void clearCache()
-	{
-		ALLOWED_ORE_NAME_CACHE.clear();
-	}
-
-	private static boolean isOreNameAllowed(int id)
-	{
-		byte b = ALLOWED_ORE_NAME_CACHE.get(id);
-
-		if (b == 0)
-		{
-			b = 2;
-
-			String name = OreDictionary.getOreName(id);
-
-			for (String v : YabbaConfig.general.allowed_ore_prefixes)
-			{
-				if (name.startsWith(v))
-				{
-					b = 1;
-					break;
-				}
-			}
-
-			ALLOWED_ORE_NAME_CACHE.put(id, b);
-		}
-
-		return b == 1;
-	}
-
-	private static boolean canInsertItem(ItemStack stored, ItemStack stack, boolean checkOreNames)
+	private static boolean canInsertItem(ItemStack stored, ItemStack stack)
 	{
 		if (stored.getItem() != stack.getItem() || stored.getMetadata() != stack.getMetadata() || stored.getItemDamage() != stack.getItemDamage())
-		{
-			return checkOreNames && canInsertOreItem(stored, stack);
-		}
-
-		NBTTagCompound tag1 = stored.getTagCompound();
-		NBTTagCompound tag2 = stack.getTagCompound();
-		return Objects.equals((tag1 == null || tag1.hasNoTags()) ? null : tag1, (tag2 == null || tag2.hasNoTags()) ? null : tag2) && stored.areCapsCompatible(stack) || checkOreNames && canInsertOreItem(stored, stack);
-
-	}
-
-	private static boolean canInsertOreItem(ItemStack stored, ItemStack stack)
-	{
-		int[] storedIDs = OreDictionary.getOreIDs(stored);
-
-		if (storedIDs.length != 1)
 		{
 			return false;
 		}
 
-		int[] stackIDs = OreDictionary.getOreIDs(stack);
-		return !(stackIDs.length != 1 || storedIDs[0] != stackIDs[0] || !isOreNameAllowed(stackIDs[0]));
+		return Objects.equals(InvUtils.nullIfEmpty(stored.getTagCompound()), InvUtils.nullIfEmpty(stack.getTagCompound())) && stored.areCapsCompatible(stack);
 	}
 
 	public ItemStack storedItem = ItemStack.EMPTY;
 	public int itemCount = 0;
 	private String cachedItemName, cachedItemCount;
 	private int prevItemCount = -1, prevItemCountForNet = -1;
-	private final ConfigBoolean disableOreItems = new ConfigBoolean(false);
 	private int cachedSlotCount = -1;
 
 	@Override
@@ -527,7 +475,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		}
 
 		boolean storedIsEmpty = storedItem.isEmpty();
-		boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack, !disableOreItems.getBoolean());
+		boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack);
 		if (!storedIsEmpty && tier.creative())
 		{
 			return canInsert ? ItemStack.EMPTY : stack;
@@ -742,7 +690,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		super.createConfig(event);
 		String group = Yabba.MOD_ID;
 		event.getConfig().setGroupName(group, new TextComponentString(Yabba.MOD_NAME));
-		event.getConfig().add(group, "disable_ore_items", disableOreItems);
 
 		if (!tier.creative())
 		{
@@ -809,6 +756,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public boolean shouldDrop()
 	{
-		return super.shouldDrop() || itemCount > 0 || disableOreItems.getBoolean();
+		return itemCount > 0 || super.shouldDrop();
 	}
 }
