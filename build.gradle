@@ -36,11 +36,12 @@ repositories {
 }
 
 dependencies {
-	compile "com.latmod.mods:FTBLib:${ftblib_version}:api"
-	deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
-	deobfCompile "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
-	//compile "refinedstorage:refinedstorage:${refinedstorage_version}:api"
-	compile "chisel:Chisel:${chisel_version}:api"
+	provided "com.latmod.mods:FTBLib:${ftblib_version}:api"
+	runtime "com.latmod.mods:FTBLib:${ftblib_version}"
+	provided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+	provided "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
+	//provided "refinedstorage:refinedstorage:${refinedstorage_version}:api"
+	provided "chisel:Chisel:${chisel_version}:api"
 }
 
 task apiJar(type: Jar) {
