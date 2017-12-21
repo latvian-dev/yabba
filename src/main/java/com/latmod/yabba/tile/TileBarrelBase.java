@@ -1,12 +1,12 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
-import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
-import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
-import com.feed_the_beast.ftbl.lib.tile.TileBase;
-import com.feed_the_beast.ftbl.lib.util.misc.DataStorage;
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
+import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
+import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
+import com.feed_the_beast.ftblib.lib.tile.TileBase;
+import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
@@ -395,11 +395,11 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 	{
 		String group = Yabba.MOD_ID;
 
-		event.getConfig().add(group, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.config.general.always_display_data");
+		event.getConfig().add(group, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.general.always_display_data");
 
 		if (!tier.infiniteCapacity())
 		{
-			event.getConfig().add(group, "display_bar", displayBar).setNameLangKey("yabba_client.config.general.display_bar");
+			event.getConfig().add(group, "display_bar", displayBar).setNameLangKey("yabba_client.general.display_bar");
 		}
 
 		DataStorage data = getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
@@ -431,7 +431,7 @@ public class TileBarrelBase extends TileBase implements ITickable, IConfigCallba
 		YabbaConfigEvent event = new YabbaConfigEvent(this, configGroup, player);
 		event.post();
 		createConfig(event);
-		FTBLibAPI.API.editServerConfig((EntityPlayerMP) player, configGroup, this);
+		FTBLibAPI.editServerConfig((EntityPlayerMP) player, configGroup, this);
 	}
 
 	@SideOnly(Side.CLIENT)

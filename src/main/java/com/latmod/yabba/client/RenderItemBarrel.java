@@ -1,6 +1,6 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;

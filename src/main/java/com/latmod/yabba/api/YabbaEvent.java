@@ -1,6 +1,6 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftbl.lib.util.misc.EventBase;
+import com.feed_the_beast.ftblib.lib.EventBase;
 
 /**
  * @author LatvianModder

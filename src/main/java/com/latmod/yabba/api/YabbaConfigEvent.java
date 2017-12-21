@@ -1,6 +1,6 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.entity.player.EntityPlayer;
 

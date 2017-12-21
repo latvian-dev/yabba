@@ -1,8 +1,8 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
-import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.tile.TileBarrelBase;

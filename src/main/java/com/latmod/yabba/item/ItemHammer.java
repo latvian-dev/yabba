@@ -1,6 +1,6 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;

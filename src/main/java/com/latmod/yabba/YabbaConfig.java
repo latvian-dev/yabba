@@ -1,7 +1,7 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.gui.GuiLang;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.block.Tier;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = Yabba.MOD_ID)
-@Config(modid = Yabba.MOD_ID, category = "config")
+@Config(modid = Yabba.MOD_ID, category = "")
 public class YabbaConfig
 {
 	@Config.LangKey(GuiLang.LANG_GENERAL)

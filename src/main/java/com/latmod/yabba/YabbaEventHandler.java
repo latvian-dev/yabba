@@ -1,7 +1,7 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.ServerReloadEvent;
+import com.feed_the_beast.ftblib.events.ServerReloadEvent;
+import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -74,7 +74,7 @@ public class YabbaEventHandler
 						if (itemStack.isEmpty())
 						{
 							entityItem.setDead();
-							net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerItemPickupEvent(player, entityItem);
+							net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerItemPickupEvent(player, entityItem, itemStack);
 
 							if (!entityItem.isSilent())
 							{

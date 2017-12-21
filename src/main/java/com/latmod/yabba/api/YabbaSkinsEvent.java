@@ -1,6 +1,6 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
+import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import net.minecraft.util.ResourceLocation;
 
 /**

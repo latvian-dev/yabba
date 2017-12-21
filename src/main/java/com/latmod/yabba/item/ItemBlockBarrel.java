@@ -1,6 +1,6 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftbl.lib.block.ItemBlockBase;
+import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;

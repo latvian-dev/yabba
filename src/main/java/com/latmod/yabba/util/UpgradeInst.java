@@ -1,6 +1,6 @@
 package com.latmod.yabba.util;
 
-import com.feed_the_beast.ftbl.lib.util.misc.DataStorage;
+import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.latmod.yabba.item.IUpgrade;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

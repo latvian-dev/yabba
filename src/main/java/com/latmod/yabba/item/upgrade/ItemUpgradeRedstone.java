@@ -1,10 +1,10 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
-import com.feed_the_beast.ftbl.lib.config.ConfigInt;
-import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
-import com.feed_the_beast.ftbl.lib.util.misc.DataStorage;
-import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
+import com.feed_the_beast.ftblib.lib.config.ConfigInt;
+import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
+import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
+import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;

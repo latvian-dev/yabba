@@ -1,9 +1,9 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftbl.lib.client.SpriteSet;
-import com.feed_the_beast.ftbl.lib.icon.Color4I;
-import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
+import com.feed_the_beast.ftblib.lib.client.SpriteSet;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;

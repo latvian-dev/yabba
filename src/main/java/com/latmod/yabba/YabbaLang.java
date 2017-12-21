@@ -1,6 +1,6 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftbl.lib.util.LangKey;
+import com.feed_the_beast.ftblib.lib.util.LangKey;
 
 /**
  * @author LatvianModder

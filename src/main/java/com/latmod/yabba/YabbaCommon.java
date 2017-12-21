@@ -1,7 +1,7 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.util.BarrelModelCustomData;

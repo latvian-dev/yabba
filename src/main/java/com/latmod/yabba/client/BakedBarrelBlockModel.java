@@ -1,8 +1,9 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.ModelBase;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.client.ModelBase;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockBarrelBase;
 import net.minecraft.block.BlockHorizontal;
@@ -89,6 +90,8 @@ public class BakedBarrelBlockModel extends ModelBase
 			{
 				defaultModelVariant = variant;
 			}
+
+			Yabba.LOGGER.info("Created cached model for " + key.model + ":" + key.skin);
 		}
 
 		return variant;

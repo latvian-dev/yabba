@@ -1,9 +1,9 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
-import com.feed_the_beast.ftbl.lib.config.EnumTristate;
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.config.ConfigRGB;
+import com.feed_the_beast.ftblib.lib.config.EnumTristate;
+import com.feed_the_beast.ftblib.lib.gui.GuiLang;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.latmod.yabba.Yabba;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = Yabba.MOD_ID, value = Side.CLIENT)
-@Config(modid = Yabba.MOD_ID + "_client", category = "config", name = "../local/client/" + Yabba.MOD_ID)
+@Config(modid = Yabba.MOD_ID + "_client", category = "", name = "../local/client/" + Yabba.MOD_ID)
 public class YabbaClientConfig
 {
 	@Config.LangKey(GuiLang.LANG_GENERAL)
