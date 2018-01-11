@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-	compile "com.latmod.mods:FTBLib:${ftblib_version}"
+	compile "com.latmod.mods:FTBLib:${ftblib_version}:deobf"
 	provided "mezz.jei:jei_${mc_version}:${jei_version}:api"
 	provided "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
 	//provided "refinedstorage:refinedstorage:${refinedstorage_version}:api"
