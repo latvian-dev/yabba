@@ -34,7 +34,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -44,7 +44,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifiable
+public class TileItemBarrel extends TileBarrelBase implements IItemHandler
 {
 	private static boolean canInsertItem(ItemStack stored, ItemStack stack)
 	{
@@ -428,6 +428,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		return storedItem;
 	}
 
+	/*
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
@@ -441,7 +442,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 			setRawItemCount(itemCount + (stack.getCount() - getStackInSlot(slot).getCount()));
 			markBarrelDirty(false);
 		}
-	}
+	}*/
 
 	@Override
 	public int getSlots()

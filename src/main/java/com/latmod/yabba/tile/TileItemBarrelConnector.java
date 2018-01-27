@@ -11,7 +11,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrelConnector extends TileBase implements IItemHandlerModifiable, ITickable
+public class TileItemBarrelConnector extends TileBase implements IItemHandler, ITickable
 {
 	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
 
@@ -153,6 +153,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 		return barrel == null || barrel.isInvalid() ? null : barrel;
 	}
 
+	/*
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
@@ -162,7 +163,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 		{
 			barrel.setStackInSlot(0, stack);
 		}
-	}
+	}*/
 
 	@Override
 	public int getSlots()

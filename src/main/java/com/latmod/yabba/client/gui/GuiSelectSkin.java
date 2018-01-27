@@ -70,7 +70,7 @@ public class GuiSelectSkin extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -126,12 +126,6 @@ public class GuiSelectSkin extends GuiBase
 					}
 				}
 
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
 				for (int i = 0; i < widgets.size(); i++)
 				{
 					Widget w = widgets.get(i);
@@ -155,7 +149,7 @@ public class GuiSelectSkin extends GuiBase
 		scrollBar = new PanelScrollBar(this, 184, 28, 18, 113, 0, skinsPanel)
 		{
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}
