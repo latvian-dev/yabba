@@ -1,5 +1,7 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftblib.lib.item.ItemEntry;
+import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
 import com.latmod.yabba.YabbaConfig;
@@ -10,18 +12,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author LatvianModder
  */
-public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
+public class TileAntibarrel extends TileBase implements IItemHandler
 {
-	private final List<ItemStack> items = new ArrayList<>();
+	public final Map<ItemEntry, ItemEntryWithCount> items = new LinkedHashMap<>();
+	private ItemEntryWithCount[] itemsArray = null;
 
 	public static boolean isValidItem(ItemStack is)
 	{
@@ -52,9 +55,12 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 		{
 			NBTTagList list = new NBTTagList();
 
-			for (ItemStack is : items)
+			for (ItemEntryWithCount entry : items.values())
 			{
-				list.appendTag(is.serializeNBT());
+				if (!entry.isEmpty())
+				{
+					list.appendTag(entry.serializeNBT());
+				}
 			}
 
 			nbt.setTag("Inv", list);
@@ -65,26 +71,18 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
 		items.clear();
+		itemsArray = null;
 
 		NBTTagList list = nbt.getTagList("Inv", Constants.NBT.TAG_COMPOUND);
 
 		for (int i = 0; i < list.tagCount(); i++)
 		{
-			ItemStack is = new ItemStack(list.getCompoundTagAt(i));
+			ItemEntryWithCount entryc = new ItemEntryWithCount(list.getCompoundTagAt(i));
 
-			if (!is.isEmpty())
+			if (!entryc.isEmpty())
 			{
-				items.add(is);
+				items.put(entryc.entry, entryc);
 			}
-		}
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack)
-	{
-		if (slot != 0)
-		{
-			setItemStack(slot - 1, stack);
 		}
 	}
 
@@ -97,7 +95,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		return (slot == 0) ? ItemStack.EMPTY : getItemStack(slot - 1);
+		return slot <= 0 || slot > items.size() ? ItemStack.EMPTY : getItemArray()[slot - 1].getStack(false);
 	}
 
 	@Override
@@ -107,14 +105,37 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 		{
 			return ItemStack.EMPTY;
 		}
-		else if (items.size() < YabbaConfig.general.antibarrel_capacity && isValidItem(stack))
+		else if (slot >= 0 && slot <= items.size() && items.size() < YabbaConfig.general.antibarrel_capacity && isValidItem(stack))
 		{
 			if (!simulate)
 			{
-				setItemStack(-1, stack); //return ?
-			}
+				ItemEntry entry = ItemEntry.get(stack);
 
-			return ItemStack.EMPTY;
+				if (slot == 0)
+				{
+					ItemEntryWithCount entryc = items.get(entry);
+
+					if (entryc == null)
+					{
+						entryc = new ItemEntryWithCount(entry, 0);
+						items.put(entry, entryc);
+						itemsArray = null;
+					}
+
+					entryc.count += stack.getCount();
+					return ItemStack.EMPTY;
+				}
+				else
+				{
+					ItemEntryWithCount entryc = getItemArray()[slot];
+
+					if (entryc.entry.equalsEntry(entry))
+					{
+						entryc.count += stack.getCount();
+						return ItemStack.EMPTY;
+					}
+				}
+			}
 		}
 
 		return stack;
@@ -123,60 +144,44 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
-		if (slot == 0 || amount < 1)
+		if (slot <= 0 || slot > items.size() || amount < 1)
 		{
 			return ItemStack.EMPTY;
 		}
 
-		ItemStack is = getItemStack(slot - 1);
+		ItemEntryWithCount entryc = getItemArray()[slot - 1];
+
+		if (entryc.isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		int extracted = Math.min(amount, entryc.count);
+
+		ItemStack is = entryc.entry.getStack(extracted, true);
 
 		if (!simulate)
 		{
-			setItemStack(slot - 1, ItemStack.EMPTY);
+			entryc.count -= extracted;
 		}
 
 		return is;
 	}
 
+	public ItemEntryWithCount[] getItemArray()
+	{
+		if (itemsArray == null)
+		{
+			itemsArray = items.values().toArray(new ItemEntryWithCount[0]);
+		}
+
+		return itemsArray;
+	}
+
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return 1;
-	}
-
-	public ItemStack setItemStack(int slot, ItemStack stack)
-	{
-		ItemStack is;
-
-		if (slot < 0 || slot >= items.size())
-		{
-			if (stack.getCount() == 1)
-			{
-				items.add(stack);
-			}
-
-			is = null;
-		}
-		else
-		{
-			if (stack.isEmpty())
-			{
-				is = items.remove(slot);
-			}
-			else
-			{
-				is = items.set(slot, stack);
-			}
-		}
-
-		markDirty();
-		return is == null ? ItemStack.EMPTY : is;
-	}
-
-	public ItemStack getItemStack(int slot)
-	{
-		ItemStack stack = (slot < 0 || slot >= items.size()) ? null : items.get(slot);
-		return stack == null ? ItemStack.EMPTY : stack;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override

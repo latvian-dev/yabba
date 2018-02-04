@@ -26,7 +26,7 @@ public class YabbaConfig
 		@Config.Comment("false to inverse normal behaviour - sneak-click will give you a single item, normal-click will give a stack of items")
 		public boolean sneak_left_click_extracts_stack = true;
 
-		@Config.Comment("How many items can Antibarrel store")
+		@Config.Comment("How many slots can Antibarrel have")
 		public int antibarrel_capacity = 100000;
 
 		@Config.Comment({
