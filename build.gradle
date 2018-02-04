@@ -8,6 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 version = "${mod_version}"
 group = package_group
@@ -28,19 +29,20 @@ minecraft {
 }
 
 repositories {
-	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
-	ivy { name "chisel"; artifactPattern "https://addons-origin.cursecdn.com/files/${chisel_file}/[module]-[revision](-[classifier]).[ext]" }
+	mavenLocal()
+	maven { url "http://maven.latmod.com/" }
+	maven { url "http://maven.tterrag.com/" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 	maven { url = "http://maven.ic2.player.to/" }
-	//maven { name = "refinedstorage"; url = "https://dl.bintray.com/raoulvdberge/dev/" }
+	//maven { url = "https://dl.bintray.com/raoulvdberge/dev/" }
 }
 
 dependencies {
-	compile "com.latmod.mods:FTBLib:${ftblib_version}:deobf"
+	deobfCompile "com.feed_the_beast.ftblib:FTBLib:${ftblib_version}"
 	provided "mezz.jei:jei_${mc_version}:${jei_version}:api"
 	provided "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
 	//provided "refinedstorage:refinedstorage:${refinedstorage_version}:api"
-	provided "chisel:Chisel:${chisel_version}:api"
+	provided "team.chisel:Chisel:${chisel_version}:api"
 }
 
 processResources {
@@ -57,9 +59,19 @@ processResources {
 	}
 }
 
-task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	classifier = 'deobf'
+artifacts {
+	archives jar
+	archives sourceJar
 }
 
-build.dependsOn deobfJar
+publishing() {
+	publications {
+		YABBA(MavenPublication) {
+			groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+			artifact jar
+			artifact sourceJar
+		}
+	}
+}
