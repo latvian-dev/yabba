@@ -23,7 +23,8 @@ public class GuiSelectModel extends GuiBase
 
 		public ButtonModel(GuiBase gui, int i)
 		{
-			super(gui, 8 + (i % 5) * 39, 8 + (i / 5) * 39, 38, 38);
+			super(gui);
+			setPosAndSize(8 + (i % 5) * 39, 8 + (i / 5) * 39, 38, 38);
 			index = i;
 			model = index >= YabbaClient.ALL_MODELS.size() ? null : YabbaClient.ALL_MODELS.get(index);
 
@@ -66,7 +67,7 @@ public class GuiSelectModel extends GuiBase
 
 	public GuiSelectModel()
 	{
-		super(210, 171);
+		setSize(210, 171);
 
 		buttons = new ArrayList<>();
 

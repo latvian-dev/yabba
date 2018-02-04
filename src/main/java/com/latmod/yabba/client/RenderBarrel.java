@@ -137,13 +137,14 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0.5F, 0.80F, textDistance);
+				boolean flag = getFontRenderer().getUnicodeFlag();
 				getFontRenderer().setUnicodeFlag(true);
 				String s2 = barrel.getItemDisplayName();
 				int sw1 = getFontRenderer().getStringWidth(s2);
 				float f1 = 1F / (float) Math.max((sw1 + 10), 64);
 				GlStateManager.scale(f1, f1, 1F);
 				getFontRenderer().drawString(s2, -sw1 / 2, 0, 0xFFFFFFFF);
-				getFontRenderer().setUnicodeFlag(false);
+				getFontRenderer().setUnicodeFlag(flag);
 				GlStateManager.popMatrix();
 			}
 		}

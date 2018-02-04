@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
-import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
@@ -31,7 +30,8 @@ public class GuiSelectSkin extends GuiBase
 
 		private Skin(GuiBase gui, BarrelSkin s)
 		{
-			super(gui, 0, 0, 20, 20);
+			super(gui);
+			setSize(20, 20);
 			skin = s;
 			String t = s.toString();
 			setTitle(t);
@@ -87,9 +87,9 @@ public class GuiSelectSkin extends GuiBase
 
 	public GuiSelectSkin()
 	{
-		super(211, 150);
+		setSize(211, 150);
 
-		searchBar = new TextBox(this, 8, 8, 194, 14)
+		searchBar = new TextBox(this)
 		{
 			@Override
 			public void onTextChanged()
@@ -98,7 +98,9 @@ public class GuiSelectSkin extends GuiBase
 			}
 		};
 
-		skinsPanel = new Panel(this, 9, 29, 167, 111)
+		searchBar.setPosAndSize(8, 8, 194, 14);
+
+		skinsPanel = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -125,12 +127,14 @@ public class GuiSelectSkin extends GuiBase
 						}
 					}
 				}
+			}
 
+			@Override
+			public void alignWidgets()
+			{
 				for (int i = 0; i < widgets.size(); i++)
 				{
-					Widget w = widgets.get(i);
-					w.posX = (i % 8) * 21;
-					w.posY = (i / 8) * 21;
+					widgets.get(i).setPos((i % 8) * 21, (i / 8) * 21);
 				}
 
 				scrollBar.setElementSize(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 20);
@@ -144,9 +148,10 @@ public class GuiSelectSkin extends GuiBase
 			}
 		};
 
+		skinsPanel.setPosAndSize(9, 29, 167, 111);
 		skinsPanel.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, 184, 28, 18, 113, 0, skinsPanel)
+		scrollBar = new PanelScrollBar(this, skinsPanel)
 		{
 			@Override
 			public boolean shouldDraw()
@@ -154,6 +159,8 @@ public class GuiSelectSkin extends GuiBase
 				return true;
 			}
 		};
+
+		scrollBar.setPosAndSize(184, 28, 18, 113);
 
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{
