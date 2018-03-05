@@ -3,6 +3,7 @@ package com.latmod.yabba.client.gui;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
@@ -34,7 +35,7 @@ public class GuiSelectModel extends GuiBase
 			}
 			else
 			{
-				setIcon(gui.getTheme().getDisabledButton());
+				setIcon(gui.getTheme().getButton(WidgetType.DISABLED));
 			}
 		}
 
@@ -45,7 +46,7 @@ public class GuiSelectModel extends GuiBase
 			{
 				GuiHelper.playClickSound();
 				new MessageSelectModel(model.id).sendToServer();
-				gui.closeGui();
+				getGui().closeGui();
 			}
 		}
 

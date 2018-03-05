@@ -12,7 +12,6 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectSkin;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class GuiSelectSkin extends GuiBase
 			if (skin != null)
 			{
 				new MessageSelectSkin(skin.id).sendToServer();
-				gui.closeGui();
+				getGui().closeGui();
 			}
 		}
 
@@ -57,7 +56,7 @@ public class GuiSelectSkin extends GuiBase
 			{
 				list.add(TextFormatting.DARK_GRAY + skin.id);
 
-				if (skin.state != Blocks.AIR.getDefaultState())
+				if (skin.state != CommonUtils.AIR_STATE)
 				{
 					String s = CommonUtils.getNameFromState(skin.state);
 
@@ -144,7 +143,7 @@ public class GuiSelectSkin extends GuiBase
 			@Override
 			public Icon getIcon()
 			{
-				return gui.getTheme().getPanelBackground();
+				return getTheme().getPanelBackground();
 			}
 		};
 
@@ -171,6 +170,14 @@ public class GuiSelectSkin extends GuiBase
 	@Override
 	public void addWidgets()
 	{
-		addAll(searchBar, skinsPanel, scrollBar);
+		add(searchBar);
+		add(skinsPanel);
+		add(scrollBar);
+	}
+
+	@Override
+	public void alignWidgets()
+	{
+		skinsPanel.alignWidgets();
 	}
 }

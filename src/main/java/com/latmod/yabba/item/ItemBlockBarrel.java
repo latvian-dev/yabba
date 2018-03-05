@@ -4,9 +4,7 @@ import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,11 +39,5 @@ public class ItemBlockBarrel extends ItemBlockBase
 			tooltip.add(ItemHammer.getModelTooltip(""));
 			tooltip.add(ItemPainter.getSkinTooltip(""));
 		}
-	}
-
-	@Override
-	public boolean renderPlacement(ItemStack stack, EntityPlayer player, RayTraceResult ray)
-	{
-		return true;
 	}
 }

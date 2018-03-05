@@ -349,7 +349,7 @@ public class BlockBarrelBase extends BlockYabba
 	}
 
 	@Override
-	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
+	public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 

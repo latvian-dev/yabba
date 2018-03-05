@@ -33,7 +33,7 @@ public class YabbaCommon
 		{
 			try
 			{
-				JsonElement json = JsonUtils.fromJson(StringUtils.readString(Yabba.class.getResourceAsStream("/assets/" + mod.getModId() + "/yabba_models/_custom_data.json")));
+				JsonElement json = JsonUtils.fromJson(StringUtils.readString(Yabba.class.getResourceAsStream("/assets/" + mod.getModId() + "/yabba_models/_custom_data.json"), 256));
 
 				if (json.isJsonObject())
 				{

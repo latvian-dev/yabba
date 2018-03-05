@@ -32,9 +32,9 @@ public class YabbaClientConfig
 
 	public static class YabbaBarColor
 	{
-		public final ConfigRGB border = new ConfigRGB(0xFF3FD2FF);
-		public final ConfigRGB free = new ConfigRGB(0xFF5BF77F);
-		public final ConfigRGB filled = new ConfigRGB(0xFFFF635B);
+		public final ConfigRGB border = new ConfigRGB(Color4I.rgb(0x3FD2FF));
+		public final ConfigRGB free = new ConfigRGB(Color4I.rgb(0x5BF77F));
+		public final ConfigRGB filled = new ConfigRGB(Color4I.rgb(0xFF635B));
 
 		@Config.RangeInt(min = 1, max = 255)
 		public int alpha = 85;

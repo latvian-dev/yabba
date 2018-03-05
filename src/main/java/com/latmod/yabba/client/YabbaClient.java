@@ -1,5 +1,6 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -24,7 +25,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
@@ -170,7 +170,7 @@ public class YabbaClient extends YabbaCommon
 
 		for (BarrelSkin skin : SKINS.values())
 		{
-			if (skin.displayName.isEmpty() && skin.state != Blocks.AIR.getDefaultState())
+			if (skin.displayName.isEmpty() && skin.state != CommonUtils.AIR_STATE)
 			{
 				try
 				{
@@ -202,7 +202,7 @@ public class YabbaClient extends YabbaCommon
 
 		Yabba.LOGGER.info("Models: " + ALL_MODELS.size());
 
-		if (CommonUtils.DEV_ENV)
+		if (FTBLibConfig.debugging.print_more_info)
 		{
 			for (BarrelModel model : ALL_MODELS)
 			{
@@ -222,7 +222,7 @@ public class YabbaClient extends YabbaCommon
 
 		Yabba.LOGGER.info("Skins: " + ALL_SKINS.size());
 
-		if (CommonUtils.DEV_ENV)
+		if (FTBLibConfig.debugging.print_more_info)
 		{
 			for (BarrelSkin skin : ALL_SKINS)
 			{
