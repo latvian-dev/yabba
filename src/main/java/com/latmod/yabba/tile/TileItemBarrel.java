@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.YabbaLang;
 import com.latmod.yabba.api.BarrelType;
@@ -27,14 +26,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -44,7 +42,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrel extends TileBarrelBase implements IItemHandler
+public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifiable
 {
 	private static boolean canInsertItem(ItemStack stored, ItemStack stack)
 	{
@@ -60,7 +58,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandler
 	public int itemCount = 0;
 	private String cachedItemName, cachedItemCount;
 	private int prevItemCount = -1, prevItemCountForNet = -1;
-	private int cachedSlotCount = -1;
 
 	@Override
 	public BarrelType getType()
@@ -87,7 +84,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandler
 		cachedItemName = null;
 		cachedItemCount = null;
 		//prevItemCount = -1;
-		cachedSlotCount = -1;
 	}
 
 	@Override
@@ -313,7 +309,6 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandler
 	{
 		itemCount = v;
 		cachedItemCount = null;
-		cachedSlotCount = -1;
 	}
 
 	public boolean setItemCount(int v)
@@ -391,80 +386,20 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandler
 			return ItemStack.EMPTY;
 		}
 
-		if (!YabbaConfig.general.autocreate_slots)
-		{
-			storedItem.setCount(tier.creative() ? (Tier.MAX_ITEMS / 2) : itemCount);
-			return storedItem;
-		}
-
-		int maxStack = storedItem.getMaxStackSize();
-
-		if (tier.creative())
-		{
-			storedItem.setCount(maxStack);
-			return storedItem;
-		}
-
-		int slotCount = getSlots();
-
-		if (slot >= slotCount - 1)
-		{
-			return ItemStack.EMPTY;
-		}
-		else if (slot < slotCount - 2)
-		{
-			storedItem.setCount(maxStack);
-			return storedItem;
-		}
-
-		int stackSize = itemCount % maxStack;
-
-		if (stackSize == 0)
-		{
-			stackSize = maxStack;
-		}
-
-		storedItem.setCount(stackSize);
+		storedItem.setCount(tier.creative() ? (Tier.MAX_ITEMS / 2) : itemCount);
 		return storedItem;
 	}
 
-	/*
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
-		if (storedItem.isEmpty())
-		{
-			setStoredItemType(stack, stack.getCount());
-		}
-		else
-		{
-			//TODO: Check me
-			setRawItemCount(itemCount + (stack.getCount() - getStackInSlot(slot).getCount()));
-			markBarrelDirty(false);
-		}
-	}*/
+		setStoredItemType(stack, stack.getCount());
+	}
 
 	@Override
 	public int getSlots()
 	{
-		if (!YabbaConfig.general.autocreate_slots)
-		{
-			return 1;
-		}
-
-		if (cachedSlotCount == -1)
-		{
-			if (itemCount <= 0)
-			{
-				cachedSlotCount = 1;
-			}
-			else
-			{
-				cachedSlotCount = 1 + MathHelper.ceil(itemCount / (double) storedItem.getMaxStackSize());
-			}
-		}
-
-		return cachedSlotCount;
+		return 1;
 	}
 
 	@Override
@@ -554,7 +489,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandler
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return (YabbaConfig.general.autocreate_slots || itemCount <= 0) ? 64 : getMaxItems(storedItem);
+		return getMaxItems(storedItem);
 	}
 
 	public int getFreeSpace()

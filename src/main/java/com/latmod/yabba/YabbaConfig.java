@@ -28,12 +28,6 @@ public class YabbaConfig
 
 		@Config.Comment("How many slots can Antibarrel have")
 		public int antibarrel_capacity = 100000;
-
-		@Config.Comment({
-				"Recommended to be true. Only adding this as config option in case something really breaks.",
-				"This config option will be removed once better mod integration is added"
-		})
-		public boolean autocreate_slots = false;
 		public int connector_update_ticks = (int) (CommonUtils.TICKS_MINUTE * 5L);
 	}
 
