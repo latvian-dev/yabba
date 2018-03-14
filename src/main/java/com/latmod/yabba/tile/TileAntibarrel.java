@@ -12,16 +12,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author LatvianModder
  */
-public class TileAntibarrel extends TileBase implements IItemHandler
+public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 {
 	public final Map<ItemEntry, ItemEntryWithCount> items = new LinkedHashMap<>();
 	private ItemEntryWithCount[] itemsArray = null;
@@ -96,6 +97,44 @@ public class TileAntibarrel extends TileBase implements IItemHandler
 	public ItemStack getStackInSlot(int slot)
 	{
 		return slot <= 0 || slot > items.size() ? ItemStack.EMPTY : getItemArray()[slot - 1].getStack(false);
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack)
+	{
+		if (slot == 0)
+		{
+			return;
+		}
+		else if (stack.isEmpty())
+		{
+			int i = 1;
+
+			Iterator<Map.Entry<ItemEntry, ItemEntryWithCount>> iterator = items.entrySet().iterator();
+
+			while (iterator.hasNext())
+			{
+				iterator.next();
+
+				if (i == slot)
+				{
+					iterator.remove();
+					itemsArray = null;
+					return;
+				}
+
+				i++;
+			}
+
+			return;
+		}
+
+		ItemEntry entry = ItemEntry.get(stack);
+
+		if (items.remove(entry) != null)
+		{
+			insertItem(0, stack, false);
+		}
 	}
 
 	@Override

@@ -1,17 +1,20 @@
 package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaLang;
+import com.latmod.yabba.tile.TileItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -92,7 +95,25 @@ public class BlockItemBarrelConnector extends BlockYabba
 		{
 			TileItemBarrelConnector connector = (TileItemBarrelConnector) tileEntity;
 			connector.updateLinks();
-			playerIn.sendStatusMessage(YabbaLang.BARREL_CONNECTOR_CONNECTED.textComponent(playerIn, connector.linkedBarrels.size()), true);
+			YabbaLang.BARREL_CONNECTOR_CONNECTED.sendMessage(playerIn, connector.linkedBarrels.size());
+
+			int empty = 0;
+			for (TileItemBarrel barrel : connector.linkedBarrels)
+			{
+				if (barrel.itemCount > 0 || barrel.isLocked.getBoolean())
+				{
+					playerIn.sendMessage(new TextComponentString(barrel.itemCount + "x " + barrel.storedItem.getDisplayName() + (barrel.isLocked.getBoolean() ? " [Locked]" : ""))); //LANG
+				}
+				else
+				{
+					empty++;
+				}
+			}
+
+			if (empty > 0)
+			{
+				playerIn.sendMessage(new TextComponentString(empty + "x " + ItemStack.EMPTY.getDisplayName())); //LANG
+			}
 		}
 
 		return true;

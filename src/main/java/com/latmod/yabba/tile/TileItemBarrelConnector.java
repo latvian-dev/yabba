@@ -15,6 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,11 @@ import java.util.List;
 public class TileItemBarrelConnector extends TileBase implements IItemHandler, ITickable
 {
 	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
+
+	private static final Comparator<TileItemBarrel> BARREL_COMPARATOR = (o1, o2) -> {
+		int i = Boolean.compare(o1.isLocked.getBoolean(), o2.isLocked.getBoolean());
+		return i == 0 ? o2.itemCount - o1.itemCount : i;
+	};
 
 	public static void markAllDirty(int dimension)
 	{
@@ -117,6 +123,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler, I
 			}
 
 			linkedBarrels.addAll(scanned);
+			linkedBarrels.sort(BARREL_COMPARATOR);
 		}
 	}
 
