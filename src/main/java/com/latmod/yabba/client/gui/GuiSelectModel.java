@@ -3,6 +3,7 @@ package com.latmod.yabba.client.gui;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.client.BarrelModel;
@@ -22,9 +23,9 @@ public class GuiSelectModel extends GuiBase
 		private final BarrelModel model;
 		private final int index;
 
-		public ButtonModel(GuiBase gui, int i)
+		public ButtonModel(Panel panel, int i)
 		{
-			super(gui);
+			super(panel);
 			setPosAndSize(8 + (i % 5) * 39, 8 + (i / 5) * 39, 38, 38);
 			index = i;
 			model = index >= YabbaClient.ALL_MODELS.size() ? null : YabbaClient.ALL_MODELS.get(index);
@@ -35,7 +36,7 @@ public class GuiSelectModel extends GuiBase
 			}
 			else
 			{
-				setIcon(gui.getTheme().getButton(WidgetType.DISABLED));
+				setIcon(getTheme().getButton(WidgetType.DISABLED));
 			}
 		}
 

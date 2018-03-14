@@ -27,9 +27,9 @@ public class GuiSelectSkin extends GuiBase
 		private final BarrelSkin skin;
 		private final String searchText;
 
-		private Skin(GuiBase gui, BarrelSkin s)
+		private Skin(Panel panel, BarrelSkin s)
 		{
-			super(gui);
+			super(panel);
 			setSize(20, 20);
 			skin = s;
 			String t = s.toString();
@@ -163,7 +163,7 @@ public class GuiSelectSkin extends GuiBase
 
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{
-			allSkins.add(new Skin(this, s));
+			allSkins.add(new Skin(skinsPanel, s));
 		}
 	}
 
