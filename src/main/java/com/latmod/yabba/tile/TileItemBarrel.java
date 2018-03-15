@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.YabbaLang;
 import com.latmod.yabba.api.BarrelType;
@@ -393,7 +394,10 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
-		setStoredItemType(stack, stack.getCount());
+		if (YabbaConfig.general.crash_on_set_methods)
+		{
+			throw new RuntimeException("Do not use setStackInSlot method! This is not a YABBA bug.");
+		}
 	}
 
 	@Override

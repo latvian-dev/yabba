@@ -15,7 +15,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -26,11 +25,6 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 {
 	public final Map<ItemEntry, ItemEntryWithCount> items = new LinkedHashMap<>();
 	private ItemEntryWithCount[] itemsArray = null;
-
-	public static boolean isValidItem(ItemStack is)
-	{
-		return is.getCount() == 1 && !is.isStackable();
-	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side)
@@ -102,38 +96,9 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
-		if (slot == 0)
+		if (YabbaConfig.general.crash_on_set_methods)
 		{
-			return;
-		}
-		else if (stack.isEmpty())
-		{
-			int i = 1;
-
-			Iterator<Map.Entry<ItemEntry, ItemEntryWithCount>> iterator = items.entrySet().iterator();
-
-			while (iterator.hasNext())
-			{
-				iterator.next();
-
-				if (i == slot)
-				{
-					iterator.remove();
-					itemsArray = null;
-					return;
-				}
-
-				i++;
-			}
-
-			return;
-		}
-
-		ItemEntry entry = ItemEntry.get(stack);
-
-		if (items.remove(entry) != null)
-		{
-			insertItem(0, stack, false);
+			throw new RuntimeException("Do not use setStackInSlot method! This is not a YABBA bug.");
 		}
 	}
 
@@ -144,7 +109,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 		{
 			return ItemStack.EMPTY;
 		}
-		else if (slot >= 0 && slot <= items.size() && items.size() < YabbaConfig.general.antibarrel_capacity && isValidItem(stack))
+		else if (slot >= 0 && slot <= items.size() && items.size() < YabbaConfig.general.antibarrel_capacity && !stack.isStackable())
 		{
 			if (!simulate)
 			{
@@ -162,7 +127,6 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 					}
 
 					entryc.count += stack.getCount();
-					return ItemStack.EMPTY;
 				}
 				else
 				{
@@ -171,9 +135,10 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 					if (entryc.entry.equalsEntry(entry))
 					{
 						entryc.count += stack.getCount();
-						return ItemStack.EMPTY;
 					}
 				}
+
+				return ItemStack.EMPTY;
 			}
 		}
 
