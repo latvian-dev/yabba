@@ -1,7 +1,6 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.google.gson.JsonElement;
 import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.util.BarrelModelCustomData;
@@ -9,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class YabbaCommon
 		{
 			try
 			{
-				JsonElement json = JsonUtils.fromJson(StringUtils.readString(Yabba.class.getResourceAsStream("/assets/" + mod.getModId() + "/yabba_models/_custom_data.json"), 256));
+				JsonElement json = DataReader.get(Yabba.class.getResource("/assets/" + mod.getModId() + "/yabba_models/_custom_data.json"), DataReader.JSON, Proxy.NO_PROXY).json();
 
 				if (json.isJsonObject())
 				{

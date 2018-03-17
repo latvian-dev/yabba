@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -91,11 +92,11 @@ public class YabbaClient extends YabbaCommon
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_index.json")))
 				{
-					for (JsonElement element : JsonUtils.fromJson(resource).getAsJsonArray())
+					for (JsonElement element : DataReader.get(resource).json().getAsJsonArray())
 					{
 						try
 						{
-							JsonObject modelFile = JsonUtils.fromJson(manager.getResource(new ResourceLocation(domain, "yabba_models/" + element.getAsString() + ".json"))).getAsJsonObject();
+							JsonObject modelFile = DataReader.get(manager.getResource(new ResourceLocation(domain, "yabba_models/" + element.getAsString() + ".json"))).json().getAsJsonObject();
 							BarrelModel model = new BarrelModel(new ResourceLocation(domain, element.getAsString()), modelFile);
 							MODELS.put(model.id, model);
 
@@ -122,7 +123,7 @@ public class YabbaClient extends YabbaCommon
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_skins.json")))
 				{
-					parseSkinsJson(JsonUtils.fromJson(resource).getAsJsonArray());
+					parseSkinsJson(DataReader.get(resource).json().getAsJsonArray());
 					VARIABLES.clear();
 				}
 			}

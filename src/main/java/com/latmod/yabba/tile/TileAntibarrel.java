@@ -137,9 +137,9 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 						entryc.count += stack.getCount();
 					}
 				}
-
-				return ItemStack.EMPTY;
 			}
+
+			return ItemStack.EMPTY;
 		}
 
 		return stack;
