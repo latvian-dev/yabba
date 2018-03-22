@@ -1,0 +1,15 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "yabba:barrel",
+	"result": {"item": "compound_item_barrel", "count": 4},
+	"pattern": [
+		"UCU",
+		"CSC",
+		"UCU"
+	],
+	"key": {
+		"U": {"item": "#blank_upgrade"},
+		"C": {"item": "#chest"},
+		"S": {"type": "forge:ore_dict", "ore": "cobblestone"}
+	}
+}

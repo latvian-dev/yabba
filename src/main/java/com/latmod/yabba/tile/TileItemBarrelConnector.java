@@ -1,13 +1,14 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftblib.lib.item.SetStackInSlotException;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -23,16 +24,16 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrelConnector extends TileBase implements IItemHandlerModifiable, ITickable
+public class TileItemBarrelConnector extends TileBase implements IItemHandlerModifiable
 {
 	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
 
-	private static final Comparator<TileItemBarrel> BARREL_COMPARATOR = (o1, o2) -> {
-		int i = Boolean.compare(o1.isLocked.getBoolean(), o2.isLocked.getBoolean());
-		return i == 0 ? o2.itemCount - o1.itemCount : i;
+	private static final Comparator<IItemBarrel> BARREL_COMPARATOR = (o1, o2) -> {
+		int i = Boolean.compare(o1.getStoredItemType().isEmpty(), o2.getStoredItemType().isEmpty());
+		return i == 0 ? Boolean.compare(o2.isLocked(), o1.isLocked()) : i;
 	};
 
-	public static void markAllDirty(int dimension)
+	public static void markAllDirty(BlockPos pos, int dimension)
 	{
 		Iterator<TileItemBarrelConnector> iterator = ALL_CONNECTORS.iterator();
 
@@ -44,14 +45,14 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 			{
 				iterator.remove();
 			}
-			else if (connector.world != null && dimension == connector.world.provider.getDimension())
+			else if (connector.world != null && dimension == connector.world.provider.getDimension() && connector.pos.distanceSq(pos) <= 65536D)
 			{
-				connector.markDirty();
+				connector.lastUpdate = 0L;
 			}
 		}
 	}
 
-	public final List<TileItemBarrel> linkedBarrels = new ArrayList<>();
+	public final List<IItemBarrel> linkedBarrels = new ArrayList<>();
 	private long lastUpdate = 0L;
 
 	@Override
@@ -91,9 +92,9 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 	}
 
 	@Override
-	public void update()
+	public void markDirty()
 	{
-		checkIfDirty();
+		sendDirtyUpdate();
 	}
 
 	@Override
@@ -102,36 +103,11 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 		return false;
 	}
 
-	@Override
-	protected void sendDirtyUpdate()
-	{
-		lastUpdate = 0L;
-		super.sendDirtyUpdate();
-	}
-
-	public void updateLinks()
-	{
-		linkedBarrels.clear();
-
-		if (world != null && !world.isRemote)
-		{
-			HashSet<TileItemBarrel> scanned = new HashSet<>();
-
-			for (EnumFacing facing : EnumFacing.VALUES)
-			{
-				addToList(scanned, pos.offset(facing), facing.getOpposite());
-			}
-
-			linkedBarrels.addAll(scanned);
-			linkedBarrels.sort(BARREL_COMPARATOR);
-		}
-	}
-
-	private void addToList(HashSet<TileItemBarrel> scanned, BlockPos pos, EnumFacing from)
+	private void addToList(HashSet<IItemBarrel> scanned, BlockPos pos, EnumFacing from)
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TileItemBarrel && scanned.add((TileItemBarrel) tileEntity))
+		if (tileEntity instanceof IItemBarrel && scanned.add((IItemBarrel) tileEntity))
 		{
 			for (EnumFacing facing1 : EnumFacing.VALUES)
 			{
@@ -144,7 +120,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 	}
 
 	@Nullable
-	private TileItemBarrel getAt(int slot)
+	private IItemBarrel getAt(int slot)
 	{
 		if (world == null || world.isRemote)
 		{
@@ -153,24 +129,25 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 		else if (world.getTotalWorldTime() - lastUpdate >= YabbaConfig.general.connector_update_ticks)
 		{
 			lastUpdate = world.getTotalWorldTime();
-			updateLinks();
+			linkedBarrels.clear();
+
+			if (world != null && !world.isRemote)
+			{
+				HashSet<IItemBarrel> scanned = new HashSet<>();
+
+				for (EnumFacing facing : EnumFacing.VALUES)
+				{
+					addToList(scanned, pos.offset(facing), facing.getOpposite());
+				}
+
+				linkedBarrels.addAll(scanned);
+				linkedBarrels.sort(BARREL_COMPARATOR);
+			}
 		}
 
-		TileItemBarrel barrel = (slot < 0 || slot >= linkedBarrels.size()) ? null : linkedBarrels.get(slot);
-		return barrel == null || barrel.isInvalid() ? null : barrel;
+		IItemBarrel barrel = (slot < 0 || slot >= linkedBarrels.size()) ? null : linkedBarrels.get(slot);
+		return barrel == null || barrel.isBarrelInvalid() ? null : barrel;
 	}
-
-	/*
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack)
-	{
-		TileItemBarrel barrel = getAt(slot);
-
-		if (barrel != null)
-		{
-			barrel.setStackInSlot(0, stack);
-		}
-	}*/
 
 	@Override
 	public int getSlots()
@@ -182,39 +159,37 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		TileItemBarrel barrel = getAt(slot);
+		IItemBarrel barrel = getAt(slot);
 		return barrel == null ? ItemStack.EMPTY : barrel.getStackInSlot(0);
 	}
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
-		TileItemBarrel barrel = getAt(slot);
-
-		if (barrel != null)
+		if (YabbaConfig.general.crash_on_set_methods)
 		{
-			barrel.setStackInSlot(0, stack);
+			throw new SetStackInSlotException(Yabba.MOD_NAME);
 		}
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		TileItemBarrel barrel = getAt(slot);
+		IItemBarrel barrel = getAt(slot);
 		return barrel == null ? stack : barrel.insertItem(0, stack, simulate);
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
-		TileItemBarrel barrel = getAt(slot);
+		IItemBarrel barrel = getAt(slot);
 		return barrel == null ? ItemStack.EMPTY : barrel.extractItem(0, amount, simulate);
 	}
 
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		TileItemBarrel barrel = getAt(slot);
+		IItemBarrel barrel = getAt(slot);
 		return barrel == null ? 64 : barrel.getSlotLimit(0);
 	}
 }

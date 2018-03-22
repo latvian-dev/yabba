@@ -1,4 +1,4 @@
-package com.latmod.yabba.client.gui;
+package com.latmod.yabba.gui;
 
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;

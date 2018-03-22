@@ -1,16 +1,24 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
+import com.latmod.yabba.YabbaConfig;
+import com.latmod.yabba.YabbaLang;
+import com.latmod.yabba.gui.ContainerAntibarrel;
+import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -26,9 +34,9 @@ import java.util.List;
  */
 public class BlockAntibarrel extends BlockYabba
 {
-	public BlockAntibarrel()
+	public BlockAntibarrel(String id)
 	{
-		super("antibarrel", Material.ROCK, MapColor.NETHERRACK);
+		super(id, Material.ROCK, MapColor.NETHERRACK);
 		setHardness(4F);
 		setResistance(1000F);
 	}
@@ -82,16 +90,43 @@ public class BlockAntibarrel extends BlockYabba
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced)
 	{
-		tooltip.add(StringUtils.translate("guide.yabba.antibarrel.info"));
+		tooltip.add(YabbaLang.ANTIBARREL_TOOLTIP.translate());
+
+		int t = 0;
+		int i = 0;
 
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
 		{
 			NBTTagList list = stack.getTagCompound().getCompoundTag("BlockEntityTag").getTagList("Inv", Constants.NBT.TAG_COMPOUND);
+			t = list.tagCount();
 
-			if (list.tagCount() > 0)
+			if (t > 0)
 			{
-				tooltip.add(list.tagCount() + " items");
+				for (int j = 0; j < t; j++)
+				{
+					NBTTagCompound nbt = list.getCompoundTagAt(j);
+					i += nbt.hasKey("RealCount") ? nbt.getInteger("RealCount") : nbt.getInteger("Count");
+				}
 			}
 		}
+
+		tooltip.add(YabbaLang.ANTIBARREL_ITEMS.translate(i, t, YabbaConfig.general.antibarrel_capacity));
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		if (!world.isRemote)
+		{
+			TileEntity tileEntity = world.getTileEntity(pos);
+
+			if (tileEntity instanceof TileAntibarrel)
+			{
+				FTBLibAPI.openGui(ContainerAntibarrel.ID, (EntityPlayerMP) player, pos, null);
+				new MessageAntibarrelUpdate((TileAntibarrel) tileEntity).sendTo(player);
+			}
+		}
+
+		return true;
 	}
 }

@@ -1,7 +1,7 @@
 package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaLang;
-import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.tile.IItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -27,9 +27,9 @@ import java.util.Random;
  */
 public class BlockItemBarrelConnector extends BlockYabba
 {
-	public BlockItemBarrelConnector()
+	public BlockItemBarrelConnector(String id)
 	{
-		super("item_barrel_connector", Material.WOOD, MapColor.WOOD);
+		super(id, Material.WOOD, MapColor.WOOD);
 	}
 
 	@Override
@@ -73,36 +73,35 @@ public class BlockItemBarrelConnector extends BlockYabba
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			worldIn.spawnParticle(EnumParticleTypes.PORTAL, pos.getX() + rand.nextFloat(), pos.getY(), pos.getZ() + rand.nextFloat(), 0D, 0D, 0D);
+			world.spawnParticle(EnumParticleTypes.PORTAL, pos.getX() + rand.nextFloat(), pos.getY(), pos.getZ() + rand.nextFloat(), 0D, 0D, 0D);
 		}
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (worldIn.isRemote)
+		if (world.isRemote)
 		{
 			return true;
 		}
 
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
 
 		if (tileEntity instanceof TileItemBarrelConnector)
 		{
 			TileItemBarrelConnector connector = (TileItemBarrelConnector) tileEntity;
-			connector.updateLinks();
-			YabbaLang.BARREL_CONNECTOR_CONNECTED.sendMessage(playerIn, connector.linkedBarrels.size());
+			YabbaLang.BARREL_CONNECTOR_CONNECTED.sendMessage(player, connector.getSlots());
 
 			int empty = 0;
-			for (TileItemBarrel barrel : connector.linkedBarrels)
+			for (IItemBarrel barrel : connector.linkedBarrels)
 			{
-				if (barrel.itemCount > 0 || barrel.isLocked.getBoolean())
+				if (barrel.getItemCount() > 0 || barrel.isLocked())
 				{
-					playerIn.sendMessage(new TextComponentString(barrel.itemCount + "x " + barrel.storedItem.getDisplayName() + (barrel.isLocked.getBoolean() ? " [Locked]" : ""))); //LANG
+					player.sendMessage(new TextComponentString(barrel.getItemCount() + "x " + barrel.getStoredItemType().getDisplayName() + (barrel.isLocked() ? " [Locked]" : ""))); //LANG
 				}
 				else
 				{
@@ -112,7 +111,7 @@ public class BlockItemBarrelConnector extends BlockYabba
 
 			if (empty > 0)
 			{
-				playerIn.sendMessage(new TextComponentString(empty + "x " + ItemStack.EMPTY.getDisplayName())); //LANG
+				player.sendMessage(new TextComponentString(empty + "x " + ItemStack.EMPTY.getDisplayName())); //LANG
 			}
 		}
 

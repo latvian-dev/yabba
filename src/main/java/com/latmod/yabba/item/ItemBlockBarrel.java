@@ -1,6 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
+import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import com.latmod.yabba.tile.TileBarrelBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -24,15 +25,20 @@ public class ItemBlockBarrel extends ItemBlockBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
 		{
-			TileBarrelBase barrel = (TileBarrelBase) block.createTileEntity(worldIn, block.getDefaultState());
+			TileBarrelBase barrel = (TileBarrelBase) block.createTileEntity(world, block.getDefaultState());
 			barrel.readFromNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
-			tooltip.add(ItemHammer.getModelTooltip(barrel.model));
-			tooltip.add(ItemPainter.getSkinTooltip(barrel.skin));
-			barrel.addInformation(tooltip, flagIn);
+
+			if (barrel instanceof TileAdvancedBarrelBase)
+			{
+				tooltip.add(ItemHammer.getModelTooltip(((TileAdvancedBarrelBase) barrel).model));
+				tooltip.add(ItemPainter.getSkinTooltip(((TileAdvancedBarrelBase) barrel).skin));
+			}
+
+			barrel.addInformation(tooltip, flag);
 		}
 		else
 		{

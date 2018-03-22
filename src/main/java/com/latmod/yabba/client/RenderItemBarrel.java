@@ -15,26 +15,26 @@ public class RenderItemBarrel extends RenderBarrel<TileItemBarrel>
 	@Override
 	public double getFilled(TileItemBarrel barrel)
 	{
-		if (barrel.itemCount <= 0)
+		if (barrel.getItemCount() <= 0)
 		{
 			return 0D;
 		}
 
-		return barrel.itemCount / (double) barrel.getMaxItems(barrel.storedItem);
+		return barrel.getItemCount() / (double) barrel.getMaxItems(barrel.getStoredItemType());
 	}
 
 	@Override
 	public boolean hasIcon(TileItemBarrel barrel)
 	{
-		return (barrel.itemCount > 0 || barrel.isLocked.getBoolean()) && !barrel.storedItem.isEmpty();
+		return (barrel.getItemCount() > 0 || barrel.isLocked()) && !barrel.getStoredItemType().isEmpty();
 	}
 
 	@Override
 	public void renderIcon(TileItemBarrel barrel)
 	{
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(barrel.storedItem, barrel.getWorld(), ClientUtils.MC.player);
+		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(barrel.getStoredItemType(), barrel.getWorld(), ClientUtils.MC.player);
 		GlStateManager.scale(0.4F, -0.4F, -0.02F);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-		ClientUtils.MC.getRenderItem().renderItem(barrel.storedItem, bakedmodel);
+		ClientUtils.MC.getRenderItem().renderItem(barrel.getStoredItemType(), bakedmodel);
 	}
 }

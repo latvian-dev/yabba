@@ -1,10 +1,10 @@
 package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.item.SetStackInSlotException;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -43,7 +44,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifiable
+public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable, IItemBarrel, IItemHandlerModifiable
 {
 	private static boolean canInsertItem(ItemStack stored, ItemStack stack)
 	{
@@ -55,8 +56,8 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		return Objects.equals(InvUtils.nullIfEmpty(stored.getTagCompound()), InvUtils.nullIfEmpty(stack.getTagCompound())) && stored.areCapsCompatible(stack);
 	}
 
-	public ItemStack storedItem = ItemStack.EMPTY;
-	public int itemCount = 0;
+	private ItemStack storedItem = ItemStack.EMPTY;
+	private int itemCount = 0;
 	private String cachedItemName, cachedItemCount;
 	private int prevItemCount = -1, prevItemCountForNet = -1;
 
@@ -165,7 +166,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (world != null && !world.isRemote)
 		{
-			TileItemBarrelConnector.markAllDirty(world.provider.getDimension());
+			TileItemBarrelConnector.markAllDirty(pos, world.provider.getDimension());
 		}
 	}
 
@@ -176,7 +177,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 
 		if (world != null && !world.isRemote)
 		{
-			TileItemBarrelConnector.markAllDirty(world.provider.getDimension());
+			TileItemBarrelConnector.markAllDirty(pos, world.provider.getDimension());
 		}
 	}
 
@@ -319,7 +320,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 			boolean isEmpty = itemCount <= 0;
 			setRawItemCount(v);
 
-			if (itemCount <= 0 && !isLocked.getBoolean() && !storedItem.isEmpty())
+			if (itemCount <= 0 && !isLocked() && !storedItem.isEmpty())
 			{
 				setStoredItemType(ItemStack.EMPTY, 0);
 			}
@@ -341,6 +342,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		return tier.maxItemStacks * (stack.isEmpty() ? 64 : stack.getMaxStackSize());
 	}
 
+	@Override
 	public void setStoredItemType(ItemStack type, int amount)
 	{
 		boolean prevEmpty = storedItem.isEmpty();
@@ -354,7 +356,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 		{
 			amount = 0;
 
-			if (!isLocked.getBoolean())
+			if (!isLocked())
 			{
 				type = ItemStack.EMPTY;
 			}
@@ -396,7 +398,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	{
 		if (YabbaConfig.general.crash_on_set_methods)
 		{
-			throw new RuntimeException("Do not use setStackInSlot method! This is not a YABBA bug.");
+			throw new SetStackInSlotException(Yabba.MOD_NAME);
 		}
 	}
 
@@ -561,7 +563,7 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	@Override
 	public void removeItem(EntityPlayer player, boolean removeStack)
 	{
-		if (!storedItem.isEmpty() && itemCount == 0 && !isLocked.getBoolean())
+		if (!storedItem.isEmpty() && itemCount == 0 && !isLocked())
 		{
 			setStoredItemType(ItemStack.EMPTY, 0);
 			markBarrelDirty(true);
@@ -643,9 +645,9 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	{
 		tooltip.add(YabbaLang.TIER.translate(tier.langKey.translate()));
 
-		if (isLocked.getBoolean())
+		if (isLocked())
 		{
-			tooltip.add(StringUtils.translate("barrel_config.yabba.locked"));
+			tooltip.add(YabbaLang.LOCKED.translate());
 		}
 
 		if (!storedItem.isEmpty())
@@ -697,5 +699,17 @@ public class TileItemBarrel extends TileBarrelBase implements IItemHandlerModifi
 	public boolean shouldDrop()
 	{
 		return itemCount > 0 || super.shouldDrop();
+	}
+
+	@Override
+	public int getItemCount()
+	{
+		return itemCount;
+	}
+
+	@Override
+	public ItemStack getStoredItemType()
+	{
+		return storedItem;
 	}
 }

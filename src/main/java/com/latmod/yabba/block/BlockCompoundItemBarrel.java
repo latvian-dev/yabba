@@ -1,6 +1,6 @@
 package com.latmod.yabba.block;
 
-import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.tile.TileCompoundItemBarrel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 /**
  * @author LatvianModder
  */
-public class BlockItemBarrel extends BlockAdvancedBarrelBase
+public class BlockCompoundItemBarrel extends BlockCompoundBarrelBase
 {
-	public BlockItemBarrel(String id)
+	public BlockCompoundItemBarrel(String id)
 	{
 		super(id);
 	}
@@ -18,6 +18,6 @@ public class BlockItemBarrel extends BlockAdvancedBarrelBase
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new TileItemBarrel();
+		return new TileCompoundItemBarrel();
 	}
 }

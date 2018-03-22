@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
-import com.latmod.yabba.block.BlockBarrelBase;
+import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -103,12 +103,12 @@ public class BakedBarrelBlockModel extends ModelBase
 		if (state instanceof IExtendedBlockState)
 		{
 			IExtendedBlockState statex = (IExtendedBlockState) state;
-			BarrelModel model = YabbaClient.getModel(StringUtils.emptyIfNull(statex.getValue(BlockBarrelBase.MODEL)));
-			BarrelSkin skin = YabbaClient.getSkin(StringUtils.emptyIfNull(statex.getValue(BlockBarrelBase.SKIN)));
+			BarrelModel model = YabbaClient.getModel(StringUtils.emptyIfNull(statex.getValue(BlockAdvancedBarrelBase.MODEL)));
+			BarrelSkin skin = YabbaClient.getSkin(StringUtils.emptyIfNull(statex.getValue(BlockAdvancedBarrelBase.SKIN)));
 
 			if (MinecraftForgeClient.getRenderLayer() == ClientUtils.getStrongest(model.layer, skin.layer))
 			{
-				return get(BarrelModelKey.get(model.id, skin.id)).getQuads(state.getValue(BlockBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
+				return get(BarrelModelKey.get(model.id, skin.id)).getQuads(state.getValue(BlockAdvancedBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
 			}
 		}
 

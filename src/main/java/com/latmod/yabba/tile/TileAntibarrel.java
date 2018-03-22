@@ -25,6 +25,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 {
 	public final Map<ItemEntry, ItemEntryWithCount> items = new LinkedHashMap<>();
 	private ItemEntryWithCount[] itemsArray = null;
+	public int totalChanges = 0;
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side)
@@ -44,9 +45,14 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	}
 
 	@Override
-	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
+	public void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		if (type.full && !items.isEmpty())
+		if (type != EnumSaveType.SAVE)
+		{
+			return;
+		}
+
+		if (!items.isEmpty())
 		{
 			NBTTagList list = new NBTTagList();
 
@@ -63,8 +69,13 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	}
 
 	@Override
-	protected void readData(NBTTagCompound nbt, EnumSaveType type)
+	public void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
+		if (type != EnumSaveType.SAVE)
+		{
+			return;
+		}
+
 		items.clear();
 		itemsArray = null;
 
@@ -107,7 +118,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	{
 		if (stack.isEmpty())
 		{
-			return ItemStack.EMPTY;
+			return stack;
 		}
 		else if (slot >= 0 && slot <= items.size() && items.size() < YabbaConfig.general.antibarrel_capacity && !stack.isStackable())
 		{
@@ -136,6 +147,12 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 					{
 						entryc.count += stack.getCount();
 					}
+				}
+
+				if (!world.isRemote)
+				{
+					totalChanges++;
+					markDirty();
 				}
 			}
 
@@ -167,6 +184,12 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 		if (!simulate)
 		{
 			entryc.count -= extracted;
+
+			if (!world.isRemote)
+			{
+				totalChanges++;
+				markDirty();
+			}
 		}
 
 		return is;

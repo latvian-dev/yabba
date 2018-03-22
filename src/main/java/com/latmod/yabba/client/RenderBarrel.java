@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * @author LatvianModder
  */
-public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRenderer<T>
+public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySpecialRenderer<T>
 {
 	private static final CachedVertexData ICON_SETTINGS[] = new CachedVertexData[5];
 
@@ -91,9 +91,9 @@ public class RenderBarrel<T extends TileBarrelBase> extends TileEntitySpecialRen
 
 		if (mouseOver || YabbaClientConfig.general.always_display_data.get(barrel.alwaysDisplayData.getBoolean()))
 		{
-			boolean isCreative = barrel.tier.creative();
+			boolean isCreative = barrel.getTier().creative();
 			float textDistance = model.textDistance;
-			boolean infinite = isCreative || barrel.tier.infiniteCapacity();
+			boolean infinite = isCreative || barrel.getTier().infiniteCapacity();
 
 			if (hasIcon)
 			{

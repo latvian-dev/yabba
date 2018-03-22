@@ -1,8 +1,8 @@
 package com.latmod.yabba;
 
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.latmod.yabba.block.BlockAntibarrel;
+import com.latmod.yabba.block.BlockCompoundItemBarrel;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.BlockItemBarrelConnector;
 import com.latmod.yabba.block.Tier;
@@ -19,9 +19,11 @@ import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeStone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.TileAntibarrel;
+import com.latmod.yabba.tile.TileCompoundItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -46,6 +48,7 @@ public class YabbaItems
 	public static final Block ITEM_BARREL = Blocks.AIR;
 	public static final Block ITEM_BARREL_CONNECTOR = Blocks.AIR;
 	public static final Block ANTIBARREL = Blocks.AIR;
+	public static final Block COMPOUND_ITEM_BARREL = Blocks.AIR;
 
 	public static final Item UPGRADE_BLANK = Items.AIR;
 	public static final Item UPGRADE_STONE_TIER = Items.AIR;
@@ -70,13 +73,16 @@ public class YabbaItems
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
 		event.getRegistry().registerAll(
-				new BlockItemBarrel(),
-				new BlockItemBarrelConnector(),
-				new BlockAntibarrel());
+				new BlockItemBarrel("item_barrel"),
+				new BlockItemBarrelConnector("item_barrel_connector"),
+				new BlockAntibarrel("antibarrel"),
+				new BlockCompoundItemBarrel("compound_item_barrel")
+		);
 
 		GameRegistry.registerTileEntity(TileItemBarrel.class, Yabba.MOD_ID + ":item_barrel");
 		GameRegistry.registerTileEntity(TileItemBarrelConnector.class, Yabba.MOD_ID + ":item_barrel_connector");
 		GameRegistry.registerTileEntity(TileAntibarrel.class, Yabba.MOD_ID + ":antibarrel");
+		GameRegistry.registerTileEntity(TileCompoundItemBarrel.class, Yabba.MOD_ID + ":compound_item_barrel");
 	}
 
 	@SubscribeEvent
@@ -86,6 +92,7 @@ public class YabbaItems
 				new ItemBlockBarrel(ITEM_BARREL),
 				new ItemBlockBase(ITEM_BARREL_CONNECTOR),
 				new ItemBlockBase(ANTIBARREL),
+				new ItemBlockBarrel(COMPOUND_ITEM_BARREL),
 				new ItemUpgradeBlank("upgrade_blank"),
 				new ItemUpgradeStone("upgrade_stone_tier"),
 				new ItemUpgradeTier("upgrade_iron_tier", Tier.IRON),
@@ -99,7 +106,8 @@ public class YabbaItems
 				new ItemUpgrade("upgrade_void"),
 				new ItemUpgrade("upgrade_pickup"),
 				new ItemHammer(),
-				new ItemPainter());
+				new ItemPainter()
+		);
 	}
 
 	@SubscribeEvent
@@ -110,22 +118,24 @@ public class YabbaItems
 		ModelLoader.setCustomModelResourceLocation(ITEM_BARREL_ITEM, 0, BarrelModelLoader.MODEL_LOCATION);
 		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.INSTANCE);
 
-		ClientUtils.registerModel(ITEM_BARREL_CONNECTOR);
-		ClientUtils.registerModel(ANTIBARREL);
-		ClientUtils.registerModel(UPGRADE_BLANK);
-		ClientUtils.registerModel(UPGRADE_STONE_TIER);
-		ClientUtils.registerModel(UPGRADE_IRON_TIER);
-		ClientUtils.registerModel(UPGRADE_GOLD_TIER);
-		ClientUtils.registerModel(UPGRADE_DIAMOND_TIER);
-		ClientUtils.registerModel(UPGRADE_STAR_TIER);
-		ClientUtils.registerModel(UPGRADE_CREATIVE);
-		ClientUtils.registerModel(UPGRADE_OBSIDIAN_SHELL);
-		ClientUtils.registerModel(UPGRADE_REDSTONE_OUT);
-		ClientUtils.registerModel(UPGRADE_HOPPER);
-		ClientUtils.registerModel(UPGRADE_VOID);
-		ClientUtils.registerModel(UPGRADE_PICKUP);
-		ClientUtils.registerModel(HAMMER);
-		ClientUtils.registerModel(PAINTER);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ITEM_BARREL_CONNECTOR), 0, new ModelResourceLocation(ITEM_BARREL_CONNECTOR.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ANTIBARREL), 0, new ModelResourceLocation(ANTIBARREL.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(COMPOUND_ITEM_BARREL), 0, new ModelResourceLocation(COMPOUND_ITEM_BARREL.getRegistryName(), "inventory"));
+
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_BLANK, 0, new ModelResourceLocation(UPGRADE_BLANK.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_STONE_TIER, 0, new ModelResourceLocation(UPGRADE_STONE_TIER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_IRON_TIER, 0, new ModelResourceLocation(UPGRADE_IRON_TIER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_GOLD_TIER, 0, new ModelResourceLocation(UPGRADE_GOLD_TIER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_DIAMOND_TIER, 0, new ModelResourceLocation(UPGRADE_DIAMOND_TIER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_STAR_TIER, 0, new ModelResourceLocation(UPGRADE_STAR_TIER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_CREATIVE, 0, new ModelResourceLocation(UPGRADE_CREATIVE.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_OBSIDIAN_SHELL, 0, new ModelResourceLocation(UPGRADE_OBSIDIAN_SHELL.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_REDSTONE_OUT, 0, new ModelResourceLocation(UPGRADE_REDSTONE_OUT.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_HOPPER, 0, new ModelResourceLocation(UPGRADE_HOPPER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_VOID, 0, new ModelResourceLocation(UPGRADE_VOID.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(UPGRADE_PICKUP, 0, new ModelResourceLocation(UPGRADE_PICKUP.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(HAMMER, 0, new ModelResourceLocation(HAMMER.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(PAINTER, 0, new ModelResourceLocation(PAINTER.getRegistryName(), "inventory"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileItemBarrel.class, new RenderItemBarrel());
 	}

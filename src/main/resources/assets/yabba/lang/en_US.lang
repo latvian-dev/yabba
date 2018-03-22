@@ -42,10 +42,13 @@ lang.fluid.flowing=Flowing %s
 # Blocks
 tile.yabba.item_barrel.name=Item Barrel
 tile.yabba.item_barrel_connector.name=Item Barrel Connector
-tile.yabba.item_barrel_connector.connected=Connected %d barrels
+tile.yabba.item_barrel_connector.connected=Connected barrels: %d
 tile.yabba.fluid_barrel.name=Fluid Barrel
 tile.yabba.energy_barrel.name=Energy Barrel
 tile.yabba.antibarrel.name=AntiBarrel
+tile.yabba.antibarrel.tooltip=Stores infinite amount of non-stackable items.
+tile.yabba.antibarrel.items=%d items, %d/%d types
+tile.yabba.compound_item_barrel.name=Compound Item Barrel
 
 tile.yabba.machine.name=Machine
 
@@ -79,7 +82,6 @@ barrel_config.yabba.hopper.down=Down
 barrel_config.yabba.hopper.collect=Collect
 
 # Guide
-guide.yabba.antibarrel.info=Stores infinite amount of non-stackable items.
 guide.yabba.item_barrel.info=Item Barrel stores multiple stacks of one item type.
 guide.yabba.fluid_barrel.info=Fluid Barrel is a container that stores fluids.
 guide.yabba.energy_barrel.info=Energy Barrel can store energy.
@@ -95,7 +97,6 @@ yabba.yabba_model.cover=Cover
 yabba.yabba_model.panel=Panel
 yabba.yabba_model.slab=Slab
 yabba.yabba_model.block=Block
-yabba.yabba_model.invisible=Invisible
 yabba.yabba_model.block_window=Block with Window
 yabba.yabba_model.block_borders=Bordered Block with Window
 yabba.yabba_model.crate=Crate

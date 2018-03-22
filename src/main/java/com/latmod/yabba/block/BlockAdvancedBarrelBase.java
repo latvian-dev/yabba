@@ -8,7 +8,7 @@ import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
-import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.MapColor;
@@ -44,13 +44,13 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class BlockBarrelBase extends BlockYabba
+public class BlockAdvancedBarrelBase extends BlockYabba
 {
 	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
 	public static final IUnlistedProperty<String> MODEL = UnlistedPropertyString.create("model");
 	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
 
-	public BlockBarrelBase(String id)
+	public BlockAdvancedBarrelBase(String id)
 	{
 		super(id, Material.WOOD, MapColor.WOOD);
 		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
@@ -119,13 +119,13 @@ public class BlockBarrelBase extends BlockYabba
 
 	@Override
 	@Deprecated
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBarrelBase)
+		if (tile instanceof TileAdvancedBarrelBase)
 		{
-			return ((TileBarrelBase) tile).createState(state);
+			return ((TileAdvancedBarrelBase) tile).createState(state);
 		}
 
 		return state;
@@ -140,9 +140,9 @@ public class BlockBarrelBase extends BlockYabba
 
 	@Override
 	@Deprecated
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+	public IBlockState withMirror(IBlockState state, Mirror mirror)
 	{
-		return state.withRotation(mirrorIn.toRotation(state.getValue(BlockHorizontal.FACING)));
+		return state.withRotation(mirror.toRotation(state.getValue(BlockHorizontal.FACING)));
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class BlockBarrelBase extends BlockYabba
 
 	public ItemStack createStack(IBlockState state, String model, String skin, Tier tier)
 	{
-		TileBarrelBase tile = new TileBarrelBase();
+		TileAdvancedBarrelBase tile = (TileAdvancedBarrelBase) createTileEntity(null, state);
 		tile.setModel(model, false);
 		tile.setSkin(skin, false);
 		tile.setTier(tier, false);
@@ -191,17 +191,17 @@ public class BlockBarrelBase extends BlockYabba
 
 	@Override
 	@Deprecated
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
 	{
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TileBarrelBase)
+		if (tileEntity instanceof TileAdvancedBarrelBase)
 		{
-			TileBarrelBase barrel = (TileBarrelBase) tileEntity;
+			TileAdvancedBarrelBase barrel = (TileAdvancedBarrelBase) tileEntity;
 			return createStack(state, barrel.model, barrel.skin, Tier.WOOD);
 		}
 
-		return super.getItem(worldIn, pos, state);
+		return super.getItem(world, pos, state);
 	}
 
 	@Override
@@ -212,19 +212,19 @@ public class BlockBarrelBase extends BlockYabba
 	}
 
 	@Override
-	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player)
 	{
-		if (worldIn.isRemote || playerIn.capabilities.isCreativeMode)
+		if (world.isRemote || player.capabilities.isCreativeMode)
 		{
 			return;
 		}
 
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TileBarrelBase)
+		if (tileEntity instanceof TileAdvancedBarrelBase)
 		{
-			long time = worldIn.getTotalWorldTime();
-			TileBarrelBase barrel = (TileBarrelBase) tileEntity;
+			long time = world.getTotalWorldTime();
+			TileAdvancedBarrelBase barrel = (TileAdvancedBarrelBase) tileEntity;
 
 			if (time - barrel.lastClick < 3)
 			{
@@ -233,47 +233,46 @@ public class BlockBarrelBase extends BlockYabba
 
 			barrel.lastClick = time;
 
-			((TileBarrelBase) tileEntity).removeItem(playerIn, playerIn.isSneaking() == YabbaConfig.general.sneak_left_click_extracts_stack);
+			((TileAdvancedBarrelBase) tileEntity).removeItem(player, player.isSneaking() == YabbaConfig.general.sneak_left_click_extracts_stack);
 
-			playerIn.inventory.markDirty();
+			player.inventory.markDirty();
 
-			if (playerIn.openContainer != null)
+			if (player.openContainer != null)
 			{
-				playerIn.openContainer.detectAndSendChanges();
+				player.openContainer.detectAndSendChanges();
 			}
 		}
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		ItemStack heldItem = playerIn.getHeldItem(hand);
+		ItemStack heldItem = player.getHeldItem(hand);
 		if (heldItem.getItem() instanceof ItemBlockBarrel)
 		{
 			return false;
 		}
 
-		if (worldIn.isRemote)
+		if (world.isRemote)
 		{
 			return true;
 		}
 
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBarrelBase)
+		if (tile instanceof TileAdvancedBarrelBase)
 		{
-			TileBarrelBase barrel = (TileBarrelBase) tile;
-			ItemStack handItem = playerIn.getHeldItem(hand);
+			TileAdvancedBarrelBase barrel = (TileAdvancedBarrelBase) tile;
 
-			if (playerIn.isSneaking())
+			if (player.isSneaking())
 			{
-				barrel.displayConfig(playerIn);
+				barrel.displayConfig(player);
 			}
-			else if (handItem.getItem() instanceof IUpgrade)
+			else if (heldItem.getItem() instanceof IUpgrade)
 			{
 				if (!barrel.hasUpgrade(heldItem.getItem()))
 				{
-					ApplyUpgradeEvent event = new ApplyUpgradeEvent(false, barrel, new UpgradeInst(heldItem.getItem()), playerIn, hand, side);
+					ApplyUpgradeEvent event = new ApplyUpgradeEvent(false, barrel, new UpgradeInst(heldItem.getItem()), player, hand, side);
 
 					if (event.getUpgrade().getUpgrade().applyOn(event))
 					{
@@ -293,15 +292,15 @@ public class BlockBarrelBase extends BlockYabba
 			}
 			else
 			{
-				long time = worldIn.getTotalWorldTime();
+				long time = world.getTotalWorldTime();
 
 				if (time - barrel.lastClick <= 8L)
 				{
-					barrel.addAllItems(playerIn, hand);
+					barrel.addAllItems(player, hand);
 				}
 				else if (!heldItem.isEmpty())
 				{
-					barrel.addItem(playerIn, hand);
+					barrel.addItem(player, hand);
 				}
 
 				barrel.lastClick = time;
@@ -315,7 +314,7 @@ public class BlockBarrelBase extends BlockYabba
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileBarrelBase && ((TileBarrelBase) tile).canConnectRedstone(side);
+		return tile instanceof TileAdvancedBarrelBase && ((TileAdvancedBarrelBase) tile).canConnectRedstone(side);
 	}
 
 	@Override
@@ -323,7 +322,7 @@ public class BlockBarrelBase extends BlockYabba
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = blockAccess.getTileEntity(pos);
-		return tile instanceof TileBarrelBase ? ((TileBarrelBase) tile).redstoneOutput(side) : 0;
+		return tile instanceof TileAdvancedBarrelBase ? ((TileAdvancedBarrelBase) tile).redstoneOutput(side) : 0;
 	}
 
 	@Override
@@ -331,7 +330,7 @@ public class BlockBarrelBase extends BlockYabba
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = blockAccess.getTileEntity(pos);
-		return tile instanceof TileBarrelBase ? ((TileBarrelBase) tile).redstoneOutput(side) : 0;
+		return tile instanceof TileAdvancedBarrelBase ? ((TileAdvancedBarrelBase) tile).redstoneOutput(side) : 0;
 	}
 
 	@Override
@@ -340,9 +339,9 @@ public class BlockBarrelBase extends BlockYabba
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBarrelBase)
+		if (tile instanceof TileAdvancedBarrelBase)
 		{
-			return YabbaCommon.getModelData(((TileBarrelBase) tile).model).getAABB(state);
+			return YabbaCommon.getModelData(((TileAdvancedBarrelBase) tile).model).getAABB(state);
 		}
 
 		return FULL_BLOCK_AABB;
@@ -353,7 +352,7 @@ public class BlockBarrelBase extends BlockYabba
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBarrelBase && ((TileBarrelBase) tile).hasUpgrade(YabbaItems.UPGRADE_OBSIDIAN_SHELL))
+		if (tile instanceof TileAdvancedBarrelBase && ((TileAdvancedBarrelBase) tile).hasUpgrade(YabbaItems.UPGRADE_OBSIDIAN_SHELL))
 		{
 			return Float.MAX_VALUE;
 		}

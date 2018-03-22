@@ -1,7 +1,10 @@
 package com.latmod.yabba;
 
+import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.latmod.yabba.gui.ContainerAntibarrel;
+import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,7 +62,7 @@ public class YabbaEventHandler
 					TileItemBarrel barrel = (TileItemBarrel) YabbaItems.ITEM_BARREL.createTileEntity(entityItem.world, YabbaItems.ITEM_BARREL.getDefaultState());
 					barrel.readFromNBT(istack.getTagCompound().getCompoundTag("BlockEntityTag"));
 
-					if (!barrel.storedItem.isEmpty() && barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))
+					if (!barrel.getStoredItemType().isEmpty() && barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))
 					{
 						int originalSize = itemStack.getCount();
 						itemStack = barrel.insertItem(0, itemStack, false);
@@ -95,73 +98,9 @@ public class YabbaEventHandler
 		}
 	}
 
-	/*
 	@SubscribeEvent
-	public void pickupItems(final EntityItemPickupEvent event)
+	public static void registerContainers(RegisterContainerProvidersEvent event)
 	{
-		boolean modified = false;
-
-		final EntityItem entityItem = event.getItem();
-		if (entityItem != null)
-		{
-			final ItemStack is = entityItem.getEntityItem();
-			final EntityPlayer player = event.getEntityPlayer();
-			if (is != null && is.getItem() instanceof ItemChiseledBit)
-			{
-				final int originalSize = ModUtil.getStackSize(is);
-				final IInventory inv = player.inventory;
-				final List<BagPos> bags = getBags(inv);
-
-				// has the stack?
-				final boolean seen = ModUtil.containsAtLeastOneOf(inv, is);
-
-				if (seen)
-				{
-					for (final BagPos i : bags)
-					{
-						if (!entityItem.isDead)
-						{
-							modified = updateEntity(player, entityItem, i.inv.insertItem(ModUtil.nonNull(entityItem.getEntityItem())), originalSize) || modified;
-						}
-					}
-				}
-				else
-				{
-					if (ModUtil.getStackSize(is) > is.getMaxStackSize() && !entityItem.isDead)
-					{
-						final ItemStack singleStack = is.copy();
-						ModUtil.setStackSize(singleStack, singleStack.getMaxStackSize());
-
-						if (player.inventory.addItemStackToInventory(singleStack) == false)
-						{
-							ModUtil.adjustStackSize(is, -(singleStack.getMaxStackSize() - ModUtil.getStackSize(is)));
-						}
-
-						modified = updateEntity(player, entityItem, is, originalSize) || modified;
-					}
-					else
-					{
-						return;
-					}
-
-					for (final BagPos i : bags)
-					{
-
-						if (!entityItem.isDead)
-						{
-							modified = updateEntity(player, entityItem, i.inv.insertItem(ModUtil.nonNull(entityItem.getEntityItem())), originalSize) || modified;
-						}
-					}
-				}
-			}
-
-			cleanupInventory(player, is);
-		}
-
-		if (modified)
-		{
-			event.setCanceled(true);
-		}
+		event.register(ContainerAntibarrel.ID, (player, pos, nbt) -> new ContainerAntibarrel(player, (TileAntibarrel) player.world.getTileEntity(pos)));
 	}
-	*/
 }

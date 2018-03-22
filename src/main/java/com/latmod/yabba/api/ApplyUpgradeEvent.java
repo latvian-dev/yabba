@@ -1,6 +1,6 @@
 package com.latmod.yabba.api;
 
-import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class ApplyUpgradeEvent
 {
 	private final boolean simulate;
-	private final TileBarrelBase barrel;
+	private final TileAdvancedBarrelBase barrel;
 	private final UpgradeInst upgrade;
 	private final EntityPlayer player;
 	private final EnumHand hand;
@@ -22,7 +22,7 @@ public class ApplyUpgradeEvent
 	private boolean consumeItem = true;
 	private boolean addUpgrade = true;
 
-	public ApplyUpgradeEvent(boolean s, TileBarrelBase b, UpgradeInst u, EntityPlayer p, EnumHand h, EnumFacing f)
+	public ApplyUpgradeEvent(boolean s, TileAdvancedBarrelBase b, UpgradeInst u, EntityPlayer p, EnumHand h, EnumFacing f)
 	{
 		simulate = s;
 		barrel = b;
@@ -42,7 +42,7 @@ public class ApplyUpgradeEvent
 		return getBarrel().getWorld();
 	}
 
-	public TileBarrelBase getBarrel()
+	public TileAdvancedBarrelBase getBarrel()
 	{
 		return barrel;
 	}

@@ -3,7 +3,7 @@ package com.latmod.yabba.item.upgrade;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.tile.IItemBarrel;
 
 /**
  * @author LatvianModder
@@ -20,7 +20,7 @@ public class ItemUpgradeCreative extends ItemUpgrade
 	{
 		event.setAddUpgrade(false);
 
-		if (event.getBarrel().tier.creative())
+		if (event.getBarrel().getTier().creative())
 		{
 			return false;
 		}
@@ -28,7 +28,7 @@ public class ItemUpgradeCreative extends ItemUpgrade
 		switch (event.getBarrel().getType())
 		{
 			case ITEM:
-				if (((TileItemBarrel) event.getBarrel()).itemCount <= 0)
+				if (((IItemBarrel) event.getBarrel()).getItemCount() <= 0)
 				{
 					return false;
 				}
@@ -42,12 +42,12 @@ public class ItemUpgradeCreative extends ItemUpgrade
 		{
 			if (!simulate)
 			{
-				event.getBarrel().isLocked.setBoolean(false);
+				event.getBarrel().setLocked(false);
 
 				if (event.getBarrel().getType() == BarrelType.ITEM)
 				{
-					TileItemBarrel itemBarrel = (TileItemBarrel) event.getBarrel();
-					itemBarrel.setStoredItemType(itemBarrel.storedItem, 1);
+					IItemBarrel itemBarrel = (IItemBarrel) event.getBarrel();
+					itemBarrel.setStoredItemType(itemBarrel.getStoredItemType(), 1);
 				}
 			}
 
