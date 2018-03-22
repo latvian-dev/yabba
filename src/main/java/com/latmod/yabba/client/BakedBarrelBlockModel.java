@@ -1,5 +1,6 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -91,7 +92,10 @@ public class BakedBarrelBlockModel extends ModelBase
 				defaultModelVariant = variant;
 			}
 
-			Yabba.LOGGER.info("Created cached model for " + key.model + ":" + key.skin);
+			if (FTBLibConfig.debugging.print_more_info)
+			{
+				Yabba.LOGGER.info("Created cached model for " + model.id + ":" + skin.id);
+			}
 		}
 
 		return variant;
