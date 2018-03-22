@@ -1,10 +1,5 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "yabba:item_barrel_connector"
-	},
 	"variants": {
-		"inventory": [{}],
-		"normal": [{}]
+		"normal": {"model": "yabba:item_barrel_connector"}
 	}
 }

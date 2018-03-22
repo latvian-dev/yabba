@@ -118,9 +118,9 @@ public class YabbaItems
 		ModelLoader.setCustomModelResourceLocation(ITEM_BARREL_ITEM, 0, BarrelModelLoader.MODEL_LOCATION);
 		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.INSTANCE);
 
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ITEM_BARREL_CONNECTOR), 0, new ModelResourceLocation(ITEM_BARREL_CONNECTOR.getRegistryName(), "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ANTIBARREL), 0, new ModelResourceLocation(ANTIBARREL.getRegistryName(), "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(COMPOUND_ITEM_BARREL), 0, new ModelResourceLocation(COMPOUND_ITEM_BARREL.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ITEM_BARREL_CONNECTOR), 0, new ModelResourceLocation(ITEM_BARREL_CONNECTOR.getRegistryName(), "normal"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ANTIBARREL), 0, new ModelResourceLocation(ANTIBARREL.getRegistryName(), "normal"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(COMPOUND_ITEM_BARREL), 0, new ModelResourceLocation(COMPOUND_ITEM_BARREL.getRegistryName(), "normal"));
 
 		ModelLoader.setCustomModelResourceLocation(UPGRADE_BLANK, 0, new ModelResourceLocation(UPGRADE_BLANK.getRegistryName(), "inventory"));
 		ModelLoader.setCustomModelResourceLocation(UPGRADE_STONE_TIER, 0, new ModelResourceLocation(UPGRADE_STONE_TIER.getRegistryName(), "inventory"));
