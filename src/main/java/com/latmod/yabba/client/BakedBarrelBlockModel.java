@@ -3,10 +3,10 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
+import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -36,19 +36,19 @@ import java.util.Map;
 public class BakedBarrelBlockModel extends ModelBase
 {
 	private final VertexFormat format;
-	private final Map<BarrelModelKey, BarrelModelVariant> map;
+	private final Map<BarrelLook, BarrelModelVariant> map;
 	private BarrelModelVariant defaultModelVariant;
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(new ArrayList<>())
 	{
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
 		{
-			BarrelModelKey key = BarrelModelKey.DEFAULT;
+			BarrelLook key = BarrelLook.DEFAULT;
 
 			if (stack.hasTagCompound())
 			{
 				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-				key = BarrelModelKey.get(data.getString("Model"), data.getString("Skin"));
+				key = BarrelLook.get(data.getString("Model"), data.getString("Skin"));
 			}
 
 			return get(key).itemModel;
@@ -62,9 +62,9 @@ public class BakedBarrelBlockModel extends ModelBase
 		map = new HashMap<>();
 	}
 
-	private BarrelModelVariant get(BarrelModelKey key)
+	private BarrelModelVariant get(BarrelLook key)
 	{
-		if (key == BarrelModelKey.DEFAULT && defaultModelVariant != null)
+		if (key == BarrelLook.DEFAULT && defaultModelVariant != null)
 		{
 			return defaultModelVariant;
 		}
@@ -74,8 +74,8 @@ public class BakedBarrelBlockModel extends ModelBase
 		if (variant == null)
 		{
 			List<List<BakedQuad>> quads = new ArrayList<>(ModelRotation.values().length);
-			BarrelModel model = YabbaClient.getModel(key.model);
-			BarrelSkin skin = YabbaClient.getSkin(key.skin);
+			BarrelModel model = key.getModel();
+			BarrelSkin skin = key.getSkin();
 			model.textureMap.put("skin", skin.spriteSet);
 
 			for (ModelRotation rotation : ModelRotation.values())
@@ -87,7 +87,7 @@ public class BakedBarrelBlockModel extends ModelBase
 			variant = new BarrelModelVariant(quads, new BakedBarrelItemModel(getParticleTexture(), itemQuads.isEmpty() ? quads.get(0) : itemQuads));
 			map.put(key, variant);
 
-			if (key == BarrelModelKey.DEFAULT)
+			if (key == BarrelLook.DEFAULT)
 			{
 				defaultModelVariant = variant;
 			}
@@ -107,12 +107,19 @@ public class BakedBarrelBlockModel extends ModelBase
 		if (state instanceof IExtendedBlockState)
 		{
 			IExtendedBlockState statex = (IExtendedBlockState) state;
-			BarrelModel model = YabbaClient.getModel(StringUtils.emptyIfNull(statex.getValue(BlockAdvancedBarrelBase.MODEL)));
-			BarrelSkin skin = YabbaClient.getSkin(StringUtils.emptyIfNull(statex.getValue(BlockAdvancedBarrelBase.SKIN)));
+			BarrelLook look = statex.getValue(BlockAdvancedBarrelBase.LOOK);
+
+			if (look == null)
+			{
+				look = BarrelLook.DEFAULT;
+			}
+
+			BarrelModel model = look.getModel();
+			BarrelSkin skin = look.getSkin();
 
 			if (MinecraftForgeClient.getRenderLayer() == ClientUtils.getStrongest(model.layer, skin.layer))
 			{
-				return get(BarrelModelKey.get(model.id, skin.id)).getQuads(state.getValue(BlockAdvancedBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
+				return get(BarrelLook.get(model.id, skin.id)).getQuads(state.getValue(BlockAdvancedBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
 			}
 		}
 

@@ -22,6 +22,7 @@ import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.gui.GuiSelectModel;
 import com.latmod.yabba.gui.GuiSelectSkin;
+import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.resources.IResource;
@@ -189,12 +190,12 @@ public class YabbaClient extends YabbaCommon
 
 			if (skin.icon.isEmpty())
 			{
-				skin.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), Yabba.MOD_ID + ":block", skin.id, Tier.WOOD));
+				skin.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(Yabba.MOD_ID + ":block", skin.id), Tier.WOOD));
 			}
 		}
 
 		ALL_MODELS.addAll(MODELS.values());
-		DEFAULT_MODEL = MODELS.get(DEFAULT_MODEL_ID);
+		DEFAULT_MODEL = MODELS.get(BarrelLook.DEFAULT_MODEL_ID);
 
 		if (DEFAULT_MODEL == null)
 		{
@@ -214,7 +215,7 @@ public class YabbaClient extends YabbaCommon
 		ALL_SKINS.addAll(SKINS.values());
 		ALL_SKINS.sort(StringUtils.ID_COMPARATOR);
 
-		DEFAULT_SKIN = SKINS.get(DEFAULT_SKIN_ID);
+		DEFAULT_SKIN = SKINS.get(BarrelLook.DEFAULT_SKIN_ID);
 
 		if (DEFAULT_SKIN == null)
 		{
@@ -233,7 +234,7 @@ public class YabbaClient extends YabbaCommon
 
 		for (BarrelModel model : ALL_MODELS)
 		{
-			model.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), model.id, "", Tier.WOOD));
+			model.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(model.id, ""), Tier.WOOD));
 		}
 	}
 

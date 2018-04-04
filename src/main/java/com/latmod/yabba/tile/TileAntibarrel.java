@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
@@ -116,38 +117,46 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		if (stack.isEmpty())
+		if (slot < 0 || slot > items.size() || stack.isEmpty() || stack.isStackable())
 		{
 			return stack;
 		}
-		else if (slot >= 0 && slot <= items.size() && items.size() < YabbaConfig.general.antibarrel_capacity && !stack.isStackable())
+
+		ItemEntry entry = ItemEntry.get(stack);
+		ItemEntryWithCount entryc;
+		int added = 0;
+
+		if (slot == 0)
+		{
+			entryc = items.get(entry);
+
+			if (entryc != null)
+			{
+				added = Math.min(YabbaConfig.general.antibarrel_items_per_type - entryc.count, stack.getCount());
+			}
+			else if (items.size() < YabbaConfig.general.antibarrel_capacity)
+			{
+				entryc = new ItemEntryWithCount(entry, 0);
+				items.put(entry, entryc);
+				itemsArray = null;
+				added = Math.min(YabbaConfig.general.antibarrel_items_per_type, stack.getCount());
+			}
+		}
+		else
+		{
+			entryc = getItemArray()[slot - 1];
+
+			if (entryc.entry.equalsEntry(entry))
+			{
+				added = Math.min(YabbaConfig.general.antibarrel_items_per_type - entryc.count, stack.getCount());
+			}
+		}
+
+		if (entryc != null && added > 0)
 		{
 			if (!simulate)
 			{
-				ItemEntry entry = ItemEntry.get(stack);
-
-				if (slot == 0)
-				{
-					ItemEntryWithCount entryc = items.get(entry);
-
-					if (entryc == null)
-					{
-						entryc = new ItemEntryWithCount(entry, 0);
-						items.put(entry, entryc);
-						itemsArray = null;
-					}
-
-					entryc.count += stack.getCount();
-				}
-				else
-				{
-					ItemEntryWithCount entryc = getItemArray()[slot];
-
-					if (entryc.entry.equalsEntry(entry))
-					{
-						entryc.count += stack.getCount();
-					}
-				}
+				entryc.count += added;
 
 				if (!world.isRemote)
 				{
@@ -156,7 +165,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 				}
 			}
 
-			return ItemStack.EMPTY;
+			return added == stack.getCount() ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - added);
 		}
 
 		return stack;
@@ -208,7 +217,7 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return Integer.MAX_VALUE;
+		return YabbaConfig.general.antibarrel_items_per_type;
 	}
 
 	@Override

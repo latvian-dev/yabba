@@ -55,7 +55,8 @@ tile.yabba.machine.name=Machine
 # Config
 yabba.general.sneak_left_click_extracts_stack=Sneak-Left-Click Extracts a Stack
 yabba.general.antibarrel_capacity=Antibarrel Capacity
-yabba.general.autocreate_slots=Auto-create Slots
+yabba.general.antibarrel_items_per_type=Antibarrel Items per Type
+yabba.general.crash_on_set_methods=Crash setStackInSlot Methods
 yabba.general.connector_update_ticks=Barrel Connector Update Ticks
 
 yabba_client.general.always_display_data=Always Display Data
@@ -67,12 +68,12 @@ yabba_client.bar_color.free=Free Space
 yabba_client.bar_color.filled=Filled Space
 yabba_client.bar_color.alpha=Alpha
 
-yabba.config.tier=Tier
-yabba.config.tier.wood=Wood
-yabba.config.tier.iron=Iron
-yabba.config.tier.gold=Gold
-yabba.config.tier.diamond=Diamond
-yabba.config.tier.max_item_stacks=Max Item Stacks
+yabba.tier=Tier
+yabba.tier.wood=Wood
+yabba.tier.iron=Iron
+yabba.tier.gold=Gold
+yabba.tier.diamond=Diamond
+yabba.tier.max_item_stacks=Max Item Stacks
 
 barrel_config.yabba.locked=Locked
 barrel_config.yabba.redstone.mode=Mode

@@ -15,6 +15,7 @@ import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -82,6 +83,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	@Override
 	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
+		updateContainingBlockInfo();
 		tier = Tier.NAME_MAP.get(nbt.getString("Tier"));
 
 		upgrades.clear();
@@ -162,6 +164,18 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 			return true;
 		}
 
+		return false;
+	}
+
+	@Override
+	public BarrelLook getLook()
+	{
+		return BarrelLook.DEFAULT;
+	}
+
+	@Override
+	public boolean setLook(BarrelLook look, boolean simulate)
+	{
 		return false;
 	}
 

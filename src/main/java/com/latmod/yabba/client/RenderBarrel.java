@@ -3,7 +3,6 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -51,7 +50,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 			GlStateManager.translate(x, y, z);
 			GlStateManager.glNormal3f(0F, 1F, 0F);
 			CachedVertexData data = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			data.cube(YabbaCommon.getModelData(barrel.model).getAABB(barrel.getBlockState()));
+			data.cube(barrel.getAABB(barrel.getBlockState()));
 			data.draw(Tessellator.getInstance(), Tessellator.getInstance().getBuffer());
 			GlStateManager.popMatrix();
 		}
@@ -85,7 +84,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
 
-		BarrelModel model = YabbaClient.getModel(barrel.model);
+		BarrelModel model = barrel.getLook().getModel();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 

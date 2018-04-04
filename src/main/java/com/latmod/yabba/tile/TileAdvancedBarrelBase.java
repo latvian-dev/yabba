@@ -4,18 +4,19 @@ import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -27,27 +28,27 @@ import javax.annotation.Nullable;
  */
 public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCallback
 {
-	public String model = "";
-	public String skin = "";
+	private BarrelLook look = BarrelLook.DEFAULT;
 	public ConfigBoolean alwaysDisplayData = new ConfigBoolean(false);
 	public ConfigBoolean displayBar = new ConfigBoolean(false);
 	public long lastClick;
 
 	private float cachedRotationX, cachedRotationY;
+	private AxisAlignedBB cachedAABB;
 
 	@Override
 	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
 		super.writeData(nbt, type);
 
-		if (!model.isEmpty())
+		if (!look.model.isEmpty())
 		{
-			nbt.setString("Model", model);
+			nbt.setString("Model", look.model);
 		}
 
-		if (!skin.isEmpty())
+		if (!look.skin.isEmpty())
 		{
-			nbt.setString("Skin", skin);
+			nbt.setString("Skin", look.skin);
 		}
 
 		if (alwaysDisplayData.getBoolean())
@@ -65,8 +66,7 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
 		super.readData(nbt, type);
-		model = nbt.getString("Model");
-		skin = nbt.getString("Skin");
+		look = BarrelLook.get(nbt.getString("Model"), nbt.getString("Skin"));
 		alwaysDisplayData.setBoolean(nbt.getBoolean("AlwaysDisplayData"));
 		displayBar.setBoolean(nbt.getBoolean("DisplayBar"));
 	}
@@ -82,7 +82,7 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	{
 		if (state instanceof IExtendedBlockState)
 		{
-			return ((IExtendedBlockState) state).withProperty(BlockAdvancedBarrelBase.MODEL, model).withProperty(BlockAdvancedBarrelBase.SKIN, skin);
+			return ((IExtendedBlockState) state).withProperty(BlockAdvancedBarrelBase.LOOK, getLook());
 		}
 
 		return state;
@@ -94,6 +94,7 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		super.updateContainingBlockInfo();
 		cachedRotationX = -1F;
 		cachedRotationY = -1F;
+		cachedAABB = null;
 	}
 
 	@Override
@@ -137,40 +138,22 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		return cachedRotationY;
 	}
 
-	public boolean setSkin(String v, boolean simulate)
+	@Override
+	public BarrelLook getLook()
 	{
-		if (v.equals(YabbaCommon.DEFAULT_SKIN_ID))
-		{
-			v = "";
-		}
-
-		if (!skin.equals(v))
-		{
-			if (!simulate)
-			{
-				skin = v;
-				markBarrelDirty(true);
-			}
-
-			return true;
-		}
-
-		return false;
+		return look;
 	}
 
-	public boolean setModel(String v, boolean simulate)
+	@Override
+	public boolean setLook(BarrelLook l, boolean simulate)
 	{
-		if (v.equals(YabbaCommon.DEFAULT_MODEL_ID))
-		{
-			v = "";
-		}
-
-		if (!model.equals(v))
+		if (!look.equals(l))
 		{
 			if (!simulate)
 			{
-				model = v;
+				look = l;
 				markBarrelDirty(true);
+				updateContainingBlockInfo();
 			}
 
 			return true;
@@ -202,7 +185,7 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	@Override
 	public boolean shouldDrop()
 	{
-		return !skin.isEmpty() || !model.isEmpty() || super.shouldDrop();
+		return !look.skin.isEmpty() || !look.model.isEmpty() || super.shouldDrop();
 	}
 
 	public void addItem(EntityPlayer player, EnumHand hand)
@@ -228,5 +211,15 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		{
 			event.getConfig().add(Yabba.MOD_ID, "display_bar", displayBar).setNameLangKey("yabba_client.general.display_bar");
 		}
+	}
+
+	public AxisAlignedBB getAABB(IBlockState state)
+	{
+		if (cachedAABB == null)
+		{
+			cachedAABB = getLook().getModelCustomData().getAABB(state);
+		}
+
+		return cachedAABB;
 	}
 }

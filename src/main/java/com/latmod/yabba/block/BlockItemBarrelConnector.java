@@ -1,6 +1,11 @@
 package com.latmod.yabba.block;
 
-import com.latmod.yabba.YabbaLang;
+import com.feed_the_beast.ftblib.lib.block.BlockBase;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
+import com.feed_the_beast.ftblib.lib.tile.TileBase;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.latmod.yabba.net.MessageBarrelConnector;
 import com.latmod.yabba.tile.IItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.material.MapColor;
@@ -15,11 +20,16 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -94,25 +104,47 @@ public class BlockItemBarrelConnector extends BlockYabba
 		if (tileEntity instanceof TileItemBarrelConnector)
 		{
 			TileItemBarrelConnector connector = (TileItemBarrelConnector) tileEntity;
-			YabbaLang.BARREL_CONNECTOR_CONNECTED.sendMessage(player, connector.getSlots());
+			connector.getSlots();
+			List<MessageBarrelConnector.BarrelInst> list = new ArrayList<>();
 
-			int empty = 0;
 			for (IItemBarrel barrel : connector.linkedBarrels)
 			{
-				if (barrel.getItemCount() > 0 || barrel.isLocked())
+				MessageBarrelConnector.BarrelInst inst = new MessageBarrelConnector.BarrelInst();
+				inst.pos = ((TileEntity) barrel).getPos();
+				IBlockState blockState = world.getBlockState(inst.pos);
+
+				if (blockState.getBlock() instanceof BlockBase && barrel instanceof TileBase)
 				{
-					player.sendMessage(new TextComponentString(barrel.getItemCount() + "x " + barrel.getStoredItemType().getDisplayName() + (barrel.isLocked() ? " [Locked]" : ""))); //LANG
+					ItemStack stack = ((BlockBase) blockState.getBlock()).createStack(blockState, ((TileBase) barrel));
+					inst.title2 = new TextComponentString(stack.getDisplayName());
+					inst.icon2 = ItemIcon.getItemIcon(stack);
 				}
 				else
 				{
-					empty++;
+					inst.title2 = new TextComponentString("Unknown"); //LANG
+					inst.icon2 = Icon.EMPTY;
 				}
+
+				if (!barrel.getStoredItemType().isEmpty())
+				{
+					inst.title = new TextComponentString(StringUtils.formatDouble(barrel.getItemCount(), true) + "x " + barrel.getStoredItemType().getDisplayName());
+					inst.icon = ItemIcon.getItemIcon(ItemHandlerHelper.copyStackWithSize(barrel.getStoredItemType(), 1));
+				}
+				else
+				{
+					inst.title = new TextComponentString("Empty"); //LANG
+					inst.icon = Icon.EMPTY;
+				}
+
+				if (barrel.isLocked())
+				{
+					inst.title.getStyle().setColor(TextFormatting.GOLD);
+				}
+
+				list.add(inst);
 			}
 
-			if (empty > 0)
-			{
-				player.sendMessage(new TextComponentString(empty + "x " + ItemStack.EMPTY.getDisplayName())); //LANG
-			}
+			new MessageBarrelConnector(new TextComponentTranslation("tile.yabba.item_barrel_connector.name"), list).sendTo(player);
 		}
 
 		return true;

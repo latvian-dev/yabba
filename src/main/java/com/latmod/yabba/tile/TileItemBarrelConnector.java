@@ -28,9 +28,11 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 {
 	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
 
+	private static BlockPos currentPos = null;
 	private static final Comparator<IItemBarrel> BARREL_COMPARATOR = (o1, o2) -> {
 		int i = Boolean.compare(o1.getStoredItemType().isEmpty(), o2.getStoredItemType().isEmpty());
-		return i == 0 ? Boolean.compare(o2.isLocked(), o1.isLocked()) : i;
+		i = i == 0 ? Boolean.compare(o2.isLocked(), o1.isLocked()) : i;
+		return i == 0 ? Double.compare(currentPos.distanceSq(((TileEntity) o1).getPos()), currentPos.distanceSq(((TileEntity) o2).getPos())) : i;
 	};
 
 	public static void markAllDirty(BlockPos pos, int dimension)
@@ -141,6 +143,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 				}
 
 				linkedBarrels.addAll(scanned);
+				currentPos = pos;
 				linkedBarrels.sort(BARREL_COMPARATOR);
 			}
 		}

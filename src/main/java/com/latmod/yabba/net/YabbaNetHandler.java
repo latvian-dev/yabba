@@ -16,5 +16,6 @@ public class YabbaNetHandler
 		NET.register(2, new MessageSelectSkin());
 		NET.register(3, new MessageAntibarrelUpdate());
 		NET.register(4, new MessageAntibarrelClickSlot());
+		NET.register(5, new MessageBarrelConnector());
 	}
 }

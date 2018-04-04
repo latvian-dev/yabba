@@ -1,14 +1,8 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.google.gson.JsonElement;
 import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.util.BarrelModelCustomData;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,9 +11,7 @@ import java.util.Map;
  */
 public class YabbaCommon
 {
-	private static final Map<String, BarrelModelCustomData> DATA_MAP = new HashMap<>();
-	public static final String DEFAULT_MODEL_ID = Yabba.MOD_ID + ":barrel";
-	public static final String DEFAULT_SKIN_ID = "minecraft:planks_oak";
+	public static final Map<String, BarrelModelCustomData> DATA_MAP = new HashMap<>();
 
 	public void preInit()
 	{
@@ -29,24 +21,6 @@ public class YabbaCommon
 
 	public void postInit()
 	{
-		for (ModContainer mod : Loader.instance().getModList())
-		{
-			try
-			{
-				JsonElement json = DataReader.get(Yabba.class.getResource("/assets/" + mod.getModId() + "/yabba_models/_custom_data.json"), DataReader.JSON, Proxy.NO_PROXY).json();
-
-				if (json.isJsonObject())
-				{
-					for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
-					{
-						DATA_MAP.put(new ResourceLocation(mod.getModId(), entry.getKey()).toString(), BarrelModelCustomData.from(entry.getValue()));
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-			}
-		}
 	}
 
 	public void openModelGui()
@@ -59,6 +33,11 @@ public class YabbaCommon
 
 	public static BarrelModelCustomData getModelData(String id)
 	{
+		if (id.isEmpty())
+		{
+			return BarrelModelCustomData.DEFAULT;
+		}
+
 		BarrelModelCustomData data = DATA_MAP.get(id);
 		return data == null ? BarrelModelCustomData.DEFAULT : data;
 	}

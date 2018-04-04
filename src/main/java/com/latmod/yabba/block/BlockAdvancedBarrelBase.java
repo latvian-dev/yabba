@@ -1,24 +1,18 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftblib.lib.block.EnumRotation;
-import com.feed_the_beast.ftblib.lib.util.misc.UnlistedPropertyString;
-import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.tile.TileAdvancedBarrelBase;
+import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,11 +21,9 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -44,17 +36,40 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class BlockAdvancedBarrelBase extends BlockYabba
+public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 {
 	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-	public static final IUnlistedProperty<String> MODEL = UnlistedPropertyString.create("model");
-	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
+	public static final IUnlistedProperty<BarrelLook> LOOK = new IUnlistedProperty<BarrelLook>()
+	{
+		@Override
+		public String getName()
+		{
+			return "look";
+		}
+
+		@Override
+		public boolean isValid(BarrelLook value)
+		{
+			return true;
+		}
+
+		@Override
+		public Class<BarrelLook> getType()
+		{
+			return BarrelLook.class;
+		}
+
+		@Override
+		public String valueToString(BarrelLook value)
+		{
+			return value.toString();
+		}
+	};
 
 	public BlockAdvancedBarrelBase(String id)
 	{
-		super(id, Material.WOOD, MapColor.WOOD);
+		super(id);
 		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
-		setHardness(2F);
 	}
 
 	public static EnumFacing normalizeFacing(IBlockState state)
@@ -74,22 +89,9 @@ public class BlockAdvancedBarrelBase extends BlockYabba
 	}
 
 	@Override
-	public boolean dropSpecial(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-	{
-		list.add(createStack(getDefaultState(), "", "", Tier.WOOD));
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION}, new IUnlistedProperty[] {MODEL, SKIN});
+		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION}, new IUnlistedProperty[] {LOOK});
 	}
 
 	@Override
@@ -109,12 +111,6 @@ public class BlockAdvancedBarrelBase extends BlockYabba
 	public int damageDropped(IBlockState state)
 	{
 		return 0;
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
 	}
 
 	@Override
@@ -178,30 +174,6 @@ public class BlockAdvancedBarrelBase extends BlockYabba
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
 	{
 		return true;
-	}
-
-	public ItemStack createStack(IBlockState state, String model, String skin, Tier tier)
-	{
-		TileAdvancedBarrelBase tile = (TileAdvancedBarrelBase) createTileEntity(null, state);
-		tile.setModel(model, false);
-		tile.setSkin(skin, false);
-		tile.setTier(tier, false);
-		return createStack(state, tile);
-	}
-
-	@Override
-	@Deprecated
-	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileAdvancedBarrelBase)
-		{
-			TileAdvancedBarrelBase barrel = (TileAdvancedBarrelBase) tileEntity;
-			return createStack(state, barrel.model, barrel.skin, Tier.WOOD);
-		}
-
-		return super.getItem(world, pos, state);
 	}
 
 	@Override
@@ -341,22 +313,9 @@ public class BlockAdvancedBarrelBase extends BlockYabba
 
 		if (tile instanceof TileAdvancedBarrelBase)
 		{
-			return YabbaCommon.getModelData(((TileAdvancedBarrelBase) tile).model).getAABB(state);
+			return ((TileAdvancedBarrelBase) tile).getAABB(state);
 		}
 
 		return FULL_BLOCK_AABB;
-	}
-
-	@Override
-	public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-
-		if (tile instanceof TileAdvancedBarrelBase && ((TileAdvancedBarrelBase) tile).hasUpgrade(YabbaItems.UPGRADE_OBSIDIAN_SHELL))
-		{
-			return Float.MAX_VALUE;
-		}
-
-		return 8F;
 	}
 }

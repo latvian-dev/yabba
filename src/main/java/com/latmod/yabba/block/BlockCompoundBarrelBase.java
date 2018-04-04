@@ -1,8 +1,8 @@
 package com.latmod.yabba.block;
 
 import com.latmod.yabba.YabbaItems;
-import com.latmod.yabba.tile.TileAdvancedBarrelBase;
-import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.tile.IBarrelBase;
+import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -44,7 +44,7 @@ public class BlockCompoundBarrelBase extends BlockYabba
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		list.add(createStack(getDefaultState(), Tier.WOOD));
+		list.add(createStack(getDefaultState(), BarrelLook.DEFAULT, Tier.WOOD));
 	}
 
 	@Override
@@ -53,18 +53,33 @@ public class BlockCompoundBarrelBase extends BlockYabba
 		return true;
 	}
 
-	public ItemStack createStack(IBlockState state, Tier tier)
+	public ItemStack createStack(IBlockState state, BarrelLook look, Tier tier)
 	{
-		TileBarrelBase tile = (TileBarrelBase) createTileEntity(null, state);
-		tile.setTier(tier, false);
-		return createStack(state, tile);
+		TileEntity tileEntity = createTileEntity(null, state);
+
+		if (tileEntity instanceof IBarrelBase)
+		{
+			IBarrelBase barrel = (IBarrelBase) tileEntity;
+			barrel.setTier(tier, false);
+			barrel.setLook(look, false);
+		}
+
+		return createStack(state, tileEntity);
 	}
 
 	@Override
 	@Deprecated
 	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
 	{
-		return createStack(state, Tier.WOOD);
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof IBarrelBase)
+		{
+			IBarrelBase barrel = (IBarrelBase) tileEntity;
+			return createStack(state, barrel.getLook(), Tier.WOOD);
+		}
+
+		return super.getItem(world, pos, state);
 	}
 
 	@Override
@@ -79,7 +94,7 @@ public class BlockCompoundBarrelBase extends BlockYabba
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileAdvancedBarrelBase && ((TileAdvancedBarrelBase) tile).hasUpgrade(YabbaItems.UPGRADE_OBSIDIAN_SHELL))
+		if (tile instanceof IBarrelBase && ((IBarrelBase) tile).hasUpgrade(YabbaItems.UPGRADE_OBSIDIAN_SHELL))
 		{
 			return Float.MAX_VALUE;
 		}

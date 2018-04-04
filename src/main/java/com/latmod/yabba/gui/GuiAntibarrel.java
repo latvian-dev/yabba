@@ -130,7 +130,7 @@ public class GuiAntibarrel extends GuiBase
 		{
 			if (button.isLeft() && !entry.isEmpty() && isMouseOver() && ClientUtils.MC.player.inventory.getItemStack().isEmpty())
 			{
-				((GuiAntibarrel) getGui()).container.onClick(entry.entry, GuiScreen.isShiftKeyDown());
+				((GuiAntibarrel) getGui()).container.onClick(entry.entry, isShiftKeyDown());
 				return true;
 			}
 
@@ -200,8 +200,7 @@ public class GuiAntibarrel extends GuiBase
 					widget.setPos((i % 8) * 18, (i / 8) * 18);
 				}
 
-				scrollBar.setElementSize(MathHelper.ceil(widgets.size() / 8F) * 18);
-				scrollBar.setSrollStepFromOneElementSize(18);
+				scrollBar.setMaxValue(MathHelper.ceil(widgets.size() / 8F) * 18);
 			}
 
 			@Override
@@ -219,7 +218,7 @@ public class GuiAntibarrel extends GuiBase
 				}
 				else if (button.isLeft() && isMouseOver() && !ClientUtils.MC.player.inventory.getItemStack().isEmpty())
 				{
-					((GuiAntibarrel) getGui()).container.onClick(ItemEntry.EMPTY, GuiScreen.isShiftKeyDown());
+					((GuiAntibarrel) getGui()).container.onClick(ItemEntry.EMPTY, isShiftKeyDown());
 					return true;
 				}
 
@@ -230,16 +229,10 @@ public class GuiAntibarrel extends GuiBase
 		panel.addFlags(DEFAULTS | UNICODE);
 		panel.setPosAndSize(7, 7, 18 * 8, 72);
 
-		scrollBar = new PanelScrollBar(this, panel)
-		{
-			@Override
-			public boolean isEnabled()
-			{
-				return true;
-			}
-		};
-
+		scrollBar = new PanelScrollBar(this, panel);
 		scrollBar.setPosAndSize(157, panel.posY, 12, panel.height);
+		scrollBar.setCanAlwaysScroll(true);
+		scrollBar.setScrollStep(18);
 	}
 
 	@Override

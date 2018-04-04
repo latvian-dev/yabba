@@ -104,7 +104,7 @@ public class GuiSelectSkin extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				scrollBar.setValue(0D);
+				scrollBar.setValue(0);
 				String search = searchBar.getText();
 
 				if (search.isEmpty())
@@ -136,8 +136,7 @@ public class GuiSelectSkin extends GuiBase
 					widgets.get(i).setPos((i % 8) * 21, (i / 8) * 21);
 				}
 
-				scrollBar.setElementSize(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 20);
-				scrollBar.setSrollStepFromOneElementSize(19);
+				scrollBar.setMaxValue(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 20);
 			}
 
 			@Override
@@ -150,16 +149,9 @@ public class GuiSelectSkin extends GuiBase
 		skinsPanel.setPosAndSize(9, 29, 167, 111);
 		skinsPanel.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, skinsPanel)
-		{
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-		};
-
+		scrollBar = new PanelScrollBar(this, skinsPanel);
 		scrollBar.setPosAndSize(184, 28, 18, 113);
+		scrollBar.setScrollStep(19);
 
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{

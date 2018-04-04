@@ -3,6 +3,7 @@ package com.latmod.yabba.item;
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import com.latmod.yabba.tile.TileBarrelBase;
+import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -34,8 +35,9 @@ public class ItemBlockBarrel extends ItemBlockBase
 
 			if (barrel instanceof TileAdvancedBarrelBase)
 			{
-				tooltip.add(ItemHammer.getModelTooltip(((TileAdvancedBarrelBase) barrel).model));
-				tooltip.add(ItemPainter.getSkinTooltip(((TileAdvancedBarrelBase) barrel).skin));
+				BarrelLook look = barrel.getLook();
+				tooltip.add(ItemHammer.getModelTooltip(look.model));
+				tooltip.add(ItemPainter.getSkinTooltip(look.skin));
 			}
 
 			barrel.addInformation(tooltip, flag);
