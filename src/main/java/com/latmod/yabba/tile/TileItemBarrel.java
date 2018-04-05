@@ -70,13 +70,13 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 	@Override
 	public void markBarrelDirty(boolean majorChange)
 	{
-		super.markBarrelDirty(majorChange);
-
 		if (majorChange)
 		{
 			prevItemCount = -1;
 			prevItemCountForNet = -1;
 		}
+
+		super.markBarrelDirty(majorChange);
 	}
 
 	@Override

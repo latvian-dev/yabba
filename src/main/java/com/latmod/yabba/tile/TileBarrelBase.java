@@ -116,6 +116,8 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		{
 			updateContainingBlockInfo();
 		}
+
+		markDirty();
 	}
 
 	@Override
@@ -265,7 +267,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	}
 
 	@Override
-	public final void displayConfig(EntityPlayer player)
+	public final void openGui(EntityPlayer player)
 	{
 		System.out.println("Test!");
 		ConfigGroup configGroup = new ConfigGroup(getDisplayName());

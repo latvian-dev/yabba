@@ -15,7 +15,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,7 +30,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class TileCompoundItemBarrel extends TileBarrelBase implements ITickable, IItemBarrel, IItemHandlerModifiable
+public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarrel, IItemHandlerModifiable
 {
 	private static boolean canInsertItem(ItemStack stored, ItemStack stack)
 	{
@@ -128,9 +127,9 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements ITickable,
 	}
 
 	@Override
-	public void update()
+	public void markDirty()
 	{
-		checkIfDirty();
+		sendDirtyUpdate();
 	}
 
 	private void setRawItemCount(int v)

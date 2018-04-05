@@ -55,7 +55,7 @@ public interface IBarrelBase extends IConfigCallback
 
 	boolean addUpgrade(Item upgrade, boolean simulate);
 
-	void displayConfig(EntityPlayer player);
+	void openGui(EntityPlayer player);
 
 	@SideOnly(Side.CLIENT)
 	default void addInformation(List<String> tooltip, ITooltipFlag flagIn)

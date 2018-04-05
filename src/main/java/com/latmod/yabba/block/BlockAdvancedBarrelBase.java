@@ -238,7 +238,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 
 			if (player.isSneaking())
 			{
-				barrel.displayConfig(player);
+				barrel.openGui(player);
 			}
 			else if (heldItem.getItem() instanceof IUpgrade)
 			{

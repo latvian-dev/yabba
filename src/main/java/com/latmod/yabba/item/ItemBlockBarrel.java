@@ -1,7 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
-import com.latmod.yabba.tile.TileAdvancedBarrelBase;
+import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.Block;
@@ -33,7 +33,7 @@ public class ItemBlockBarrel extends ItemBlockBase
 			TileBarrelBase barrel = (TileBarrelBase) block.createTileEntity(world, block.getDefaultState());
 			barrel.readFromNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
 
-			if (barrel instanceof TileAdvancedBarrelBase)
+			if (block instanceof BlockAdvancedBarrelBase)
 			{
 				BarrelLook look = barrel.getLook();
 				tooltip.add(ItemHammer.getModelTooltip(look.model));
@@ -42,7 +42,7 @@ public class ItemBlockBarrel extends ItemBlockBase
 
 			barrel.addInformation(tooltip, flag);
 		}
-		else
+		else if (block instanceof BlockAdvancedBarrelBase)
 		{
 			tooltip.add(ItemHammer.getModelTooltip(""));
 			tooltip.add(ItemPainter.getSkinTooltip(""));

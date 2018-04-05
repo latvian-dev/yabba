@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.net.MessageBarrelConnector;
+import com.latmod.yabba.net.MessageOpenBarrelGui;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -38,6 +39,7 @@ public class GuiBarrelConnector extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
+					new MessageOpenBarrelGui(inst.pos).sendToServer();
 				}
 
 				@Override

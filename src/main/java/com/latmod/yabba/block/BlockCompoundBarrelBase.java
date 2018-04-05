@@ -86,7 +86,23 @@ public class BlockCompoundBarrelBase extends BlockYabba
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack stack = player.getHeldItem(hand);
-		return !(stack.getItem() instanceof ItemBlock) || !(((ItemBlock) stack.getItem()).getBlock() instanceof BlockCompoundBarrelBase);
+		if (stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() instanceof BlockCompoundBarrelBase || !player.isSneaking())
+		{
+			return false;
+		}
+		else if (world.isRemote)
+		{
+			return true;
+		}
+
+		TileEntity tile = world.getTileEntity(pos);
+
+		if (tile instanceof IBarrelBase)
+		{
+			((IBarrelBase) tile).openGui(player);
+		}
+
+		return true;
 	}
 
 	@Override
