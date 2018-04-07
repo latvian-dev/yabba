@@ -1,7 +1,6 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
@@ -104,7 +103,7 @@ public class BakedBarrelBlockModel extends ModelBase
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
-		if (state instanceof IExtendedBlockState)
+		if (side == null && state instanceof IExtendedBlockState)
 		{
 			IExtendedBlockState statex = (IExtendedBlockState) state;
 			BarrelLook look = statex.getValue(BlockAdvancedBarrelBase.LOOK);
@@ -114,12 +113,9 @@ public class BakedBarrelBlockModel extends ModelBase
 				look = BarrelLook.DEFAULT;
 			}
 
-			BarrelModel model = look.getModel();
-			BarrelSkin skin = look.getSkin();
-
-			if (MinecraftForgeClient.getRenderLayer() == ClientUtils.getStrongest(model.layer, skin.layer))
+			if (MinecraftForgeClient.getRenderLayer() == look.getLayer())
 			{
-				return get(BarrelLook.get(model.id, skin.id)).getQuads(state.getValue(BlockAdvancedBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
+				return get(look).getQuads(state.getValue(BlockAdvancedBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
 			}
 		}
 

@@ -1,10 +1,12 @@
 package com.latmod.yabba.util;
 
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -87,5 +89,11 @@ public class BarrelLook
 	public BarrelModelCustomData getModelCustomData()
 	{
 		return YabbaCommon.getModelData(model);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getLayer()
+	{
+		return ClientUtils.getStrongest(getModel().layer, getSkin().layer);
 	}
 }

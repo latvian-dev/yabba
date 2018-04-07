@@ -27,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -171,9 +172,24 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	}
 
 	@Override
+	@Deprecated
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+	{
+		return false;
+	}
+
+	@Override
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
 	{
-		return true;
+		BarrelLook look = null;
+
+		if (state instanceof IExtendedBlockState)
+		{
+			look = ((IExtendedBlockState) state).getValue(LOOK);
+		}
+
+		return layer == (look == null ? BarrelLook.DEFAULT : look).getLayer();
 	}
 
 	@Override
