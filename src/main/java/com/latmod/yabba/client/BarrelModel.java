@@ -151,13 +151,17 @@ public class BarrelModel
 		{
 			return new SetOffset(parseVec(json.get("offset")));
 		}
+		else if (json.has("layer"))
+		{
+			return new SetLayer(ClientUtils.BLOCK_RENDER_LAYER_NAME_MAP.get(json.get("layer").getAsString()));
+		}
 
 		return null;
 	}
 
 	public interface ModelFunction
 	{
-		void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin);
+		void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer);
 	}
 
 	public enum SetUvlock implements ModelFunction
@@ -166,7 +170,7 @@ public class BarrelModel
 		FALSE;
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
 		{
 			builder.setUVLocked(this == TRUE);
 		}
@@ -178,7 +182,7 @@ public class BarrelModel
 		FALSE;
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
 		{
 			builder.setShade(this == TRUE);
 		}
@@ -194,7 +198,7 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
 		{
 			model.currentTexture = model.textureMap.get(tex);
 		}
@@ -210,9 +214,25 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
 		{
 			model.offset = off;
+		}
+	}
+
+	public static class SetLayer implements ModelFunction
+	{
+		public final BlockRenderLayer layer;
+
+		public SetLayer(BlockRenderLayer l)
+		{
+			layer = l;
+		}
+
+		@Override
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer _layer)
+		{
+			model.currentLayer = layer;
 		}
 	}
 
@@ -259,9 +279,9 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
 		{
-			if (faces.isEmpty())
+			if (faces.isEmpty() || model.currentLayer != layer)
 			{
 				return;
 			}
@@ -284,9 +304,9 @@ public class BarrelModel
 	public static class InvertedCube extends Cube
 	{
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
 		{
-			if (faces.isEmpty())
+			if (faces.isEmpty() || model.currentLayer != layer)
 			{
 				return;
 			}
@@ -313,7 +333,7 @@ public class BarrelModel
 	public final float textDistance;
 	public final float iconDistance;
 	private final String unlocalizedName;
-	public final BlockRenderLayer layer;
+	public BlockRenderLayer currentLayer;
 	public Icon icon = Icon.EMPTY;
 
 	public BarrelModel(ResourceLocation _id, JsonObject json)
@@ -368,12 +388,11 @@ public class BarrelModel
 		}
 		else
 		{
-			itemModel = Collections.emptyList();
+			itemModel = model;
 		}
 
 		textDistance = (json.has("text_distance") ? json.get("text_distance").getAsFloat() : -0.08F) / 16F;
 		iconDistance = (json.has("icon_distance") ? json.get("icon_distance").getAsFloat() : 0.64F) / 16F;
-		layer = json.has("layer") ? ClientUtils.BLOCK_RENDER_LAYER_NAME_MAP.get(json.get("layer").getAsString()) : BlockRenderLayer.SOLID;
 	}
 
 	public int hashCode()
@@ -400,7 +419,7 @@ public class BarrelModel
 		return StringUtils.translate(unlocalizedName);
 	}
 
-	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin)
+	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin, BlockRenderLayer layer)
 	{
 		currentTexture = textureMap.get("skin");
 
@@ -410,42 +429,57 @@ public class BarrelModel
 		}
 
 		offset = Vec3d.ZERO;
+		currentLayer = skin.layer;
 		ModelBuilder builder = new ModelBuilder(format, rotation);
 
 		for (ModelFunction func : model)
 		{
-			func.apply(builder, this, skin);
+			func.apply(builder, this, skin, layer);
 		}
 
 		currentTexture = SpriteSet.EMPTY;
 		offset = Vec3d.ZERO;
-		return builder.getQuads();
+		return builder.getQuads().isEmpty() ? Collections.emptyList() : builder.getQuads();
 	}
 
 	public List<BakedQuad> buildItemModel(VertexFormat format, BarrelSkin skin)
 	{
-		if (!itemModel.isEmpty())
+		currentTexture = textureMap.get("skin");
+
+		if (currentTexture == null || currentTexture == SpriteSet.EMPTY)
 		{
-			currentTexture = textureMap.get("skin");
-
-			if (currentTexture == null || currentTexture == SpriteSet.EMPTY)
-			{
-				return Collections.emptyList();
-			}
-
-			offset = Vec3d.ZERO;
-			ModelBuilder builder = new ModelBuilder(format, ModelRotation.X0_Y0);
-
-			for (ModelFunction func : itemModel)
-			{
-				func.apply(builder, this, skin);
-			}
-
-			currentTexture = SpriteSet.EMPTY;
-			offset = Vec3d.ZERO;
-			return builder.getQuads();
+			return Collections.emptyList();
 		}
 
-		return Collections.emptyList();
+		offset = Vec3d.ZERO;
+		currentLayer = skin.layer;
+		ModelBuilder builder = new ModelBuilder(format, ModelRotation.X0_Y0);
+
+		for (ModelFunction func : itemModel)
+		{
+			func.apply(builder, this, skin, BlockRenderLayer.SOLID);
+		}
+
+		currentTexture = textureMap.get("skin");
+		offset = Vec3d.ZERO;
+		currentLayer = skin.layer;
+
+		for (ModelFunction func : itemModel)
+		{
+			func.apply(builder, this, skin, BlockRenderLayer.CUTOUT);
+		}
+
+		currentTexture = textureMap.get("skin");
+		offset = Vec3d.ZERO;
+		currentLayer = skin.layer;
+
+		for (ModelFunction func : itemModel)
+		{
+			func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT);
+		}
+
+		currentTexture = SpriteSet.EMPTY;
+		offset = Vec3d.ZERO;
+		return builder.getQuads().isEmpty() ? Collections.emptyList() : builder.getQuads();
 	}
 }

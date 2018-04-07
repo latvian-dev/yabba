@@ -151,7 +151,7 @@ public class GuiSelectSkin extends GuiBase
 
 		scrollBar = new PanelScrollBar(this, skinsPanel);
 		scrollBar.setPosAndSize(184, 28, 18, 113);
-		scrollBar.setScrollStep(19);
+		scrollBar.setScrollStep(21);
 
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)
 		{

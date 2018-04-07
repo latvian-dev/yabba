@@ -1,5 +1,4 @@
 {
-	"layer": "cutout",
 	"textures": {
 		"band": "north=yabba:blocks/barrel_band_window,south&east&west=yabba:blocks/barrel_band"
 	},
@@ -20,6 +19,7 @@
 		{"add": "cube", "from_to": [0, 3, 0, 16, 4, 16], "faces_except": "y"},
 		{"add": "cube", "from_to": [1, 1, 1, 15, 15, 15]},
 		{"add": "cube", "from_to": [2, 0, 2, 14, 16, 14]},
+		{"layer": "cutout"},
 		{"texture": "band"},
 		{"uvlock": false},
 		{"add": "cube", "from_to": [0, 0, 0, 16, 16, 16]}

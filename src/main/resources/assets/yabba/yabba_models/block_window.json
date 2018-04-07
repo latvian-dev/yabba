@@ -1,5 +1,4 @@
 {
-	"layer": "cutout",
 	"textures": {
 		"overlay": "north=yabba:blocks/barrel_solid_window"
 	},
@@ -10,6 +9,7 @@
 		{"add": "cube", "from_to": [0, 12, 0, 16, 16, 0], "faces": "north"},
 		{"add": "cube", "from_to": [0, 4, 0, 4, 12, 0], "faces": "north"},
 		{"add": "cube", "from_to": [12, 4, 0, 16, 12, 0], "faces": "north"},
+		{"layer": "cutout"},
 		{"texture": "overlay"},
 		{"add": "cube", "from_to": [0, 0, 0, 16, 16, 0], "faces": "north"}
 	]

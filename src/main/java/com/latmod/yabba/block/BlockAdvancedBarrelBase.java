@@ -27,7 +27,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -180,16 +179,16 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.TRANSLUCENT;
+	}
+
+	@Override
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
 	{
-		BarrelLook look = null;
-
-		if (state instanceof IExtendedBlockState)
-		{
-			look = ((IExtendedBlockState) state).getValue(LOOK);
-		}
-
-		return layer == (look == null ? BarrelLook.DEFAULT : look).getLayer();
+		return layer != BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
 	@Override

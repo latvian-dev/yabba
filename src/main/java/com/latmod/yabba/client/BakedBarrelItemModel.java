@@ -3,7 +3,6 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
@@ -16,9 +15,9 @@ public class BakedBarrelItemModel extends ModelBase
 {
 	private final List<BakedQuad> quads;
 
-	public BakedBarrelItemModel(TextureAtlasSprite p, List<BakedQuad> q)
+	public BakedBarrelItemModel(List<BakedQuad> q)
 	{
-		super(p);
+		super(null);
 		quads = q;
 	}
 
