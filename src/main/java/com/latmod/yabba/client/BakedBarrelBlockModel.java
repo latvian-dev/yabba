@@ -22,7 +22,6 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +36,7 @@ public class BakedBarrelBlockModel extends ModelBase
 	private final Map<BarrelLook, IBakedModel> itemModels;
 	private final Map<BarrelBlockModelKey, BarrelBlockModelVariant> blockModels;
 
-	private final ItemOverrideList itemOverrideList = new ItemOverrideList(new ArrayList<>())
+	private final ItemOverrideList itemOverrideList = new ItemOverrideList(Collections.emptyList())
 	{
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
@@ -71,6 +70,12 @@ public class BakedBarrelBlockModel extends ModelBase
 		format = f;
 		itemModels = new HashMap<>();
 		blockModels = new HashMap<>();
+	}
+
+	@Override
+	public boolean isAmbientOcclusion()
+	{
+		return false;
 	}
 
 	@Override

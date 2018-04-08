@@ -150,6 +150,8 @@ public class GuiSelectSkin extends GuiBase
 		skinsPanel.addFlags(Panel.DEFAULTS);
 
 		scrollBar = new PanelScrollBar(this, skinsPanel);
+		scrollBar.setCanAlwaysScroll(true);
+		scrollBar.setCanAlwaysScrollPlane(true);
 		scrollBar.setPosAndSize(184, 28, 18, 113);
 		scrollBar.setScrollStep(21);
 

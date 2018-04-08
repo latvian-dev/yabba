@@ -22,6 +22,12 @@ public class BakedBarrelItemModel extends ModelBase
 	}
 
 	@Override
+	public boolean isAmbientOcclusion()
+	{
+		return false;
+	}
+
+	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
 		return quads;
