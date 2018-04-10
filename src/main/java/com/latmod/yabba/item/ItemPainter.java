@@ -1,9 +1,9 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -59,7 +59,7 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 	@SideOnly(Side.CLIENT)
 	public static String getSkinTooltip(String skin)
 	{
-		return StringUtils.translate("lang.yabba.skin", StringUtils.translate(YabbaClient.getSkin(skin).toString()));
+		return I18n.format("lang.yabba.skin", I18n.format(YabbaClient.getSkin(skin).toString()));
 	}
 
 	@Override

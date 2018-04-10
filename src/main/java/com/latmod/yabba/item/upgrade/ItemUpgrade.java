@@ -1,9 +1,9 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemYabba;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -33,6 +33,6 @@ public class ItemUpgrade extends ItemYabba implements IUpgrade
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		tooltip.add(StringUtils.translate("item.yabba.upgrade.desc"));
+		tooltip.add(I18n.format("item.yabba.upgrade.desc"));
 	}
 }

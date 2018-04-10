@@ -226,7 +226,7 @@ public class GuiAntibarrel extends GuiBase
 			}
 		};
 
-		panel.addFlags(DEFAULTS | UNICODE);
+		panel.setUnicode(true);
 		panel.setPosAndSize(7, 7, 18 * 8, 72);
 
 		scrollBar = new PanelScrollBar(this, panel);

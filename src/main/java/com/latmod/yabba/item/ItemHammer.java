@@ -1,9 +1,9 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -59,7 +59,7 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 	@SideOnly(Side.CLIENT)
 	public static String getModelTooltip(String model)
 	{
-		return StringUtils.translate("lang.yabba.model", YabbaClient.getModel(model).toString());
+		return I18n.format("lang.yabba.model", YabbaClient.getModel(model).toString());
 	}
 
 	@Override
