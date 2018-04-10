@@ -1,9 +1,7 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftblib.lib.item.SetStackInSlotException;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class TileItemBarrelConnector extends TileBase implements IItemHandlerModifiable
+public class TileItemBarrelConnector extends TileBase implements IItemHandler
 {
 	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
 
@@ -109,13 +107,18 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof IItemBarrel && scanned.add((IItemBarrel) tileEntity))
+		if (tileEntity != null && tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, from))
 		{
-			for (EnumFacing facing1 : EnumFacing.VALUES)
+			IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, from);
+
+			if (itemHandler instanceof IItemBarrel && scanned.add((IItemBarrel) itemHandler))
 			{
-				if (facing1 != from)
+				for (EnumFacing facing1 : EnumFacing.VALUES)
 				{
-					addToList(scanned, pos.offset(facing1), facing1.getOpposite());
+					if (facing1 != from)
+					{
+						addToList(scanned, pos.offset(facing1), facing1.getOpposite());
+					}
 				}
 			}
 		}
@@ -164,15 +167,6 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandlerMod
 	{
 		IItemBarrel barrel = getAt(slot);
 		return barrel == null ? ItemStack.EMPTY : barrel.getStackInSlot(0);
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack)
-	{
-		if (YabbaConfig.general.crash_on_set_methods)
-		{
-			throw new SetStackInSlotException(Yabba.MOD_NAME);
-		}
 	}
 
 	@Override

@@ -45,6 +45,8 @@ public interface IBarrelBase extends IConfigCallback
 
 	boolean isLocked();
 
+	void setLocked(boolean b);
+
 	boolean isBarrelInvalid();
 
 	DataStorage getUpgradeData(Item upgrade);

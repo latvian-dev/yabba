@@ -25,6 +25,7 @@ import com.latmod.yabba.gui.GuiSelectSkin;
 import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.ItemStack;
@@ -151,7 +152,7 @@ public class YabbaClient extends YabbaCommon
 			ResourceLocation still = fluid.getStill(stack);
 
 			BarrelSkin skin = new BarrelSkin(fluid.getName() + "_still", TextureSet.of("all=" + still));
-			skin.displayName = StringUtils.translate("lang.fluid.still", displayName);
+			skin.displayName = I18n.format("lang.fluid.still", displayName);
 			skin.color = color;
 			skin.layer = BlockRenderLayer.TRANSLUCENT;
 			REGISTER_SKIN.addSkin(skin);
@@ -161,7 +162,7 @@ public class YabbaClient extends YabbaCommon
 			if (!still.equals(flowing))
 			{
 				skin = new BarrelSkin(fluid.getName() + "_flowing", TextureSet.of("up&down=" + still + ",all=" + flowing));
-				skin.displayName = StringUtils.translate("lang.fluid.flowing", displayName);
+				skin.displayName = I18n.format("lang.fluid.flowing", displayName);
 				skin.color = color;
 				skin.layer = BlockRenderLayer.TRANSLUCENT;
 				REGISTER_SKIN.addSkin(skin);

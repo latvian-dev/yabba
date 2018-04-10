@@ -26,9 +26,6 @@ public class YabbaConfig
 		@Config.Comment("false to inverse normal behaviour - sneak-click will give you a single item, normal-click will give a stack of items.")
 		public boolean sneak_left_click_extracts_stack = true;
 
-		@Config.Comment("When enabled it will cause crash when inventory handlers are used incorrectly.")
-		public boolean crash_on_set_methods = true;
-
 		@Config.Comment("How many slots can Antibarrel have.")
 		@Config.RangeInt(min = 1, max = 32768)
 		public int antibarrel_capacity = 8192;

@@ -12,7 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
+public class TileAntibarrel extends TileBase implements IItemHandler
 {
 	public final Map<ItemEntry, ItemEntryWithCount> items = new LinkedHashMap<>();
 	private ItemEntryWithCount[] itemsArray = null;
@@ -103,15 +103,6 @@ public class TileAntibarrel extends TileBase implements IItemHandlerModifiable
 	public ItemStack getStackInSlot(int slot)
 	{
 		return slot <= 0 || slot > items.size() ? ItemStack.EMPTY : getItemArray()[slot - 1].getStack(false);
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack)
-	{
-		if (YabbaConfig.general.crash_on_set_methods)
-		{
-			throw new RuntimeException("Do not use setStackInSlot method! This is not a YABBA bug.");
-		}
 	}
 
 	@Override

@@ -1,15 +1,9 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftblib.lib.item.SetStackInSlotException;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
-import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.YabbaLang;
-import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.YabbaConfigEvent;
-import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -20,36 +14,17 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author LatvianModder
  */
-public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarrel, IItemHandlerModifiable
+public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarrel
 {
-	private static boolean canInsertItem(ItemStack stored, ItemStack stack)
-	{
-		if (stored.getItem() != stack.getItem() || stored.getMetadata() != stack.getMetadata() || stored.getItemDamage() != stack.getItemDamage())
-		{
-			return false;
-		}
-
-		return Objects.equals(InvUtils.nullIfEmpty(stored.getTagCompound()), InvUtils.nullIfEmpty(stack.getTagCompound())) && stored.areCapsCompatible(stack);
-	}
-
 	private ItemStack storedItem = ItemStack.EMPTY;
 	private int itemCount = 0;
-
-	@Override
-	public BarrelType getType()
-	{
-		return BarrelType.ITEM;
-	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
@@ -132,44 +107,16 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarre
 		sendDirtyUpdate();
 	}
 
-	private void setRawItemCount(int v)
-	{
-		itemCount = v;
-	}
-
-	public boolean setItemCount(int v)
-	{
-		if (itemCount != v)
-		{
-			boolean isEmpty = itemCount <= 0;
-			setRawItemCount(v);
-
-			if (itemCount <= 0 && !isLocked() && !storedItem.isEmpty())
-			{
-				setStoredItemType(ItemStack.EMPTY, 0);
-			}
-
-			markBarrelDirty(isEmpty != (itemCount <= 0));
-			return true;
-		}
-
-		return false;
-	}
-
-	public int getMaxItems(ItemStack stack)
-	{
-		if (tier.infiniteCapacity())
-		{
-			return Tier.MAX_ITEMS;
-		}
-
-		return tier.maxItemStacks * (stack.isEmpty() ? 64 : stack.getMaxStackSize());
-	}
-
 	@Override
 	public int getItemCount()
 	{
 		return itemCount;
+	}
+
+	@Override
+	public void setRawItemCount(int v)
+	{
+		itemCount = v;
 	}
 
 	@Override
@@ -179,152 +126,9 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarre
 	}
 
 	@Override
-	public void setStoredItemType(ItemStack type, int amount)
+	public void setRawItemType(ItemStack type)
 	{
-		if (type.isEmpty())
-		{
-			type = ItemStack.EMPTY;
-		}
-
-		if (amount <= 0)
-		{
-			amount = 0;
-
-			if (!isLocked())
-			{
-				type = ItemStack.EMPTY;
-			}
-		}
-
-		if (!type.isEmpty())
-		{
-			type = ItemHandlerHelper.copyStackWithSize(type, 1);
-
-			if (tier.creative())
-			{
-				amount = Tier.MAX_ITEMS / 2;
-			}
-		}
-
 		storedItem = type;
-		setRawItemCount(Math.min(amount, getMaxItems(storedItem)));
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		if (itemCount <= 0)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		storedItem.setCount(tier.creative() ? (Tier.MAX_ITEMS / 2) : itemCount);
-		return storedItem;
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack)
-	{
-		if (YabbaConfig.general.crash_on_set_methods)
-		{
-			throw new SetStackInSlotException(Yabba.MOD_NAME);
-		}
-	}
-
-	@Override
-	public int getSlots()
-	{
-		return 1;
-	}
-
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-	{
-		if (stack.isEmpty())
-		{
-			return ItemStack.EMPTY;
-		}
-
-		boolean storedIsEmpty = storedItem.isEmpty();
-		boolean canInsert = storedIsEmpty || canInsertItem(storedItem, stack);
-		if (!storedIsEmpty && tier.creative())
-		{
-			return canInsert ? ItemStack.EMPTY : stack;
-		}
-
-		int capacity;
-
-		if (itemCount > 0)
-		{
-			capacity = getMaxItems(storedItem);
-
-			if (itemCount >= capacity)
-			{
-				return (canInsert && hasUpgrade(YabbaItems.UPGRADE_VOID)) ? ItemStack.EMPTY : stack;
-			}
-		}
-		else
-		{
-			capacity = getMaxItems(stack);
-		}
-
-		if (canInsert)
-		{
-			int size = Math.min(stack.getCount(), capacity - itemCount);
-
-			if (size > 0)
-			{
-				if (!simulate)
-				{
-					if (storedItem.isEmpty())
-					{
-						setStoredItemType(stack, size);
-					}
-					else
-					{
-						setItemCount(itemCount + size);
-					}
-				}
-			}
-
-			return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - size);
-		}
-
-		return stack;
-	}
-
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate)
-	{
-		if (amount <= 0)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		if (itemCount <= 0 || storedItem.isEmpty())
-		{
-			return ItemStack.EMPTY;
-		}
-
-		if (tier.creative())
-		{
-			return ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(amount, storedItem.getMaxStackSize()));
-		}
-
-		ItemStack stack = ItemHandlerHelper.copyStackWithSize(storedItem, Math.min(Math.min(amount, itemCount), storedItem.getMaxStackSize()));
-
-		if (!simulate)
-		{
-			setItemCount(itemCount - stack.getCount());
-		}
-
-		return stack;
-	}
-
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return getMaxItems(storedItem);
 	}
 
 	@Override

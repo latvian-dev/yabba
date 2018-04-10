@@ -137,6 +137,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		return isLocked.getBoolean();
 	}
 
+	@Override
 	public void setLocked(boolean b)
 	{
 		if (isLocked.getBoolean() != b)
@@ -191,7 +192,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	@Override
 	public boolean hasUpgrade(Item upgrade)
 	{
-		return upgrades.containsKey(upgrade);
+		return !upgrades.isEmpty() && upgrades.containsKey(upgrade);
 	}
 
 	@Override

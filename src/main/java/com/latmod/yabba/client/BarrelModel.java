@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.client.ModelBuilder;
 import com.feed_the_beast.ftblib.lib.client.SpriteSet;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,6 +13,7 @@ import com.latmod.yabba.api.BarrelSkin;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -416,7 +416,7 @@ public class BarrelModel
 
 	public String toString()
 	{
-		return StringUtils.translate(unlocalizedName);
+		return I18n.format(unlocalizedName);
 	}
 
 	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin, BlockRenderLayer layer)

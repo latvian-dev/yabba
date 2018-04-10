@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaItems;
-import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
@@ -69,12 +68,6 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		look = BarrelLook.get(nbt.getString("Model"), nbt.getString("Skin"));
 		alwaysDisplayData.setBoolean(nbt.getBoolean("AlwaysDisplayData"));
 		displayBar.setBoolean(nbt.getBoolean("DisplayBar"));
-	}
-
-	@Override
-	public BarrelType getType()
-	{
-		throw new IllegalStateException("Missing barrel type!");
 	}
 
 	@Override
