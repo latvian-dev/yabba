@@ -30,8 +30,7 @@ minecraft {
 }
 
 repositories {
-	mavenLocal()
-	maven { url "http://maven.latmod.com/" }
+	maven { url "https://maven.latmod.com/" }
 	maven { url "http://maven.tterrag.com/" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 	maven { url = "http://maven.ic2.player.to/" }
@@ -39,7 +38,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "com.feed_the_beast.ftblib:FTBLib:${ftblib_version}"
+	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
 	provided "mezz.jei:jei_${mc_version}:${jei_version}:api"
 	provided "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
 	//provided "refinedstorage:refinedstorage:${refinedstorage_version}:api"
