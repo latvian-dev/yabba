@@ -10,13 +10,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.api.BarrelSkin;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.vector.Vector3f;
@@ -30,15 +30,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author LatvianModder
  */
 public class BarrelModel
 {
-	public static final HashSet<EnumFacing> SET_ALL_FACES = new HashSet<>(Arrays.asList(EnumFacing.VALUES));
+	public static final Set<EnumFacing> SET_ALL_FACES = new HashSet<>(Arrays.asList(EnumFacing.VALUES));
 
-	public static HashSet<EnumFacing> parseFaces(JsonArray json)
+	public static Set<EnumFacing> parseFaces(JsonArray json)
 	{
 		HashSet<EnumFacing> set = new HashSet<>();
 
@@ -65,7 +66,7 @@ public class BarrelModel
 			}
 		}
 
-		return set;
+		return set.isEmpty() ? Collections.emptySet() : set;
 	}
 
 	public static Vec3d parseVec(JsonElement e)
@@ -161,7 +162,14 @@ public class BarrelModel
 
 	public interface ModelFunction
 	{
-		void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer);
+		default void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer, @Nullable EnumFacing side)
+		{
+			applyFunction(builder, model);
+		}
+
+		default void applyFunction(ModelBuilder builder, BarrelModel model)
+		{
+		}
 	}
 
 	public enum SetUvlock implements ModelFunction
@@ -170,7 +178,7 @@ public class BarrelModel
 		FALSE;
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
+		public void applyFunction(ModelBuilder builder, BarrelModel model)
 		{
 			builder.setUVLocked(this == TRUE);
 		}
@@ -182,7 +190,7 @@ public class BarrelModel
 		FALSE;
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
+		public void applyFunction(ModelBuilder builder, BarrelModel model)
 		{
 			builder.setShade(this == TRUE);
 		}
@@ -198,7 +206,7 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
+		public void applyFunction(ModelBuilder builder, BarrelModel model)
 		{
 			model.currentTexture = model.textureMap.get(tex);
 		}
@@ -214,7 +222,7 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
+		public void applyFunction(ModelBuilder builder, BarrelModel model)
 		{
 			model.offset = off;
 		}
@@ -230,7 +238,7 @@ public class BarrelModel
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer _layer)
+		public void applyFunction(ModelBuilder builder, BarrelModel model)
 		{
 			model.currentLayer = layer;
 		}
@@ -240,7 +248,8 @@ public class BarrelModel
 	{
 		public Vec3d from;
 		public Vec3d to;
-		public HashSet<EnumFacing> faces;
+		public Set<EnumFacing> faces;
+		public Set<EnumFacing> cull;
 
 		public static void parseCube(Cube c, JsonObject o)
 		{
@@ -276,12 +285,29 @@ public class BarrelModel
 				c.faces = new HashSet<>(SET_ALL_FACES);
 				c.faces.removeAll(parseFaces(JsonUtils.toArray(o.get("faces_except"))));
 			}
+
+			c.cull = Collections.emptySet();
+
+			if (o.has("cull"))
+			{
+				c.cull = parseFaces(JsonUtils.toArray(o.get("cull")));
+			}
+			else if (o.has("cull_except"))
+			{
+				c.cull = new HashSet<>(SET_ALL_FACES);
+				c.cull.removeAll(parseFaces(JsonUtils.toArray(o.get("cull_except"))));
+			}
 		}
 
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer, @Nullable EnumFacing side)
 		{
 			if (faces.isEmpty() || model.currentLayer != layer)
+			{
+				return;
+			}
+
+			if (side != null) //FIXME
 			{
 				return;
 			}
@@ -304,9 +330,14 @@ public class BarrelModel
 	public static class InvertedCube extends Cube
 	{
 		@Override
-		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer)
+		public void apply(ModelBuilder builder, BarrelModel model, BarrelSkin skin, BlockRenderLayer layer, @Nullable EnumFacing side)
 		{
 			if (faces.isEmpty() || model.currentLayer != layer)
+			{
+				return;
+			}
+
+			if (side != null) //FIXME
 			{
 				return;
 			}
@@ -323,7 +354,7 @@ public class BarrelModel
 		}
 	}
 
-	public final String id;
+	public final EnumBarrelModel id;
 	public final Map<String, TextureSet> textures;
 	public final List<ModelFunction> model;
 	public final List<ModelFunction> itemModel;
@@ -332,14 +363,12 @@ public class BarrelModel
 	public Vec3d offset;
 	public final float textDistance;
 	public final float iconDistance;
-	private final String unlocalizedName;
 	public BlockRenderLayer currentLayer;
 	public Icon icon = Icon.EMPTY;
 
-	public BarrelModel(ResourceLocation _id, JsonObject json)
+	public BarrelModel(EnumBarrelModel _id, JsonObject json)
 	{
-		id = _id.toString();
-		unlocalizedName = _id.getResourceDomain() + ".yabba_model." + _id.getResourcePath();
+		id = _id;
 
 		if (json.has("textures"))
 		{
@@ -416,10 +445,10 @@ public class BarrelModel
 
 	public String toString()
 	{
-		return I18n.format(unlocalizedName);
+		return I18n.format(id.getUnlocalizedName());
 	}
 
-	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin, BlockRenderLayer layer)
+	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin, BlockRenderLayer layer, @Nullable EnumFacing side)
 	{
 		currentTexture = textureMap.get("skin");
 
@@ -434,12 +463,12 @@ public class BarrelModel
 
 		for (ModelFunction func : model)
 		{
-			func.apply(builder, this, skin, layer);
+			func.apply(builder, this, skin, layer, side);
 		}
 
 		currentTexture = SpriteSet.EMPTY;
 		offset = Vec3d.ZERO;
-		return builder.getQuads().isEmpty() ? Collections.emptyList() : builder.getQuads();
+		return builder.getQuads().isEmpty() ? Collections.emptyList() : Arrays.asList(builder.getQuads().toArray(new BakedQuad[0]));
 	}
 
 	public List<BakedQuad> buildItemModel(VertexFormat format, BarrelSkin skin)
@@ -457,7 +486,12 @@ public class BarrelModel
 
 		for (ModelFunction func : itemModel)
 		{
-			func.apply(builder, this, skin, BlockRenderLayer.SOLID);
+			func.apply(builder, this, skin, BlockRenderLayer.SOLID, null);
+
+			for (EnumFacing facing : EnumFacing.VALUES)
+			{
+				func.apply(builder, this, skin, BlockRenderLayer.SOLID, facing);
+			}
 		}
 
 		currentTexture = textureMap.get("skin");
@@ -466,7 +500,12 @@ public class BarrelModel
 
 		for (ModelFunction func : itemModel)
 		{
-			func.apply(builder, this, skin, BlockRenderLayer.CUTOUT);
+			func.apply(builder, this, skin, BlockRenderLayer.CUTOUT, null);
+
+			for (EnumFacing facing : EnumFacing.VALUES)
+			{
+				func.apply(builder, this, skin, BlockRenderLayer.CUTOUT, facing);
+			}
 		}
 
 		currentTexture = textureMap.get("skin");
@@ -475,11 +514,16 @@ public class BarrelModel
 
 		for (ModelFunction func : itemModel)
 		{
-			func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT);
+			func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT, null);
+
+			for (EnumFacing facing : EnumFacing.VALUES)
+			{
+				func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT, facing);
+			}
 		}
 
 		currentTexture = SpriteSet.EMPTY;
 		offset = Vec3d.ZERO;
-		return builder.getQuads().isEmpty() ? Collections.emptyList() : builder.getQuads();
+		return builder.getQuads().isEmpty() ? Collections.emptyList() : Arrays.asList(builder.getQuads().toArray(new BakedQuad[0]));
 	}
 }

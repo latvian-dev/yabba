@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
-import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -82,8 +81,9 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 			skin.spriteSet = skin.textures.getSpriteSet(bakedTextureGetter);
 		}
 
-		for (BarrelModel model : YabbaClient.ALL_MODELS)
+		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
 		{
+			BarrelModel model = id.getModel();
 			model.textureMap = new HashMap<>();
 
 			for (Map.Entry<String, TextureSet> entry : model.textures.entrySet())
@@ -100,14 +100,14 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 	{
 		if (tintIndex == 0)
 		{
-			BarrelLook look = null;
+			String skin = null;
 
 			if (state instanceof IExtendedBlockState)
 			{
-				look = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.LOOK);
+				skin = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.SKIN);
 			}
 
-			Color4I color = (look == null ? BarrelLook.DEFAULT : look).getSkin().color;
+			Color4I color = YabbaClient.getSkin(skin).color;
 
 			if (!color.isEmpty())
 			{
@@ -127,8 +127,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 
 			if (stack.hasTagCompound())
 			{
-				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-				id = data.getString("Skin");
+				id = stack.getTagCompound().getCompoundTag("BlockEntityTag").getString("Skin");
 			}
 
 			Color4I color = YabbaClient.getSkin(id).color;

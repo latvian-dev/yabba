@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.item.ItemHammer;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -14,13 +15,13 @@ import net.minecraft.util.EnumHand;
  */
 public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 {
-	private String modelId;
+	private EnumBarrelModel modelId;
 
 	public MessageSelectModel()
 	{
 	}
 
-	public MessageSelectModel(String id)
+	public MessageSelectModel(EnumBarrelModel id)
 	{
 		modelId = id;
 	}
@@ -34,13 +35,13 @@ public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(modelId);
+		data.writeString(modelId.getNBTName());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		modelId = data.readString();
+		modelId = EnumBarrelModel.getFromNBTName(data.readString());
 	}
 
 	@Override

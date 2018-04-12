@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -22,6 +23,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,12 @@ public class BakedBarrelBlockModel extends ModelBase
 	private final VertexFormat format;
 	private final Map<BarrelLook, IBakedModel> itemModels;
 	private final Map<BarrelBlockModelKey, BarrelBlockModelVariant> blockModels;
+	private static final List<BakedQuad>[] EMPTY = new List[7];
+
+	static
+	{
+		Arrays.fill(EMPTY, Collections.emptyList());
+	}
 
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(Collections.emptyList())
 	{
@@ -46,7 +54,7 @@ public class BakedBarrelBlockModel extends ModelBase
 			if (stack.hasTagCompound())
 			{
 				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-				look = BarrelLook.get(data.getString("Model"), data.getString("Skin"));
+				look = BarrelLook.get(EnumBarrelModel.getFromNBTName(data.getString("Model")), data.getString("Skin"));
 			}
 
 			IBakedModel bakedModel = itemModels.get(look);
@@ -81,53 +89,85 @@ public class BakedBarrelBlockModel extends ModelBase
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
-		if (side == null && state instanceof IExtendedBlockState)
+		BarrelLook look = BarrelLook.DEFAULT;
+
+		if (state != null)
 		{
-			BarrelLook look = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.LOOK);
+			String skin = null;
 
-			if (look == null)
+			if (state instanceof IExtendedBlockState)
 			{
-				look = BarrelLook.DEFAULT;
+				skin = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.SKIN);
 			}
 
-			BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockAdvancedBarrelBase.ROTATION).getModelRotationIndexFromFacing(state.getValue(BlockHorizontal.FACING)));
-			BarrelBlockModelVariant variant = blockModels.get(key);
+			look = BarrelLook.get(state.getValue(BlockAdvancedBarrelBase.MODEL), skin);
+		}
 
-			if (variant == null)
+		BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockHorizontal.FACING).getHorizontalIndex());
+		BarrelBlockModelVariant variant = blockModels.get(key);
+
+		if (variant == null)
+		{
+			BarrelModel model = key.look.getModel();
+			BarrelSkin skin = key.look.getSkin();
+			ModelRotation rotation = BarrelBlockModelKey.ROTATIONS[state.getValue(BlockHorizontal.FACING).getOpposite().getHorizontalIndex()];
+			model.textureMap.put("skin", skin.spriteSet);
+
+			List<BakedQuad>[] solidQuads = new List[7];
+			List<BakedQuad>[] cutoutQuads = new List[7];
+			List<BakedQuad>[] translucentQuads = new List[7];
+
+			for (int i = 0; i < 7; i++)
 			{
-				BarrelModel model = key.look.getModel();
-				BarrelSkin skin = key.look.getSkin();
-				ModelRotation rotation = BarrelBlockModelKey.ROTATIONS[key.rotation];
-				model.textureMap.put("skin", skin.spriteSet);
-				List<BakedQuad> solidQuads = model.buildModel(format, rotation, skin, BlockRenderLayer.SOLID);
-				List<BakedQuad> cutoutQuads = model.buildModel(format, rotation, skin, BlockRenderLayer.CUTOUT);
-				List<BakedQuad> translucentQuads = model.buildModel(format, rotation, skin, BlockRenderLayer.TRANSLUCENT);
-				variant = new BarrelBlockModelVariant(solidQuads, cutoutQuads, translucentQuads);
-				blockModels.put(key, variant);
+				EnumFacing side1 = i == 6 ? null : EnumFacing.VALUES[i];
+				solidQuads[i] = model.buildModel(format, rotation, skin, BlockRenderLayer.SOLID, side1);
+				cutoutQuads[i] = model.buildModel(format, rotation, skin, BlockRenderLayer.CUTOUT, side1);
+				translucentQuads[i] = model.buildModel(format, rotation, skin, BlockRenderLayer.TRANSLUCENT, side1);
 			}
 
-			BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+			variant = new BarrelBlockModelVariant(optimize(solidQuads), optimize(cutoutQuads), optimize(translucentQuads));
+			blockModels.put(key, variant);
+		}
 
-			if (layer == null)
-			{
-				layer = key.look.getSkin().layer;
-			}
+		BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
 
-			if (layer == BlockRenderLayer.SOLID)
+		if (layer == null)
+		{
+			layer = key.look.getSkin().layer;
+		}
+
+		int sidei = 6;
+
+		if (side != null)
+		{
+			sidei = side.getIndex();
+		}
+
+		if (layer == BlockRenderLayer.SOLID)
+		{
+			return variant.solidQuads[sidei];
+		}
+		else if (layer == BlockRenderLayer.TRANSLUCENT)
+		{
+			return variant.translucentQuads[sidei];
+		}
+		else
+		{
+			return variant.cutoutQuads[sidei];
+		}
+	}
+
+	private static List<BakedQuad>[] optimize(List<BakedQuad>[] lists)
+	{
+		for (List<BakedQuad> list : lists)
+		{
+			if (!list.isEmpty())
 			{
-				return variant.solidQuads;
-			}
-			else if (layer == BlockRenderLayer.TRANSLUCENT)
-			{
-				return variant.translucentQuads;
-			}
-			else
-			{
-				return variant.cutoutQuads;
+				return lists;
 			}
 		}
 
-		return Collections.emptyList();
+		return EMPTY;
 	}
 
 	@Override

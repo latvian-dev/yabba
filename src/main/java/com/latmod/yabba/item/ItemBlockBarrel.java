@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -44,7 +45,7 @@ public class ItemBlockBarrel extends ItemBlockBase
 		}
 		else if (block instanceof BlockAdvancedBarrelBase)
 		{
-			tooltip.add(ItemHammer.getModelTooltip(""));
+			tooltip.add(ItemHammer.getModelTooltip(EnumBarrelModel.BARREL));
 			tooltip.add(ItemPainter.getSkinTooltip(""));
 		}
 	}

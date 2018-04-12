@@ -3,12 +3,9 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.google.gson.JsonElement;
 import com.latmod.yabba.gui.ContainerAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
-import com.latmod.yabba.util.BarrelModelCustomData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -17,11 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -30,13 +23,11 @@ import java.util.Map;
 public class YabbaEventHandler
 {
 	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(Yabba.MOD_ID, "config");
-	public static final ResourceLocation RELOAD_MODEL_DATA = new ResourceLocation(Yabba.MOD_ID, "model_data");
 
 	@SubscribeEvent
 	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
 	{
 		event.register(RELOAD_CONFIG);
-		event.register(RELOAD_MODEL_DATA);
 	}
 
 	@SubscribeEvent
@@ -45,30 +36,6 @@ public class YabbaEventHandler
 		if (event.reload(RELOAD_CONFIG))
 		{
 			YabbaConfig.sync();
-		}
-
-		if (event.reload(RELOAD_MODEL_DATA))
-		{
-			YabbaCommon.DATA_MAP.clear();
-
-			for (ModContainer mod : Loader.instance().getModList())
-			{
-				try
-				{
-					JsonElement json = DataReader.get(YabbaEventHandler.class.getResourceAsStream("/assets/" + mod.getModId() + "/yabba_models/_custom_data.json")).json();
-
-					if (json.isJsonObject())
-					{
-						for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
-						{
-							YabbaCommon.DATA_MAP.put(new ResourceLocation(mod.getModId(), entry.getKey()).toString(), BarrelModelCustomData.from(entry.getValue()));
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-				}
-			}
 		}
 	}
 

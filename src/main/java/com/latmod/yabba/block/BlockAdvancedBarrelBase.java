@@ -1,12 +1,13 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.EnumRotation;
+import com.feed_the_beast.ftblib.lib.util.misc.UnlistedPropertyString;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,73 +40,32 @@ import javax.annotation.Nullable;
  */
 public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 {
-	public static final PropertyEnum<EnumRotation> ROTATION = PropertyEnum.create("rotation", EnumRotation.class);
-	public static final IUnlistedProperty<BarrelLook> LOOK = new IUnlistedProperty<BarrelLook>()
-	{
-		@Override
-		public String getName()
-		{
-			return "look";
-		}
-
-		@Override
-		public boolean isValid(BarrelLook value)
-		{
-			return true;
-		}
-
-		@Override
-		public Class<BarrelLook> getType()
-		{
-			return BarrelLook.class;
-		}
-
-		@Override
-		public String valueToString(BarrelLook value)
-		{
-			return value.toString();
-		}
-	};
+	public static final PropertyEnum<EnumBarrelModel> MODEL = PropertyEnum.create("model", EnumBarrelModel.class);
+	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
 
 	public BlockAdvancedBarrelBase(String id)
 	{
 		super(id);
-		setDefaultState(blockState.getBaseState().withProperty(ROTATION, EnumRotation.NORMAL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
-	}
-
-	public static EnumFacing normalizeFacing(IBlockState state)
-	{
-		EnumRotation rotation = state.getValue(ROTATION);
-
-		if (rotation == EnumRotation.FACING_DOWN)
-		{
-			return EnumFacing.DOWN;
-		}
-		else if (rotation == EnumRotation.FACING_UP)
-		{
-			return EnumFacing.UP;
-		}
-
-		return state.getValue(BlockHorizontal.FACING);
+		setDefaultState(blockState.getBaseState().withProperty(MODEL, EnumBarrelModel.BARREL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, ROTATION}, new IUnlistedProperty[] {LOOK});
+		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, MODEL}, new IUnlistedProperty[] {SKIN});
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta)).withProperty(ROTATION, EnumRotation.VALUES[(meta >> 2) & 3]);
+		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return (state.getValue(ROTATION).ordinal() << 2) | state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+		return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -115,13 +76,44 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 
 	@Override
 	@Deprecated
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof TileAdvancedBarrelBase)
+		{
+			EnumBarrelModel model = ((TileAdvancedBarrelBase) tileEntity).getLook().model;
+
+			if (!model.isDefault())
+			{
+				return state.withProperty(MODEL, model);
+			}
+		}
+
+		return state;
+	}
+
+	@Override
+	@Deprecated
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tile instanceof TileAdvancedBarrelBase)
+		if (tileEntity instanceof TileAdvancedBarrelBase)
 		{
-			return ((TileAdvancedBarrelBase) tile).createState(state);
+			BarrelLook look = ((TileAdvancedBarrelBase) tileEntity).getLook();
+
+			if (!look.isDefault())
+			{
+				state = state.withProperty(MODEL, look.model);
+
+				if (state instanceof IExtendedBlockState)
+				{
+					state = ((IExtendedBlockState) state).withProperty(SKIN, look.skin);
+				}
+
+				return state;
+			}
 		}
 
 		return state;
@@ -173,9 +165,9 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	@Override
 	@Deprecated
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return false;
+		return super.shouldSideBeRendered(state, world, pos, side);
 	}
 
 	@Override
@@ -195,7 +187,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	@Deprecated
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(ROTATION, EnumRotation.getRotationFromEntity(pos, placer)).withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override

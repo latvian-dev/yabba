@@ -3,18 +3,18 @@
 		"overlay": "north=yabba:blocks/barrel_solid_borders_window,all=yabba:blocks/barrel_solid_borders"
 	},
 	"model": [
-		{"add": "cube", "from_to": [1, 16, 1, 15, 16, 15], "faces": "up"},
-		{"add": "cube", "from_to": [1, 0, 1, 15, 0, 15], "faces": "down"},
+		{"add": "cube", "from_to": [1, 16, 1, 15, 16, 15], "faces": "up", "cull": "up"},
+		{"add": "cube", "from_to": [1, 0, 1, 15, 0, 15], "faces": "down", "cull": "down"},
 		{"add": "cube", "from_to": [0, 1, 1, 0, 15, 15], "faces": "west"},
-		{"add": "cube", "from_to": [16, 1, 1, 16, 15, 15], "faces": "east"},
-		{"add": "cube", "from_to": [1, 1, 16, 15, 15, 16], "faces": "south"},
-		{"add": "inverted_cube", "from_to": [4, 4, 0, 12, 12, 1]},
-		{"add": "cube", "from_to": [1, 1, 0, 15, 4, 0], "faces": "north"},
-		{"add": "cube", "from_to": [1, 12, 0, 15, 15, 0], "faces": "north"},
-		{"add": "cube", "from_to": [1, 4, 0, 4, 12, 0], "faces": "north"},
-		{"add": "cube", "from_to": [12, 4, 0, 15, 12, 0], "faces": "north"},
+		{"add": "cube", "from_to": [16, 1, 1, 16, 15, 15], "faces": "east", "cull": "east"},
+		{"add": "cube", "from_to": [1, 1, 16, 15, 15, 16], "faces": "south", "cull": "south"},
+		{"add": "inverted_cube", "from_to": [4, 4, 0, 12, 12, 1], "cull": "north"},
+		{"add": "cube", "from_to": [1, 1, 0, 15, 4, 0], "faces": "north", "cull": "north"},
+		{"add": "cube", "from_to": [1, 12, 0, 15, 15, 0], "faces": "north", "cull": "north"},
+		{"add": "cube", "from_to": [1, 4, 0, 4, 12, 0], "faces": "north", "cull": "north"},
+		{"add": "cube", "from_to": [12, 4, 0, 15, 12, 0], "faces": "north", "cull": "north"},
 		{"layer": "cutout"},
 		{"texture": "overlay"},
-		{"add": "cube", "from_to": [0, 0, 0, 16, 16, 16]}
+		{"add": "cube", "from_to": [0, 0, 0, 16, 16, 16], "cull_except": []}
 	]
 }

@@ -2,6 +2,9 @@ package com.latmod.yabba;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.OtherMods;
+import com.latmod.yabba.block.BlockItemBarrel;
+import com.latmod.yabba.block.Tier;
+import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -37,7 +40,7 @@ public class Yabba
 		@Override
 		public ItemStack getTabIconItem()
 		{
-			return new ItemStack(YabbaItems.UPGRADE_BLANK);
+			return ((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.DEFAULT, Tier.WOOD);
 		}
 	};
 

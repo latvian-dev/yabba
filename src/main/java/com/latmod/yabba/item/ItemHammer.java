@@ -2,7 +2,7 @@ package com.latmod.yabba.item;
 
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
-import com.latmod.yabba.client.YabbaClient;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,14 +23,14 @@ import java.util.List;
  */
 public class ItemHammer extends ItemYabba implements IUpgrade
 {
-	private static String getModel(ItemStack stack)
+	private static EnumBarrelModel getModel(ItemStack stack)
 	{
-		return stack.hasTagCompound() ? stack.getTagCompound().getString("Model") : "";
+		return stack.hasTagCompound() ? EnumBarrelModel.getFromNBTName(stack.getTagCompound().getString("Model")) : EnumBarrelModel.BARREL;
 	}
 
-	public static void setModel(ItemStack stack, String modelId)
+	public static void setModel(ItemStack stack, EnumBarrelModel modelId)
 	{
-		stack.setTagInfo("Model", new NBTTagString(modelId));
+		stack.setTagInfo("Model", new NBTTagString(modelId.getName()));
 	}
 
 	public ItemHammer()
@@ -57,9 +57,9 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static String getModelTooltip(String model)
+	public static String getModelTooltip(EnumBarrelModel model)
 	{
-		return I18n.format("lang.yabba.model", YabbaClient.getModel(model).toString());
+		return I18n.format("lang.yabba.model", model.toString());
 	}
 
 	@Override

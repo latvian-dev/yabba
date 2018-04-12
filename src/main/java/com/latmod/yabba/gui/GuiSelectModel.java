@@ -7,8 +7,8 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.client.BarrelModel;
-import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectModel;
+import com.latmod.yabba.util.EnumBarrelModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class GuiSelectModel extends GuiBase
 			super(panel);
 			setPosAndSize(8 + (i % 5) * 39, 8 + (i / 5) * 39, 38, 38);
 			index = i;
-			model = index >= YabbaClient.ALL_MODELS.size() ? null : YabbaClient.ALL_MODELS.get(index);
+			model = index >= EnumBarrelModel.NAME_MAP.values.size() ? null : EnumBarrelModel.NAME_MAP.values.get(index).getModel();
 
 			if (model != null)
 			{

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,7 +30,7 @@ public interface IBarrelBase extends IConfigCallback
 
 	BarrelLook getLook();
 
-	default boolean setModel(String v, boolean simulate)
+	default boolean setModel(EnumBarrelModel v, boolean simulate)
 	{
 		return setLook(BarrelLook.get(v, getLook().skin), simulate);
 	}

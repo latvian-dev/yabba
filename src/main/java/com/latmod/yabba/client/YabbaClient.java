@@ -23,6 +23,7 @@ import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.gui.GuiSelectModel;
 import com.latmod.yabba.gui.GuiSelectSkin;
 import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.resources.I18n;
@@ -35,13 +36,13 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,11 +52,8 @@ import java.util.Map;
 public class YabbaClient extends YabbaCommon
 {
 	public static final Collection<ResourceLocation> TEXTURES = new HashSet<>();
-	private static final Map<String, BarrelModel> MODELS = new LinkedHashMap<>();
 	private static final Map<String, BarrelSkin> SKINS = new HashMap<>();
-	public static final List<BarrelModel> ALL_MODELS = new ArrayList<>();
 	public static final List<BarrelSkin> ALL_SKINS = new ArrayList<>();
-	private static BarrelModel DEFAULT_MODEL;
 	private static BarrelSkin DEFAULT_SKIN;
 	private static final Map<String, String> VARIABLES = new HashMap<>();
 
@@ -81,46 +79,31 @@ public class YabbaClient extends YabbaCommon
 	public static void loadModelsAndSkins()
 	{
 		TEXTURES.clear();
-		MODELS.clear();
 		SKINS.clear();
-		ALL_MODELS.clear();
 		ALL_SKINS.clear();
 
 		IResourceManager manager = ClientUtils.MC.getResourceManager();
 
-		for (String domain : manager.getResourceDomains())
+		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
 		{
 			try
 			{
-				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_index.json")))
-				{
-					for (JsonElement element : DataReader.get(resource).json().getAsJsonArray())
-					{
-						try
-						{
-							JsonObject modelFile = DataReader.get(manager.getResource(new ResourceLocation(domain, "yabba_models/" + element.getAsString() + ".json"))).json().getAsJsonObject();
-							BarrelModel model = new BarrelModel(new ResourceLocation(domain, element.getAsString()), modelFile);
-							MODELS.put(model.id, model);
+				JsonObject modelFile = DataReader.get(manager.getResource(new ResourceLocation(Yabba.MOD_ID, "yabba_models/" + id.getName() + ".json"))).json().getAsJsonObject();
+				BarrelModel model = new BarrelModel(id, modelFile);
+				id.setModel(model);
 
-							for (TextureSet textureSet : model.textures.values())
-							{
-								TEXTURES.addAll(textureSet.getTextures());
-							}
-						}
-						catch (Exception ex1)
-						{
-						}
-					}
+				for (TextureSet textureSet : model.textures.values())
+				{
+					TEXTURES.addAll(textureSet.getTextures());
 				}
 			}
-			catch (Exception ex)
+			catch (Exception ex1)
 			{
-				if (!(ex instanceof FileNotFoundException))
-				{
-					ex.printStackTrace();
-				}
 			}
+		}
 
+		for (String domain : manager.getResourceDomains())
+		{
 			try
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_skins.json")))
@@ -191,25 +174,7 @@ public class YabbaClient extends YabbaCommon
 
 			if (skin.icon.isEmpty())
 			{
-				skin.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(Yabba.MOD_ID + ":block", skin.id), Tier.WOOD));
-			}
-		}
-
-		ALL_MODELS.addAll(MODELS.values());
-		DEFAULT_MODEL = MODELS.get(BarrelLook.DEFAULT_MODEL_ID);
-
-		if (DEFAULT_MODEL == null)
-		{
-			DEFAULT_MODEL = ALL_MODELS.isEmpty() ? null : ALL_MODELS.get(0);
-		}
-
-		Yabba.LOGGER.info("Models: " + ALL_MODELS.size());
-
-		if (FTBLibConfig.debugging.print_more_info)
-		{
-			for (BarrelModel model : ALL_MODELS)
-			{
-				Yabba.LOGGER.info("-- " + model.id + " :: " + model);
+				skin.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(EnumBarrelModel.BLOCK, skin.id), Tier.WOOD));
 			}
 		}
 
@@ -233,9 +198,9 @@ public class YabbaClient extends YabbaCommon
 			}
 		}
 
-		for (BarrelModel model : ALL_MODELS)
+		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
 		{
-			model.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(model.id, ""), Tier.WOOD));
+			id.getModel().icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(id, ""), Tier.WOOD));
 		}
 	}
 
@@ -415,25 +380,14 @@ public class YabbaClient extends YabbaCommon
 		new GuiSelectSkin().openGui();
 	}
 
-	public static BarrelSkin getSkin(String id)
+	public static BarrelSkin getSkin(@Nullable String id)
 	{
-		if (id.isEmpty())
+		if (id == null || id.isEmpty())
 		{
 			return DEFAULT_SKIN;
 		}
 
 		BarrelSkin skin = SKINS.get(id);
 		return skin == null ? DEFAULT_SKIN : skin;
-	}
-
-	public static BarrelModel getModel(String id)
-	{
-		if (id.isEmpty())
-		{
-			return DEFAULT_MODEL;
-		}
-
-		BarrelModel model = MODELS.get(id);
-		return model == null ? DEFAULT_MODEL : model;
 	}
 }

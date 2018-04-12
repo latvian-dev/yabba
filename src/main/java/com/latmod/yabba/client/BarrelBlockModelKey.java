@@ -2,6 +2,7 @@ package com.latmod.yabba.client;
 
 import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author LatvianModder
@@ -12,18 +13,16 @@ public class BarrelBlockModelKey
 
 	public final BarrelLook look;
 	public final int rotation;
-	//public final EnumFacing face;
 
-	public BarrelBlockModelKey(BarrelLook l, int r/*, @Nullable EnumFacing f*/)
+	public BarrelBlockModelKey(BarrelLook l, int r)
 	{
 		look = l;
 		rotation = r;
-		//face = f;
 	}
 
 	public int hashCode()
 	{
-		return look.hashCode() * 16 + rotation;
+		return look.hashCode() * 4 + rotation;
 	}
 
 	public boolean equals(Object o)
@@ -35,7 +34,7 @@ public class BarrelBlockModelKey
 		else if (o instanceof BarrelBlockModelKey)
 		{
 			BarrelBlockModelKey k = (BarrelBlockModelKey) o;
-			return look.equals(k.look) && rotation == k.rotation/* && face == k.face*/;
+			return look.equals(k.look) && rotation == k.rotation;
 		}
 
 		return false;
@@ -43,6 +42,6 @@ public class BarrelBlockModelKey
 
 	public String toString()
 	{
-		return look + ":" + ROTATIONS[rotation].name().toLowerCase();
+		return look + ":" + EnumFacing.getHorizontal(rotation).getName();
 	}
 }

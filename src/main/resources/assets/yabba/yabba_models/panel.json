@@ -2,7 +2,7 @@
 	"text_distance": 11.92,
 	"icon_distance": 11.84,
 	"model": [
-		{"add": "cube", "pos_size": [0, 0, 12, 16, 16, 4]}
+		{"add": "cube", "pos_size": [0, 0, 12, 16, 16, 4], "cull_except": ["south"]}
 	],
 	"item_model": [
 		{"add": "cube", "center_size": [8, 8, 8, 16, 16, 4]}

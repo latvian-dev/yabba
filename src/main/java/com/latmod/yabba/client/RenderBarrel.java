@@ -75,7 +75,6 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 		GlStateManager.translate(0.5F, 0.5F, 0.5F);
 		GlStateManager.rotate(180F, 0F, 0F, 1F);
 		GlStateManager.rotate(barrel.getRotationAngleY(), 0F, 1F, 0F);
-		GlStateManager.rotate(barrel.getRotationAngleX(), 1F, 0F, 0F);
 		GlStateManager.translate(-0.5F, -0.5F, -0.5F);
 		setLightmapDisabled(true);
 		GlStateManager.disableLighting();
