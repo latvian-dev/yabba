@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -307,11 +306,6 @@ public class BarrelModel
 				return;
 			}
 
-			if (side != null) //FIXME
-			{
-				return;
-			}
-
 			builder.setTintIndex((!skin.color.isEmpty() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
 
 			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
@@ -319,11 +313,16 @@ public class BarrelModel
 
 			for (EnumFacing facing : faces)
 			{
-				Objects.requireNonNull(builder);
-				Objects.requireNonNull(model);
-				Objects.requireNonNull(model.currentTexture);
-				builder.addQuad(fromv, tov, facing, model.currentTexture.get(facing));
+				if (drawFace(side, facing))
+				{
+					builder.addQuad(fromv, tov, facing, model.currentTexture.get(facing));
+				}
 			}
+		}
+
+		protected boolean drawFace(@Nullable EnumFacing side, EnumFacing facing)
+		{
+			return side == null;
 		}
 	}
 
@@ -337,11 +336,6 @@ public class BarrelModel
 				return;
 			}
 
-			if (side != null) //FIXME
-			{
-				return;
-			}
-
 			builder.setTintIndex((!skin.color.isEmpty() && model.currentTexture == model.textureMap.get("skin")) ? 0 : -1);
 
 			Vector3f fromv = new Vector3f((float) (model.offset.x + from.x), (float) (model.offset.y + from.y), (float) (model.offset.z + from.z));
@@ -349,7 +343,10 @@ public class BarrelModel
 
 			for (EnumFacing facing : faces)
 			{
-				builder.addQuad(tov, fromv, facing, model.currentTexture.get(facing));
+				if (!drawFace(side, facing))
+				{
+					builder.addQuad(tov, fromv, facing, model.currentTexture.get(facing));
+				}
 			}
 		}
 	}
@@ -471,7 +468,7 @@ public class BarrelModel
 		return builder.getQuads().isEmpty() ? Collections.emptyList() : Arrays.asList(builder.getQuads().toArray(new BakedQuad[0]));
 	}
 
-	public List<BakedQuad> buildItemModel(VertexFormat format, BarrelSkin skin)
+	public List<BakedQuad> buildItemModel(VertexFormat format, BarrelSkin skin, @Nullable EnumFacing side)
 	{
 		currentTexture = textureMap.get("skin");
 
@@ -486,12 +483,7 @@ public class BarrelModel
 
 		for (ModelFunction func : itemModel)
 		{
-			func.apply(builder, this, skin, BlockRenderLayer.SOLID, null);
-
-			for (EnumFacing facing : EnumFacing.VALUES)
-			{
-				func.apply(builder, this, skin, BlockRenderLayer.SOLID, facing);
-			}
+			func.apply(builder, this, skin, BlockRenderLayer.SOLID, side);
 		}
 
 		currentTexture = textureMap.get("skin");
@@ -500,12 +492,7 @@ public class BarrelModel
 
 		for (ModelFunction func : itemModel)
 		{
-			func.apply(builder, this, skin, BlockRenderLayer.CUTOUT, null);
-
-			for (EnumFacing facing : EnumFacing.VALUES)
-			{
-				func.apply(builder, this, skin, BlockRenderLayer.CUTOUT, facing);
-			}
+			func.apply(builder, this, skin, BlockRenderLayer.CUTOUT, side);
 		}
 
 		currentTexture = textureMap.get("skin");
@@ -514,12 +501,7 @@ public class BarrelModel
 
 		for (ModelFunction func : itemModel)
 		{
-			func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT, null);
-
-			for (EnumFacing facing : EnumFacing.VALUES)
-			{
-				func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT, facing);
-			}
+			func.apply(builder, this, skin, BlockRenderLayer.TRANSLUCENT, side);
 		}
 
 		currentTexture = SpriteSet.EMPTY;

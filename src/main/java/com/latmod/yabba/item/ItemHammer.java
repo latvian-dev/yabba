@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class ItemHammer extends ItemYabba implements IUpgrade
 {
-	private static EnumBarrelModel getModel(ItemStack stack)
+	public static EnumBarrelModel getModel(ItemStack stack)
 	{
 		return stack.hasTagCompound() ? EnumBarrelModel.getFromNBTName(stack.getTagCompound().getString("Model")) : EnumBarrelModel.BARREL;
 	}
@@ -59,7 +59,7 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 	@SideOnly(Side.CLIENT)
 	public static String getModelTooltip(EnumBarrelModel model)
 	{
-		return I18n.format("lang.yabba.model", model.toString());
+		return I18n.format("lang.yabba.model", I18n.format(model.getUnlocalizedName()));
 	}
 
 	@Override

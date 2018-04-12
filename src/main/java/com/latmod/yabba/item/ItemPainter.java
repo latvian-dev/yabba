@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class ItemPainter extends ItemYabba implements IUpgrade
 {
-	private static String getSkin(ItemStack stack)
+	public static String getSkin(ItemStack stack)
 	{
 		return stack.hasTagCompound() ? stack.getTagCompound().getString("Skin") : "";
 	}

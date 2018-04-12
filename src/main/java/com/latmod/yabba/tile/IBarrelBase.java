@@ -4,8 +4,6 @@ import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.latmod.yabba.api.BarrelType;
 import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.util.BarrelLook;
-import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,7 +15,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public interface IBarrelBase extends IConfigCallback
+public interface IBarrelBase extends IConfigCallback, ITileWithBarrelLook
 {
 	default BarrelType getType()
 	{
@@ -27,20 +25,6 @@ public interface IBarrelBase extends IConfigCallback
 	Tier getTier();
 
 	boolean setTier(Tier t, boolean simulate);
-
-	BarrelLook getLook();
-
-	default boolean setModel(EnumBarrelModel v, boolean simulate)
-	{
-		return setLook(BarrelLook.get(v, getLook().skin), simulate);
-	}
-
-	default boolean setSkin(String v, boolean simulate)
-	{
-		return setLook(BarrelLook.get(getLook().model, v), simulate);
-	}
-
-	boolean setLook(BarrelLook look, boolean simulate);
 
 	void markBarrelDirty(boolean majorChange);
 

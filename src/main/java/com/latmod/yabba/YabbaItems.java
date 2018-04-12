@@ -3,12 +3,14 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.latmod.yabba.block.BlockAntibarrel;
 import com.latmod.yabba.block.BlockCompoundItemBarrel;
+import com.latmod.yabba.block.BlockDecorativeBlock;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.BlockItemBarrelConnector;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModelLoader;
 import com.latmod.yabba.client.RenderItemBarrel;
 import com.latmod.yabba.item.ItemBlockBarrel;
+import com.latmod.yabba.item.ItemBlockDecorativeBlock;
 import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.item.ItemPainter;
 import com.latmod.yabba.item.upgrade.ItemUpgrade;
@@ -20,6 +22,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgradeStone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileCompoundItemBarrel;
+import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.tile.TileItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.Block;
@@ -49,6 +52,7 @@ public class YabbaItems
 	public static final Block ITEM_BARREL_CONNECTOR = Blocks.AIR;
 	public static final Block ANTIBARREL = Blocks.AIR;
 	public static final Block COMPOUND_ITEM_BARREL = Blocks.AIR;
+	public static final Block DECORATIVE_BLOCK = Blocks.AIR;
 
 	public static final Item UPGRADE_BLANK = Items.AIR;
 	public static final Item UPGRADE_STONE_TIER = Items.AIR;
@@ -69,6 +73,9 @@ public class YabbaItems
 	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":item_barrel")
 	public static final Item ITEM_BARREL_ITEM = Items.AIR;
 
+	@GameRegistry.ObjectHolder(Yabba.MOD_ID + ":decorative_block")
+	public static final Item DECORATIVE_BLOCK_ITEM = Items.AIR;
+
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
@@ -76,13 +83,15 @@ public class YabbaItems
 				new BlockItemBarrel("item_barrel"),
 				new BlockItemBarrelConnector("item_barrel_connector"),
 				new BlockAntibarrel("antibarrel"),
-				new BlockCompoundItemBarrel("compound_item_barrel")
+				new BlockCompoundItemBarrel("compound_item_barrel"),
+				new BlockDecorativeBlock("decorative_block")
 		);
 
 		GameRegistry.registerTileEntity(TileItemBarrel.class, Yabba.MOD_ID + ":item_barrel");
 		GameRegistry.registerTileEntity(TileItemBarrelConnector.class, Yabba.MOD_ID + ":item_barrel_connector");
 		GameRegistry.registerTileEntity(TileAntibarrel.class, Yabba.MOD_ID + ":antibarrel");
 		GameRegistry.registerTileEntity(TileCompoundItemBarrel.class, Yabba.MOD_ID + ":compound_item_barrel");
+		GameRegistry.registerTileEntity(TileDecorativeBlock.class, Yabba.MOD_ID + ":decorative_block");
 	}
 
 	@SubscribeEvent
@@ -93,6 +102,7 @@ public class YabbaItems
 				new ItemBlockBase(ITEM_BARREL_CONNECTOR),
 				new ItemBlockBase(ANTIBARREL),
 				new ItemBlockBarrel(COMPOUND_ITEM_BARREL),
+				new ItemBlockDecorativeBlock(DECORATIVE_BLOCK),
 				new ItemUpgradeBlank("upgrade_blank"),
 				new ItemUpgradeStone("upgrade_stone_tier"),
 				new ItemUpgradeTier("upgrade_iron_tier", Tier.IRON),
@@ -116,7 +126,9 @@ public class YabbaItems
 	{
 		ModelLoaderRegistry.registerLoader(BarrelModelLoader.INSTANCE);
 		ModelLoader.setCustomModelResourceLocation(ITEM_BARREL_ITEM, 0, BarrelModelLoader.MODEL_LOCATION);
+		ModelLoader.setCustomModelResourceLocation(DECORATIVE_BLOCK_ITEM, 0, BarrelModelLoader.MODEL_LOCATION);
 		ModelLoader.setCustomStateMapper(ITEM_BARREL, BarrelModelLoader.INSTANCE);
+		ModelLoader.setCustomStateMapper(DECORATIVE_BLOCK, BarrelModelLoader.INSTANCE);
 
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ITEM_BARREL_CONNECTOR), 0, new ModelResourceLocation(ITEM_BARREL_CONNECTOR.getRegistryName(), "normal"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ANTIBARREL), 0, new ModelResourceLocation(ANTIBARREL.getRegistryName(), "normal"));

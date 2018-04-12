@@ -1,0 +1,14 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "yabba:barrel",
+	"result": {"item": "decorative_block", "count": 8, "nbt": {"BlockEntityTag": {"Model": "crate"}}},
+	"pattern": [
+		"PPP",
+		"PUP",
+		"PPP"
+	],
+	"key": {
+		"U": {"item": "#blank_upgrade"},
+		"P": {"type": "forge:ore_dict", "ore": "plankWood"}
+	}
+}

@@ -64,7 +64,13 @@ public class BakedBarrelBlockModel extends ModelBase
 				BarrelModel model = look.getModel();
 				BarrelSkin skin = look.getSkin();
 				model.textureMap.put("skin", skin.spriteSet);
-				bakedModel = new BakedBarrelItemModel(model.buildItemModel(format, skin));
+				List<BakedQuad>[] quads = new List[7];
+				for (int i = 0; i < 7; i++)
+				{
+					quads[i] = model.buildItemModel(format, skin, i == 6 ? null : EnumFacing.VALUES[i]);
+				}
+
+				bakedModel = new BakedBarrelItemModel(optimize(quads));
 				itemModels.put(look, bakedModel);
 			}
 

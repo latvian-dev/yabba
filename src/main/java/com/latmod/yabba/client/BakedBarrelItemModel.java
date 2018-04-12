@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class BakedBarrelItemModel extends ModelBase
 {
-	private final List<BakedQuad> quads;
+	private final List<BakedQuad> quads[];
 
-	public BakedBarrelItemModel(List<BakedQuad> q)
+	public BakedBarrelItemModel(List<BakedQuad> q[])
 	{
 		super(null);
 		quads = q;
@@ -30,6 +30,6 @@ public class BakedBarrelItemModel extends ModelBase
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
-		return quads;
+		return quads[side == null ? 6 : side.getIndex()];
 	}
 }
