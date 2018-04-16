@@ -40,32 +40,33 @@ import javax.annotation.Nullable;
  */
 public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 {
+	public static final PropertyEnum<EnumFacing> FACING = BlockHorizontal.FACING;
 	public static final PropertyEnum<EnumBarrelModel> MODEL = PropertyEnum.create("model", EnumBarrelModel.class);
 	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
 
 	public BlockAdvancedBarrelBase(String id)
 	{
 		super(id);
-		setDefaultState(blockState.getBaseState().withProperty(MODEL, EnumBarrelModel.BARREL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		setDefaultState(blockState.getBaseState().withProperty(MODEL, EnumBarrelModel.BARREL).withProperty(FACING, EnumFacing.NORTH));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, MODEL}, new IUnlistedProperty[] {SKIN});
+		return new ExtendedBlockState(this, new IProperty[] {FACING, MODEL}, new IUnlistedProperty[] {SKIN});
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+		return state.getValue(FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -123,14 +124,14 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	@Deprecated
 	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{
-		return state.withProperty(BlockHorizontal.FACING, rot.rotate(state.getValue(BlockHorizontal.FACING)));
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState withMirror(IBlockState state, Mirror mirror)
 	{
-		return state.withRotation(mirror.toRotation(state.getValue(BlockHorizontal.FACING)));
+		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
 	}
 
 	@Override
@@ -152,7 +153,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	@SideOnly(Side.CLIENT)
 	public boolean hasCustomBreakingProgress(IBlockState state)
 	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -187,7 +188,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	@Deprecated
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override

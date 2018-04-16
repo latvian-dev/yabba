@@ -43,22 +43,6 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 			return;
 		}
 
-		if (destroyStage >= 0)
-		{
-			ClientUtils.MC.getTextureManager().bindTexture(DESTROY_STAGES[destroyStage]);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x, y, z);
-			GlStateManager.glNormal3f(0F, 1F, 0F);
-			CachedVertexData data = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			data.cube(barrel.getAABB(barrel.getBlockState()));
-			data.draw(Tessellator.getInstance(), Tessellator.getInstance().getBuffer());
-			GlStateManager.popMatrix();
-		}
-		else
-		{
-			GlStateManager.color(1F, 1F, 1F, alpha);
-		}
-
 		boolean hasIcon = hasIcon(barrel);
 		boolean isSneaking = ClientUtils.MC.player.isSneaking();
 		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
@@ -69,6 +53,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 			return;
 		}
 
+		GlStateManager.color(1F, 1F, 1F, alpha);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.glNormal3f(0F, 1F, 0F);

@@ -10,7 +10,6 @@ import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -97,7 +96,7 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 				return 0F;
 			}
 
-			cachedRotationY = state.getValue(BlockHorizontal.FACING).getHorizontalAngle() + 180F;
+			cachedRotationY = state.getValue(BlockAdvancedBarrelBase.FACING).getHorizontalAngle() + 180F;
 		}
 
 		return cachedRotationY;

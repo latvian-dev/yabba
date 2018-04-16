@@ -5,7 +5,6 @@ import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -109,14 +108,14 @@ public class BakedBarrelBlockModel extends ModelBase
 			look = BarrelLook.get(state.getValue(BlockAdvancedBarrelBase.MODEL), skin);
 		}
 
-		BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockHorizontal.FACING).getHorizontalIndex());
+		BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockAdvancedBarrelBase.FACING).getHorizontalIndex());
 		BarrelBlockModelVariant variant = blockModels.get(key);
 
 		if (variant == null)
 		{
 			BarrelModel model = key.look.getModel();
 			BarrelSkin skin = key.look.getSkin();
-			ModelRotation rotation = BarrelBlockModelKey.ROTATIONS[state.getValue(BlockHorizontal.FACING).getOpposite().getHorizontalIndex()];
+			ModelRotation rotation = BarrelBlockModelKey.ROTATIONS[state.getValue(BlockAdvancedBarrelBase.FACING).getOpposite().getHorizontalIndex()];
 			model.textureMap.put("skin", skin.spriteSet);
 
 			List<BakedQuad>[] solidQuads = new List[7];

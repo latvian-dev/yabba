@@ -6,7 +6,6 @@ import com.latmod.yabba.item.ItemPainter;
 import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -43,26 +42,26 @@ public class BlockDecorativeBlock extends BlockYabba
 	{
 		super(id, Material.WOOD, MapColor.WOOD);
 		setHardness(2F);
-		setDefaultState(blockState.getBaseState().withProperty(BlockAdvancedBarrelBase.MODEL, EnumBarrelModel.BARREL).withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		setDefaultState(blockState.getBaseState().withProperty(BlockAdvancedBarrelBase.MODEL, EnumBarrelModel.BARREL).withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.NORTH));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING, BlockAdvancedBarrelBase.MODEL}, new IUnlistedProperty[] {BlockAdvancedBarrelBase.SKIN});
+		return new ExtendedBlockState(this, new IProperty[] {BlockAdvancedBarrelBase.FACING, BlockAdvancedBarrelBase.MODEL}, new IUnlistedProperty[] {BlockAdvancedBarrelBase.SKIN});
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+		return state.getValue(BlockAdvancedBarrelBase.FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -199,14 +198,14 @@ public class BlockDecorativeBlock extends BlockYabba
 	@Deprecated
 	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{
-		return state.withProperty(BlockHorizontal.FACING, rot.rotate(state.getValue(BlockHorizontal.FACING)));
+		return state.withProperty(BlockAdvancedBarrelBase.FACING, rot.rotate(state.getValue(BlockAdvancedBarrelBase.FACING)));
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState withMirror(IBlockState state, Mirror mirror)
 	{
-		return state.withRotation(mirror.toRotation(state.getValue(BlockHorizontal.FACING)));
+		return state.withRotation(mirror.toRotation(state.getValue(BlockAdvancedBarrelBase.FACING)));
 	}
 
 	@Override
@@ -263,7 +262,7 @@ public class BlockDecorativeBlock extends BlockYabba
 	@Deprecated
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(BlockAdvancedBarrelBase.FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
