@@ -10,6 +10,6 @@
 	"key": {
 		"U": {"item": "#blank_upgrade"},
 		"C": {"item": "#chest"},
-		"S": {"type": "forge:ore_dict", "ore": "cobblestone"}
+		"S": {"item": "#any_stone"}
 	}
 }

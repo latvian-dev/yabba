@@ -9,6 +9,6 @@
 	],
 	"key": {
 		"U": {"item": "#blank_upgrade"},
-		"I": [{"type": "forge:ore_dict", "ore": "cobblestone"}, {"type": "ftblib:ore_dict", "ore": "stone*"}]
+		"I": {"item": "#any_stone"}
 	}
 }

@@ -8,7 +8,7 @@
 		"SSS"
 	],
 	"key": {
-		"S": [{"type": "ftblib:ore_dict", "ore": "slab*"}, {"item": "minecraft:stone_slab", "data": 32767}],
+		"S": {"item": "#any_slab"},
 		"I": {"item": "minecraft:iron_bars"},
 		"C": {"item": "#chest"}
 	}

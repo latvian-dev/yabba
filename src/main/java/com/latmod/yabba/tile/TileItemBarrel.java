@@ -227,7 +227,7 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 
 				if (!world.isRemote || prevItemCount == -1)
 				{
-					world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 255);
+					CommonUtils.notifyBlockUpdate(world, pos, getBlockState());
 				}
 
 				if (hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT))
