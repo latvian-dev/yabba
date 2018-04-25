@@ -6,9 +6,10 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.gui.GuiBarrelConnector;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 import java.util.List;
@@ -81,8 +82,9 @@ public class MessageBarrelConnector extends MessageToClient<MessageBarrelConnect
 	}
 
 	@Override
-	public void onMessage(MessageBarrelConnector message, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiBarrelConnector(message.title, message.barrels).openGui();
+		new GuiBarrelConnector(title, barrels).openGui();
 	}
 }

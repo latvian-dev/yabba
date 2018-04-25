@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.tile.IBarrelBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -44,9 +44,9 @@ public class MessageOpenBarrelGui extends MessageToServer<MessageOpenBarrelGui>
 	}
 
 	@Override
-	public void onMessage(MessageOpenBarrelGui message, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
-		if (player.world.isBlockLoaded(message.pos))
+		if (player.world.isBlockLoaded(pos))
 		{
 			TileEntity tileEntity = player.world.getTileEntity(pos);
 

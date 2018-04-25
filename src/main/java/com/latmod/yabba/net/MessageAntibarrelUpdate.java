@@ -8,8 +8,9 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.gui.GuiAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -47,13 +48,14 @@ public class MessageAntibarrelUpdate extends MessageToClient<MessageAntibarrelUp
 	}
 
 	@Override
-	public void onMessage(MessageAntibarrelUpdate message, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
 		GuiAntibarrel gui = ClientUtils.getCurrentGuiAs(GuiAntibarrel.class);
 
 		if (gui != null)
 		{
-			gui.container.tile.readData(message.nbt, EnumSaveType.SAVE);
+			gui.container.tile.readData(nbt, EnumSaveType.SAVE);
 			gui.refreshWidgets();
 		}
 	}

@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.gui.ContainerAntibarrel;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -48,11 +48,11 @@ public class MessageAntibarrelClickSlot extends MessageToServer<MessageAntibarre
 	}
 
 	@Override
-	public void onMessage(MessageAntibarrelClickSlot message, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
 		if (player.openContainer instanceof ContainerAntibarrel)
 		{
-			((ContainerAntibarrel) player.openContainer).onClick(ItemEntry.get(message.stack), message.shift);
+			((ContainerAntibarrel) player.openContainer).onClick(ItemEntry.get(stack), shift);
 		}
 	}
 }

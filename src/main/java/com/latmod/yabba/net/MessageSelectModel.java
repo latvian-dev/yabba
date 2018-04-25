@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.util.EnumBarrelModel;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
@@ -45,13 +45,13 @@ public class MessageSelectModel extends MessageToServer<MessageSelectModel>
 	}
 
 	@Override
-	public void onMessage(MessageSelectModel message, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
 		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
 		if (!stack.isEmpty() && stack.getItem() instanceof ItemHammer)
 		{
-			ItemHammer.setModel(stack, message.modelId);
+			ItemHammer.setModel(stack, modelId);
 		}
 	}
 }
