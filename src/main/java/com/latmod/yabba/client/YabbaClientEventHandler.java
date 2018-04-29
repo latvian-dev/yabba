@@ -1,6 +1,6 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftblib.events.RegisterGuiProvidersEvent;
+import com.feed_the_beast.ftblib.events.client.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.latmod.yabba.gui.ContainerAntibarrel;
 import com.latmod.yabba.gui.GuiAntibarrel;

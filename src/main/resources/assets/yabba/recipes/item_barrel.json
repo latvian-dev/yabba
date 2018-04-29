@@ -4,6 +4,6 @@
 	"result": {"item": "item_barrel"},
 	"ingredients": [
 		{"item": "#blank_upgrade"},
-		{"item": "#chest"}
+		{"type": "forge:ore_dict", "ore": "chestWood"}
 	]
 }

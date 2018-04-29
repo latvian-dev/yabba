@@ -1,7 +1,6 @@
 [
 	{"name": "blank_upgrade", "ingredient": {"item": "upgrade_blank"}},
-	{"name": "iron", "ingredient": {"type": "forge:ore_dict", "ore": "ingotIron"}},
-	{"name": "chest", "ingredient": {"type": "forge:ore_dict", "ore": "chestWood"}},
+	{"name": "any_wool", "ingredient": {"item": "minecraft:wool", "data": 32767}},
 	{
 		"name": "any_stone",
 		"ingredient": [

@@ -9,6 +9,7 @@ import com.latmod.yabba.net.MessageAntibarrelClickSlot;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -53,9 +54,9 @@ public class ContainerAntibarrel extends Container
 		{
 			totalChanges = tile.totalChanges;
 
-			if (!tile.getWorld().isRemote)
+			if (player instanceof EntityPlayerMP)
 			{
-				new MessageAntibarrelUpdate(tile).sendTo(player);
+				new MessageAntibarrelUpdate(tile).sendTo((EntityPlayerMP) player);
 			}
 		}
 	}

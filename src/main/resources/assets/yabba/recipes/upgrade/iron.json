@@ -9,6 +9,6 @@
 	],
 	"key": {
 		"U": {"item": "#blank_upgrade"},
-		"I": {"item": "#iron"}
+		"I": {"type": "forge:ore_dict", "ore": "ingotIron"}
 	}
 }

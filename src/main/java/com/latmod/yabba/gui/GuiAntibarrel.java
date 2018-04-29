@@ -25,7 +25,6 @@ import net.minecraft.util.text.TextFormatting;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ import java.util.List;
  */
 public class GuiAntibarrel extends GuiBase
 {
-	private static class ButtonItem extends Widget
+	private static class ButtonItem extends Widget implements Comparable<ButtonItem>
 	{
 		private static final DecimalFormat FORMATTER_1 = new DecimalFormat("#0.00");
 		private static final DecimalFormat FORMATTER_2 = new DecimalFormat("#0.0");
@@ -156,6 +155,14 @@ public class GuiAntibarrel extends GuiBase
 				popFontUnicode();
 			}
 		}
+
+		@Override
+		public int compareTo(ButtonItem o)
+		{
+			int i1 = entry.isEmpty() ? Integer.MAX_VALUE : Item.getIdFromItem(entry.entry.item);
+			int i2 = o.entry.isEmpty() ? Integer.MAX_VALUE : Item.getIdFromItem(o.entry.entry.item);
+			return Integer.compare(i1, i2);
+		}
 	}
 
 	public final ContainerAntibarrel container;
@@ -188,7 +195,7 @@ public class GuiAntibarrel extends GuiBase
 
 				}
 
-				widgets.sort(Comparator.comparingInt(value -> ((ButtonItem) value).entry.isEmpty() ? Integer.MAX_VALUE : Item.getIdFromItem(((ButtonItem) value).entry.entry.item)));
+				widgets.sort(null);
 			}
 
 			@Override

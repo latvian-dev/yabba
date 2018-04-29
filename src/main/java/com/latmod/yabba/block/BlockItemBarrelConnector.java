@@ -12,6 +12,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -144,7 +145,7 @@ public class BlockItemBarrelConnector extends BlockYabba
 				list.add(inst);
 			}
 
-			new MessageBarrelConnector(new TextComponentTranslation("tile.yabba.item_barrel_connector.name"), list).sendTo(player);
+			new MessageBarrelConnector(new TextComponentTranslation("tile.yabba.item_barrel_connector.name"), list).sendTo((EntityPlayerMP) player);
 		}
 
 		return true;

@@ -10,6 +10,6 @@
 	"key": {
 		"S": {"item": "#any_slab"},
 		"I": {"item": "minecraft:iron_bars"},
-		"C": {"item": "#chest"}
+		"C": {"type": "forge:ore_dict", "ore": "chestWood"}
 	}
 }

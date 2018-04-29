@@ -9,7 +9,7 @@
 	],
 	"key": {
 		"U": {"item": "#blank_upgrade"},
-		"C": {"item": "#chest"},
+		"C": {"type": "forge:ore_dict", "ore": "chestWood"},
 		"S": {"item": "#any_stone"}
 	}
 }
