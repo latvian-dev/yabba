@@ -12,11 +12,11 @@ public class YabbaNetHandler
 
 	public static void init()
 	{
-		NET.register(1, new MessageSelectModel());
-		NET.register(2, new MessageSelectSkin());
-		NET.register(3, new MessageAntibarrelUpdate());
-		NET.register(4, new MessageAntibarrelClickSlot());
-		NET.register(5, new MessageBarrelConnector());
-		NET.register(6, new MessageOpenBarrelGui());
+		NET.register(new MessageSelectModel());
+		NET.register(new MessageSelectSkin());
+		NET.register(new MessageAntibarrelUpdate());
+		NET.register(new MessageAntibarrelClickSlot());
+		NET.register(new MessageBarrelConnector());
+		NET.register(new MessageOpenBarrelGui());
 	}
 }
