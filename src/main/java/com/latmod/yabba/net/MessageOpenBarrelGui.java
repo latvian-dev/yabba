@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author LatvianModder
  */
-public class MessageOpenBarrelGui extends MessageToServer<MessageOpenBarrelGui>
+public class MessageOpenBarrelGui extends MessageToServer
 {
 	private BlockPos pos;
 

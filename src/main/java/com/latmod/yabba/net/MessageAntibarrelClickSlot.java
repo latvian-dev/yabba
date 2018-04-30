@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 /**
  * @author LatvianModder
  */
-public class MessageAntibarrelClickSlot extends MessageToServer<MessageAntibarrelClickSlot>
+public class MessageAntibarrelClickSlot extends MessageToServer
 {
 	private ItemStack stack;
 	private boolean shift;

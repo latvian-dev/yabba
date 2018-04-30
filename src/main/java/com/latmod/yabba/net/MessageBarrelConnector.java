@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class MessageBarrelConnector extends MessageToClient<MessageBarrelConnector>
+public class MessageBarrelConnector extends MessageToClient
 {
 	public static class BarrelInst
 	{

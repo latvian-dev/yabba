@@ -12,7 +12,7 @@ import net.minecraft.util.EnumHand;
 /**
  * @author LatvianModder
  */
-public class MessageSelectSkin extends MessageToServer<MessageSelectSkin>
+public class MessageSelectSkin extends MessageToServer
 {
 	private String skinId;
 

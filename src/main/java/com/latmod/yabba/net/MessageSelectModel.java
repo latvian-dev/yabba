@@ -13,7 +13,7 @@ import net.minecraft.util.EnumHand;
 /**
  * @author LatvianModder
  */
-public class MessageSelectModel extends MessageToServer<MessageSelectModel>
+public class MessageSelectModel extends MessageToServer
 {
 	private EnumBarrelModel modelId;
 

@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageAntibarrelUpdate extends MessageToClient<MessageAntibarrelUpdate>
+public class MessageAntibarrelUpdate extends MessageToClient
 {
 	private NBTTagCompound nbt;
 
