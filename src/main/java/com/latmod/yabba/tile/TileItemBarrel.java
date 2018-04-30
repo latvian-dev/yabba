@@ -72,6 +72,7 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ? (T) this : super.getCapability(capability, facing);

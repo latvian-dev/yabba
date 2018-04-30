@@ -3,6 +3,7 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.gui.ContainerAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
@@ -51,16 +52,16 @@ public class YabbaEventHandler
 
 		for (int i = 0; i < size; i++)
 		{
-			ItemStack istack = player.inventory.getStackInSlot(i);
+			ItemStack stack = player.inventory.getStackInSlot(i);
 
-			if (!istack.isEmpty() && istack.hasTagCompound() && istack.getTagCompound().hasKey("BlockEntityTag"))
+			if (CommonUtils.hasBlockData(stack))
 			{
-				Item stackItem = istack.getItem();
+				Item stackItem = stack.getItem();
 
 				if (stackItem == YabbaItems.ITEM_BARREL_ITEM)
 				{
 					TileItemBarrel barrel = (TileItemBarrel) YabbaItems.ITEM_BARREL.createTileEntity(entityItem.world, YabbaItems.ITEM_BARREL.getDefaultState());
-					barrel.readFromNBT(istack.getTagCompound().getCompoundTag("BlockEntityTag"));
+					barrel.readFromNBT(CommonUtils.getBlockData(stack));
 
 					if (!barrel.getStoredItemType().isEmpty() && barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))
 					{
@@ -70,7 +71,7 @@ public class YabbaEventHandler
 						if (originalSize != itemStack.getCount())
 						{
 							entityItem.setItem(itemStack);
-							istack.setTagCompound(barrel.createItemData());
+							stack.setTagCompound(barrel.createItemData());
 							modified = true;
 						}
 

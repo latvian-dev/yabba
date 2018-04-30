@@ -1,6 +1,7 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
@@ -36,6 +37,8 @@ public class BakedBarrelBlockModel extends ModelBase
 	private final VertexFormat format;
 	private final Map<BarrelLook, IBakedModel> itemModels;
 	private final Map<BarrelBlockModelKey, BarrelBlockModelVariant> blockModels;
+
+	@SuppressWarnings("unchecked")
 	private static final List<BakedQuad>[] EMPTY = new List[7];
 
 	static
@@ -45,14 +48,15 @@ public class BakedBarrelBlockModel extends ModelBase
 
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(Collections.emptyList())
 	{
+		@SuppressWarnings("unchecked")
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
 		{
 			BarrelLook look = BarrelLook.DEFAULT;
 
-			if (stack.hasTagCompound())
+			if (CommonUtils.hasBlockData(stack))
 			{
-				NBTTagCompound data = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+				NBTTagCompound data = CommonUtils.getBlockData(stack);
 				look = BarrelLook.get(EnumBarrelModel.getFromNBTName(data.getString("Model")), data.getString("Skin"));
 			}
 
@@ -91,22 +95,23 @@ public class BakedBarrelBlockModel extends ModelBase
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
-		BarrelLook look = BarrelLook.DEFAULT;
-
-		if (state != null)
+		if (state == null)
 		{
-			String skin = null;
-
-			if (state instanceof IExtendedBlockState)
-			{
-				skin = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.SKIN);
-			}
-
-			look = BarrelLook.get(state.getValue(BlockAdvancedBarrelBase.MODEL), skin);
+			return Collections.emptyList();
 		}
+
+		String skinid = null;
+
+		if (state instanceof IExtendedBlockState)
+		{
+			skinid = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.SKIN);
+		}
+
+		BarrelLook look = BarrelLook.get(state.getValue(BlockAdvancedBarrelBase.MODEL), skinid);
 
 		BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockAdvancedBarrelBase.FACING).getHorizontalIndex());
 		BarrelBlockModelVariant variant = blockModels.get(key);

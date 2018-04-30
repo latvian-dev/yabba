@@ -1,6 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -27,9 +28,9 @@ public class ItemBlockDecorativeBlock extends ItemBlockBase
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
+		if (CommonUtils.hasBlockData(stack))
 		{
-			NBTTagCompound tag = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+			NBTTagCompound tag = CommonUtils.getBlockData(stack);
 			tooltip.add(ItemHammer.getModelTooltip(EnumBarrelModel.getFromNBTName(tag.getString("Model"))));
 			tooltip.add(ItemPainter.getSkinTooltip(tag.getString("Skin")));
 		}

@@ -1,6 +1,7 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaLang;
 import com.latmod.yabba.gui.ContainerAntibarrel;
@@ -95,9 +96,9 @@ public class BlockAntibarrel extends BlockYabba
 		int t = 0;
 		int i = 0;
 
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
+		if (CommonUtils.hasBlockData(stack))
 		{
-			NBTTagList list = stack.getTagCompound().getCompoundTag("BlockEntityTag").getTagList("Inv", Constants.NBT.TAG_COMPOUND);
+			NBTTagList list = CommonUtils.getBlockData(stack).getTagList("Inv", Constants.NBT.TAG_COMPOUND);
 			t = list.tagCount();
 
 			if (t > 0)

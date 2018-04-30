@@ -35,14 +35,10 @@ public class TileAntibarrel extends TileBase implements IItemHandler
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side)
 	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-		{
-			return (T) this;
-		}
-
-		return super.getCapability(capability, side);
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) this : super.getCapability(capability, side);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 	@SideOnly(Side.CLIENT)
 	public static String getSkinTooltip(String skin)
 	{
-		return I18n.format("lang.yabba.skin", I18n.format(YabbaClient.getSkin(skin).toString()));
+		return I18n.format("lang.yabba.skin", YabbaClient.getSkin(skin).toString());
 	}
 
 	@Override

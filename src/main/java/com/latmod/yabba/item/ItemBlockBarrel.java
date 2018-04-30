@@ -1,6 +1,7 @@
 package com.latmod.yabba.item;
 
 import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
@@ -29,10 +30,10 @@ public class ItemBlockBarrel extends ItemBlockBase
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag"))
+		if (CommonUtils.hasBlockData(stack))
 		{
 			TileBarrelBase barrel = (TileBarrelBase) block.createTileEntity(world, block.getDefaultState());
-			barrel.readFromNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+			barrel.readFromNBT(CommonUtils.getBlockData(stack));
 
 			if (block instanceof BlockAdvancedBarrelBase)
 			{
