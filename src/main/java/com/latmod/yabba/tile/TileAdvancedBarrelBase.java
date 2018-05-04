@@ -16,8 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -76,13 +74,6 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		super.updateContainingBlockInfo();
 		cachedRotationY = -1F;
 		cachedAABB = null;
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-	{
-		updateContainingBlockInfo();
-		return oldState.getBlock() != newSate.getBlock();
 	}
 
 	public float getRotationAngleY()

@@ -7,8 +7,6 @@ import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 /**
  * @author LatvianModder
@@ -50,13 +48,6 @@ public class TileDecorativeBlock extends TileBase implements ITileWithBarrelLook
 	public void markDirty()
 	{
 		sendDirtyUpdate();
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-	{
-		updateContainingBlockInfo();
-		return oldState.getBlock() != newSate.getBlock();
 	}
 
 	public AxisAlignedBB getAABB(IBlockState state)
