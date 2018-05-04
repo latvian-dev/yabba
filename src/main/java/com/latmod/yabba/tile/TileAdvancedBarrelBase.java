@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 
@@ -160,11 +161,11 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	{
 		super.createConfig(event);
 
-		event.getConfig().add(Yabba.MOD_ID, "always_display_data", alwaysDisplayData).setNameLangKey("yabba_client.general.always_display_data");
+		event.getConfig().add(Yabba.MOD_ID, "always_display_data", alwaysDisplayData).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
 
 		if (!tier.infiniteCapacity())
 		{
-			event.getConfig().add(Yabba.MOD_ID, "display_bar", displayBar).setNameLangKey("yabba_client.general.display_bar");
+			event.getConfig().add(Yabba.MOD_ID, "display_bar", displayBar).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
 		}
 	}
 
