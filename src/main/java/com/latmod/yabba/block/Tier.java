@@ -1,7 +1,6 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 
@@ -24,14 +23,14 @@ public enum Tier implements IStringSerializable
 	public static final NameMap<Tier> NAME_MAP = NameMap.create(WOOD, values());
 
 	private final String name;
-	public final LangKey langKey;
+	private final String langKey;
 	public int maxItemStacks = MAX_ITEMS / 64;
 	public final Color4I color;
 
 	Tier(String n, int c)
 	{
 		name = n;
-		langKey = LangKey.of("lang.yabba.tier." + n);
+		langKey = "lang.yabba.tier." + n;
 		color = Color4I.rgb(c);
 	}
 
@@ -39,6 +38,11 @@ public enum Tier implements IStringSerializable
 	public String getName()
 	{
 		return name;
+	}
+
+	public String getLangKey()
+	{
+		return langKey;
 	}
 
 	public boolean creative()

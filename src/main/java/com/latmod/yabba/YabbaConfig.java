@@ -1,6 +1,5 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.block.Tier;
 import net.minecraftforge.common.config.Config;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = Yabba.MOD_ID, category = "")
 public class YabbaConfig
 {
-	@Config.LangKey(GuiLang.LANG_GENERAL)
+	@Config.LangKey("stat.generalButton")
 	public static final General general = new General();
 
 	public static final TierCategory tier = new TierCategory();

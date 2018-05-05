@@ -13,9 +13,9 @@ import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.YabbaLang;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -255,7 +255,7 @@ public class GuiAntibarrel extends GuiBase
 			totalItems += entry.count;
 		}
 
-		title = YabbaLang.ANTIBARREL_ITEMS.translate(totalItems, container.tile.items.size(), YabbaConfig.general.antibarrel_capacity);
+		title = I18n.format("tile.yabba.antibarrel.items", totalItems, container.tile.items.size(), YabbaConfig.general.antibarrel_capacity);
 
 		/*
 		if (Loader.isModLoaded(OtherMods.FTBGUIDES))

@@ -40,7 +40,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 {
 	INSTANCE;
 
-	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(Yabba.MOD_ID + ":barrel#normal");
+	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation("yabba:barrel#normal");
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)

@@ -8,11 +8,11 @@ import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaItems;
-import com.latmod.yabba.YabbaLang;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.util.UpgradeInst;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityItem;
@@ -451,37 +451,37 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 	@SideOnly(Side.CLIENT)
 	public void addInformation(List<String> tooltip, ITooltipFlag flagIn)
 	{
-		tooltip.add(YabbaLang.TIER.translate(tier.langKey.translate()));
+		tooltip.add(I18n.format("lang.yabba.tier", I18n.format(tier.getLangKey())));
 
 		if (isLocked())
 		{
-			tooltip.add(YabbaLang.LOCKED.translate());
+			tooltip.add(I18n.format("barrel_config.yabba.locked"));
 		}
 
 		if (!storedItem.isEmpty())
 		{
-			tooltip.add(YabbaLang.ITEM.translate(storedItem.getDisplayName()));
+			tooltip.add(I18n.format("lang.yabba.item", storedItem.getDisplayName()));
 		}
 
 		if (!tier.creative())
 		{
 			if (tier.infiniteCapacity())
 			{
-				tooltip.add(YabbaLang.ITEM_COUNT_INF.translate(itemCount));
+				tooltip.add(I18n.format("lang.yabba.item_count_inf", itemCount));
 			}
 			else if (!storedItem.isEmpty())
 			{
-				tooltip.add(YabbaLang.ITEM_COUNT.translate(itemCount, getMaxItems(storedItem)));
+				tooltip.add(I18n.format("lang.yabba.item_count", itemCount, getMaxItems(storedItem)));
 			}
 			else
 			{
-				tooltip.add(YabbaLang.ITEM_COUNT_MAX.translate(tier.maxItemStacks));
+				tooltip.add(I18n.format("lang.yabba.item_count_max", tier.maxItemStacks));
 			}
 		}
 
 		if (!upgrades.isEmpty())
 		{
-			tooltip.add(YabbaLang.UPGRADES.translate());
+			tooltip.add(I18n.format("lang.yabba.upgrades"));
 
 			for (UpgradeInst upgrade : upgrades.values())
 			{

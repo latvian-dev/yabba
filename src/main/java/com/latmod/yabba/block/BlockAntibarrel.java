@@ -3,13 +3,13 @@ package com.latmod.yabba.block;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.YabbaLang;
 import com.latmod.yabba.gui.ContainerAntibarrel;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -91,7 +91,7 @@ public class BlockAntibarrel extends BlockYabba
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced)
 	{
-		tooltip.add(YabbaLang.ANTIBARREL_TOOLTIP.translate());
+		tooltip.add(I18n.format("tile.yabba.antibarrel.tooltip"));
 
 		int t = 0;
 		int i = 0;
@@ -111,7 +111,7 @@ public class BlockAntibarrel extends BlockYabba
 			}
 		}
 
-		tooltip.add(YabbaLang.ANTIBARREL_ITEMS.translate(i, t, YabbaConfig.general.antibarrel_capacity));
+		tooltip.add(I18n.format("tile.yabba.antibarrel.items", i, t, YabbaConfig.general.antibarrel_capacity));
 	}
 
 	@Override

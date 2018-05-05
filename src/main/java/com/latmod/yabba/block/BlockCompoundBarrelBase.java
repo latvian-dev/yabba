@@ -65,7 +65,7 @@ public class BlockCompoundBarrelBase extends BlockYabba
 		if (tileEntity instanceof IBarrelBase)
 		{
 			IBarrelBase barrel = (IBarrelBase) tileEntity;
-			return createStack(state, barrel.getLook(), Tier.WOOD);
+			return createStack(state, barrel.getLook(), barrel.getTier());
 		}
 
 		return super.getItem(world, pos, state);
