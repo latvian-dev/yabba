@@ -24,6 +24,7 @@ public class GuiBarrelConnector extends GuiButtonListBase
 	public GuiBarrelConnector(ITextComponent t, Collection<MessageBarrelConnector.BarrelInst> c)
 	{
 		setTitle(t.getFormattedText());
+		setHasSearchBox(true);
 		barrels = c;
 	}
 
