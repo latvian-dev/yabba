@@ -28,7 +28,7 @@ public class GuiSelectModel extends GuiBase
 			super(panel);
 			setPosAndSize(8 + (i % 5) * 39, 8 + (i / 5) * 39, 38, 38);
 			index = i;
-			model = index >= EnumBarrelModel.NAME_MAP.values.size() ? null : EnumBarrelModel.NAME_MAP.values.get(index).getModel();
+			model = index >= EnumBarrelModel.NAME_MAP.size() ? null : EnumBarrelModel.NAME_MAP.get(index).getModel();
 
 			if (model != null)
 			{
