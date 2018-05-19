@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -87,11 +88,11 @@ public class YabbaItems
 				new BlockDecorativeBlock("decorative_block")
 		);
 
-		GameRegistry.registerTileEntity(TileItemBarrel.class, Yabba.MOD_ID + ":item_barrel");
-		GameRegistry.registerTileEntity(TileItemBarrelConnector.class, Yabba.MOD_ID + ":item_barrel_connector");
-		GameRegistry.registerTileEntity(TileAntibarrel.class, Yabba.MOD_ID + ":antibarrel");
-		GameRegistry.registerTileEntity(TileCompoundItemBarrel.class, Yabba.MOD_ID + ":compound_item_barrel");
-		GameRegistry.registerTileEntity(TileDecorativeBlock.class, Yabba.MOD_ID + ":decorative_block");
+		GameRegistry.registerTileEntity(TileItemBarrel.class, new ResourceLocation(Yabba.MOD_ID, "item_barrel"));
+		GameRegistry.registerTileEntity(TileItemBarrelConnector.class, new ResourceLocation(Yabba.MOD_ID, "item_barrel_connector"));
+		GameRegistry.registerTileEntity(TileAntibarrel.class, new ResourceLocation(Yabba.MOD_ID, "antibarrel"));
+		GameRegistry.registerTileEntity(TileCompoundItemBarrel.class, new ResourceLocation(Yabba.MOD_ID, "compound_item_barrel"));
+		GameRegistry.registerTileEntity(TileDecorativeBlock.class, new ResourceLocation(Yabba.MOD_ID, "decorative_block"));
 	}
 
 	@SubscribeEvent
