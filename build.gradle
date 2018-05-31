@@ -33,6 +33,7 @@ minecraft {
 }
 
 repositories {
+	mavenLocal()
 	maven { url "https://maven.latmod.com/" }
 	maven { url "http://maven.tterrag.com/" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
