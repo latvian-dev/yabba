@@ -61,12 +61,12 @@ yabba.general.crash_on_set_methods=Crash setStackInSlot Methods
 yabba.general.connector_update_ticks=储物桶连接器更新间隔（刻）
 
 yabba_client.general.always_display_data=总是显示数量
-yabba_client.general.display_bar=显示栏
+yabba_client.general.display_bar=容量显示栏
 
-yabba_client.bar_color=显示栏颜色
+yabba_client.bar_color=容量显示栏颜色
 yabba_client.bar_color.border=边框
-yabba_client.bar_color.free=底色
-yabba_client.bar_color.filled=填充色
+yabba_client.bar_color.free=已使用色
+yabba_client.bar_color.filled=底色
 yabba_client.bar_color.alpha=透明度
 
 yabba.tier=桶等级
