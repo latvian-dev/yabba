@@ -34,7 +34,7 @@ public class YabbaConfig
 		public int antibarrel_items_per_type = Integer.MAX_VALUE;
 
 		@Config.Comment("After how many ticks will be connector update it's barrels, defaults to 5 minutes.")
-		public int connector_update_ticks = (int) Ticks.mt(5L);
+		public int connector_update_ticks = (int) Ticks.MINUTE.x(5L).ticks();
 	}
 
 	public static class TierCategory
