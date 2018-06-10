@@ -1,0 +1,104 @@
+# Creative Tabs
+itemGroup.yabba=YABBA 
+
+# Items
+item.yabba.upgrade.desc=FÄ±Ã§Ä± YÃ¼kseltmesi
+item.yabba.upgrade_blank.name=BoÅŸ FÄ±Ã§Ä± YÃ¼kseltmesi
+item.yabba.upgrade_stone_tier.name=TaÅŸ Seviyesi
+item.yabba.upgrade_iron_tier.name=Demir Seviyesi
+item.yabba.upgrade_gold_tier.name=AltÄ±n Seviyesi
+item.yabba.upgrade_diamond_tier.name=Elmas Seviyesi
+item.yabba.upgrade_star_tier.name=Sonsuz Kapasite
+item.yabba.upgrade_creative.name=YaratÄ±cÄ± FÄ±Ã§Ä±sÄ±
+item.yabba.upgrade_obsidian_shell.name=Obsidyen Kaplama
+item.yabba.upgrade_redstone_out.name=KÄ±zÄ±ltaÅŸ Ã‡Ä±kÄ±ÅŸÄ±
+item.yabba.upgrade_hopper.name=Huni
+item.yabba.upgrade_void.name=EÅŸyalarÄ± Yok Edici
+item.yabba.upgrade_pickup.name=EÅŸyalarÄ± ToplayÄ±cÄ±
+
+item.yabba.painter.name=FÄ±Ã§Ä± BoyacÄ±sÄ±
+item.yabba.hammer.name=FÄ±Ã§Ä± Ã‡ekici
+
+lang.yabba.tier=Seviye: %s
+lang.yabba.tier.stone=TaÅŸ
+lang.yabba.tier.wood=Tahta
+lang.yabba.tier.iron=Demir
+lang.yabba.tier.gold=AltÄ±n
+lang.yabba.tier.diamond=Elmas
+lang.yabba.tier.star=YÄ±ldÄ±z
+lang.yabba.tier.creative=YaratÄ±cÄ±
+
+lang.yabba.model=Modeli: %s
+lang.yabba.skin=GÃ¶rÃ¼nÃ¼ÅŸ: %s
+lang.yabba.item=EÅŸya: %s
+lang.yabba.upgrades=YÃ¼kseltmeler:
+lang.yabba.item_count=%d / %d eÅŸya
+lang.yabba.item_count_inf=%d eÅŸya
+lang.yabba.item_count_max=Max %d yÄ±ÄŸÄ±n/stack
+
+lang.fluid.still=Durgun %s
+lang.fluid.flowing=Akan %s
+
+# Blocks
+tile.yabba.item_barrel.name=EÅŸya FÄ±Ã§Ä±sÄ±
+tile.yabba.item_barrel_connector.name=EÅŸya FÄ±Ã§Ä±sÄ± BaÄŸlayÄ±cÄ±sÄ±
+tile.yabba.item_barrel_connector.connected=BaÄŸlÄ± fÄ±Ã§Ä±lar: %d
+tile.yabba.fluid_barrel.name=SÄ±vÄ± FÄ±Ã§Ä±sÄ±
+tile.yabba.energy_barrel.name=Enerji FÄ±Ã§Ä±sÄ±
+tile.yabba.decorative_block.name=Dekoratif Blok
+tile.yabba.antibarrel.name=Anti-FÄ±Ã§Ä±
+tile.yabba.antibarrel.tooltip=YÄ±ÄŸÄ±nlanamayan bir Ã§ok eÅŸyayÄ± depolar.
+tile.yabba.antibarrel.items=%d eÅŸya, %d/%d tÃ¼r
+tile.yabba.compound_item_barrel.name=KarÄ±ÅŸÄ±k EÅŸya FÄ±Ã§Ä±sÄ±
+
+tile.yabba.machine.name=Makine
+
+# Config
+yabba.general.sneak_left_click_extracts_stack=EÄŸilerek Sol-tÄ±k, bir yÄ±ÄŸÄ±nÄ± Ã§Ä±karÄ±r
+yabba.general.antibarrel_capacity=Anti-FÄ±Ã§Ä± kapasitesi
+yabba.general.antibarrel_items_per_type=Antibarrel Items per Type
+yabba.general.crash_on_set_methods=Crash setStackInSlot Methods
+yabba.general.connector_update_ticks=Barrel Connector Update Ticks
+
+yabba_client.general.always_display_data=Always Display Data
+yabba_client.general.display_bar=Display Bar
+
+yabba_client.bar_color=Bar Color
+yabba_client.bar_color.border=Border
+yabba_client.bar_color.free=Free Space
+yabba_client.bar_color.filled=Filled Space
+yabba_client.bar_color.alpha=Alpha
+
+yabba.tier=Tier
+yabba.tier.wood=Wood
+yabba.tier.iron=Iron
+yabba.tier.gold=Gold
+yabba.tier.diamond=Diamond
+yabba.tier.max_item_stacks=Max Item Stacks
+
+barrel_config.yabba.locked=Locked
+barrel_config.yabba.redstone.mode=Mode
+barrel_config.yabba.redstone.count=Count
+barrel_config.yabba.hopper.up=Up
+barrel_config.yabba.hopper.down=Down
+barrel_config.yabba.hopper.collect=Collect
+
+# Guide
+guide.yabba.item_barrel.info=EÅŸya FÄ±Ã§Ä±sÄ±, bir eÅŸya tÃ¼rÃ¼nÃ¼n birden fazla yÄ±ÄŸÄ±nlÄ± olarak depolar.
+guide.yabba.fluid_barrel.info=SÄ±vÄ± FÄ±Ã§Ä±sÄ±, iÃ§inde sÄ±vÄ± depolanabilen bir fÄ±Ã§Ä±dÄ±r.
+guide.yabba.energy_barrel.info=Enerji FÄ±Ã§Ä±sÄ±, iÃ§ine enerji depolayabilir.
+guide.yabba.hammer.info=SaÄŸ tÄ±k ile arayÃ¼zÃ¼ aÃ§Ä±n ve kullanmak istediÄŸiniz modeli seÃ§in. Modeli deÄŸiÅŸtirmek iÃ§in fÄ±Ã§Ä± ile beraber Ã¼retilebilir.
+guide.yabba.painter.info=SaÄŸ tÄ±k ile arayÃ¼zÃ¼ aÃ§Ä±n ve kullanmak istediÄŸiniz gÃ¶rÃ¼nÃ¼mÃ¼ seÃ§in. GÃ¶rÃ¼nÃ¼ÅŸÃ¼ deÄŸiÅŸtirmek iÃ§in fÄ±Ã§Ä± ile beraber Ã¼retilebilir.
+guide.yabba.upgrades.apply=Bir fÄ±Ã§Ä±ya yÃ¼kseltme uygulamak iÃ§in, elinizde yÃ¼kseltme var iken direk saÄŸ tÄ±klayabilir, veya Ã¼retim masasÄ±ndan fÄ±Ã§Ä± ile beraber koyabilirsin.
+guide.yabba.upgrades.cant_apply=EÄŸer yÃ¼kseltme uygulanamadÄ± ise / fÄ±Ã§Ä± ile beraber Ã¼retilemedi ise, fÄ±Ã§Ä±da zaten bu yÃ¼kseltme vardÄ±r veya uygulanamÄ±yordur.
+guide.yabba.upgrades.tooltip=FÄ±Ã§Ä± eÅŸyasÄ±na fareyi getirdiÄŸinizde, uygulanmÄ±ÅŸ yÃ¼kseltmeleri gÃ¶sterir.
+
+# Models
+yabba.yabba_model.barrel=FÄ±Ã§Ä±
+yabba.yabba_model.cover=Kaplama
+yabba.yabba_model.panel=Panel
+yabba.yabba_model.slab=Basamak
+yabba.yabba_model.block=Blok
+yabba.yabba_model.block_window=Pencereli Blok
+yabba.yabba_model.block_borders=Pencereli ve KenarlÄ± Blok
+yabba.yabba_model.crate=Kasa
