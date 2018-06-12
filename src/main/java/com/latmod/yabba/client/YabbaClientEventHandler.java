@@ -1,17 +1,18 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftblib.events.client.RegisterGuiProvidersEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.latmod.yabba.Yabba;
 import com.latmod.yabba.gui.ContainerAntibarrel;
 import com.latmod.yabba.gui.GuiAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = Yabba.MOD_ID, value = Side.CLIENT)
 public class YabbaClientEventHandler
 {
 	@SubscribeEvent

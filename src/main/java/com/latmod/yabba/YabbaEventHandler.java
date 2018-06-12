@@ -2,7 +2,6 @@ package com.latmod.yabba;
 
 import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.gui.ContainerAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
@@ -15,12 +14,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = Yabba.MOD_ID)
 public class YabbaEventHandler
 {
 	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(Yabba.MOD_ID, "config");

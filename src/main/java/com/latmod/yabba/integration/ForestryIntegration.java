@@ -1,6 +1,5 @@
 package com.latmod.yabba.integration;
 
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.latmod.yabba.Yabba;
@@ -10,16 +9,27 @@ import forestry.api.arboriculture.EnumVanillaWoodType;
 import forestry.api.arboriculture.IWoodType;
 import forestry.api.arboriculture.TreeManager;
 import forestry.api.arboriculture.WoodBlockKind;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = OtherMods.FORESTRY)
+@Mod.EventBusSubscriber(modid = Yabba.MOD_ID, value = Side.CLIENT)
 public class ForestryIntegration
 {
 	@SubscribeEvent
 	public static void registerSkins(YabbaSkinsEvent event)
+	{
+		if (Loader.isModLoaded(OtherMods.FORESTRY))
+		{
+			registerSkins0(event);
+		}
+	}
+
+	private static void registerSkins0(YabbaSkinsEvent event)
 	{
 		Yabba.LOGGER.info("Loading Forestry Integration");
 
