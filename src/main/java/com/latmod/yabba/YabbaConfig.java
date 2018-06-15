@@ -63,7 +63,7 @@ public class YabbaConfig
 		}
 	}
 
-	public static void sync()
+	public static boolean sync()
 	{
 		ConfigManager.sync(Yabba.MOD_ID, Config.Type.INSTANCE);
 		tier.stone.syncWith(Tier.STONE);
@@ -71,6 +71,7 @@ public class YabbaConfig
 		tier.iron.syncWith(Tier.IRON);
 		tier.gold.syncWith(Tier.GOLD);
 		tier.diamond.syncWith(Tier.DIAMOND);
+		return true;
 	}
 
 	@SubscribeEvent

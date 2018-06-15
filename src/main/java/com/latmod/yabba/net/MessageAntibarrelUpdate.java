@@ -9,6 +9,8 @@ import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.gui.GuiAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class MessageAntibarrelUpdate extends MessageToClient
 {
+	private BlockPos pos;
 	private NBTTagCompound nbt;
 
 	public MessageAntibarrelUpdate()
@@ -25,6 +28,7 @@ public class MessageAntibarrelUpdate extends MessageToClient
 
 	public MessageAntibarrelUpdate(TileAntibarrel antibarrel)
 	{
+		pos = antibarrel.getPos();
 		nbt = new NBTTagCompound();
 		antibarrel.writeData(nbt, EnumSaveType.SAVE);
 	}
@@ -38,12 +42,14 @@ public class MessageAntibarrelUpdate extends MessageToClient
 	@Override
 	public void writeData(DataOut data)
 	{
+		data.writePos(pos);
 		data.writeNBT(nbt);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
+		pos = data.readPos();
 		nbt = data.readNBT();
 	}
 
@@ -51,12 +57,18 @@ public class MessageAntibarrelUpdate extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		GuiAntibarrel gui = ClientUtils.getCurrentGuiAs(GuiAntibarrel.class);
+		TileEntity tileEntity = ClientUtils.MC.world.getTileEntity(pos);
 
-		if (gui != null)
+		if (tileEntity instanceof TileAntibarrel)
 		{
-			gui.container.tile.readData(nbt, EnumSaveType.SAVE);
-			gui.refreshWidgets();
+			((TileAntibarrel) tileEntity).readData(nbt, EnumSaveType.SAVE);
+
+			GuiAntibarrel gui = ClientUtils.getCurrentGuiAs(GuiAntibarrel.class);
+
+			if (gui != null)
+			{
+				gui.refreshWidgets();
+			}
 		}
 	}
 }

@@ -1,9 +1,8 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.latmod.yabba.YabbaConfig;
-import com.latmod.yabba.gui.ContainerAntibarrel;
+import com.latmod.yabba.YabbaGuiHandler;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.block.material.MapColor;
@@ -123,8 +122,8 @@ public class BlockAntibarrel extends BlockYabba
 
 			if (tileEntity instanceof TileAntibarrel)
 			{
-				FTBLibAPI.openGui(ContainerAntibarrel.ID, (EntityPlayerMP) player, pos, null);
 				new MessageAntibarrelUpdate((TileAntibarrel) tileEntity).sendTo((EntityPlayerMP) player);
+				YabbaGuiHandler.open(player, YabbaGuiHandler.GUI_ANTIBARREL, pos);
 			}
 		}
 

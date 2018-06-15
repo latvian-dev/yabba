@@ -1,10 +1,7 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
-import com.feed_the_beast.ftblib.events.ServerReloadEvent;
+import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.latmod.yabba.gui.ContainerAntibarrel;
-import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,21 +20,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Yabba.MOD_ID)
 public class YabbaEventHandler
 {
-	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(Yabba.MOD_ID, "config");
-
 	@SubscribeEvent
-	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
+	public static void onFTBLibPreInitRegistry(FTBLibPreInitRegistryEvent event)
 	{
-		event.register(RELOAD_CONFIG);
-	}
-
-	@SubscribeEvent
-	public static void onServerReload(ServerReloadEvent event)
-	{
-		if (event.reload(RELOAD_CONFIG))
-		{
-			YabbaConfig.sync();
-		}
+		event.getRegistry().registerServerReloadHandler(new ResourceLocation(Yabba.MOD_ID, "config"), reloadEvent -> YabbaConfig.sync());
 	}
 
 	@SubscribeEvent
@@ -97,11 +83,5 @@ public class YabbaEventHandler
 		{
 			event.setCanceled(true);
 		}
-	}
-
-	@SubscribeEvent
-	public static void registerContainers(RegisterContainerProvidersEvent event)
-	{
-		event.register(ContainerAntibarrel.ID, (player, pos, nbt) -> new ContainerAntibarrel(player, (TileAntibarrel) player.world.getTileEntity(pos)));
 	}
 }
