@@ -1,6 +1,5 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -189,14 +188,6 @@ public class YabbaClient extends YabbaCommon
 		}
 
 		Yabba.LOGGER.info("Skins: " + ALL_SKINS.size());
-
-		if (FTBLibConfig.debugging.print_more_info)
-		{
-			for (BarrelSkin skin : ALL_SKINS)
-			{
-				Yabba.LOGGER.info("-- " + skin.id + " :: " + skin);
-			}
-		}
 
 		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
 		{
