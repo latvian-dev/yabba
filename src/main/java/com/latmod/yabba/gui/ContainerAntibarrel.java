@@ -1,34 +1,28 @@
 package com.latmod.yabba.gui;
 
+import com.feed_the_beast.ftblib.lib.gui.ContainerBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.item.SlotOnlyInsertItem;
-import com.feed_the_beast.ftblib.lib.util.InvUtils;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.net.MessageAntibarrelClickSlot;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 /**
  * @author LatvianModder
  */
-public class ContainerAntibarrel extends Container
+public class ContainerAntibarrel extends ContainerBase
 {
-	public static final ResourceLocation ID = new ResourceLocation(Yabba.MOD_ID, "antibarrel");
-
-	public final EntityPlayer player;
 	public final TileAntibarrel tile;
 	private int totalChanges;
 
-	public ContainerAntibarrel(EntityPlayer ep, TileAntibarrel t)
+	public ContainerAntibarrel(EntityPlayer player, TileAntibarrel t)
 	{
-		player = ep;
+		super(player);
 		tile = t;
 		totalChanges = t.totalChanges;
 
@@ -44,12 +38,14 @@ public class ContainerAntibarrel extends Container
 			}
 		});
 
-		InvUtils.addPlayerSlots(this, player, 8, 84, false);
+		addPlayerSlots(8, 84, false);
 	}
 
 	@Override
 	public void detectAndSendChanges()
 	{
+		super.detectAndSendChanges();
+
 		if (totalChanges != tile.totalChanges)
 		{
 			totalChanges = tile.totalChanges;
@@ -62,23 +58,16 @@ public class ContainerAntibarrel extends Container
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player)
+	public int getNonPlayerSlots()
 	{
-		BlockPos pos = tile.getPos();
-		if (player.world.getTileEntity(pos) != tile)
-		{
-			return false;
-		}
-		else
-		{
-			return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64D;
-		}
+		return 1;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int index)
+	public boolean canInteractWith(EntityPlayer player)
 	{
-		return InvUtils.transferStackInSlot(this, index, 1);
+		BlockPos pos = tile.getPos();
+		return player.world.getTileEntity(pos) == tile && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64D;
 	}
 
 	public void onClick(ItemEntry entry, boolean shift)
