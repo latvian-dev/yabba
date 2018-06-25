@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,7 +51,6 @@ public class Yabba
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
 		PROXY.preInit();
-		NetworkRegistry.INSTANCE.registerGuiHandler(MOD, new YabbaGuiHandler());
 	}
 
 	@Mod.EventHandler

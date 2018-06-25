@@ -123,7 +123,7 @@ public class BlockAntibarrel extends BlockYabba
 			if (tileEntity instanceof TileAntibarrel)
 			{
 				new MessageAntibarrelUpdate((TileAntibarrel) tileEntity).sendTo((EntityPlayerMP) player);
-				YabbaGuiHandler.open(player, YabbaGuiHandler.GUI_ANTIBARREL, pos);
+				YabbaGuiHandler.ANTIBARREL.open(player, pos);
 			}
 		}
 
