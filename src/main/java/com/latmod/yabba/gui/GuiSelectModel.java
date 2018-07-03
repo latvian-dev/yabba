@@ -21,14 +21,12 @@ public class GuiSelectModel extends GuiBase
 	private class ButtonModel extends Button
 	{
 		private final BarrelModel model;
-		private final int index;
 
 		public ButtonModel(Panel panel, int i)
 		{
 			super(panel);
-			setPosAndSize(8 + (i % 5) * 39, 8 + (i / 5) * 39, 38, 38);
-			index = i;
-			model = index >= EnumBarrelModel.NAME_MAP.size() ? null : EnumBarrelModel.NAME_MAP.get(index).getModel();
+			setPosAndSize(8 + (i % 4) * 39, 8 + (i / 4) * 39, 38, 38);
+			model = i >= EnumBarrelModel.NAME_MAP.size() ? null : EnumBarrelModel.NAME_MAP.get(i).getModel();
 
 			if (model != null)
 			{
@@ -69,11 +67,14 @@ public class GuiSelectModel extends GuiBase
 
 	public GuiSelectModel()
 	{
-		setSize(210, 171);
+		int cols = 4;
+		int rows = 3;
+
+		setSize(19 + cols * 38, 19 + rows * 38);
 
 		buttons = new ArrayList<>();
 
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < cols * rows; i++)
 		{
 			buttons.add(new ButtonModel(this, i));
 		}

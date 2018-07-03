@@ -1,5 +1,5 @@
 {
-	"type": "forge:ore_shapeless",
+	"type": "minecraft:crafting_shapeless",
 	"group": "yabba:upgrade_redstone_out",
 	"result": {"item": "upgrade_redstone_out"},
 	"ingredients": [

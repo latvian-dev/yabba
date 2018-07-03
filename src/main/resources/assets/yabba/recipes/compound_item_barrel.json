@@ -1,5 +1,5 @@
 {
-	"type": "forge:ore_shaped",
+	"type": "minecraft:crafting_shaped",
 	"group": "yabba:barrel",
 	"result": {"item": "compound_item_barrel", "count": 4},
 	"pattern": [

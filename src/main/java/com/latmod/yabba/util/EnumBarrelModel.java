@@ -17,13 +17,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public enum EnumBarrelModel implements IStringSerializable
 {
 	BARREL("barrel", Block.FULL_BLOCK_AABB),
+	CRATE("crate", Block.FULL_BLOCK_AABB),
+	BLOCK_WINDOW("block_window", Block.FULL_BLOCK_AABB),
+	BLOCK_BORDERS("block_borders", Block.FULL_BLOCK_AABB),
 	COVER("cover", new AxisAlignedBB(0, 0.875, 0, 1, 1, 1)),
 	PANEL("panel", new AxisAlignedBB(0, 0.75, 0, 1, 1, 1)),
 	SLAB("slab", new AxisAlignedBB(0, 0.5, 0, 1, 1, 1)),
-	BLOCK("block", Block.FULL_BLOCK_AABB),
-	BLOCK_WINDOW("block_window", Block.FULL_BLOCK_AABB),
-	BLOCK_BORDERS("block_borders", Block.FULL_BLOCK_AABB),
-	CRATE("crate", Block.FULL_BLOCK_AABB);
+	BLOCK("block", Block.FULL_BLOCK_AABB);
 
 	public static final NameMap<EnumBarrelModel> NAME_MAP = NameMap.create(BARREL, values());
 
