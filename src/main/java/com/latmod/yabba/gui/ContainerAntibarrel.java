@@ -26,7 +26,7 @@ public class ContainerAntibarrel extends ContainerBase
 		tile = t;
 		totalChanges = t.totalChanges;
 
-		addSlotToContainer(new SlotOnlyInsertItem(tile, 0, -10000, 0)
+		addSlotToContainer(new SlotOnlyInsertItem(tile.contents, 0, -10000, 0)
 		{
 			@Override
 			public void onSlotChanged()
@@ -78,7 +78,7 @@ public class ContainerAntibarrel extends ContainerBase
 		{
 			if (entry.isEmpty())
 			{
-				if (tile.insertItem(0, stack, false).isEmpty())
+				if (tile.contents.insertItem(0, stack, false).isEmpty())
 				{
 					player.inventory.setItemStack(ItemStack.EMPTY);
 					player.inventory.markDirty();
@@ -87,7 +87,7 @@ public class ContainerAntibarrel extends ContainerBase
 			}
 			else
 			{
-				ItemEntryWithCount entryWithCount = tile.items.get(entry);
+				ItemEntryWithCount entryWithCount = tile.contents.items.get(entry);
 
 				if (entryWithCount != null && entryWithCount.count > 0)
 				{
@@ -110,7 +110,7 @@ public class ContainerAntibarrel extends ContainerBase
 
 						if (entryWithCount.count == 0)
 						{
-							tile.items.remove(entry);
+							tile.contents.items.remove(entry);
 							tile.updateContainingBlockInfo();
 						}
 

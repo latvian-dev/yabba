@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.gui.GuiAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,8 +28,7 @@ public class MessageAntibarrelUpdate extends MessageToClient
 	public MessageAntibarrelUpdate(TileAntibarrel antibarrel)
 	{
 		pos = antibarrel.getPos();
-		nbt = new NBTTagCompound();
-		antibarrel.writeData(nbt, EnumSaveType.SAVE);
+		nbt = antibarrel.contents.serializeNBT();
 	}
 
 	@Override
@@ -61,7 +59,7 @@ public class MessageAntibarrelUpdate extends MessageToClient
 
 		if (tileEntity instanceof TileAntibarrel)
 		{
-			((TileAntibarrel) tileEntity).readData(nbt, EnumSaveType.SAVE);
+			((TileAntibarrel) tileEntity).contents.deserializeNBT(nbt);
 
 			GuiAntibarrel gui = ClientUtils.getCurrentGuiAs(GuiAntibarrel.class);
 

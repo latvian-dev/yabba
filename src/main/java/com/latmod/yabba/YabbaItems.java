@@ -9,6 +9,7 @@ import com.latmod.yabba.block.BlockItemBarrelConnector;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModelLoader;
 import com.latmod.yabba.client.RenderItemBarrel;
+import com.latmod.yabba.item.ItemBlockAntibarrel;
 import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.item.ItemBlockDecorativeBlock;
 import com.latmod.yabba.item.ItemHammer;
@@ -101,7 +102,7 @@ public class YabbaItems
 		event.getRegistry().registerAll(
 				new ItemBlockBarrel(ITEM_BARREL),
 				new ItemBlockBase(ITEM_BARREL_CONNECTOR),
-				new ItemBlockBase(ANTIBARREL),
+				new ItemBlockAntibarrel(ANTIBARREL),
 				new ItemBlockBarrel(COMPOUND_ITEM_BARREL),
 				new ItemBlockDecorativeBlock(DECORATIVE_BLOCK),
 				new ItemUpgradeBlank("upgrade_blank"),

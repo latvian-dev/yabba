@@ -1,20 +1,16 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaGuiHandler;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
+import com.latmod.yabba.util.AntibarrelData;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -22,12 +18,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * @author LatvianModder
@@ -87,33 +79,6 @@ public class BlockAntibarrel extends BlockYabba
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced)
-	{
-		tooltip.add(I18n.format("tile.yabba.antibarrel.tooltip"));
-
-		int t = 0;
-		int i = 0;
-
-		if (CommonUtils.hasBlockData(stack))
-		{
-			NBTTagList list = CommonUtils.getBlockData(stack).getTagList("Inv", Constants.NBT.TAG_COMPOUND);
-			t = list.tagCount();
-
-			if (t > 0)
-			{
-				for (int j = 0; j < t; j++)
-				{
-					NBTTagCompound nbt = list.getCompoundTagAt(j);
-					i += nbt.hasKey("RealCount") ? nbt.getInteger("RealCount") : nbt.getInteger("Count");
-				}
-			}
-		}
-
-		tooltip.add(I18n.format("tile.yabba.antibarrel.items", i, t, YabbaConfig.general.antibarrel_capacity));
-	}
-
-	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		if (!world.isRemote)
@@ -128,5 +93,36 @@ public class BlockAntibarrel extends BlockYabba
 		}
 
 		return true;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
+	{
+		super.onBlockPlacedBy(world, pos, state, player, stack);
+
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof TileAntibarrel)
+		{
+			AntibarrelData data = AntibarrelData.get(stack);
+
+			if (!data.items.isEmpty())
+			{
+				((TileAntibarrel) tileEntity).contents.copyFrom(data);
+			}
+		}
+	}
+
+	@Override
+	public ItemStack createStack(IBlockState state, @Nullable TileEntity tile)
+	{
+		ItemStack stack = new ItemStack(this);
+
+		if (tile instanceof TileAntibarrel)
+		{
+			AntibarrelData.get(stack).copyFrom(((TileAntibarrel) tile).contents);
+		}
+
+		return stack;
 	}
 }

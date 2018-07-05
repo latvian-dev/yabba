@@ -179,12 +179,12 @@ public class GuiAntibarrel extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				for (ItemEntryWithCount entry : container.tile.items.values())
+				for (ItemEntryWithCount entry : container.tile.contents.items.values())
 				{
 					add(new ButtonItem(this, entry));
 				}
 
-				int s = container.tile.items.size() % 8;
+				int s = container.tile.contents.items.size() % 8;
 
 				if (s != 0)
 				{
@@ -248,14 +248,7 @@ public class GuiAntibarrel extends GuiBase
 		add(panel);
 		add(scrollBar);
 
-		int totalItems = 0;
-
-		for (ItemEntryWithCount entry : container.tile.items.values())
-		{
-			totalItems += entry.count;
-		}
-
-		title = I18n.format("tile.yabba.antibarrel.items", totalItems, container.tile.items.size(), YabbaConfig.general.antibarrel_capacity);
+		title = I18n.format("tile.yabba.antibarrel.items", container.tile.contents.getTotalItemCount(), container.tile.contents.items.size(), YabbaConfig.general.antibarrel_capacity);
 
 		/*
 		if (Loader.isModLoaded(OtherMods.FTBGUIDES))
