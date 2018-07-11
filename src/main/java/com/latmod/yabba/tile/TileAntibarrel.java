@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class TileAntibarrel extends TileBase implements AntibarrelData.IChangeCallback
+public class TileAntibarrel extends TileBase
 {
 	public int totalChanges = 0;
 	public final AntibarrelData contents = new AntibarrelData(this);
@@ -73,7 +73,7 @@ public class TileAntibarrel extends TileBase implements AntibarrelData.IChangeCa
 	}
 
 	@Override
-	public void onContentsChanged()
+	public void onContentsChanged(boolean majorChange)
 	{
 		if (!world.isRemote)
 		{

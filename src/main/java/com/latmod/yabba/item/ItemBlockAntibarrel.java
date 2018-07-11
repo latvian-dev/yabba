@@ -35,7 +35,8 @@ public class ItemBlockAntibarrel extends ItemBlockBase
 	@Override
 	public int getItemStackLimit(ItemStack stack)
 	{
-		return AntibarrelData.get(stack).items.isEmpty() ? 64 : 1;
+		AntibarrelData data = AntibarrelData.get(stack);
+		return data == null || data.items.isEmpty() ? 16 : 1;
 	}
 
 	@Override

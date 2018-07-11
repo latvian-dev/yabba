@@ -1,7 +1,7 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
@@ -126,9 +126,9 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 		{
 			String id = "";
 
-			if (CommonUtils.hasBlockData(stack))
+			if (NBTUtils.hasBlockData(stack))
 			{
-				id = CommonUtils.getBlockData(stack).getString("Skin");
+				id = NBTUtils.getBlockData(stack).getString("Skin");
 			}
 
 			Color4I color = YabbaClient.getSkin(id).color;

@@ -2,7 +2,8 @@ package com.latmod.yabba.util;
 
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.tile.IChangeCallback;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.latmod.yabba.YabbaConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,11 +26,6 @@ import java.util.Map;
  */
 public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, IItemHandler
 {
-	public interface IChangeCallback
-	{
-		void onContentsChanged();
-	}
-
 	@CapabilityInject(AntibarrelData.class)
 	public static Capability<AntibarrelData> CAP;
 
@@ -42,16 +38,10 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 	{
 		AntibarrelData data = stack.getCapability(CAP, null);
 
-		if (CommonUtils.hasBlockData(stack))
+		if (NBTUtils.hasBlockData(stack))
 		{
-			data.deserializeNBT(CommonUtils.getBlockData(stack));
-			stack.getTagCompound().removeTag("BlockEntityTag");
-			stack.getTagCompound().removeTag("display");
-
-			if (stack.getTagCompound().hasNoTags())
-			{
-				stack.setTagCompound(null);
-			}
+			data.deserializeNBT(NBTUtils.getBlockData(stack));
+			NBTUtils.removeBlockData(stack);
 		}
 
 		return data;
@@ -128,6 +118,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 	public void copyFrom(AntibarrelData data)
 	{
 		clear();
+		totalItemCount = data.totalItemCount;
 
 		for (ItemEntryWithCount entry : data.items.values())
 		{
@@ -192,7 +183,11 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 			{
 				entryc.count += added;
 				totalItemCount = -1;
-				callback.onContentsChanged();
+
+				if (callback != null)
+				{
+					callback.onContentsChanged(false);
+				}
 			}
 
 			return added == stack.getCount() ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - added);
@@ -224,7 +219,11 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 		{
 			entryc.count -= extracted;
 			totalItemCount = -1;
-			callback.onContentsChanged();
+
+			if (callback != null)
+			{
+				callback.onContentsChanged(false);
+			}
 		}
 
 		return is;

@@ -1,7 +1,7 @@
 package com.latmod.yabba;
 
 import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,14 +40,14 @@ public class YabbaEventHandler
 		{
 			ItemStack stack = player.inventory.getStackInSlot(i);
 
-			if (CommonUtils.hasBlockData(stack))
+			if (NBTUtils.hasBlockData(stack))
 			{
 				Item stackItem = stack.getItem();
 
 				if (stackItem == YabbaItems.ITEM_BARREL_ITEM)
 				{
 					TileItemBarrel barrel = (TileItemBarrel) YabbaItems.ITEM_BARREL.createTileEntity(entityItem.world, YabbaItems.ITEM_BARREL.getDefaultState());
-					barrel.readFromNBT(CommonUtils.getBlockData(stack));
+					barrel.readFromNBT(NBTUtils.getBlockData(stack));
 
 					if (!barrel.getStoredItemType().isEmpty() && barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))
 					{
