@@ -277,7 +277,7 @@ public class YabbaClient extends YabbaCommon
 					}
 					else
 					{
-						textures = TextureSet.of("all=" + id.getResourceDomain() + ":blocks/" + id.getResourcePath());
+						textures = TextureSet.of("all=" + id.getNamespace() + ":blocks/" + id.getPath());
 					}
 
 					BarrelSkin skin = new BarrelSkin(id.toString(), textures);

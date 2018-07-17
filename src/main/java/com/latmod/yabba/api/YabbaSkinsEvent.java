@@ -33,6 +33,6 @@ public class YabbaSkinsEvent extends YabbaEvent
 	public void addSkin(String id)
 	{
 		ResourceLocation id1 = new ResourceLocation(id);
-		addSkin(id, "all=" + id1.getResourceDomain() + ":blocks/" + id1.getResourcePath());
+		addSkin(id, "all=" + id1.getNamespace() + ":blocks/" + id1.getPath());
 	}
 }

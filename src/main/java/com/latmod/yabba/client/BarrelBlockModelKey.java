@@ -42,6 +42,6 @@ public class BarrelBlockModelKey
 
 	public String toString()
 	{
-		return look + ":" + EnumFacing.getHorizontal(rotation).getName();
+		return look + ":" + EnumFacing.byHorizontalIndex(rotation).getName();
 	}
 }

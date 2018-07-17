@@ -3,6 +3,7 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
 import com.latmod.yabba.util.AntibarrelData;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -80,5 +81,17 @@ public class TileAntibarrel extends TileBase
 			totalChanges++;
 			markDirty();
 		}
+	}
+
+	@Override
+	public void writeToItem(ItemStack stack)
+	{
+		AntibarrelData.get(stack).copyFrom(contents);
+	}
+
+	@Override
+	public void readFromItem(ItemStack stack)
+	{
+		contents.copyFrom(AntibarrelData.get(stack));
 	}
 }

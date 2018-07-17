@@ -3,14 +3,11 @@ package com.latmod.yabba.block;
 import com.latmod.yabba.YabbaGuiHandler;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
-import com.latmod.yabba.util.AntibarrelData;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -18,8 +15,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -93,36 +88,5 @@ public class BlockAntibarrel extends BlockYabba
 		}
 
 		return true;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
-	{
-		super.onBlockPlacedBy(world, pos, state, player, stack);
-
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileAntibarrel)
-		{
-			AntibarrelData data = AntibarrelData.get(stack);
-
-			if (!data.items.isEmpty())
-			{
-				((TileAntibarrel) tileEntity).contents.copyFrom(data);
-			}
-		}
-	}
-
-	@Override
-	public ItemStack createStack(IBlockState state, @Nullable TileEntity tile)
-	{
-		ItemStack stack = new ItemStack(this);
-
-		if (tile instanceof TileAntibarrel)
-		{
-			AntibarrelData.get(stack).copyFrom(((TileAntibarrel) tile).contents);
-		}
-
-		return stack;
 	}
 }

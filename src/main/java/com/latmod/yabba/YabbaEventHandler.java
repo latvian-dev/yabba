@@ -57,7 +57,7 @@ public class YabbaEventHandler
 						if (originalSize != itemStack.getCount())
 						{
 							entityItem.setItem(itemStack);
-							stack.setTagCompound(barrel.createItemData());
+							barrel.writeToItem(stack);
 							modified = true;
 						}
 

@@ -60,7 +60,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

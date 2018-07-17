@@ -55,7 +55,7 @@ public class BlockDecorativeBlock extends BlockYabba
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override
@@ -247,7 +247,7 @@ public class BlockDecorativeBlock extends BlockYabba
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

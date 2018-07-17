@@ -249,7 +249,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		if (data instanceof ItemUpgradeRedstone.Data)
 		{
 			String group = Yabba.MOD_ID + ".redstone";
-			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getUnlocalizedName() + ".name"));
+			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getTranslationKey() + ".name"));
 			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
 			event.getConfig().add(group, "mode", data1.mode);
 			event.getConfig().add(group, "count", data1.count);
@@ -259,7 +259,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		if (data instanceof ItemUpgradeHopper.Data)
 		{
 			String group = Yabba.MOD_ID + ".hopper";
-			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getUnlocalizedName() + ".name"));
+			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getTranslationKey() + ".name"));
 			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
 			event.getConfig().add(group, "up", data1.up);
 			event.getConfig().add(group, "down", data1.down);

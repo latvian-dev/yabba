@@ -45,7 +45,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		return modelLocation.getResourceDomain().equals(Yabba.MOD_ID) && modelLocation.getResourcePath().equals("barrel");
+		return modelLocation.getNamespace().equals(Yabba.MOD_ID) && modelLocation.getPath().equals("barrel");
 	}
 
 	@Override
