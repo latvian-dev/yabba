@@ -33,7 +33,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 	public final Map<ItemEntry, ItemEntryWithCount> items;
 	private ItemEntryWithCount[] itemsArray;
 	private int totalItemCount;
-	private NBTTagCompound serializedData;
+	private NBTTagCompound cachedNetData;
 
 	public static AntibarrelData get(ItemStack stack)
 	{
@@ -59,7 +59,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 		items.clear();
 		itemsArray = null;
 		totalItemCount = -1;
-		serializedData = null;
+		cachedNetData = null;
 	}
 
 	@Override
@@ -78,28 +78,49 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 	@Override
 	public NBTTagCompound serializeNBT()
 	{
-		if (serializedData != null)
-		{
-			return serializedData;
-		}
-
-		serializedData = new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagList list = new NBTTagList();
 
 		for (ItemEntryWithCount entry : items.values())
 		{
 			if (!entry.isEmpty())
 			{
-				list.appendTag(entry.serializeNBT());
+				list.appendTag(entry.serializeNBT(false));
 			}
 		}
 
 		if (!list.isEmpty())
 		{
-			serializedData.setTag("Inv", list);
+			nbt.setTag("Inv", list);
 		}
 
-		return serializedData;
+		return nbt;
+	}
+
+	public NBTTagCompound serializeNBTForNet()
+	{
+		if (cachedNetData != null)
+		{
+			return cachedNetData;
+		}
+
+		cachedNetData = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+
+		for (ItemEntryWithCount entry : items.values())
+		{
+			if (!entry.isEmpty())
+			{
+				list.appendTag(entry.serializeNBT(true));
+			}
+		}
+
+		if (!list.isEmpty())
+		{
+			cachedNetData.setTag("Inv", list);
+		}
+
+		return cachedNetData;
 	}
 
 	@Override
@@ -111,7 +132,8 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 
 		for (int i = 0; i < list.tagCount(); i++)
 		{
-			ItemEntryWithCount entryc = new ItemEntryWithCount(list.getCompoundTagAt(i));
+			NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+			ItemEntryWithCount entryc = new ItemEntryWithCount(nbt1);
 
 			if (!entryc.isEmpty())
 			{
@@ -169,7 +191,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 				items.put(entry, entryc);
 				itemsArray = null;
 				totalItemCount = -1;
-				serializedData = null;
+				cachedNetData = null;
 				added = Math.min(YabbaConfig.general.antibarrel_items_per_type, stack.getCount());
 			}
 		}
@@ -189,7 +211,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 			{
 				entryc.count += added;
 				totalItemCount = -1;
-				serializedData = null;
+				cachedNetData = null;
 
 				if (callback != null)
 				{
@@ -226,7 +248,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 		{
 			entryc.count -= extracted;
 			totalItemCount = -1;
-			serializedData = null;
+			cachedNetData = null;
 
 			if (callback != null)
 			{

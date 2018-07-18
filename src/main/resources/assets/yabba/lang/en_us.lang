@@ -49,6 +49,9 @@ tile.yabba.decorative_block.name=Decorative Block
 tile.yabba.antibarrel.name=AntiBarrel
 tile.yabba.antibarrel.tooltip=Stores a lot of non-stackable items.
 tile.yabba.antibarrel.items=%d items, %d/%d types
+tile.yabba.antibarrel.items_only=%d Items
+tile.yabba.antibarrel.types=%d Types
+tile.yabba.antibarrel.pick_up=Pick Up
 tile.yabba.compound_item_barrel.name=Compound Item Barrel
 
 tile.yabba.machine.name=Machine

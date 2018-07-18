@@ -42,7 +42,7 @@ public class ItemBlockAntibarrel extends ItemBlockBase
 	@Override
 	public NBTTagCompound getNBTShareTag(ItemStack stack)
 	{
-		return AntibarrelData.get(stack).serializeNBT();
+		return AntibarrelData.get(stack).serializeNBTForNet();
 	}
 
 	@Override
