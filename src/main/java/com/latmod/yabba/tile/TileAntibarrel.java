@@ -86,7 +86,6 @@ public class TileAntibarrel extends TileBase
 	@Override
 	public void writeToItem(ItemStack stack)
 	{
-		AntibarrelData.get(stack).copyFrom(contents);
 	}
 
 	@Override
