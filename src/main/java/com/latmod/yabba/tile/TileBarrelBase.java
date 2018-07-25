@@ -6,8 +6,6 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
-import com.google.gson.JsonObject;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.RemoveUpgradeEvent;
 import com.latmod.yabba.api.YabbaConfigEvent;
@@ -237,9 +235,8 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	}
 
 	@Override
-	public void saveConfig(ConfigGroup group, ICommandSender sender, JsonObject json)
+	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
 	{
-		group.fromJson(json);
 		markBarrelDirty(true);
 	}
 
@@ -248,34 +245,34 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		DataStorage data = getUpgradeData(YabbaItems.UPGRADE_REDSTONE_OUT);
 		if (data instanceof ItemUpgradeRedstone.Data)
 		{
-			String group = Yabba.MOD_ID + ".redstone";
-			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getTranslationKey() + ".name"));
+			ConfigGroup group = event.getConfig().getGroup("redstone");
+			group.setDisplayName(new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getTranslationKey() + ".name"));
 			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
-			event.getConfig().add(group, "mode", data1.mode);
-			event.getConfig().add(group, "count", data1.count);
+			group.add("mode", data1.mode);
+			group.add("count", data1.count);
 		}
 
 		data = getUpgradeData(YabbaItems.UPGRADE_HOPPER);
 		if (data instanceof ItemUpgradeHopper.Data)
 		{
-			String group = Yabba.MOD_ID + ".hopper";
-			event.getConfig().setGroupName(group, new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getTranslationKey() + ".name"));
+			ConfigGroup group = event.getConfig().getGroup("hopper");
+			group.setDisplayName(new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getTranslationKey() + ".name"));
 			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
-			event.getConfig().add(group, "up", data1.up);
-			event.getConfig().add(group, "down", data1.down);
-			event.getConfig().add(group, "collect", data1.collect);
+			group.add("up", data1.up);
+			group.add("down", data1.down);
+			group.add("collect", data1.collect);
 		}
 	}
 
 	@Override
 	public final void openGui(EntityPlayer player)
 	{
-		ConfigGroup configGroup = new ConfigGroup(getDisplayName());
-		configGroup.setSupergroup("barrel_config");
-		YabbaConfigEvent event = new YabbaConfigEvent(this, configGroup, player);
+		ConfigGroup main = new ConfigGroup("barrel_config");
+		main.setDisplayName(getDisplayName());
+		YabbaConfigEvent event = new YabbaConfigEvent(this, main, player);
 		event.post();
 		createConfig(event);
-		FTBLibAPI.editServerConfig((EntityPlayerMP) player, configGroup, this);
+		FTBLibAPI.editServerConfig((EntityPlayerMP) player, main, this);
 	}
 
 	@Override

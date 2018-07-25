@@ -5,8 +5,6 @@ import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
-import com.google.gson.JsonObject;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
@@ -24,7 +22,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -428,9 +425,8 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 	}
 
 	@Override
-	public void saveConfig(ConfigGroup group, ICommandSender sender, JsonObject json)
+	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
 	{
-		super.saveConfig(group, sender, json);
 		setStoredItemType(storedItem, itemCount);
 	}
 
@@ -438,12 +434,10 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 	public void createConfig(YabbaConfigEvent event)
 	{
 		super.createConfig(event);
-		String group = Yabba.MOD_ID;
-		event.getConfig().setGroupName(group, new TextComponentString(Yabba.MOD_NAME));
 
 		if (!tier.creative())
 		{
-			event.getConfig().add(group, "locked", isLocked);
+			event.getConfig().add("locked", isLocked);
 		}
 	}
 

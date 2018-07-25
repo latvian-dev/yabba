@@ -3,7 +3,6 @@ package com.latmod.yabba.tile;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
@@ -161,11 +160,11 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	{
 		super.createConfig(event);
 
-		event.getConfig().add(Yabba.MOD_ID, "always_display_data", alwaysDisplayData).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
+		event.getConfig().add("always_display_data", alwaysDisplayData).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
 
 		if (!tier.infiniteCapacity())
 		{
-			event.getConfig().add(Yabba.MOD_ID, "display_bar", displayBar).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
+			event.getConfig().add("display_bar", displayBar).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.util.UpgradeInst;
 import net.minecraft.client.resources.I18n;
@@ -9,7 +8,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -136,12 +134,10 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarre
 	public void createConfig(YabbaConfigEvent event)
 	{
 		super.createConfig(event);
-		String group = Yabba.MOD_ID;
-		event.getConfig().setGroupName(group, new TextComponentString(Yabba.MOD_NAME));
 
 		if (!tier.creative())
 		{
-			event.getConfig().add(group, "locked", isLocked);
+			event.getConfig().add("locked", isLocked);
 		}
 	}
 
