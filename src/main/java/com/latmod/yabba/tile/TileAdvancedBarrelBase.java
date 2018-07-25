@@ -160,11 +160,11 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	{
 		super.createConfig(event);
 
-		event.getConfig().add("always_display_data", alwaysDisplayData).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
+		event.getConfig().add("always_display_data", alwaysDisplayData, new ConfigBoolean(false)).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
 
 		if (!tier.infiniteCapacity())
 		{
-			event.getConfig().add("display_bar", displayBar).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
+			event.getConfig().add("display_bar", displayBar, new ConfigBoolean(false)).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
 		}
 	}
 

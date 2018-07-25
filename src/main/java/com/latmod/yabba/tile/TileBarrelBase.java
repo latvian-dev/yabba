@@ -1,7 +1,9 @@
 package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
@@ -248,8 +250,8 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 			ConfigGroup group = event.getConfig().getGroup("redstone");
 			group.setDisplayName(new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getTranslationKey() + ".name"));
 			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
-			group.add("mode", data1.mode);
-			group.add("count", data1.count);
+			group.add("mode", data1.mode, new ConfigEnum<>(ItemUpgradeRedstone.Mode.NAME_MAP));
+			group.add("count", data1.count, new ConfigInt(1));
 		}
 
 		data = getUpgradeData(YabbaItems.UPGRADE_HOPPER);
@@ -258,9 +260,9 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 			ConfigGroup group = event.getConfig().getGroup("hopper");
 			group.setDisplayName(new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getTranslationKey() + ".name"));
 			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
-			group.add("up", data1.up);
-			group.add("down", data1.down);
-			group.add("collect", data1.collect);
+			group.add("up", data1.up, new ConfigBoolean(true));
+			group.add("down", data1.down, new ConfigBoolean(true));
+			group.add("collect", data1.collect, new ConfigBoolean(false));
 		}
 	}
 

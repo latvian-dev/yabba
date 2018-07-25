@@ -1,5 +1,6 @@
 package com.latmod.yabba.tile;
 
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.api.YabbaConfigEvent;
 import com.latmod.yabba.util.UpgradeInst;
@@ -137,7 +138,7 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarre
 
 		if (!tier.creative())
 		{
-			event.getConfig().add("locked", isLocked);
+			event.getConfig().add("locked", isLocked, new ConfigBoolean(false));
 		}
 	}
 
