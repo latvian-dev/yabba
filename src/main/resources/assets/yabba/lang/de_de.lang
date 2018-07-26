@@ -23,19 +23,15 @@ tile.yabba.barrel.name=Gegenstandsfass
 tile.yabba.antibarrel.name=AntiFass
 
 # Config
-config_group.yabba.name=YABBA
-config_group.yabba.crafting.name=Handwerk
-config_group.yabba.tier.name=Stufe
-config_group.yabba.tier.item.name=Gegenstand
+yabba_client.general.always_display_data=Daten immer anzeigen
+yabba_client.general.display_bar=Balken anzeigen
 
-# Client Config
-config_group.yabba.bar_color.name=Balkenfarbe
-client_config.yabba.bar_color.border.name=Rahmen
-client_config.yabba.bar_color.free.name=Freier Platz
-client_config.yabba.bar_color.filled.name=Belegter Platz
-client_config.yabba.bar_color.alpha.name=Alpha
+yabba_client.bar_color=Balkenfarbe
+yabba_client.bar_color.border=Rahmen
+yabba_client.bar_color.free=Freier Platz
+yabba_client.bar_color.filled=Belegter Platz
+yabba_client.bar_color.alpha=Alpha
 
-config.yabba.allowed_ore_prefixes.name=Erlaubte Erz-Präfixe
 config.yabba.tier.item.wood.name=Holz
 config.yabba.tier.item.iron.name=Eisen
 config.yabba.tier.item.gold.name=Gold
@@ -44,19 +40,11 @@ config.yabba.tier.item.infinity.name=Unendlichkeit
 config.yabba.crafting.upgrade_stack_size.name=Stackgröße verbessern
 config.yabba.crafting.barrel_easy_recipe.name=Einfaches Fassrezept
 
-barrel_config.yabba.disable_ore_items.name=Erz-Items deaktivieren
-barrel_config.yabba.always_display_data.name=Daten immer anzeigen
-barrel_config.yabba.display_bar.name=Balken anzeigen
-config_group.yabba.redstone.name=Redstone-Output
-barrel_config.yabba.redstone.mode.name=Modus
-barrel_config.yabba.redstone.item_count.name=Gegenstandsanzahl
-config_group.yabba.hopper.name=Trichter
-barrel_config.yabba.hopper.up.name=Oben
-barrel_config.yabba.hopper.down.name=Unten
-barrel_config.yabba.hopper.collect.name=Sammeln
-
-# Guide
-yabba.guide=YABBA
+barrel_config.redstone.mode=Modus
+barrel_config.redstone.item_count=Gegenstandsanzahl
+barrel_config.hopper.up=Oben
+barrel_config.hopper.down=Unten
+barrel_config.hopper.collect=Sammeln
 
 # Models
 yabba.model.barrel=Fass

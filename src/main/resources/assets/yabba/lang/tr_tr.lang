@@ -76,22 +76,12 @@ yabba.tier.gold=Gold
 yabba.tier.diamond=Diamond
 yabba.tier.max_item_stacks=Max Item Stacks
 
-barrel_config.yabba.locked=Locked
-barrel_config.yabba.redstone.mode=Mode
-barrel_config.yabba.redstone.count=Count
-barrel_config.yabba.hopper.up=Up
-barrel_config.yabba.hopper.down=Down
-barrel_config.yabba.hopper.collect=Collect
-
-# Guide
-guide.yabba.item_barrel.info=EÅŸya FÄ±Ã§Ä±sÄ±, bir eÅŸya tÃ¼rÃ¼nÃ¼n birden fazla yÄ±ÄŸÄ±nlÄ± olarak depolar.
-guide.yabba.fluid_barrel.info=SÄ±vÄ± FÄ±Ã§Ä±sÄ±, iÃ§inde sÄ±vÄ± depolanabilen bir fÄ±Ã§Ä±dÄ±r.
-guide.yabba.energy_barrel.info=Enerji FÄ±Ã§Ä±sÄ±, iÃ§ine enerji depolayabilir.
-guide.yabba.hammer.info=SaÄŸ tÄ±k ile arayÃ¼zÃ¼ aÃ§Ä±n ve kullanmak istediÄŸiniz modeli seÃ§in. Modeli deÄŸiÅŸtirmek iÃ§in fÄ±Ã§Ä± ile beraber Ã¼retilebilir.
-guide.yabba.painter.info=SaÄŸ tÄ±k ile arayÃ¼zÃ¼ aÃ§Ä±n ve kullanmak istediÄŸiniz gÃ¶rÃ¼nÃ¼mÃ¼ seÃ§in. GÃ¶rÃ¼nÃ¼ÅŸÃ¼ deÄŸiÅŸtirmek iÃ§in fÄ±Ã§Ä± ile beraber Ã¼retilebilir.
-guide.yabba.upgrades.apply=Bir fÄ±Ã§Ä±ya yÃ¼kseltme uygulamak iÃ§in, elinizde yÃ¼kseltme var iken direk saÄŸ tÄ±klayabilir, veya Ã¼retim masasÄ±ndan fÄ±Ã§Ä± ile beraber koyabilirsin.
-guide.yabba.upgrades.cant_apply=EÄŸer yÃ¼kseltme uygulanamadÄ± ise / fÄ±Ã§Ä± ile beraber Ã¼retilemedi ise, fÄ±Ã§Ä±da zaten bu yÃ¼kseltme vardÄ±r veya uygulanamÄ±yordur.
-guide.yabba.upgrades.tooltip=FÄ±Ã§Ä± eÅŸyasÄ±na fareyi getirdiÄŸinizde, uygulanmÄ±ÅŸ yÃ¼kseltmeleri gÃ¶sterir.
+barrel_config.locked=Locked
+barrel_config.redstone.mode=Mode
+barrel_config.redstone.count=Count
+barrel_config.hopper.up=Up
+barrel_config.hopper.down=Down
+barrel_config.hopper.collect=Collect
 
 # Models
 yabba.yabba_model.barrel=FÄ±Ã§Ä±
