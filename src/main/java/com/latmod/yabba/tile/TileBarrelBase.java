@@ -269,7 +269,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	@Override
 	public final void openGui(EntityPlayer player)
 	{
-		ConfigGroup main = new ConfigGroup("barrel_config");
+		ConfigGroup main = ConfigGroup.newGroup("barrel_config");
 		main.setDisplayName(getDisplayName());
 		YabbaConfigEvent event = new YabbaConfigEvent(this, main, player);
 		event.post();
