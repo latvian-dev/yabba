@@ -8,7 +8,6 @@ import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.BlockItemBarrelConnector;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.client.BarrelModelLoader;
-import com.latmod.yabba.client.RenderAntibarrel;
 import com.latmod.yabba.client.RenderItemBarrel;
 import com.latmod.yabba.item.ItemBlockAntibarrel;
 import com.latmod.yabba.item.ItemBlockBarrel;
@@ -153,6 +152,5 @@ public class YabbaItems
 		ModelLoader.setCustomModelResourceLocation(PAINTER, 0, new ModelResourceLocation(PAINTER.getRegistryName(), "inventory"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileItemBarrel.class, new RenderItemBarrel());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAntibarrel.class, new RenderAntibarrel());
 	}
 }
