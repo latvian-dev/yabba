@@ -6,6 +6,8 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
@@ -69,12 +71,18 @@ public class GuiSelectSkin extends GuiBase
 		}
 
 		@Override
+		public Icon getButtonBackground()
+		{
+			return getWidgetType() == WidgetType.MOUSE_OVER ? Color4I.LIGHT_GREEN.withAlpha(70) : Color4I.BLACK.withAlpha(50);
+		}
+
+		@Override
 		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
 
-			getIcon().draw(ax, ay, width, height);
+			getButtonBackground().draw(ax, ay, width, height);
 			skin.icon.draw(ax + 2, ay + 2, 16, 16);
 		}
 	}
@@ -86,7 +94,7 @@ public class GuiSelectSkin extends GuiBase
 
 	public GuiSelectSkin()
 	{
-		setSize(211, 150);
+		setSize(213, 152);
 
 		searchBar = new TextBox(this)
 		{
@@ -133,10 +141,10 @@ public class GuiSelectSkin extends GuiBase
 			{
 				for (int i = 0; i < widgets.size(); i++)
 				{
-					widgets.get(i).setPos((i % 8) * 21, (i / 8) * 21);
+					widgets.get(i).setPos(1 + (i % 8) * 21, 1 + (i / 8) * 21);
 				}
 
-				scrollBar.setMaxValue(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 20);
+				scrollBar.setMaxValue(widgets.isEmpty() ? 0 : widgets.get(widgets.size() - 1).posY + 21);
 			}
 
 			@Override
@@ -146,12 +154,12 @@ public class GuiSelectSkin extends GuiBase
 			}
 		};
 
-		skinsPanel.setPosAndSize(9, 29, 167, 111);
+		skinsPanel.setPosAndSize(9, 29, 169, 113);
 
 		scrollBar = new PanelScrollBar(this, skinsPanel);
 		scrollBar.setCanAlwaysScroll(true);
 		scrollBar.setCanAlwaysScrollPlane(true);
-		scrollBar.setPosAndSize(184, 28, 18, 113);
+		scrollBar.setPosAndSize(186, 28, 18, 115);
 		scrollBar.setScrollStep(21);
 
 		for (BarrelSkin s : YabbaClient.ALL_SKINS)

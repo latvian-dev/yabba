@@ -1,4 +1,5 @@
 [
+	{"add": "yabba:debug", "textures": "north=blocks/planks_oak,south=blocks/planks_big_oak,west=blocks/planks_birch,east=blocks/planks_jungle,up=blocks/planks_spruce,down=blocks/planks_acacia"},
 	{
 		"for": [
 			"v", [

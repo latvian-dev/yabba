@@ -32,10 +32,6 @@ public class GuiSelectModel extends GuiBase
 			{
 				setTitle(model.toString());
 			}
-			else
-			{
-				setIcon(getTheme().getButton(WidgetType.DISABLED));
-			}
 		}
 
 		@Override
@@ -50,11 +46,17 @@ public class GuiSelectModel extends GuiBase
 		}
 
 		@Override
+		public WidgetType getWidgetType()
+		{
+			return model == null ? WidgetType.DISABLED : super.getWidgetType();
+		}
+
+		@Override
 		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
-			getIcon().draw(ax, ay, width, height);
+			getButtonBackground().draw(ax, ay, width, height);
 
 			if (model != null)
 			{
