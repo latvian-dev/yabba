@@ -1,8 +1,8 @@
 package com.latmod.yabba.item;
 
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;
+import com.latmod.yabba.gui.GuiSelectSkin;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,13 +47,18 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 		{
 			if (worldIn.isRemote)
 			{
-				Yabba.PROXY.openSkinGui();
+				openSkinGui();
 			}
 
 			return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 		}
 
 		return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(hand));
+	}
+
+	private void openSkinGui()
+	{
+		new GuiSelectSkin().openGui();
 	}
 
 	@SideOnly(Side.CLIENT)

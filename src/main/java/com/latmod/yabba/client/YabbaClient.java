@@ -19,8 +19,6 @@ import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.api.YabbaSkinsEvent;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.gui.GuiSelectModel;
-import com.latmod.yabba.gui.GuiSelectSkin;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
@@ -357,18 +355,6 @@ public class YabbaClient extends YabbaCommon
 		super.postInit();
 		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
 		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
-	}
-
-	@Override
-	public void openModelGui()
-	{
-		new GuiSelectModel().openGui();
-	}
-
-	@Override
-	public void openSkinGui()
-	{
-		new GuiSelectSkin().openGui();
 	}
 
 	public static BarrelSkin getSkin(@Nullable String id)

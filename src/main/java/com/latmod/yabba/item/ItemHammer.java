@@ -1,7 +1,7 @@
 package com.latmod.yabba.item;
 
-import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
+import com.latmod.yabba.gui.GuiSelectModel;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -47,13 +47,18 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 		{
 			if (worldIn.isRemote)
 			{
-				Yabba.PROXY.openModelGui();
+				openModelGui();
 			}
 
 			return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 		}
 
 		return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(hand));
+	}
+
+	private void openModelGui()
+	{
+		new GuiSelectModel().openGui();
 	}
 
 	@SideOnly(Side.CLIENT)
