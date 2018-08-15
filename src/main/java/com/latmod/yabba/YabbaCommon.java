@@ -42,12 +42,4 @@ public class YabbaCommon
 	public void postInit()
 	{
 	}
-
-	public void openModelGui()
-	{
-	}
-
-	public void openSkinGui()
-	{
-	}
 }

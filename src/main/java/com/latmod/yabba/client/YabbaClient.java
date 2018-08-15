@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -153,7 +154,7 @@ public class YabbaClient extends YabbaCommon
 
 		for (BarrelSkin skin : SKINS.values())
 		{
-			if (skin.displayName.isEmpty() && skin.state != CommonUtils.AIR_STATE)
+			if (skin.displayName.isEmpty() && skin.state != BlockUtils.AIR_STATE)
 			{
 				try
 				{
@@ -300,7 +301,7 @@ public class YabbaClient extends YabbaCommon
 						skin.color = Color4I.fromJson(json.get("color"));
 					}
 
-					skin.state = CommonUtils.getStateFromName(json.has("state") ? parseVariableString(json.get("state").getAsString()) : skin.id);
+					skin.state = BlockUtils.getStateFromName(json.has("state") ? parseVariableString(json.get("state").getAsString()) : skin.id);
 					REGISTER_SKIN.addSkin(skin);
 				}
 				else if (json.has("set"))

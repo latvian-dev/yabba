@@ -9,7 +9,7 @@ import com.feed_the_beast.ftblib.lib.gui.TextBox;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
@@ -58,9 +58,9 @@ public class GuiSelectSkin extends GuiBase
 			{
 				list.add(TextFormatting.DARK_GRAY + skin.id);
 
-				if (skin.state != CommonUtils.AIR_STATE)
+				if (skin.state != BlockUtils.AIR_STATE)
 				{
-					String s = CommonUtils.getNameFromState(skin.state);
+					String s = BlockUtils.getNameFromState(skin.state);
 
 					if (!s.equals(skin.id))
 					{
