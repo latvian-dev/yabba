@@ -6,6 +6,7 @@ import com.latmod.yabba.gui.GuiSelectSkin;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemPainter extends ItemYabba implements IUpgrade
+public class ItemPainter extends Item implements IUpgrade
 {
 	public static String getSkin(ItemStack stack)
 	{
@@ -35,7 +36,6 @@ public class ItemPainter extends ItemYabba implements IUpgrade
 
 	public ItemPainter()
 	{
-		super("painter");
 		setMaxStackSize(1);
 		setMaxDamage(0);
 	}

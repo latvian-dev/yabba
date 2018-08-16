@@ -28,7 +28,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,7 +39,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 {
 	INSTANCE;
 
-	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation("yabba:barrel#normal");
+	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(Yabba.MOD_ID + ":barrel#normal");
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)

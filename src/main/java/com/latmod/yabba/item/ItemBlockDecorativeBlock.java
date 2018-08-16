@@ -1,10 +1,10 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemBlockDecorativeBlock extends ItemBlockBase
+public class ItemBlockDecorativeBlock extends ItemBlock
 {
 	public ItemBlockDecorativeBlock(Block block)
 	{

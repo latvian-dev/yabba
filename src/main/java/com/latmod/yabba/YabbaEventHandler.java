@@ -2,17 +2,43 @@ package com.latmod.yabba;
 
 import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.latmod.yabba.block.BlockAntibarrel;
+import com.latmod.yabba.block.BlockCompoundItemBarrel;
+import com.latmod.yabba.block.BlockDecorativeBlock;
+import com.latmod.yabba.block.BlockItemBarrel;
+import com.latmod.yabba.block.BlockItemBarrelConnector;
+import com.latmod.yabba.block.Tier;
+import com.latmod.yabba.item.ItemBlockAntibarrel;
+import com.latmod.yabba.item.ItemBlockBarrel;
+import com.latmod.yabba.item.ItemBlockDecorativeBlock;
+import com.latmod.yabba.item.ItemHammer;
+import com.latmod.yabba.item.ItemPainter;
+import com.latmod.yabba.item.upgrade.ItemUpgrade;
+import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
+import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
+import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
+import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.item.upgrade.ItemUpgradeStone;
+import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
+import com.latmod.yabba.tile.TileAntibarrel;
+import com.latmod.yabba.tile.TileCompoundItemBarrel;
+import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.tile.TileItemBarrel;
+import com.latmod.yabba.tile.TileItemBarrelConnector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * @author LatvianModder
@@ -20,6 +46,69 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Yabba.MOD_ID)
 public class YabbaEventHandler
 {
+	private static Block withName(Block block, String name)
+	{
+		block.setCreativeTab(Yabba.TAB);
+		block.setRegistryName(name);
+		block.setTranslationKey(Yabba.MOD_ID + "." + name);
+		return block;
+	}
+
+	private static Item withName(Item item, String name)
+	{
+		item.setCreativeTab(Yabba.TAB);
+		item.setRegistryName(name);
+		item.setTranslationKey(Yabba.MOD_ID + "." + name);
+		return item;
+	}
+
+	@SubscribeEvent
+	public static void registerBlocks(RegistryEvent.Register<Block> event)
+	{
+		event.getRegistry().registerAll(
+				withName(new BlockItemBarrel(), "item_barrel"),
+				withName(new BlockItemBarrelConnector(), "item_barrel_connector"),
+				withName(new BlockAntibarrel(), "antibarrel"),
+				withName(new BlockCompoundItemBarrel(), "compound_item_barrel"),
+				withName(new BlockDecorativeBlock(), "decorative_block")
+		);
+
+		GameRegistry.registerTileEntity(TileItemBarrel.class, new ResourceLocation(Yabba.MOD_ID, "item_barrel"));
+		GameRegistry.registerTileEntity(TileItemBarrelConnector.class, new ResourceLocation(Yabba.MOD_ID, "item_barrel_connector"));
+		GameRegistry.registerTileEntity(TileAntibarrel.class, new ResourceLocation(Yabba.MOD_ID, "antibarrel"));
+		GameRegistry.registerTileEntity(TileCompoundItemBarrel.class, new ResourceLocation(Yabba.MOD_ID, "compound_item_barrel"));
+		GameRegistry.registerTileEntity(TileDecorativeBlock.class, new ResourceLocation(Yabba.MOD_ID, "decorative_block"));
+	}
+
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event)
+	{
+		event.getRegistry().registerAll(
+				new ItemBlockBarrel(YabbaItems.ITEM_BARREL).setRegistryName("item_barrel"),
+				new ItemBlock(YabbaItems.ITEM_BARREL_CONNECTOR).setRegistryName("item_barrel_connector"),
+				new ItemBlockAntibarrel(YabbaItems.ANTIBARREL).setRegistryName("antibarrel"),
+				new ItemBlockBarrel(YabbaItems.COMPOUND_ITEM_BARREL).setRegistryName("compound_item_barrel"),
+				new ItemBlockDecorativeBlock(YabbaItems.DECORATIVE_BLOCK).setRegistryName("decorative_block")
+		);
+
+		event.getRegistry().registerAll(
+				withName(new ItemUpgradeBlank(), "upgrade_blank"),
+				withName(new ItemUpgradeStone(), "upgrade_stone_tier"),
+				withName(new ItemUpgradeTier(Tier.IRON), "upgrade_iron_tier"),
+				withName(new ItemUpgradeTier(Tier.GOLD), "upgrade_gold_tier"),
+				withName(new ItemUpgradeTier(Tier.DIAMOND), "upgrade_diamond_tier"),
+				withName(new ItemUpgradeTier(Tier.STAR), "upgrade_star_tier"),
+				withName(new ItemUpgradeCreative(), "upgrade_creative"),
+				withName(new ItemUpgrade(), "upgrade_obsidian_shell"),
+				withName(new ItemUpgradeRedstone(), "upgrade_redstone_out"),
+				withName(new ItemUpgradeHopper(), "upgrade_hopper"),
+				withName(new ItemUpgrade(), "upgrade_void"),
+				withName(new ItemUpgrade(), "upgrade_pickup"),
+				withName(new ItemHammer(), "hammer"),
+				withName(new ItemPainter(), "painter")
+		);
+	}
+
 	@SubscribeEvent
 	public static void onFTBLibPreInitRegistry(FTBLibPreInitRegistryEvent event)
 	{

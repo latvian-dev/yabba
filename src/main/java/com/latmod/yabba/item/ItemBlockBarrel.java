@@ -1,6 +1,5 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.tile.TileBarrelBase;
@@ -8,6 +7,7 @@ import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemBlockBarrel extends ItemBlockBase
+public class ItemBlockBarrel extends ItemBlock
 {
 	public ItemBlockBarrel(Block block)
 	{

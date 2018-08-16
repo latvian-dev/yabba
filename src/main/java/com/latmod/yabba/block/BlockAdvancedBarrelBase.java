@@ -44,9 +44,8 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	public static final PropertyEnum<EnumBarrelModel> MODEL = PropertyEnum.create("model", EnumBarrelModel.class);
 	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin");
 
-	public BlockAdvancedBarrelBase(String id)
+	public BlockAdvancedBarrelBase()
 	{
-		super(id);
 		setDefaultState(blockState.getBaseState().withProperty(MODEL, EnumBarrelModel.BARREL).withProperty(FACING, EnumFacing.NORTH));
 	}
 

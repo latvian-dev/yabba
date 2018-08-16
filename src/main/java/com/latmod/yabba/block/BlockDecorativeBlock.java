@@ -1,5 +1,6 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftblib.lib.block.BlockBase;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.item.ItemPainter;
@@ -36,11 +37,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class BlockDecorativeBlock extends BlockYabba
+public class BlockDecorativeBlock extends BlockBase
 {
-	public BlockDecorativeBlock(String id)
+	public BlockDecorativeBlock()
 	{
-		super(id, Material.WOOD, MapColor.WOOD);
+		super(Material.WOOD, MapColor.WOOD);
 		setHardness(2F);
 		setDefaultState(blockState.getBaseState().withProperty(BlockAdvancedBarrelBase.MODEL, EnumBarrelModel.BARREL).withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.NORTH));
 	}

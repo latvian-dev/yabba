@@ -1,5 +1,6 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftblib.lib.block.BlockBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.latmod.yabba.YabbaGuiHandler;
@@ -24,11 +25,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 /**
  * @author LatvianModder
  */
-public class BlockAntibarrel extends BlockYabba
+public class BlockAntibarrel extends BlockBase
 {
-	public BlockAntibarrel(String id)
+	public BlockAntibarrel()
 	{
-		super(id, Material.ROCK, MapColor.NETHERRACK);
+		super(Material.ROCK, MapColor.NETHERRACK);
 		setHardness(6F);
 		setResistance(1000F);
 	}

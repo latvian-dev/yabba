@@ -1,0 +1,126 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "yabba:blocks/skin_n",
+		"skin_n": "yabba:blocks/skin_n",
+		"skin_e": "yabba:blocks/skin_e",
+		"skin_s": "yabba:blocks/skin_s",
+		"skin_w": "yabba:blocks/skin_w",
+		"skin_u": "yabba:blocks/skin_u",
+		"skin_d": "yabba:blocks/skin_d"
+	},
+	"elements": [
+		{
+			"name": "cube_south",
+			"from": [1, 1, 16],
+			"to": [15, 15, 16],
+			"faces": {
+				"south": {"uv": [1, 1, 15, 15], "texture": "#skin_s", "cullface": "south"}
+			}
+		},
+		{
+			"name": "cube_up",
+			"from": [1, 16, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"up": {"uv": [1, 1, 15, 15], "texture": "#skin_u", "cullface": "up"}
+			}
+		},
+		{
+			"name": "cube_down",
+			"from": [1, 0, 1],
+			"to": [15, 0, 15],
+			"faces": {
+				"down": {"uv": [1, 1, 15, 15], "texture": "#skin_d", "cullface": "down"}
+			}
+		},
+		{
+			"name": "cube_east",
+			"from": [16, 1, 1],
+			"to": [16, 15, 15],
+			"faces": {
+				"east": {"uv": [15, 15, 1, 1], "texture": "#skin_e", "cullface": "east"}
+			}
+		},
+		{
+			"name": "cube_west",
+			"from": [0, 1, 1],
+			"to": [0, 15, 15],
+			"faces": {
+				"west": {"uv": [1, 1, 15, 15], "texture": "#skin_w", "cullface": "west"}
+			}
+		},
+		{
+			"name": "front_up",
+			"from": [1, 12, 0],
+			"to": [15, 15, 0],
+			"faces": {
+				"north": {"uv": [1, 1, 15, 4], "texture": "#skin_n", "cullface": "north"}
+			}
+		},
+		{
+			"name": "front_down",
+			"from": [1, 1, 0],
+			"to": [15, 4, 0],
+			"faces": {
+				"north": {"uv": [1, 12, 15, 15], "texture": "#skin_n", "cullface": "north"}
+			}
+		},
+		{
+			"name": "front_east",
+			"from": [12, 4, 0],
+			"to": [15, 12, 0],
+			"faces": {
+				"north": {"uv": [1, 4, 4, 12], "texture": "#skin_n", "cullface": "north"}
+			}
+		},
+		{
+			"name": "front_west",
+			"from": [1, 4, 0],
+			"to": [4, 12, 0],
+			"faces": {
+				"north": {"uv": [12, 4, 15, 12], "texture": "#skin_n", "cullface": "north"}
+			}
+		},
+		{
+			"name": "inner_north",
+			"from": [4, 4, 1],
+			"to": [12, 12, 1],
+			"faces": {
+				"north": {"uv": [4, 4, 12, 12], "texture": "#skin_n", "cullface": "north"}
+			}
+		},
+		{
+			"name": "inner_down",
+			"from": [4, 4, 0],
+			"to": [12, 4, 1],
+			"faces": {
+				"up": {"uv": [4, 0, 12, 1], "texture": "#skin_u", "cullface": "north"}
+			}
+		},
+		{
+			"name": "inner_up",
+			"from": [4, 12, 0],
+			"to": [12, 12, 1],
+			"faces": {
+				"down": {"uv": [4, 15, 12, 16], "texture": "#skin_d", "cullface": "north"}
+			}
+		},
+		{
+			"name": "inner_west",
+			"from": [4, 4, 0],
+			"to": [4, 12, 1],
+			"faces": {
+				"east": {"uv": [16, 12, 15, 4], "texture": "#skin_e", "cullface": "north"}
+			}
+		},
+		{
+			"name": "inner_east",
+			"from": [12, 4, 0],
+			"to": [12, 12, 1],
+			"faces": {
+				"west": {"uv": [0, 4, 1, 12], "texture": "#skin_w", "cullface": "north"}
+			}
+		}
+	]
+}

@@ -10,11 +10,6 @@ import net.minecraft.world.World;
  */
 public class BlockItemBarrel extends BlockAdvancedBarrelBase
 {
-	public BlockItemBarrel(String id)
-	{
-		super(id);
-	}
-
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{

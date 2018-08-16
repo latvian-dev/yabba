@@ -8,11 +8,6 @@ import com.latmod.yabba.block.Tier;
  */
 public class ItemUpgradeStone extends ItemUpgrade
 {
-	public ItemUpgradeStone(String id)
-	{
-		super(id);
-	}
-
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{

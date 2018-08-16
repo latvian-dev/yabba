@@ -1,0 +1,27 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "yabba:blocks/skin_n",
+		"skin_n": "yabba:blocks/skin_n",
+		"skin_e": "yabba:blocks/skin_e",
+		"skin_s": "yabba:blocks/skin_s",
+		"skin_w": "yabba:blocks/skin_w",
+		"skin_u": "yabba:blocks/skin_u",
+		"skin_d": "yabba:blocks/skin_d"
+	},
+	"elements": [
+		{
+			"name": "slab",
+			"from": [0, 0, 8],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#skin_n"},
+				"east": {"uv": [8, 16, 0, 0], "texture": "#skin_e", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#skin_s", "cullface": "south"},
+				"west": {"uv": [8, 0, 16, 16], "texture": "#skin_w", "cullface": "west"},
+				"up": {"uv": [0, 8, 16, 16], "texture": "#skin_u", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 8], "texture": "#skin_d", "cullface": "down"}
+			}
+		}
+	]
+}

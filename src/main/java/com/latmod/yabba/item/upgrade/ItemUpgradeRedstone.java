@@ -85,11 +85,6 @@ public class ItemUpgradeRedstone extends ItemUpgrade
 		}
 	}
 
-	public ItemUpgradeRedstone(String id)
-	{
-		super(id);
-	}
-
 	@Override
 	public DataStorage createBarrelUpgradeData()
 	{

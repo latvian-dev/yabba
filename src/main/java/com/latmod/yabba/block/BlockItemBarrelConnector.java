@@ -36,11 +36,11 @@ import java.util.Random;
 /**
  * @author LatvianModder
  */
-public class BlockItemBarrelConnector extends BlockYabba
+public class BlockItemBarrelConnector extends BlockBase
 {
-	public BlockItemBarrelConnector(String id)
+	public BlockItemBarrelConnector()
 	{
-		super(id, Material.WOOD, MapColor.WOOD);
+		super(Material.WOOD, MapColor.WOOD);
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftblib.lib.block.ItemBlockBase;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.util.AntibarrelData;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemBlockAntibarrel extends ItemBlockBase
+public class ItemBlockAntibarrel extends ItemBlock
 {
 	public ItemBlockAntibarrel(Block block)
 	{

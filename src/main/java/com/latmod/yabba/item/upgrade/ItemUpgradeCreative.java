@@ -10,11 +10,6 @@ import com.latmod.yabba.tile.IItemBarrel;
  */
 public class ItemUpgradeCreative extends ItemUpgrade
 {
-	public ItemUpgradeCreative(String id)
-	{
-		super(id);
-	}
-
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{

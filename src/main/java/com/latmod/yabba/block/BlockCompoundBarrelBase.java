@@ -1,5 +1,6 @@
 package com.latmod.yabba.block;
 
+import com.feed_the_beast.ftblib.lib.block.BlockBase;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.tile.IBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
@@ -22,11 +23,11 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class BlockCompoundBarrelBase extends BlockYabba
+public class BlockCompoundBarrelBase extends BlockBase
 {
-	public BlockCompoundBarrelBase(String id)
+	public BlockCompoundBarrelBase()
 	{
-		super(id, Material.WOOD, MapColor.WOOD);
+		super(Material.WOOD, MapColor.WOOD);
 		setHardness(2F);
 	}
 

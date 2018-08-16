@@ -7,11 +7,6 @@ import com.latmod.yabba.api.ApplyUpgradeEvent;
  */
 public class ItemUpgradeBlank extends ItemUpgrade
 {
-	public ItemUpgradeBlank(String id)
-	{
-		super(id);
-	}
-
 	@Override
 	public boolean applyOn(ApplyUpgradeEvent event)
 	{

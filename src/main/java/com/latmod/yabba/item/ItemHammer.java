@@ -6,6 +6,7 @@ import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemHammer extends ItemYabba implements IUpgrade
+public class ItemHammer extends Item implements IUpgrade
 {
 	public static EnumBarrelModel getModel(ItemStack stack)
 	{
@@ -35,7 +36,6 @@ public class ItemHammer extends ItemYabba implements IUpgrade
 
 	public ItemHammer()
 	{
-		super("hammer");
 		setMaxStackSize(1);
 		setMaxDamage(0);
 	}

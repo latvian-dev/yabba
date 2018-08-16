@@ -33,11 +33,6 @@ public class ItemUpgradeHopper extends ItemUpgrade
 		}
 	}
 
-	public ItemUpgradeHopper(String id)
-	{
-		super(id);
-	}
-
 	@Override
 	public DataStorage createBarrelUpgradeData()
 	{

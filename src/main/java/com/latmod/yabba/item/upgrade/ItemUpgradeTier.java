@@ -10,9 +10,8 @@ public class ItemUpgradeTier extends ItemUpgrade
 {
 	private final Tier tier;
 
-	public ItemUpgradeTier(String id, Tier t)
+	public ItemUpgradeTier(Tier t)
 	{
-		super(id);
 		tier = t;
 	}
 
