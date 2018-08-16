@@ -3,6 +3,7 @@ package com.latmod.yabba.block;
 import com.feed_the_beast.ftblib.lib.block.BlockBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaGuiHandler;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
 import com.latmod.yabba.tile.TileAntibarrel;
@@ -10,6 +11,8 @@ import com.latmod.yabba.util.AntibarrelData;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -20,7 +23,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -129,5 +137,14 @@ public class BlockAntibarrel extends BlockBase
 		}
 
 		super.breakBlock(world, pos, state);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
+	{
+		AntibarrelData data = AntibarrelData.get(stack);
+		tooltip.add(I18n.format("tile.yabba.antibarrel.tooltip"));
+		tooltip.add(I18n.format("tile.yabba.antibarrel.items", data.getTotalItemCount(), data.items.size(), YabbaConfig.general.antibarrel_capacity));
 	}
 }

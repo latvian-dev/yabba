@@ -1,7 +1,8 @@
 package com.latmod.yabba.client;
 
+import com.feed_the_beast.ftblib.lib.client.SpriteSet;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
@@ -63,7 +64,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
-		return Collections.emptyList();
+		return Collections.emptyList(); //EnumBarrelModel.ALL_MODEL_LOCATIONS
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 
 		for (BarrelSkin skin : YabbaClient.ALL_SKINS)
 		{
-			skin.spriteSet = skin.textures.getSpriteSet(bakedTextureGetter);
+			skin.spriteSet = SpriteSet.of(skin.textures, bakedTextureGetter);
 		}
 
 		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
@@ -89,7 +90,7 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 
 			for (Map.Entry<String, TextureSet> entry : model.textures.entrySet())
 			{
-				model.textureMap.put(entry.getKey(), entry.getValue().getSpriteSet(bakedTextureGetter));
+				model.textureMap.put(entry.getKey(), SpriteSet.of(entry.getValue(), bakedTextureGetter));
 			}
 		}
 
@@ -126,9 +127,9 @@ public enum BarrelModelLoader implements IModel, ICustomModelLoader, IBlockColor
 		{
 			String id = "";
 
-			if (NBTUtils.hasBlockData(stack))
+			if (BlockUtils.hasData(stack))
 			{
-				id = NBTUtils.getBlockData(stack).getString("Skin");
+				id = BlockUtils.getData(stack).getString("Skin");
 			}
 
 			Color4I color = YabbaClient.getSkin(id).color;

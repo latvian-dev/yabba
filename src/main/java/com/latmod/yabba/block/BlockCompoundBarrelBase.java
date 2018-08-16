@@ -1,12 +1,18 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftblib.lib.block.BlockBase;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.YabbaItems;
+import com.latmod.yabba.item.ItemHammer;
+import com.latmod.yabba.item.ItemPainter;
 import com.latmod.yabba.tile.IBarrelBase;
+import com.latmod.yabba.tile.TileBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
+import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -17,8 +23,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -106,5 +115,30 @@ public class BlockCompoundBarrelBase extends BlockBase
 		}
 
 		return 8F;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
+	{
+		if (world != null && BlockUtils.hasData(stack))
+		{
+			TileBarrelBase barrel = (TileBarrelBase) createTileEntity(world, getDefaultState());
+			barrel.readFromNBT(BlockUtils.getData(stack));
+
+			if (this instanceof BlockAdvancedBarrelBase)
+			{
+				BarrelLook look = barrel.getLook();
+				tooltip.add(ItemHammer.getModelTooltip(look.model));
+				tooltip.add(ItemPainter.getSkinTooltip(look.skin));
+			}
+
+			barrel.addInformation(tooltip, flag);
+		}
+		else if (this instanceof BlockAdvancedBarrelBase)
+		{
+			tooltip.add(ItemHammer.getModelTooltip(EnumBarrelModel.BARREL));
+			tooltip.add(ItemPainter.getSkinTooltip(""));
+		}
 	}
 }

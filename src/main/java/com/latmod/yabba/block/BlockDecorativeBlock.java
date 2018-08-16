@@ -1,6 +1,7 @@
 package com.latmod.yabba.block;
 
 import com.feed_the_beast.ftblib.lib.block.BlockBase;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.item.ItemPainter;
@@ -12,11 +13,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -33,6 +36,9 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -111,10 +117,26 @@ public class BlockDecorativeBlock extends BlockBase
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		list.add(createStack(getDefaultState(), BarrelLook.get(EnumBarrelModel.CRATE, "")));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
+	{
+		if (BlockUtils.hasData(stack))
+		{
+			NBTTagCompound tag = BlockUtils.getData(stack);
+			tooltip.add(ItemHammer.getModelTooltip(EnumBarrelModel.getFromNBTName(tag.getString("Model"))));
+			tooltip.add(ItemPainter.getSkinTooltip(tag.getString("Skin")));
+		}
+		else
+		{
+			tooltip.add(ItemHammer.getModelTooltip(EnumBarrelModel.BARREL));
+			tooltip.add(ItemPainter.getSkinTooltip(""));
+		}
 	}
 
 	@Override
@@ -225,7 +247,6 @@ public class BlockDecorativeBlock extends BlockBase
 
 	@Override
 	@Deprecated
-	@SideOnly(Side.CLIENT)
 	public boolean hasCustomBreakingProgress(IBlockState state)
 	{
 		return false;
@@ -239,15 +260,6 @@ public class BlockDecorativeBlock extends BlockBase
 	}
 
 	@Override
-	@Deprecated
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		return super.shouldSideBeRendered(state, world, pos, side);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;

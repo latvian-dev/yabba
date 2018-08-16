@@ -10,13 +10,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -78,9 +78,7 @@ public enum EnumBarrelModel implements IStringSerializable
 	private final AxisAlignedBB[] boxes;
 	private final ResourceLocation baseModel;
 	private ResourceLocation cutoutModel;
-
-	@SideOnly(Side.CLIENT)
-	private BarrelModel model;
+	private Optional<BarrelModel> model;
 
 	EnumBarrelModel(String n, AxisAlignedBB box)
 	{
@@ -88,6 +86,7 @@ public enum EnumBarrelModel implements IStringSerializable
 		unlocalizedName = "yabba.yabba_model." + name;
 		boxes = MathUtils.getRotatedBoxes(box);
 		baseModel = new ResourceLocation(Yabba.MOD_ID, "block/barrel/" + name);
+		model = Optional.empty();
 	}
 
 	@Override
@@ -122,16 +121,14 @@ public enum EnumBarrelModel implements IStringSerializable
 		return cutoutModel;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public BarrelModel getModel()
 	{
-		return model;
+		return Objects.requireNonNull(model.orElse(null));
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void setModel(BarrelModel m)
 	{
-		model = m;
+		model = Optional.of(m);
 	}
 
 	public boolean isDefault()

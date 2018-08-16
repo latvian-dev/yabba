@@ -150,7 +150,7 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarre
 
 		if (isLocked())
 		{
-			tooltip.add(I18n.format("barrel_config.yabba.locked"));
+			tooltip.add(I18n.format("barrel_config.locked"));
 		}
 
 		if (!storedItem.isEmpty())

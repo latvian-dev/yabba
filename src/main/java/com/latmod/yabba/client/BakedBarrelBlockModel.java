@@ -1,7 +1,7 @@
 package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockAdvancedBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
@@ -54,9 +54,9 @@ public class BakedBarrelBlockModel extends ModelBase
 		{
 			BarrelLook look = BarrelLook.DEFAULT;
 
-			if (NBTUtils.hasBlockData(stack))
+			if (BlockUtils.hasData(stack))
 			{
-				NBTTagCompound data = NBTUtils.getBlockData(stack);
+				NBTTagCompound data = BlockUtils.getData(stack);
 				look = BarrelLook.get(EnumBarrelModel.getFromNBTName(data.getString("Model")), data.getString("Skin"));
 			}
 

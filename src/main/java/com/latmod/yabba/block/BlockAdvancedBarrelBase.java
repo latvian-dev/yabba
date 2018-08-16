@@ -4,11 +4,11 @@ import com.feed_the_beast.ftblib.lib.util.misc.UnlistedPropertyString;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.item.IUpgrade;
-import com.latmod.yabba.item.ItemBlockBarrel;
 import com.latmod.yabba.tile.TileAdvancedBarrelBase;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import com.latmod.yabba.util.UpgradeInst;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -30,8 +30,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -149,7 +147,6 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 
 	@Override
 	@Deprecated
-	@SideOnly(Side.CLIENT)
 	public boolean hasCustomBreakingProgress(IBlockState state)
 	{
 		return false;
@@ -163,15 +160,6 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	}
 
 	@Override
-	@Deprecated
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		return super.shouldSideBeRendered(state, world, pos, side);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
@@ -227,7 +215,7 @@ public class BlockAdvancedBarrelBase extends BlockCompoundBarrelBase
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack heldItem = player.getHeldItem(hand);
-		if (heldItem.getItem() instanceof ItemBlockBarrel)
+		if (Block.getBlockFromItem(heldItem.getItem()) instanceof BlockCompoundBarrelBase)
 		{
 			return false;
 		}

@@ -4,13 +4,21 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.Tier;
+import com.latmod.yabba.net.YabbaNetHandler;
+import com.latmod.yabba.util.AntibarrelData;
 import com.latmod.yabba.util.BarrelLook;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +58,28 @@ public class Yabba
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
+		NetworkRegistry.INSTANCE.registerGuiHandler(Yabba.MOD, new YabbaGuiHandler());
+		YabbaConfig.sync();
+		YabbaNetHandler.init();
+
+		CapabilityManager.INSTANCE.register(AntibarrelData.class, new Capability.IStorage<AntibarrelData>()
+		{
+			@Override
+			public NBTBase writeNBT(Capability<AntibarrelData> capability, AntibarrelData instance, EnumFacing side)
+			{
+				return instance.serializeNBT();
+			}
+
+			@Override
+			public void readNBT(Capability<AntibarrelData> capability, AntibarrelData instance, EnumFacing side, NBTBase nbt)
+			{
+				if (nbt instanceof NBTTagCompound)
+				{
+					instance.deserializeNBT((NBTTagCompound) nbt);
+				}
+			}
+		}, () -> new AntibarrelData(null));
+
 		PROXY.preInit();
 	}
 

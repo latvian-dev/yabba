@@ -3,7 +3,7 @@ package com.latmod.yabba.util;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.tile.IChangeCallback;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.YabbaConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,10 +39,10 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 	{
 		AntibarrelData data = stack.getCapability(CAP, null);
 
-		if (NBTUtils.hasBlockData(stack))
+		if (BlockUtils.hasData(stack))
 		{
-			data.deserializeNBT(NBTUtils.getBlockData(stack));
-			NBTUtils.removeBlockData(stack);
+			data.deserializeNBT(BlockUtils.getData(stack));
+			BlockUtils.removeData(stack);
 		}
 
 		return data;

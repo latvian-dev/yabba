@@ -3,8 +3,6 @@ package com.latmod.yabba.util;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -69,13 +67,11 @@ public class BarrelLook
 		return this == DEFAULT;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public BarrelModel getModel()
 	{
 		return model.getModel();
 	}
 
-	@SideOnly(Side.CLIENT)
 	public BarrelSkin getSkin()
 	{
 		return YabbaClient.getSkin(skin);

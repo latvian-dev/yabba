@@ -346,14 +346,12 @@ public class YabbaClient extends YabbaCommon
 	@Override
 	public void preInit()
 	{
-		super.preInit();
 		YabbaClientConfig.sync();
 	}
 
 	@Override
 	public void postInit()
 	{
-		super.postInit();
 		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
 		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
 	}
