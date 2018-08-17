@@ -24,6 +24,7 @@ public class ItemWrench extends Item
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		if (player.isSneaking())
@@ -32,16 +33,20 @@ public class ItemWrench extends Item
 
 			if (tileEntity instanceof IItemWritableTile)
 			{
-				if (!world.isRemote)
-				{
-					IBlockState state = world.getBlockState(pos);
-					ItemStack drop = state.getBlock().getItem(world, pos, state);
-					((IItemWritableTile) tileEntity).writeToItem(drop);
-					world.setBlockToAir(pos);
-					Block.spawnAsEntity(world, pos, drop);
-				}
+				IBlockState state = world.getBlockState(pos);
+				ItemStack drop = state.getBlock().getItem(world, pos, state);
 
-				return EnumActionResult.SUCCESS;
+				if (!drop.isEmpty())
+				{
+					if (!world.isRemote)
+					{
+						((IItemWritableTile) tileEntity).writeToItem(drop);
+						world.setBlockToAir(pos);
+						Block.spawnAsEntity(world, pos, drop);
+					}
+
+					return EnumActionResult.SUCCESS;
+				}
 			}
 		}
 		else

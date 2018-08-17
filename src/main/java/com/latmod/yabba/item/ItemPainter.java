@@ -63,7 +63,6 @@ public class ItemPainter extends Item
 		new GuiSelectSkin().openGui();
 	}
 
-	@SideOnly(Side.CLIENT)
 	public static String getSkinTooltip(String skin)
 	{
 		return I18n.format("lang.yabba.skin", YabbaClient.getSkin(skin).toString());

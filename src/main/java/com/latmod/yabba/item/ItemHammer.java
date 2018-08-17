@@ -63,7 +63,6 @@ public class ItemHammer extends Item
 		new GuiSelectModel().openGui();
 	}
 
-	@SideOnly(Side.CLIENT)
 	public static String getModelTooltip(EnumBarrelModel model)
 	{
 		return I18n.format("lang.yabba.model", I18n.format(model.getUnlocalizedName()));
