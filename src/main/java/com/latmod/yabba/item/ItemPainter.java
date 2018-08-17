@@ -1,17 +1,20 @@
 package com.latmod.yabba.item;
 
-import com.latmod.yabba.api.ApplyUpgradeEvent;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.gui.GuiSelectSkin;
+import com.latmod.yabba.tile.ITileWithBarrelLook;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,7 +25,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemPainter extends Item implements IUpgrade
+public class ItemPainter extends Item
 {
 	public static String getSkin(ItemStack stack)
 	{
@@ -37,7 +40,6 @@ public class ItemPainter extends Item implements IUpgrade
 	public ItemPainter()
 	{
 		setMaxStackSize(1);
-		setMaxDamage(0);
 	}
 
 	@Override
@@ -75,10 +77,17 @@ public class ItemPainter extends Item implements IUpgrade
 	}
 
 	@Override
-	public boolean applyOn(ApplyUpgradeEvent event)
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		event.setConsumeItem(false);
-		event.setAddUpgrade(false);
-		return event.getBarrel().setSkin(getSkin(event.getHeldItem()), event.simulate());
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof ITileWithBarrelLook)
+		{
+			((ITileWithBarrelLook) tileEntity).setSkin(getSkin(player.getHeldItem(hand)), false);
+
+			return EnumActionResult.SUCCESS;
+		}
+
+		return EnumActionResult.PASS;
 	}
 }

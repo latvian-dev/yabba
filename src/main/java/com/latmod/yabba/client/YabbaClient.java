@@ -14,6 +14,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
+import com.latmod.yabba.YabbaBlocks;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelSkin;
@@ -173,7 +174,7 @@ public class YabbaClient extends YabbaCommon
 			{
 				TileDecorativeBlock tile = new TileDecorativeBlock();
 				tile.setLook(BarrelLook.get(EnumBarrelModel.BLOCK, skin.id), false);
-				ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK_ITEM);
+				ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 				tile.writeToPickBlock(stack);
 				skin.icon = ItemIcon.getItemIcon(stack);
 			}
@@ -195,7 +196,7 @@ public class YabbaClient extends YabbaCommon
 		{
 			TileDecorativeBlock tile = new TileDecorativeBlock();
 			tile.setLook(BarrelLook.get(id, ""), false);
-			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK_ITEM);
+			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 			tile.writeToPickBlock(stack);
 			id.getModel().icon = ItemIcon.getItemIcon(stack);
 		}
@@ -358,7 +359,7 @@ public class YabbaClient extends YabbaCommon
 	@Override
 	public void postInit()
 	{
-		Block[] blocks = {YabbaItems.ITEM_BARREL, YabbaItems.DECORATIVE_BLOCK};
+		Block[] blocks = {YabbaBlocks.ITEM_BARREL, YabbaBlocks.DECORATIVE_BLOCK};
 		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, blocks);
 		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, blocks);
 	}

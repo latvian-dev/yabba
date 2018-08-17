@@ -11,6 +11,7 @@ import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.ItemBlockAntibarrel;
 import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.item.ItemPainter;
+import com.latmod.yabba.item.ItemWrench;
 import com.latmod.yabba.item.upgrade.ItemUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
@@ -82,11 +83,11 @@ public class YabbaEventHandler
 	public static void registerItems(RegistryEvent.Register<Item> event)
 	{
 		event.getRegistry().registerAll(
-				new ItemBlock(YabbaItems.ITEM_BARREL).setRegistryName("item_barrel"),
-				new ItemBlock(YabbaItems.ITEM_BARREL_CONNECTOR).setRegistryName("item_barrel_connector"),
-				new ItemBlockAntibarrel(YabbaItems.ANTIBARREL).setRegistryName("antibarrel"),
-				new ItemBlock(YabbaItems.COMPOUND_ITEM_BARREL).setRegistryName("compound_item_barrel"),
-				new ItemBlock(YabbaItems.DECORATIVE_BLOCK).setRegistryName("decorative_block")
+				new ItemBlock(YabbaBlocks.ITEM_BARREL).setRegistryName("item_barrel"),
+				new ItemBlock(YabbaBlocks.ITEM_BARREL_CONNECTOR).setRegistryName("item_barrel_connector"),
+				new ItemBlockAntibarrel(YabbaBlocks.ANTIBARREL).setRegistryName("antibarrel"),
+				new ItemBlock(YabbaBlocks.COMPOUND_ITEM_BARREL).setRegistryName("compound_item_barrel"),
+				new ItemBlock(YabbaBlocks.DECORATIVE_BLOCK).setRegistryName("decorative_block")
 		);
 
 		event.getRegistry().registerAll(
@@ -103,7 +104,8 @@ public class YabbaEventHandler
 				withName(new ItemUpgrade(), "upgrade_void"),
 				withName(new ItemUpgrade(), "upgrade_pickup"),
 				withName(new ItemHammer(), "hammer"),
-				withName(new ItemPainter(), "painter")
+				withName(new ItemPainter(), "painter"),
+				withName(new ItemWrench(), "wrench")
 		);
 	}
 
@@ -131,9 +133,9 @@ public class YabbaEventHandler
 			{
 				Item stackItem = stack.getItem();
 
-				if (stackItem == YabbaItems.ITEM_BARREL_ITEM)
+				if (stackItem == YabbaItems.ITEM_BARREL)
 				{
-					TileItemBarrel barrel = (TileItemBarrel) YabbaItems.ITEM_BARREL.createTileEntity(entityItem.world, YabbaItems.ITEM_BARREL.getDefaultState());
+					TileItemBarrel barrel = (TileItemBarrel) YabbaBlocks.ITEM_BARREL.createTileEntity(entityItem.world, YabbaBlocks.ITEM_BARREL.getDefaultState());
 					barrel.readFromNBT(BlockUtils.getData(stack));
 
 					if (!barrel.getStoredItemType().isEmpty() && barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))

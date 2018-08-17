@@ -295,6 +295,9 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 			nbt.setString("Skin", look.skin);
 		}
 
-		stack.setTagInfo(BlockUtils.DATA_TAG, nbt);
+		if (!nbt.isEmpty())
+		{
+			stack.setTagInfo(BlockUtils.DATA_TAG, nbt);
+		}
 	}
 }

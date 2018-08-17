@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "yabba:wrench",
+	"result": {"item": "wrench"},
+	"pattern": [
+		"IUI",
+		" I ",
+		" I "
+	],
+	"key": {
+		"U": {"item": "#blank_upgrade"},
+		"I": {"type": "forge:ore_dict", "ore": "ingotIron"}
+	}
+}

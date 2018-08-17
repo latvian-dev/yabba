@@ -49,7 +49,7 @@ public class Yabba
 		@Override
 		public ItemStack getTabIconItem()
 		{
-			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK_ITEM);
+			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 			new TileDecorativeBlock().writeToPickBlock(stack);
 			return stack;
 		}
