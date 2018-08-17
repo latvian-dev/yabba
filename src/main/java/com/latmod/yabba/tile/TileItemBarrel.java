@@ -498,10 +498,4 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 
 		return 0;
 	}
-
-	@Override
-	public boolean shouldDrop()
-	{
-		return itemCount > 0 || super.shouldDrop();
-	}
 }

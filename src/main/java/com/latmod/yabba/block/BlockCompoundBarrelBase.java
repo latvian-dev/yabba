@@ -1,6 +1,6 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.BlockBase;
+import com.feed_the_beast.ftblib.lib.block.BlockSpecialDrop;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.item.ItemHammer;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BlockCompoundBarrelBase extends BlockBase
+public class BlockCompoundBarrelBase extends BlockSpecialDrop
 {
 	public BlockCompoundBarrelBase()
 	{
@@ -41,44 +41,9 @@ public class BlockCompoundBarrelBase extends BlockBase
 	}
 
 	@Override
-	public boolean dropSpecial(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
 		return true;
-	}
-
-	public ItemStack createStack(IBlockState state, BarrelLook look, Tier tier)
-	{
-		TileEntity tileEntity = createTileEntity(null, state);
-
-		if (tileEntity instanceof IBarrelBase)
-		{
-			IBarrelBase barrel = (IBarrelBase) tileEntity;
-			barrel.setTier(tier, false);
-			barrel.setLook(look, false);
-		}
-
-		return createStack(state, tileEntity);
-	}
-
-	@Override
-	@Deprecated
-	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof IBarrelBase)
-		{
-			IBarrelBase barrel = (IBarrelBase) tileEntity;
-			return createStack(state, barrel.getLook(), barrel.getTier());
-		}
-
-		return super.getItem(world, pos, state);
 	}
 
 	@Override
@@ -124,7 +89,7 @@ public class BlockCompoundBarrelBase extends BlockBase
 		if (world != null && BlockUtils.hasData(stack))
 		{
 			TileBarrelBase barrel = (TileBarrelBase) createTileEntity(world, getDefaultState());
-			barrel.readFromNBT(BlockUtils.getData(stack));
+			barrel.readFromItem(stack);
 
 			if (this instanceof BlockAdvancedBarrelBase)
 			{

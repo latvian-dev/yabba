@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.RemoveUpgradeEvent;
@@ -21,6 +22,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -231,12 +233,6 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	}
 
 	@Override
-	public boolean shouldDrop()
-	{
-		return !upgrades.isEmpty() || tier != Tier.WOOD || isLocked.getBoolean();
-	}
-
-	@Override
 	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
 	{
 		markBarrelDirty(true);
@@ -281,5 +277,24 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	public boolean isBarrelInvalid()
 	{
 		return isInvalid();
+	}
+
+	@Override
+	public void writeToPickBlock(ItemStack stack)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		BarrelLook look = getLook();
+
+		if (!look.model.isDefault())
+		{
+			nbt.setString("Model", look.model.getNBTName());
+		}
+
+		if (!look.skin.isEmpty())
+		{
+			nbt.setString("Skin", look.skin);
+		}
+
+		stack.setTagInfo(BlockUtils.DATA_TAG, nbt);
 	}
 }

@@ -18,8 +18,7 @@ import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.api.YabbaSkinsEvent;
-import com.latmod.yabba.block.BlockItemBarrel;
-import com.latmod.yabba.block.Tier;
+import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
@@ -172,7 +171,11 @@ public class YabbaClient extends YabbaCommon
 
 			if (skin.icon.isEmpty())
 			{
-				skin.icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(EnumBarrelModel.BLOCK, skin.id), Tier.WOOD));
+				TileDecorativeBlock tile = new TileDecorativeBlock();
+				tile.setLook(BarrelLook.get(EnumBarrelModel.BLOCK, skin.id), false);
+				ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK_ITEM);
+				tile.writeToPickBlock(stack);
+				skin.icon = ItemIcon.getItemIcon(stack);
 			}
 		}
 
@@ -190,7 +193,11 @@ public class YabbaClient extends YabbaCommon
 
 		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
 		{
-			id.getModel().icon = ItemIcon.getItemIcon(((BlockItemBarrel) YabbaItems.ITEM_BARREL).createStack(YabbaItems.ITEM_BARREL.getDefaultState(), BarrelLook.get(id, ""), Tier.WOOD));
+			TileDecorativeBlock tile = new TileDecorativeBlock();
+			tile.setLook(BarrelLook.get(id, ""), false);
+			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK_ITEM);
+			tile.writeToPickBlock(stack);
+			id.getModel().icon = ItemIcon.getItemIcon(stack);
 		}
 	}
 
@@ -340,7 +347,6 @@ public class YabbaClient extends YabbaCommon
 				ex.printStackTrace();
 			}
 		}
-
 	}
 
 	@Override
@@ -352,8 +358,9 @@ public class YabbaClient extends YabbaCommon
 	@Override
 	public void postInit()
 	{
-		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
-		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, YabbaItems.ITEM_BARREL);
+		Block[] blocks = {YabbaItems.ITEM_BARREL, YabbaItems.DECORATIVE_BLOCK};
+		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, blocks);
+		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, blocks);
 	}
 
 	public static BarrelSkin getSkin(@Nullable String id)

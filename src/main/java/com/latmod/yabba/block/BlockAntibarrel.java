@@ -1,8 +1,6 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.BlockBase;
-import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
-import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import com.feed_the_beast.ftblib.lib.block.BlockSpecialDrop;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaGuiHandler;
 import com.latmod.yabba.net.MessageAntibarrelUpdate;
@@ -25,7 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -33,19 +30,13 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BlockAntibarrel extends BlockBase
+public class BlockAntibarrel extends BlockSpecialDrop
 {
 	public BlockAntibarrel()
 	{
 		super(Material.ROCK, MapColor.NETHERRACK);
 		setHardness(6F);
 		setResistance(1000F);
-	}
-
-	@Override
-	public boolean dropSpecial(IBlockState state)
-	{
-		return true;
 	}
 
 	@Override
@@ -96,47 +87,12 @@ public class BlockAntibarrel extends BlockBase
 
 			if (tileEntity instanceof TileAntibarrel)
 			{
-				if (player.isSneaking() && player.getHeldItem(hand).isEmpty())
-				{
-					ItemStack stack = new ItemStack(this);
-					AntibarrelData.get(stack).copyFrom(((TileAntibarrel) tileEntity).contents);
-					ItemHandlerHelper.giveItemToPlayer(player, stack, player.inventory.currentItem);
-					world.removeTileEntity(pos);
-					world.setBlockToAir(pos);
-				}
-				else
-				{
-					new MessageAntibarrelUpdate((TileAntibarrel) tileEntity).sendTo((EntityPlayerMP) player);
-					YabbaGuiHandler.ANTIBARREL.open(player, pos);
-				}
+				new MessageAntibarrelUpdate((TileAntibarrel) tileEntity).sendTo((EntityPlayerMP) player);
+				YabbaGuiHandler.ANTIBARREL.open(player, pos);
 			}
 		}
 
 		return true;
-	}
-
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileAntibarrel)
-		{
-			AntibarrelData data = ((TileAntibarrel) tileEntity).contents;
-
-			for (ItemEntryWithCount entry : data.items.values())
-			{
-				ItemStack stack = entry.getStack(true);
-				stack.setCount(1);
-
-				for (int i = 0; i < entry.count; i++)
-				{
-					InvUtils.dropItem(world, pos, stack.copy(), 20);
-				}
-			}
-		}
-
-		super.breakBlock(world, pos, state);
 	}
 
 	@Override

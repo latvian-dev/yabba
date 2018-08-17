@@ -1,9 +1,8 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.BlockBase;
+import com.feed_the_beast.ftblib.lib.block.BlockSpecialDrop;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
-import com.feed_the_beast.ftblib.lib.tile.TileBase;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.net.MessageBarrelConnector;
 import com.latmod.yabba.tile.IItemBarrel;
@@ -34,7 +33,7 @@ import java.util.Random;
 /**
  * @author LatvianModder
  */
-public class BlockItemBarrelConnector extends BlockBase
+public class BlockItemBarrelConnector extends BlockSpecialDrop
 {
 	public BlockItemBarrelConnector()
 	{
@@ -110,18 +109,9 @@ public class BlockItemBarrelConnector extends BlockBase
 				MessageBarrelConnector.BarrelInst inst = new MessageBarrelConnector.BarrelInst();
 				inst.pos = ((TileEntity) barrel).getPos();
 				IBlockState blockState = world.getBlockState(inst.pos);
-
-				if (blockState.getBlock() instanceof BlockBase && barrel instanceof TileBase)
-				{
-					ItemStack stack = ((BlockBase) blockState.getBlock()).createStack(blockState, ((TileBase) barrel));
-					inst.title2 = new TextComponentString(stack.getDisplayName());
-					inst.icon2 = ItemIcon.getItemIcon(stack);
-				}
-				else
-				{
-					inst.title2 = new TextComponentString("Unknown"); //LANG
-					inst.icon2 = Icon.EMPTY;
-				}
+				ItemStack stack = blockState.getBlock().getItem(world, inst.pos, blockState);
+				inst.title2 = new TextComponentString(stack.getDisplayName());
+				inst.icon2 = ItemIcon.getItemIcon(stack);
 
 				if (!barrel.getStoredItemType().isEmpty())
 				{

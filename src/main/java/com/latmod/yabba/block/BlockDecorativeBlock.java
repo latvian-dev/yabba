@@ -1,6 +1,6 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.BlockBase;
+import com.feed_the_beast.ftblib.lib.block.BlockSpecialDrop;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.item.ItemHammer;
@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BlockDecorativeBlock extends BlockBase
+public class BlockDecorativeBlock extends BlockSpecialDrop
 {
 	public BlockDecorativeBlock()
 	{
@@ -78,12 +78,6 @@ public class BlockDecorativeBlock extends BlockBase
 	}
 
 	@Override
-	public boolean dropSpecial(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
 		return true;
@@ -95,31 +89,14 @@ public class BlockDecorativeBlock extends BlockBase
 		return new TileDecorativeBlock();
 	}
 
-	public ItemStack createStack(IBlockState state, BarrelLook look)
-	{
-		TileDecorativeBlock tile = new TileDecorativeBlock();
-		tile.setLook(look, false);
-		return createStack(state, tile);
-	}
-
-	@Override
-	@Deprecated
-	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileDecorativeBlock)
-		{
-			return createStack(state, ((TileDecorativeBlock) tileEntity).getLook());
-		}
-
-		return super.getItem(world, pos, state);
-	}
-
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		list.add(createStack(getDefaultState(), BarrelLook.get(EnumBarrelModel.CRATE, "")));
+		TileDecorativeBlock tile = new TileDecorativeBlock();
+		tile.setLook(BarrelLook.get(EnumBarrelModel.CRATE, ""), false);
+		ItemStack stack = new ItemStack(this);
+		tile.writeToPickBlock(stack);
+		list.add(stack);
 	}
 
 	@Override

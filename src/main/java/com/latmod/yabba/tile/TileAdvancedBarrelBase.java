@@ -137,12 +137,6 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		return "ERROR";
 	}
 
-	@Override
-	public boolean shouldDrop()
-	{
-		return !look.skin.isEmpty() || !look.model.isDefault() || super.shouldDrop();
-	}
-
 	public void addItem(EntityPlayer player, EnumHand hand)
 	{
 	}

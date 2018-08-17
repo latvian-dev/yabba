@@ -68,12 +68,6 @@ public class TileAntibarrel extends TileBase
 	}
 
 	@Override
-	public boolean shouldDrop()
-	{
-		return !contents.items.isEmpty();
-	}
-
-	@Override
 	public void onContentsChanged(boolean majorChange)
 	{
 		if (!world.isRemote)
@@ -86,6 +80,7 @@ public class TileAntibarrel extends TileBase
 	@Override
 	public void writeToItem(ItemStack stack)
 	{
+		AntibarrelData.get(stack).copyFrom(contents);
 	}
 
 	@Override

@@ -184,10 +184,4 @@ public class TileCompoundItemBarrel extends TileBarrelBase implements IItemBarre
 			}
 		}
 	}
-
-	@Override
-	public boolean shouldDrop()
-	{
-		return itemCount > 0 || super.shouldDrop();
-	}
 }
