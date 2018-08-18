@@ -31,7 +31,7 @@ public class ItemWrench extends Item
 		{
 			TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (tileEntity instanceof IItemWritableTile && ((IItemWritableTile) tileEntity).canBeWrenched())
+			if (tileEntity instanceof IItemWritableTile && ((IItemWritableTile) tileEntity).canBeWrenched(player))
 			{
 				IBlockState state = world.getBlockState(pos);
 				ItemStack drop = state.getBlock().getItem(world, pos, state);
