@@ -58,7 +58,7 @@ public class Yabba
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(Yabba.MOD, new YabbaGuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new YabbaGuiHandler());
 		YabbaConfig.sync();
 		YabbaNetHandler.init();
 
