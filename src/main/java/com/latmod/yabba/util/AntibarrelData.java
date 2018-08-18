@@ -85,7 +85,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 		{
 			if (!entry.isEmpty())
 			{
-				list.appendTag(entry.serializeNBT(false));
+				list.appendTag(entry.serializeNBT());
 			}
 		}
 
@@ -111,7 +111,7 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 		{
 			if (!entry.isEmpty())
 			{
-				list.appendTag(entry.serializeNBT(true));
+				list.appendTag(entry.serializeNBT());
 			}
 		}
 
