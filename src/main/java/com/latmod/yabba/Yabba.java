@@ -26,15 +26,13 @@ import org.apache.logging.log4j.Logger;
 @Mod(
 		modid = Yabba.MOD_ID,
 		name = Yabba.MOD_NAME,
-		version = Yabba.VERSION,
-		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:" + FTBLib.MOD_ID + ";after:" + OtherMods.FORESTRY
+		version = "0.0.0.yabba",
+		dependencies = FTBLib.THIS_DEP + ";after:" + OtherMods.FORESTRY
 )
 public class Yabba
 {
 	public static final String MOD_ID = "yabba";
 	public static final String MOD_NAME = "YABBA";
-	public static final String VERSION = "@VERSION@";
 
 	@Mod.Instance(MOD_ID)
 	public static Yabba MOD;
