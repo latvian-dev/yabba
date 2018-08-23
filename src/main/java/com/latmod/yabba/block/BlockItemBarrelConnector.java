@@ -1,12 +1,12 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.BlockSpecialDrop;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.net.MessageBarrelConnector;
 import com.latmod.yabba.tile.IItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -33,11 +33,12 @@ import java.util.Random;
 /**
  * @author LatvianModder
  */
-public class BlockItemBarrelConnector extends BlockSpecialDrop
+public class BlockItemBarrelConnector extends Block
 {
 	public BlockItemBarrelConnector()
 	{
 		super(Material.WOOD, MapColor.WOOD);
+		setHardness(1F);
 	}
 
 	@Override
