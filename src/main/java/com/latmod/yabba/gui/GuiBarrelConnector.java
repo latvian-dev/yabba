@@ -3,8 +3,8 @@ package com.latmod.yabba.gui;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.net.MessageBarrelConnector;
 import com.latmod.yabba.net.MessageOpenBarrelGui;
@@ -31,6 +31,8 @@ public class GuiBarrelConnector extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
+		Theme theme = getGui().getTheme();
+
 		for (MessageBarrelConnector.BarrelInst inst : barrels)
 		{
 			final String title2 = inst.title2.getFormattedText();
@@ -61,12 +63,12 @@ public class GuiBarrelConnector extends GuiButtonListBase
 				}
 
 				@Override
-				public Icon getIcon()
+				public void drawIcon(Theme theme, int x, int y, int w, int h)
 				{
-					return isShiftKeyDown() ? inst.icon2 : super.getIcon();
+					(isShiftKeyDown() ? inst.icon2 : inst.icon).draw(x, y, w, h);
 				}
 			};
-			button.setWidth(Math.max(button.width, getStringWidth(title2) + 28));
+			button.setWidth(Math.max(button.width, theme.getStringWidth(title2) + 28));
 			panel.add(button);
 		}
 	}

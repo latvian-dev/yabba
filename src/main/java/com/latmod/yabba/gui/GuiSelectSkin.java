@@ -6,9 +6,9 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.api.BarrelSkin;
@@ -71,19 +71,15 @@ public class GuiSelectSkin extends GuiBase
 		}
 
 		@Override
-		public Icon getButtonBackground()
+		public void drawBackground(Theme theme, int x, int y, int w, int h)
 		{
-			return getWidgetType() == WidgetType.MOUSE_OVER ? Color4I.LIGHT_GREEN.withAlpha(70) : Color4I.BLACK.withAlpha(50);
+			(getWidgetType() == WidgetType.MOUSE_OVER ? Color4I.LIGHT_GREEN.withAlpha(70) : Color4I.BLACK.withAlpha(50)).draw(x, y, w, h);
 		}
 
 		@Override
-		public void draw()
+		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
-
-			getButtonBackground().draw(ax, ay, width, height);
-			skin.icon.draw(ax + 2, ay + 2, 16, 16);
+			skin.icon.draw(x, y, w, h);
 		}
 	}
 
@@ -148,9 +144,9 @@ public class GuiSelectSkin extends GuiBase
 			}
 
 			@Override
-			public Icon getIcon()
+			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				return getTheme().getPanelBackground();
+				theme.drawPanelBackground(x, w, w, h);
 			}
 		};
 

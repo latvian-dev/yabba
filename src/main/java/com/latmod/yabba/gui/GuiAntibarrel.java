@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -137,22 +138,20 @@ public class GuiAntibarrel extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
-			getTheme().getSlot(getWidgetType()).draw(ax, ay, width, height);
+			theme.drawSlot(x, y, w, h, getWidgetType());
 
 			if (!entry.isEmpty())
 			{
-				pushFontUnicode(false);
-				icon.draw(ax + 1, ay + 1, 16, 16);
+				theme.pushFontUnicode(false);
+				icon.draw(x + 1, y + 1, 16, 16);
 				GlStateManager.pushMatrix();
-				GlStateManager.translate(ax + 17 - getStringWidth(countString) / 2F, ay + 13, 1000);
+				GlStateManager.translate(x + 17 - theme.getStringWidth(countString) / 2F, y + 13, 1000);
 				GlStateManager.scale(0.5F, 0.5F, 1F);
-				drawString(countString, 0, 0, getTheme().getContentColor(getWidgetType()), SHADOW);
+				theme.drawString(countString, 0, 0, theme.getContentColor(getWidgetType()), Theme.SHADOW);
 				GlStateManager.popMatrix();
-				popFontUnicode();
+				theme.popFontUnicode();
 			}
 		}
 
@@ -211,9 +210,9 @@ public class GuiAntibarrel extends GuiBase
 			}
 
 			@Override
-			public Icon getIcon()
+			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				return getTheme().getSlot(WidgetType.NORMAL);
+				theme.drawSlot(x, y, w, h, WidgetType.NORMAL);
 			}
 
 			@Override
@@ -272,9 +271,9 @@ public class GuiAntibarrel extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		super.drawBackground();
-		drawString(title, getAX() + 4, getAY() - 10);
+		super.drawBackground(theme, x, y, w, h);
+		theme.drawString(title, x + 4, y - 10);
 	}
 }

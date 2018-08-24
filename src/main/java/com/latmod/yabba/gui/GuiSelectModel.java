@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.client.BarrelModel;
@@ -52,15 +53,11 @@ public class GuiSelectModel extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
-			getButtonBackground().draw(ax, ay, width, height);
-
 			if (model != null)
 			{
-				model.icon.draw(ax + 3, ay + 3, 32, 32);
+				model.icon.draw(x + 3, y + 3, 32, 32);
 			}
 		}
 	}
