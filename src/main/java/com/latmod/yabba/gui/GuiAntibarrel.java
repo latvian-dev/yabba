@@ -3,6 +3,7 @@ package com.latmod.yabba.gui;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
@@ -17,7 +18,6 @@ import com.latmod.yabba.YabbaConfig;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -25,7 +25,6 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -92,28 +91,7 @@ public class GuiAntibarrel extends GuiBase
 
 			icon = ItemIcon.getItemIcon(stack);
 			tooltip = new ArrayList<>();
-
-			for (String s : stack.getTooltip(ClientUtils.MC.player, ITooltipFlag.TooltipFlags.NORMAL))
-			{
-				if (tooltip.isEmpty())
-				{
-					if (entry.count > 1)
-					{
-						s += TextFormatting.GRAY + " x" + entry.count;
-					}
-
-					tooltip.add(stack.getRarity().rarityColor + s);
-				}
-				else
-				{
-					tooltip.add(TextFormatting.GRAY + s);
-				}
-			}
-
-			if (tooltip.isEmpty())
-			{
-				tooltip = Collections.emptyList();
-			}
+			GuiHelper.addStackTooltip(stack, tooltip, TextFormatting.GRAY + (entry.count > 1 ? " x" + entry.count : ""));
 		}
 
 		@Override
