@@ -1,6 +1,5 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
@@ -169,7 +168,7 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 			boolean ender = false;//TODO: Ender hopper upgrade
 			int maxItems = ender ? 64 : 1;
 
-			if (itemCount > 0 && data.down.getBoolean())
+			if (itemCount > 0 && data.down)
 			{
 				TileEntity tileDown = world.getTileEntity(pos.offset(EnumFacing.DOWN));
 
@@ -179,7 +178,7 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 				}
 			}
 
-			if (data.up.getBoolean())
+			if (data.up)
 			{
 				TileEntity tileUp = world.getTileEntity(pos.offset(EnumFacing.UP));
 
@@ -189,7 +188,7 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 				}
 			}
 
-			if (data.collect.getBoolean())
+			if (data.collect)
 			{
 				AxisAlignedBB aabb = new AxisAlignedBB(pos.add(0, 1, 0), pos.add(1, 2, 1));
 
@@ -439,7 +438,7 @@ public class TileItemBarrel extends TileAdvancedBarrelBase implements ITickable,
 
 		if (!tier.creative())
 		{
-			event.getConfig().add("locked", isLocked, new ConfigBoolean(false));
+			event.getConfig().addBool("locked", () -> isLocked, v -> isLocked = v, false);
 		}
 	}
 

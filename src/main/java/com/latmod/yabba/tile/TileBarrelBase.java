@@ -1,9 +1,6 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
-import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
@@ -37,7 +34,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 {
 	protected Tier tier = Tier.WOOD;
 	public Map<Item, UpgradeInst> upgrades = new HashMap<>();
-	protected ConfigBoolean isLocked = new ConfigBoolean(false);
+	protected boolean isLocked = false;
 
 	public TileBarrelBase()
 	{
@@ -76,7 +73,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 			nbt.setTag("Upgrades", nbt1);
 		}
 
-		if (isLocked.getBoolean())
+		if (isLocked)
 		{
 			nbt.setBoolean("Locked", true);
 		}
@@ -108,7 +105,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 			}
 		}
 
-		isLocked.setBoolean(nbt.getBoolean("Locked"));
+		isLocked = nbt.getBoolean("Locked");
 	}
 
 	@Override
@@ -136,15 +133,15 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 	@Override
 	public boolean isLocked()
 	{
-		return isLocked.getBoolean();
+		return isLocked;
 	}
 
 	@Override
 	public void setLocked(boolean b)
 	{
-		if (isLocked.getBoolean() != b)
+		if (isLocked != b)
 		{
-			isLocked.setBoolean(b);
+			isLocked = b;
 			markBarrelDirty(true);
 		}
 	}
@@ -245,9 +242,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		{
 			ConfigGroup group = event.getConfig().getGroup("redstone");
 			group.setDisplayName(new TextComponentTranslation(YabbaItems.UPGRADE_REDSTONE_OUT.getTranslationKey() + ".name"));
-			ItemUpgradeRedstone.Data data1 = (ItemUpgradeRedstone.Data) data;
-			group.add("mode", data1.mode, new ConfigEnum<>(ItemUpgradeRedstone.Mode.NAME_MAP));
-			group.add("count", data1.count, new ConfigInt(1));
+			((ItemUpgradeRedstone.Data) data).getConfig(group);
 		}
 
 		data = getUpgradeData(YabbaItems.UPGRADE_HOPPER);
@@ -255,10 +250,7 @@ public class TileBarrelBase extends TileBase implements IBarrelBase
 		{
 			ConfigGroup group = event.getConfig().getGroup("hopper");
 			group.setDisplayName(new TextComponentTranslation(YabbaItems.UPGRADE_HOPPER.getTranslationKey() + ".name"));
-			ItemUpgradeHopper.Data data1 = (ItemUpgradeHopper.Data) data;
-			group.add("up", data1.up, new ConfigBoolean(true));
-			group.add("down", data1.down, new ConfigBoolean(true));
-			group.add("collect", data1.collect, new ConfigBoolean(false));
+			((ItemUpgradeHopper.Data) data).getConfig(group);
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
-import com.feed_the_beast.ftblib.lib.config.ConfigInt;
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.util.misc.DataStorage;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
@@ -62,26 +61,32 @@ public class ItemUpgradeRedstone extends ItemUpgrade
 
 	public static class Data extends DataStorage
 	{
-		public ConfigEnum<Mode> mode = new ConfigEnum<>(Mode.NAME_MAP);
-		public ConfigInt count = new ConfigInt(1);
+		public Mode mode = Mode.GREATER_THAN_OR_EQUAL;
+		public int count = 1;
 
 		@Override
 		public void serializeNBT(NBTTagCompound nbt, EnumSaveType type)
 		{
-			Mode.NAME_MAP.writeToNBT(nbt, "Mode", type, mode.getValue());
-			nbt.setInteger("Count", count.getInt());
+			Mode.NAME_MAP.writeToNBT(nbt, "Mode", type, mode);
+			nbt.setInteger("Count", count);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt, EnumSaveType type)
 		{
-			mode.setValue(Mode.NAME_MAP.readFromNBT(nbt, "Mode", type));
-			count.setInt(nbt.getInteger("Count"));
+			mode = Mode.NAME_MAP.readFromNBT(nbt, "Mode", type);
+			count = nbt.getInteger("Count");
 		}
 
 		public int redstoneOutput(EnumFacing facing, int amount)
 		{
-			return mode.getValue().matchesCount(amount, count.getInt()) ? 15 : 0;
+			return mode.matchesCount(amount, count) ? 15 : 0;
+		}
+
+		public void getConfig(ConfigGroup config)
+		{
+			config.addEnum("mode", () -> mode, v -> mode = v, Mode.NAME_MAP);
+			config.addInt("count", () -> count, v -> count = v, 1, 0, Integer.MAX_VALUE);
 		}
 	}
 

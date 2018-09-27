@@ -1,6 +1,5 @@
 package com.latmod.yabba.tile;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.YabbaItems;
@@ -25,8 +24,8 @@ import javax.annotation.Nullable;
 public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCallback
 {
 	private BarrelLook look = BarrelLook.DEFAULT;
-	public ConfigBoolean alwaysDisplayData = new ConfigBoolean(false);
-	public ConfigBoolean displayBar = new ConfigBoolean(false);
+	public boolean alwaysDisplayData = false;
+	public boolean displayBar = false;
 	public long lastClick;
 
 	private float cachedRotationY;
@@ -47,12 +46,12 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 			nbt.setString("Skin", look.skin);
 		}
 
-		if (alwaysDisplayData.getBoolean())
+		if (alwaysDisplayData)
 		{
 			nbt.setBoolean("AlwaysDisplayData", true);
 		}
 
-		if (displayBar.getBoolean())
+		if (displayBar)
 		{
 			nbt.setBoolean("DisplayBar", true);
 		}
@@ -64,8 +63,8 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 		super.readData(nbt, type);
 
 		look = BarrelLook.get(EnumBarrelModel.getFromNBTName(nbt.getString("Model")), nbt.getString("Skin"));
-		alwaysDisplayData.setBoolean(nbt.getBoolean("AlwaysDisplayData"));
-		displayBar.setBoolean(nbt.getBoolean("DisplayBar"));
+		alwaysDisplayData = nbt.getBoolean("AlwaysDisplayData");
+		displayBar = nbt.getBoolean("DisplayBar");
 	}
 
 	@Override
@@ -154,11 +153,11 @@ public class TileAdvancedBarrelBase extends TileBarrelBase implements IConfigCal
 	{
 		super.createConfig(event);
 
-		event.getConfig().add("always_display_data", alwaysDisplayData, new ConfigBoolean(false)).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
+		event.getConfig().addBool("always_display_data", () -> alwaysDisplayData, v -> alwaysDisplayData = v, false).setDisplayName(new TextComponentTranslation("yabba_client.general.always_display_data"));
 
 		if (!tier.infiniteCapacity())
 		{
-			event.getConfig().add("display_bar", displayBar, new ConfigBoolean(false)).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
+			event.getConfig().addBool("display_bar", () -> displayBar, v -> displayBar = v, false).setDisplayName(new TextComponentTranslation("yabba_client.general.display_bar"));
 		}
 	}
 

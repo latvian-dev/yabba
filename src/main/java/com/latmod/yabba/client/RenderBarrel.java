@@ -72,7 +72,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
-		if (mouseOver || YabbaClientConfig.general.always_display_data.get(barrel.alwaysDisplayData.getBoolean()))
+		if (mouseOver || YabbaClientConfig.general.always_display_data.get(barrel.alwaysDisplayData))
 		{
 			boolean isCreative = barrel.getTier().creative();
 			float textDistance = model.textDistance;
@@ -80,7 +80,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 
 			if (hasIcon)
 			{
-				if (!infinite && !isSneaking && YabbaClientConfig.general.display_bar.get(barrel.displayBar.getBoolean()))
+				if (!infinite && !isSneaking && YabbaClientConfig.general.display_bar.get(barrel.displayBar))
 				{
 					GlStateManager.pushMatrix();
 					GlStateManager.disableTexture2D();
