@@ -1,10 +1,10 @@
 # Creative Tabs
 itemGroup.yabba=YABBA
-itemGroup.yabba.all_models=Alle YABBA-Fässer
 
 # Items
 item.yabba.upgrade.desc=Fassupgrade
 item.yabba.upgrade_blank.name=Leer
+item.yabba.upgrade_stone_tier.name=Stein
 item.yabba.upgrade_iron_tier.name=Holz zu Eisen
 item.yabba.upgrade_gold_tier.name=Eisen zu Gold
 item.yabba.upgrade_diamond_tier.name=Gold zu Diamant
@@ -14,15 +14,51 @@ item.yabba.upgrade_obsidian_shell.name=Obsidianhülle
 item.yabba.upgrade_redstone_out.name=Redstone-Output
 item.yabba.upgrade_hopper.name=Trichter
 item.yabba.upgrade_void.name=Gegenstände löschen
+item.yabba.upgrade_pickup.name=Pickups aufsammeln
 
 item.yabba.painter.name=Fassbemaler
 item.yabba.hammer.name=Fasshammer
+item.yabba.wrench.name=Fassschlüssel
+
+lang.yabba.tier=Stufe: %s
+lang.yabba.tier.stone=Stein
+lang.yabba.tier.wood=Holz
+lang.yabba.tier.iron=Eisen
+lang.yabba.tier.gold=Gold
+lang.yabba.tier.diamond=Diamant
+lang.yabba.tier.star=Stern
+lang.yabba.tier.creative=Kreativ
+
+lang.yabba.model=Modell: %s
+lang.yabba.skin=Aussehen: %s
+lang.yabba.item=Item: %s
+lang.yabba.upgrades=Upgrades:
+lang.yabba.item_count=%d / %d Items
+lang.yabba.item_count_inf=%d Items
+lang.yabba.item_count_max=Max %d Stacks
+
+lang.fluid.still=%s (Stehend)
+lang.fluid.flowing=%s (Fließend)
 
 # Blocks
-tile.yabba.barrel.name=Gegenstandsfass
+tile.yabba.item_barrel.name=Item-Fass
+tile.yabba.item_barrel_connector.name=Item-Fassverbinden
+tile.yabba.item_barrel_connector.connected=Verbundene Fässer: %d
+tile.yabba.fluid_barrel.name=Flüssigkeitsfass
+tile.yabba.energy_barrel.name=Energiefass
+tile.yabba.decorative_block.name=Dekorationsblock
 tile.yabba.antibarrel.name=AntiFass
+tile.yabba.antibarrel.tooltip=Kann eine große Menge nicht stapelbarer Items lagern.
+tile.yabba.antibarrel.items=%d Items, %d/%d Arten
+tile.yabba.antibarrel.items_only=%d Items
+tile.yabba.antibarrel.types=%d Arten
+tile.yabba.antibarrel.pick_up=Aufsammeln
+tile.yabba.compound_item_barrel.name=Item-Verbundfass
+
+tile.yabba.machine.name=Maschine
 
 # Config
+
 yabba_client.general.always_display_data=Daten immer anzeigen
 yabba_client.general.display_bar=Balken anzeigen
 
@@ -32,25 +68,26 @@ yabba_client.bar_color.free=Freier Platz
 yabba_client.bar_color.filled=Belegter Platz
 yabba_client.bar_color.alpha=Alpha
 
-config.yabba.tier.item.wood.name=Holz
-config.yabba.tier.item.iron.name=Eisen
-config.yabba.tier.item.gold.name=Gold
-config.yabba.tier.item.diamond.name=Diamant
-config.yabba.tier.item.infinity.name=Unendlichkeit
-config.yabba.crafting.upgrade_stack_size.name=Stackgröße verbessern
-config.yabba.crafting.barrel_easy_recipe.name=Einfaches Fassrezept
+yabba.tier=Stufe
+yabba.tier.wood=Holz
+yabba.tier.iron=Eisen
+yabba.tier.gold=Gold
+yabba.tier.diamond=Diamant
+yabba.tier.max_item_stacks=Max. Item-Stacks
 
+barrel_config.locked=Verschlossen
 barrel_config.redstone.mode=Modus
-barrel_config.redstone.item_count=Gegenstandsanzahl
+barrel_config.redstone.count=Anzahl
 barrel_config.hopper.up=Oben
 barrel_config.hopper.down=Unten
 barrel_config.hopper.collect=Sammeln
 
 # Models
-yabba.model.barrel=Fass
-yabba.model.crate=Kiste
-yabba.model.solid=Solider Block
-yabba.model.solid_borders=Solider eingefasster Block
-yabba.model.cover=Hülle
-yabba.model.panel=Platte
-yabba.model.slab=Stufe
+yabba.yabba_model.barrel=Fass
+yabba.yabba_model.cover=Cover
+yabba.yabba_model.panel=Platte
+yabba.yabba_model.slab=Scheibe
+yabba.yabba_model.block=Block
+yabba.yabba_model.block_window=Block mit Fenster
+yabba.yabba_model.block_borders=Eingerahmter Block mit Fenster
+yabba.yabba_model.crate=Kiste
