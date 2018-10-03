@@ -45,7 +45,7 @@ public class Yabba
 	public static final CreativeTabs TAB = new CreativeTabs(MOD_ID)
 	{
 		@Override
-		public ItemStack getTabIconItem()
+		public ItemStack createIcon()
 		{
 			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 			new TileDecorativeBlock().writeToPickBlock(stack);
