@@ -1,0 +1,5 @@
+{
+	"listeners": {
+		"yabba_models": "com.latmod.yabba.client.BarrelModelLoader"
+	}
+}
