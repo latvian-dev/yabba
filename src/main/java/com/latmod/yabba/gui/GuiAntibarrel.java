@@ -91,7 +91,7 @@ public class GuiAntibarrel extends GuiBase
 
 			icon = ItemIcon.getItemIcon(stack);
 			tooltip = new ArrayList<>();
-			GuiHelper.addStackTooltip(stack, tooltip, TextFormatting.GRAY + (entry.count > 1 ? " x" + entry.count : ""));
+			GuiHelper.addStackTooltip(stack, tooltip, TextFormatting.GRAY + (entry.count > 1 ? entry.count + "x " : ""));
 		}
 
 		@Override
