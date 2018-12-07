@@ -38,14 +38,14 @@ minecraft {
 repositories {
 	mavenLocal()
 	maven { url "https://maven.latmod.com/" } //FTBLib
-	//maven { url "http://maven.tterrag.com/" } //Chisel
+	//maven { url "https://minecraft.curseforge.com/api/maven/" } //Chisel
 	maven { url "http://dvs1.progwml6.com/files/maven" } //JEI
 	maven { url = "http://maven.ic2.player.to/" } //Forestry
 }
 
 dependencies {
 	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
-	//provided "team.chisel:Chisel:${chisel_version}:api"
+	//deobfCompile "chisel:Chisel:MC1.12.2:${chisel_version}"
 	provided "mezz.jei:jei_${mc_version}:${jei_version}:api"
 	provided "net.sengir.forestry:forestry_${mc_version}:${forestry_version}:api"
 }
