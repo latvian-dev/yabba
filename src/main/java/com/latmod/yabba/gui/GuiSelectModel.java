@@ -53,6 +53,13 @@ public class GuiSelectModel extends GuiBase
 		}
 
 		@Override
+		public void draw(Theme theme, int x, int y, int w, int h)
+		{
+			drawBackground(theme, x, y, w, h);
+			drawIcon(theme, x, y, w, h);
+		}
+
+		@Override
 		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
 			if (model != null)
