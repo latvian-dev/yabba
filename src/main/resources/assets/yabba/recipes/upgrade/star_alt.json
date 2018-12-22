@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "yabba:upgrade_tier",
+	"result": {"item": "upgrade_star_tier"},
+	"pattern": [
+		"DDD",
+		"DUD",
+		"DDD"
+	],
+	"key": {
+		"U": {"item": "#blank_upgrade"},
+		"D": {"type": "forge:ore_dict", "ore": "gemDiamond"}
+	}
+}

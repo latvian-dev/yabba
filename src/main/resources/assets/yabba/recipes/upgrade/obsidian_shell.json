@@ -1,14 +1,9 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"group": "yabba:upgrade_obsidian_shell",
 	"result": {"item": "upgrade_obsidian_shell"},
-	"pattern": [
-		" I ",
-		"IUI",
-		" I "
-	],
-	"key": {
-		"U": {"item": "#blank_upgrade"},
-		"I": {"type": "forge:ore_dict", "ore": "obsidian"}
-	}
+	"ingredients": [
+		{"item": "#blank_upgrade"},
+		{"type": "forge:ore_dict", "ore": "obsidian"}
+	]
 }

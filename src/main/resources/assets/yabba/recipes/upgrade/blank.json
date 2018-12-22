@@ -4,12 +4,12 @@
 	"result": {"item": "upgrade_blank", "count": 16},
 	"pattern": [
 		"SSS",
-		"ICI",
+		"PCP",
 		"SSS"
 	],
 	"key": {
 		"S": {"item": "#any_slab"},
-		"I": {"item": "minecraft:iron_bars"},
+		"P": {"type": "forge:ore_dict", "ore": "paper"},
 		"C": {"type": "forge:ore_dict", "ore": "chestWood"}
 	}
 }
