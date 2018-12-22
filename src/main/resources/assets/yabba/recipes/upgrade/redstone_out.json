@@ -4,6 +4,6 @@
 	"result": {"item": "upgrade_redstone_out"},
 	"ingredients": [
 		{"item": "#blank_upgrade"},
-		{"item": "minecraft:comparator"}
+		{"item": "minecraft:redstone_torch"}
 	]
 }
