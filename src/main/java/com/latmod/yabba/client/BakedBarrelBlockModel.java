@@ -3,7 +3,7 @@ package com.latmod.yabba.client;
 import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.api.BarrelSkin;
-import com.latmod.yabba.block.BlockAdvancedBarrelBase;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.state.IBlockState;
@@ -108,19 +108,19 @@ public class BakedBarrelBlockModel extends ModelBase
 
 		if (state instanceof IExtendedBlockState)
 		{
-			skinid = ((IExtendedBlockState) state).getValue(BlockAdvancedBarrelBase.SKIN);
+			skinid = ((IExtendedBlockState) state).getValue(BlockBarrel.SKIN);
 		}
 
-		BarrelLook look = BarrelLook.get(state.getValue(BlockAdvancedBarrelBase.MODEL), skinid);
+		BarrelLook look = BarrelLook.get(state.getValue(BlockBarrel.MODEL), skinid);
 
-		BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockAdvancedBarrelBase.FACING).getHorizontalIndex());
+		BarrelBlockModelKey key = new BarrelBlockModelKey(look, state.getValue(BlockBarrel.FACING).getHorizontalIndex());
 		BarrelBlockModelVariant variant = blockModels.get(key);
 
 		if (variant == null)
 		{
 			BarrelModel model = key.look.getModel();
 			BarrelSkin skin = key.look.getSkin();
-			ModelRotation rotation = BarrelBlockModelKey.ROTATIONS[state.getValue(BlockAdvancedBarrelBase.FACING).getOpposite().getHorizontalIndex()];
+			ModelRotation rotation = BarrelBlockModelKey.ROTATIONS[state.getValue(BlockBarrel.FACING).getOpposite().getHorizontalIndex()];
 			model.textureMap.put("skin", skin.spriteSet);
 
 			List<BakedQuad>[] solidQuads = new List[7];

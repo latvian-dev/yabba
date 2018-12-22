@@ -49,26 +49,26 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	{
 		super(Material.WOOD, MapColor.WOOD);
 		setHardness(2F);
-		setDefaultState(blockState.getBaseState().withProperty(BlockAdvancedBarrelBase.MODEL, EnumBarrelModel.BARREL).withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.NORTH));
+		setDefaultState(blockState.getBaseState().withProperty(BlockBarrel.MODEL, EnumBarrelModel.BARREL).withProperty(BlockBarrel.FACING, EnumFacing.NORTH));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] {BlockAdvancedBarrelBase.FACING, BlockAdvancedBarrelBase.MODEL}, new IUnlistedProperty[] {BlockAdvancedBarrelBase.SKIN});
+		return new ExtendedBlockState(this, new IProperty[] {BlockBarrel.FACING, BlockBarrel.MODEL}, new IUnlistedProperty[] {BlockBarrel.SKIN});
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(BlockAdvancedBarrelBase.FACING, EnumFacing.byHorizontalIndex(meta));
+		return getDefaultState().withProperty(BlockBarrel.FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(BlockAdvancedBarrelBase.FACING).getHorizontalIndex();
+		return state.getValue(BlockBarrel.FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		TileDecorativeBlock tile = new TileDecorativeBlock();
-		tile.setLook(BarrelLook.get(EnumBarrelModel.CRATE, ""), false);
+		tile.setLook(BarrelLook.get(EnumBarrelModel.CRATE, ""));
 		ItemStack stack = new ItemStack(this);
 		tile.writeToPickBlock(stack);
 		list.add(stack);
@@ -135,13 +135,15 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 
 			if (tileEntity instanceof TileDecorativeBlock)
 			{
+				TileDecorativeBlock deco = (TileDecorativeBlock) tileEntity;
+
 				if (stack.getItem() == YabbaItems.HAMMER)
 				{
-					((TileDecorativeBlock) tileEntity).setModel(ItemHammer.getModel(stack), false);
+					deco.setLook(BarrelLook.get(ItemHammer.getModel(stack), deco.getLook().skin));
 				}
 				else
 				{
-					((TileDecorativeBlock) tileEntity).setSkin(ItemPainter.getSkin(stack), false);
+					deco.setLook(BarrelLook.get(deco.getLook().model, ItemPainter.getSkin(stack)));
 				}
 			}
 		}
@@ -161,7 +163,7 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 
 			if (!model.isDefault())
 			{
-				return state.withProperty(BlockAdvancedBarrelBase.MODEL, model);
+				return state.withProperty(BlockBarrel.MODEL, model);
 			}
 		}
 
@@ -180,11 +182,11 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 
 			if (!look.isDefault())
 			{
-				state = state.withProperty(BlockAdvancedBarrelBase.MODEL, look.model);
+				state = state.withProperty(BlockBarrel.MODEL, look.model);
 
 				if (state instanceof IExtendedBlockState)
 				{
-					state = ((IExtendedBlockState) state).withProperty(BlockAdvancedBarrelBase.SKIN, look.skin);
+					state = ((IExtendedBlockState) state).withProperty(BlockBarrel.SKIN, look.skin);
 				}
 
 				return state;
@@ -198,14 +200,14 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	@Deprecated
 	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{
-		return state.withProperty(BlockAdvancedBarrelBase.FACING, rot.rotate(state.getValue(BlockAdvancedBarrelBase.FACING)));
+		return state.withProperty(BlockBarrel.FACING, rot.rotate(state.getValue(BlockBarrel.FACING)));
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState withMirror(IBlockState state, Mirror mirror)
 	{
-		return state.withRotation(mirror.toRotation(state.getValue(BlockAdvancedBarrelBase.FACING)));
+		return state.withRotation(mirror.toRotation(state.getValue(BlockBarrel.FACING)));
 	}
 
 	@Override
@@ -252,7 +254,7 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	@Deprecated
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(BlockAdvancedBarrelBase.FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(BlockBarrel.FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override

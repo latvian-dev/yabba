@@ -2,6 +2,7 @@ package com.latmod.yabba;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.OtherMods;
+import com.latmod.yabba.api.UpgradeData;
 import com.latmod.yabba.net.YabbaNetHandler;
 import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.util.AntibarrelData;
@@ -19,6 +20,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -59,6 +62,26 @@ public class Yabba
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new YabbaGuiHandler());
 		YabbaConfig.sync();
 		YabbaNetHandler.init();
+
+		CapabilityManager.INSTANCE.register(UpgradeData.class, new Capability.IStorage<UpgradeData>()
+		{
+			@Override
+			@Nullable
+			public NBTBase writeNBT(Capability<UpgradeData> capability, UpgradeData instance, EnumFacing side)
+			{
+				NBTTagCompound nbt = instance.serializeNBT();
+				return nbt.isEmpty() ? null : nbt;
+			}
+
+			@Override
+			public void readNBT(Capability<UpgradeData> capability, UpgradeData instance, EnumFacing side, NBTBase nbt)
+			{
+				if (nbt instanceof NBTTagCompound)
+				{
+					instance.deserializeNBT((NBTTagCompound) nbt);
+				}
+			}
+		}, () -> new UpgradeData(ItemStack.EMPTY));
 
 		CapabilityManager.INSTANCE.register(AntibarrelData.class, new Capability.IStorage<AntibarrelData>()
 		{

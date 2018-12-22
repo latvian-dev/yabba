@@ -31,10 +31,8 @@ public class YabbaClientEventHandler
 
 		setItemModel(YabbaItems.ITEM_BARREL_CONNECTOR, "normal");
 		setItemModel(YabbaItems.ANTIBARREL, "normal");
-		setItemModel(YabbaItems.COMPOUND_ITEM_BARREL, "normal");
 
 		setItemModel(YabbaItems.UPGRADE_BLANK, "inventory");
-		setItemModel(YabbaItems.UPGRADE_STONE_TIER, "inventory");
 		setItemModel(YabbaItems.UPGRADE_IRON_TIER, "inventory");
 		setItemModel(YabbaItems.UPGRADE_GOLD_TIER, "inventory");
 		setItemModel(YabbaItems.UPGRADE_DIAMOND_TIER, "inventory");

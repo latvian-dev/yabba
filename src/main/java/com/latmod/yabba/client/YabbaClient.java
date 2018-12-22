@@ -173,7 +173,7 @@ public class YabbaClient extends YabbaCommon
 			if (skin.icon.isEmpty())
 			{
 				TileDecorativeBlock tile = new TileDecorativeBlock();
-				tile.setLook(BarrelLook.get(EnumBarrelModel.BLOCK, skin.id), false);
+				tile.setLook(BarrelLook.get(EnumBarrelModel.BLOCK, skin.id));
 				ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 				tile.writeToPickBlock(stack);
 				skin.icon = ItemIcon.getItemIcon(stack);
@@ -195,7 +195,7 @@ public class YabbaClient extends YabbaCommon
 		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
 		{
 			TileDecorativeBlock tile = new TileDecorativeBlock();
-			tile.setLook(BarrelLook.get(id, ""), false);
+			tile.setLook(BarrelLook.get(id, ""));
 			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 			tile.writeToPickBlock(stack);
 			id.getModel().icon = ItemIcon.getItemIcon(stack);

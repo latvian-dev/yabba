@@ -4,7 +4,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.latmod.yabba.net.MessageBarrelConnector;
-import com.latmod.yabba.tile.IItemBarrel;
+import com.latmod.yabba.tile.ItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrelConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -105,19 +105,19 @@ public class BlockItemBarrelConnector extends Block
 			connector.getSlots();
 			List<MessageBarrelConnector.BarrelInst> list = new ArrayList<>();
 
-			for (IItemBarrel barrel : connector.linkedBarrels)
+			for (ItemBarrel barrel : connector.linkedBarrels)
 			{
 				MessageBarrelConnector.BarrelInst inst = new MessageBarrelConnector.BarrelInst();
-				inst.pos = ((TileEntity) barrel).getPos();
+				inst.pos = ((TileEntity) barrel.barrel.block).getPos();
 				IBlockState blockState = world.getBlockState(inst.pos);
 				ItemStack stack = blockState.getBlock().getItem(world, inst.pos, blockState);
 				inst.title2 = new TextComponentString(stack.getDisplayName());
 				inst.icon2 = ItemIcon.getItemIcon(stack);
 
-				if (!barrel.getStoredItemType().isEmpty())
+				if (!barrel.type.isEmpty())
 				{
-					inst.title = new TextComponentString(StringUtils.formatDouble(barrel.getItemCount(), true) + "x " + barrel.getStoredItemType().getDisplayName());
-					inst.icon = ItemIcon.getItemIcon(ItemHandlerHelper.copyStackWithSize(barrel.getStoredItemType(), 1));
+					inst.title = new TextComponentString(StringUtils.formatDouble(barrel.count, true) + "x " + barrel.type.getDisplayName());
+					inst.icon = ItemIcon.getItemIcon(ItemHandlerHelper.copyStackWithSize(barrel.type, 1));
 				}
 				else
 				{
@@ -125,7 +125,7 @@ public class BlockItemBarrelConnector extends Block
 					inst.icon = Icon.EMPTY;
 				}
 
-				if (barrel.isLocked())
+				if (barrel.barrel.isLocked())
 				{
 					inst.title.getStyle().setColor(TextFormatting.GOLD);
 				}

@@ -3,7 +3,7 @@ package com.latmod.yabba.util;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.block.BlockAdvancedBarrelBase;
+import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.client.BarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -107,7 +107,7 @@ public enum EnumBarrelModel implements IStringSerializable
 
 	public AxisAlignedBB getAABB(IBlockState state)
 	{
-		return boxes[state.getValue(BlockAdvancedBarrelBase.FACING).getIndex()];
+		return boxes[state.getValue(BlockBarrel.FACING).getIndex()];
 	}
 
 	public ResourceLocation getBaseModel()

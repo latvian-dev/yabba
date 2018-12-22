@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 /**
  * @author LatvianModder
  */
-public class BlockItemBarrel extends BlockAdvancedBarrelBase
+public class BlockItemBarrel extends BlockBarrel
 {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)

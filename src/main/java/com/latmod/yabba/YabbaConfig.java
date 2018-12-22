@@ -39,7 +39,6 @@ public class YabbaConfig
 
 	public static class TierCategory
 	{
-		public final TierCategoryBase stone = new TierCategoryBase(1);
 		public final TierCategoryBase wood = new TierCategoryBase(64);
 		public final TierCategoryBase iron = new TierCategoryBase(256);
 		public final TierCategoryBase gold = new TierCategoryBase(1024);
@@ -66,7 +65,6 @@ public class YabbaConfig
 	public static boolean sync()
 	{
 		ConfigManager.sync(Yabba.MOD_ID, Config.Type.INSTANCE);
-		tier.stone.syncWith(Tier.STONE);
 		tier.wood.syncWith(Tier.WOOD);
 		tier.iron.syncWith(Tier.IRON);
 		tier.gold.syncWith(Tier.GOLD);

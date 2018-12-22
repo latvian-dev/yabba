@@ -14,12 +14,10 @@ public class YabbaItems
 	public static final Item ITEM_BARREL = Items.AIR;
 	public static final Item ITEM_BARREL_CONNECTOR = Items.AIR;
 	public static final Item ANTIBARREL = Items.AIR;
-	public static final Item COMPOUND_ITEM_BARREL = Items.AIR;
 	public static final Item DECORATIVE_BLOCK = Items.AIR;
 
 	//Upgrades
 	public static final Item UPGRADE_BLANK = Items.AIR;
-	public static final Item UPGRADE_STONE_TIER = Items.AIR;
 	public static final Item UPGRADE_IRON_TIER = Items.AIR;
 	public static final Item UPGRADE_GOLD_TIER = Items.AIR;
 	public static final Item UPGRADE_DIAMOND_TIER = Items.AIR;

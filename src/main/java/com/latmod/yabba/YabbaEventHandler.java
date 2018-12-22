@@ -3,7 +3,6 @@ package com.latmod.yabba;
 import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.block.BlockAntibarrel;
-import com.latmod.yabba.block.BlockCompoundItemBarrel;
 import com.latmod.yabba.block.BlockDecorativeBlock;
 import com.latmod.yabba.block.BlockItemBarrel;
 import com.latmod.yabba.block.BlockItemBarrelConnector;
@@ -13,12 +12,11 @@ import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.item.ItemPainter;
 import com.latmod.yabba.item.ItemWrench;
 import com.latmod.yabba.item.upgrade.ItemUpgrade;
-import com.latmod.yabba.item.upgrade.ItemUpgradeBlank;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
-import com.latmod.yabba.item.upgrade.ItemUpgradeStone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
+import com.latmod.yabba.tile.ItemBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileCompoundItemBarrel;
 import com.latmod.yabba.tile.TileDecorativeBlock;
@@ -68,7 +66,6 @@ public class YabbaEventHandler
 				withName(new BlockItemBarrel(), "item_barrel"),
 				withName(new BlockItemBarrelConnector(), "item_barrel_connector"),
 				withName(new BlockAntibarrel(), "antibarrel"),
-				withName(new BlockCompoundItemBarrel(), "compound_item_barrel"),
 				withName(new BlockDecorativeBlock(), "decorative_block")
 		);
 
@@ -86,13 +83,11 @@ public class YabbaEventHandler
 				new ItemBlock(YabbaBlocks.ITEM_BARREL).setRegistryName("item_barrel"),
 				new ItemBlock(YabbaBlocks.ITEM_BARREL_CONNECTOR).setRegistryName("item_barrel_connector"),
 				new ItemBlockAntibarrel(YabbaBlocks.ANTIBARREL).setRegistryName("antibarrel"),
-				new ItemBlock(YabbaBlocks.COMPOUND_ITEM_BARREL).setRegistryName("compound_item_barrel"),
 				new ItemBlock(YabbaBlocks.DECORATIVE_BLOCK).setRegistryName("decorative_block")
 		);
 
 		event.getRegistry().registerAll(
-				withName(new ItemUpgradeBlank(), "upgrade_blank"),
-				withName(new ItemUpgradeStone(), "upgrade_stone_tier"),
+				withName(new Item(), "upgrade_blank"),
 				withName(new ItemUpgradeTier(Tier.IRON), "upgrade_iron_tier"),
 				withName(new ItemUpgradeTier(Tier.GOLD), "upgrade_gold_tier"),
 				withName(new ItemUpgradeTier(Tier.DIAMOND), "upgrade_diamond_tier"),
@@ -135,13 +130,13 @@ public class YabbaEventHandler
 
 				if (stackItem == YabbaItems.ITEM_BARREL)
 				{
-					TileItemBarrel barrel = (TileItemBarrel) YabbaBlocks.ITEM_BARREL.createTileEntity(entityItem.world, YabbaBlocks.ITEM_BARREL.getDefaultState());
+					TileItemBarrel barrel = new TileItemBarrel();
 					barrel.readFromNBT(BlockUtils.getData(stack));
 
-					if (!barrel.getStoredItemType().isEmpty() && barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))
+					if (!barrel.barrel.content.isEmpty() && barrel.barrel.hasUpgrade(YabbaItems.UPGRADE_PICKUP))
 					{
 						int originalSize = itemStack.getCount();
-						itemStack = barrel.insertItem(0, itemStack, false);
+						itemStack = ((ItemBarrel) barrel.barrel.content).insertItem(0, itemStack, false);
 
 						if (originalSize != itemStack.getCount())
 						{

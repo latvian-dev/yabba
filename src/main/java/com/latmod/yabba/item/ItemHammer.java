@@ -1,7 +1,6 @@
 package com.latmod.yabba.item;
 
 import com.latmod.yabba.gui.GuiSelectModel;
-import com.latmod.yabba.tile.ITileWithBarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -9,12 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -73,20 +69,5 @@ public class ItemHammer extends Item
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		tooltip.add(getModelTooltip(getModel(stack)));
-	}
-
-	@Override
-	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, EnumHand hand)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof ITileWithBarrelLook)
-		{
-			((ITileWithBarrelLook) tileEntity).setModel(getModel(player.getHeldItem(hand)), false);
-
-			return EnumActionResult.SUCCESS;
-		}
-
-		return EnumActionResult.PASS;
 	}
 }

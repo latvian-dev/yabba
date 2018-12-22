@@ -1,10 +1,10 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.latmod.yabba.block.Tier;
-import com.latmod.yabba.tile.TileAdvancedBarrelBase;
+import com.latmod.yabba.tile.Barrel;
+import com.latmod.yabba.tile.BarrelContent;
+import com.latmod.yabba.tile.TileBarrel;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,35 +18,22 @@ import org.lwjgl.opengl.GL11;
 /**
  * @author LatvianModder
  */
-public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySpecialRenderer<T>
+public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends TileEntitySpecialRenderer<T>
 {
-	private static final CachedVertexData ICON_SETTINGS[] = new CachedVertexData[5];
-
-	static
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			ICON_SETTINGS[i] = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			ICON_SETTINGS[i].color.set(i == 4 ? Color4I.rgb(0xFF00DC) : Tier.NAME_MAP.get(i).color);
-			ICON_SETTINGS[i].pos(-0.5D, -0.5D, 0D).tex(0, 0);
-			ICON_SETTINGS[i].pos(-0.5D, +0.5D, 0D).tex(0, 1);
-			ICON_SETTINGS[i].pos(+0.5D, +0.5D, 0D).tex(1, 1);
-			ICON_SETTINGS[i].pos(+0.5D, -0.5D, 0D).tex(1, 0);
-		}
-	}
-
 	@Override
-	public void render(T barrel, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(T tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		if (barrel.isInvalid())
+		if (tile.isInvalid())
 		{
 			return;
 		}
 
-		boolean hasIcon = hasIcon(barrel);
+		Barrel barrel = tile.barrel;
+
+		boolean hasIcon = hasIcon((C) tile.barrel.content);
 		boolean isSneaking = ClientUtils.MC.player.isSneaking();
 		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
-		boolean mouseOver = ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK && ray.getBlockPos().equals(barrel.getPos());
+		boolean mouseOver = ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK && ray.getBlockPos().equals(tile.getPos());
 
 		if (!hasIcon && !isSneaking)
 		{
@@ -59,7 +46,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 		GlStateManager.glNormal3f(0F, 1F, 0F);
 		GlStateManager.translate(0.5F, 0.5F, 0.5F);
 		GlStateManager.rotate(180F, 0F, 0F, 1F);
-		GlStateManager.rotate(barrel.getRotationAngleY(), 0F, 1F, 0F);
+		GlStateManager.rotate(tile.getRotationAngleY(), 0F, 1F, 0F);
 		GlStateManager.translate(-0.5F, -0.5F, -0.5F);
 		setLightmapDisabled(true);
 		GlStateManager.disableLighting();
@@ -74,7 +61,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 
 		if (mouseOver || YabbaClientConfig.general.always_display_data.get(barrel.alwaysDisplayData))
 		{
-			boolean isCreative = barrel.getTier().creative();
+			boolean isCreative = barrel.isCreative();
 			float textDistance = model.textDistance;
 			boolean infinite = isCreative || barrel.getTier().infiniteCapacity();
 
@@ -91,7 +78,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 					double by = 0.0625D;
 					double bw = 1D - bx * 2D;
 					double bh = 0.15D;
-					double filled = MathHelper.clamp(getFilled(barrel), 0D, 1D);
+					double filled = MathHelper.clamp(getFilled((C) tile.barrel.content), 0D, 1D);
 
 					Color4I colBorder = YabbaClientConfig.bar_color.getBorderColor();
 					Color4I colFree = YabbaClientConfig.bar_color.getFreeColor();
@@ -110,7 +97,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 				{
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0.5F, 0.075F, textDistance);
-					String s1 = barrel.getItemDisplayCount(isSneaking, isCreative, infinite);
+					String s1 = barrel.content.getItemDisplayCount(isSneaking, isCreative, infinite);
 					int sw = getFontRenderer().getStringWidth(s1);
 					float f = 1F / (float) Math.max((sw + 10), 64);
 					GlStateManager.scale(f, f, 1F);
@@ -122,7 +109,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 				GlStateManager.translate(0.5F, 0.80F, textDistance);
 				boolean flag = getFontRenderer().getUnicodeFlag();
 				getFontRenderer().setUnicodeFlag(true);
-				String s2 = barrel.getItemDisplayName();
+				String s2 = barrel.content.getItemDisplayName();
 				int sw1 = getFontRenderer().getStringWidth(s2);
 				float f1 = 1F / (float) Math.max((sw1 + 10), 64);
 				GlStateManager.scale(f1, f1, 1F);
@@ -145,7 +132,7 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			renderIcon(barrel);
+			renderIcon((C) tile.barrel.content);
 			GlStateManager.disableRescaleNormal();
 			GlStateManager.disableLighting();
 			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -171,17 +158,17 @@ public class RenderBarrel<T extends TileAdvancedBarrelBase> extends TileEntitySp
 		buffer.pos(x + w, y, z).color(r, g, b, a).endVertex();
 	}
 
-	public double getFilled(T barrel)
+	public double getFilled(C content)
 	{
 		return 0D;
 	}
 
-	public boolean hasIcon(T barrel)
+	public boolean hasIcon(C content)
 	{
 		return false;
 	}
 
-	public void renderIcon(T barrel)
+	public void renderIcon(C content)
 	{
 	}
 }

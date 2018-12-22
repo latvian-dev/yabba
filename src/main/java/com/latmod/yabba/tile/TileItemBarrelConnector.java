@@ -27,10 +27,10 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 	private static final HashSet<TileItemBarrelConnector> ALL_CONNECTORS = new HashSet<>();
 
 	private static BlockPos currentPos = null;
-	private static final Comparator<IItemBarrel> BARREL_COMPARATOR = (o1, o2) -> {
-		int i = Boolean.compare(o1.getStoredItemType().isEmpty(), o2.getStoredItemType().isEmpty());
-		i = i == 0 ? Boolean.compare(o2.isLocked(), o1.isLocked()) : i;
-		return i == 0 ? Double.compare(currentPos.distanceSq(((TileEntity) o1).getPos()), currentPos.distanceSq(((TileEntity) o2).getPos())) : i;
+	private static final Comparator<ItemBarrel> BARREL_COMPARATOR = (o1, o2) -> {
+		int i = Boolean.compare(o1.type.isEmpty(), o2.type.isEmpty());
+		i = i == 0 ? Boolean.compare(o2.barrel.isLocked(), o1.barrel.isLocked()) : i;
+		return i == 0 ? Double.compare(currentPos.distanceSq(((TileEntity) o1.barrel.block).getPos()), currentPos.distanceSq(((TileEntity) o2.barrel.block).getPos())) : i;
 	};
 
 	public static void markAllDirty(BlockPos pos, int dimension)
@@ -52,7 +52,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 		}
 	}
 
-	public final List<IItemBarrel> linkedBarrels = new ArrayList<>();
+	public final List<ItemBarrel> linkedBarrels = new ArrayList<>();
 	private long lastUpdate = 0L;
 
 	@Override
@@ -104,7 +104,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 		return false;
 	}
 
-	private void addToList(HashSet<IItemBarrel> scanned, BlockPos pos, EnumFacing from)
+	private void addToList(HashSet<ItemBarrel> scanned, BlockPos pos, EnumFacing from)
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 
@@ -112,7 +112,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 		{
 			IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, from);
 
-			if (itemHandler instanceof IItemBarrel && scanned.add((IItemBarrel) itemHandler))
+			if (itemHandler instanceof ItemBarrel && scanned.add((ItemBarrel) itemHandler))
 			{
 				for (EnumFacing facing1 : EnumFacing.VALUES)
 				{
@@ -126,7 +126,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 	}
 
 	@Nullable
-	private IItemBarrel getAt(int slot)
+	private ItemBarrel getAt(int slot)
 	{
 		if (world == null || world.isRemote)
 		{
@@ -139,7 +139,7 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 
 			if (world != null && !world.isRemote)
 			{
-				HashSet<IItemBarrel> scanned = new HashSet<>();
+				HashSet<ItemBarrel> scanned = new HashSet<>();
 
 				for (EnumFacing facing : EnumFacing.VALUES)
 				{
@@ -152,8 +152,8 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 			}
 		}
 
-		IItemBarrel barrel = (slot < 0 || slot >= linkedBarrels.size()) ? null : linkedBarrels.get(slot);
-		return barrel == null || barrel.isBarrelInvalid() ? null : barrel;
+		ItemBarrel barrel = (slot < 0 || slot >= linkedBarrels.size()) ? null : linkedBarrels.get(slot);
+		return barrel == null || barrel.barrel.block.isBarrelInvalid() ? null : barrel;
 	}
 
 	@Override
@@ -166,28 +166,28 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		IItemBarrel barrel = getAt(slot);
+		ItemBarrel barrel = getAt(slot);
 		return barrel == null ? ItemStack.EMPTY : barrel.getStackInSlot(0);
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		IItemBarrel barrel = getAt(slot);
+		ItemBarrel barrel = getAt(slot);
 		return barrel == null ? stack : barrel.insertItem(0, stack, simulate);
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
-		IItemBarrel barrel = getAt(slot);
+		ItemBarrel barrel = getAt(slot);
 		return barrel == null ? ItemStack.EMPTY : barrel.extractItem(0, amount, simulate);
 	}
 
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		IItemBarrel barrel = getAt(slot);
+		ItemBarrel barrel = getAt(slot);
 		return barrel == null ? 64 : barrel.getSlotLimit(0);
 	}
 }

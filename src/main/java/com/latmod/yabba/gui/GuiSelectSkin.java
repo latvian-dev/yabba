@@ -146,7 +146,7 @@ public class GuiSelectSkin extends GuiBase
 			@Override
 			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				theme.drawPanelBackground(x, w, w, h);
+				theme.drawPanelBackground(x, y, w, h);
 			}
 		};
 

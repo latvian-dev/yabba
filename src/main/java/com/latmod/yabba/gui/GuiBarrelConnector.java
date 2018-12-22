@@ -63,6 +63,12 @@ public class GuiBarrelConnector extends GuiButtonListBase
 				}
 
 				@Override
+				public boolean hasIcon()
+				{
+					return !(isShiftKeyDown() ? inst.icon2 : inst.icon).isEmpty();
+				}
+
+				@Override
 				public void drawIcon(Theme theme, int x, int y, int w, int h)
 				{
 					(isShiftKeyDown() ? inst.icon2 : inst.icon).draw(x, y, w, h);

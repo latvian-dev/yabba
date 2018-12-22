@@ -1,11 +1,11 @@
 package com.latmod.yabba.item.upgrade;
 
-import com.latmod.yabba.api.ApplyUpgradeEvent;
-import com.latmod.yabba.item.IUpgrade;
+import com.latmod.yabba.api.UpgradeData;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ItemUpgrade extends Item implements IUpgrade
+public class ItemUpgrade extends Item
 {
 	@Override
-	public boolean applyOn(ApplyUpgradeEvent event)
+	public UpgradeData initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
 	{
-		return true;
+		return new UpgradeData(stack);
 	}
 
 	@Override

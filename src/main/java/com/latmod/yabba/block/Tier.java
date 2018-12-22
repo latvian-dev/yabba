@@ -11,13 +11,11 @@ import javax.annotation.Nullable;
  */
 public enum Tier implements IStringSerializable
 {
-	STONE("stone", 0x666666),
-	WOOD("wood", 0xC69569),
-	IRON("iron", 0xD8D8D8),
-	GOLD("gold", 0xFCD803),
-	DIAMOND("diamond", 0x00FFFF),
-	STAR("star", 0xAFC9D8),
-	CREATIVE("creative", 0xFF00FF);
+	WOOD("wood", 0, 0xC69569),
+	IRON("iron", 1, 0xD8D8D8),
+	GOLD("gold", 2, 0xFCD803),
+	DIAMOND("diamond", 3, 0x00FFFF),
+	STAR("star", 4, 0xAFC9D8);
 
 	public static final int MAX_ITEMS = 2000000000;
 	public static final NameMap<Tier> NAME_MAP = NameMap.create(WOOD, values());
@@ -25,12 +23,14 @@ public enum Tier implements IStringSerializable
 	private final String name;
 	private final String langKey;
 	public int maxItemStacks = MAX_ITEMS / 64;
+	public final int transferTier;
 	public final Color4I color;
 
-	Tier(String n, int c)
+	Tier(String n, int t, int c)
 	{
 		name = n;
 		langKey = "lang.yabba.tier." + n;
+		transferTier = t;
 		color = Color4I.rgb(c);
 	}
 
@@ -45,19 +45,14 @@ public enum Tier implements IStringSerializable
 		return langKey;
 	}
 
-	public boolean creative()
-	{
-		return this == CREATIVE;
-	}
-
 	public boolean infiniteCapacity()
 	{
-		return this == STAR || this == CREATIVE;
+		return this == STAR;
 	}
 
 	@Nullable
 	public Tier getPrevious()
 	{
-		return this == STONE ? null : NAME_MAP.getPrevious(this);
+		return this == WOOD ? null : NAME_MAP.getPrevious(this);
 	}
 }

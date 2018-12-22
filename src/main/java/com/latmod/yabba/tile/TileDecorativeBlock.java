@@ -11,7 +11,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 /**
  * @author LatvianModder
  */
-public class TileDecorativeBlock extends TileBase implements ITileWithBarrelLook
+public class TileDecorativeBlock extends TileBase
 {
 	private BarrelLook look = BarrelLook.DEFAULT;
 	private AxisAlignedBB cachedAABB;
@@ -60,26 +60,17 @@ public class TileDecorativeBlock extends TileBase implements ITileWithBarrelLook
 		return cachedAABB;
 	}
 
-	@Override
 	public BarrelLook getLook()
 	{
 		return look;
 	}
 
-	@Override
-	public boolean setLook(BarrelLook l, boolean simulate)
+	public void setLook(BarrelLook l)
 	{
 		if (!look.equals(l))
 		{
-			if (!simulate)
-			{
-				look = l;
-				markDirty();
-			}
-
-			return true;
+			look = l;
+			markDirty();
 		}
-
-		return false;
 	}
 }
