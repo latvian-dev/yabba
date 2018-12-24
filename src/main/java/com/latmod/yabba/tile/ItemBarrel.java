@@ -224,7 +224,16 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 		if (!simulate)
 		{
 			count -= stack.getCount();
-			barrel.block.markBarrelDirty(false);
+
+			if (count <= 0 && !barrel.isLocked())
+			{
+				type = ItemStack.EMPTY;
+				barrel.block.markBarrelDirty(true);
+			}
+			else
+			{
+				barrel.block.markBarrelDirty(false);
+			}
 		}
 
 		return stack;
@@ -421,7 +430,7 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 	@SideOnly(Side.CLIENT)
 	public void addInformation(List<String> tooltip, ITooltipFlag flag)
 	{
-		tooltip.add(I18n.format("lang.yabba.tier", I18n.format(barrel.getTier().getLangKey())));
+		tooltip.add(I18n.format("yabba.tier") + ": " + I18n.format(barrel.getTier().getLangKey()));
 
 		if (barrel.isLocked())
 		{

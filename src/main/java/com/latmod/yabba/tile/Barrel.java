@@ -7,6 +7,7 @@ import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelContentType;
 import com.latmod.yabba.api.UpgradeData;
 import com.latmod.yabba.block.Tier;
+import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.command.ICommandSender;
@@ -41,7 +42,7 @@ public class Barrel implements IConfigCallback
 	public Barrel(IBarrelBlock b, BarrelContentType c)
 	{
 		block = b;
-		tier = Tier.WOOD;
+		tier = null;
 		locked = false;
 		look = BarrelLook.DEFAULT;
 		upgrades = new UpgradeData[8];
@@ -54,11 +55,6 @@ public class Barrel implements IConfigCallback
 	public void writeData(NBTTagCompound nbt)
 	{
 		content.writeData(nbt);
-
-		if (tier != Tier.WOOD)
-		{
-			nbt.setString("Tier", tier.getName());
-		}
 
 		NBTTagList nbt1 = new NBTTagList();
 
@@ -107,8 +103,6 @@ public class Barrel implements IConfigCallback
 	{
 		content.readData(nbt);
 
-		tier = Tier.NAME_MAP.get(nbt.getString("Tier"));
-
 		Arrays.fill(upgrades, null);
 		NBTBase upgradeTag = nbt.getTag("Upgrades");
 
@@ -135,14 +129,19 @@ public class Barrel implements IConfigCallback
 		}
 		else if (upgradeTag instanceof NBTTagCompound)
 		{
-			int slot = 0;
-
 			for (String s : ((NBTTagCompound) upgradeTag).getKeySet())
 			{
 				Item item = Item.REGISTRY.getObject(new ResourceLocation(s));
 
 				if (item != null)
 				{
+					int slot = findFreeUpgradeSlot();
+
+					if (slot == -1)
+					{
+						break;
+					}
+
 					ItemStack stack = new ItemStack(item);
 					UpgradeData data = stack.getCapability(UpgradeData.CAPABILITY, null);
 
@@ -152,9 +151,55 @@ public class Barrel implements IConfigCallback
 					}
 
 					upgrades[slot] = data;
-					slot++;
 				}
 			}
+		}
+
+		if (nbt.hasKey("Tier"))
+		{
+			tier = Tier.NAME_MAP.get(nbt.getString("Tier"));
+
+			if (tier.tier >= Tier.IRON.tier)
+			{
+				int i = findFreeUpgradeSlot();
+
+				if (i != -1)
+				{
+					upgrades[i] = new ItemStack(YabbaItems.UPGRADE_IRON_TIER).getCapability(UpgradeData.CAPABILITY, null);
+				}
+			}
+
+			if (tier.tier >= Tier.GOLD.tier)
+			{
+				int i = findFreeUpgradeSlot();
+
+				if (i != -1)
+				{
+					upgrades[i] = new ItemStack(YabbaItems.UPGRADE_GOLD_TIER).getCapability(UpgradeData.CAPABILITY, null);
+				}
+			}
+
+			if (tier.tier >= Tier.DIAMOND.tier)
+			{
+				int i = findFreeUpgradeSlot();
+
+				if (i != -1)
+				{
+					upgrades[i] = new ItemStack(YabbaItems.UPGRADE_DIAMOND_TIER).getCapability(UpgradeData.CAPABILITY, null);
+				}
+			}
+
+			if (tier.tier >= Tier.STAR.tier)
+			{
+				int i = findFreeUpgradeSlot();
+
+				if (i != -1)
+				{
+					upgrades[i] = new ItemStack(YabbaItems.UPGRADE_STAR_TIER).getCapability(UpgradeData.CAPABILITY, null);
+				}
+			}
+
+			tier = null;
 		}
 
 		locked = nbt.getBoolean("Locked");
@@ -164,18 +209,40 @@ public class Barrel implements IConfigCallback
 		displayBar = nbt.getBoolean("DisplayBar");
 	}
 
-	public Tier getTier()
+	public int findFreeUpgradeSlot()
 	{
-		return tier;
+		for (int i = 0; i < upgrades.length; i++)
+		{
+			if (upgrades[i] == null)
+			{
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
-	public void setTier(Tier v)
+	public Tier getTier()
 	{
-		if (tier != v)
+		if (tier == null)
 		{
-			tier = v;
-			block.markBarrelDirty(true);
+			tier = Tier.WOOD;
+
+			for (UpgradeData upgrade : upgrades)
+			{
+				if (upgrade != null && upgrade.stack.getItem() instanceof ItemUpgradeTier)
+				{
+					Tier t = ((ItemUpgradeTier) upgrade.stack.getItem()).tier;
+
+					if (t.tier > tier.tier)
+					{
+						tier = t;
+					}
+				}
+			}
 		}
+
+		return tier;
 	}
 
 	public boolean isLocked()
@@ -301,6 +368,7 @@ public class Barrel implements IConfigCallback
 
 	public void clearCache()
 	{
+		tier = null;
 		isCreative = null;
 		content.clearCache();
 	}

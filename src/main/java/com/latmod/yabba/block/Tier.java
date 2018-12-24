@@ -23,14 +23,14 @@ public enum Tier implements IStringSerializable
 	private final String name;
 	private final String langKey;
 	public int maxItemStacks = MAX_ITEMS / 64;
-	public final int transferTier;
+	public final int tier;
 	public final Color4I color;
 
 	Tier(String n, int t, int c)
 	{
 		name = n;
-		langKey = "lang.yabba.tier." + n;
-		transferTier = t;
+		langKey = "yabba.tier." + n;
+		tier = t;
 		color = Color4I.rgb(c);
 	}
 

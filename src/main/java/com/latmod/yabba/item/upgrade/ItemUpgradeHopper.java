@@ -91,7 +91,7 @@ public class ItemUpgradeHopper extends ItemUpgrade
 				if (barrel.content instanceof ItemBarrel)
 				{
 					ItemBarrel itemBarrel = (ItemBarrel) barrel.content;
-					int maxItems = 1 << barrel.getTier().transferTier;
+					int maxItems = 1 << barrel.getTier().tier;
 
 					if (itemBarrel.count > 0 && down)
 					{

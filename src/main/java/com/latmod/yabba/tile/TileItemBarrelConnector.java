@@ -152,42 +152,108 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler
 			}
 		}
 
-		ItemBarrel barrel = (slot < 0 || slot >= linkedBarrels.size()) ? null : linkedBarrels.get(slot);
+		if (slot <= 0 || slot > linkedBarrels.size())
+		{
+			return null;
+		}
+
+		ItemBarrel barrel = linkedBarrels.get(slot - 1);
 		return barrel == null || barrel.barrel.block.isBarrelInvalid() ? null : barrel;
 	}
 
 	@Override
 	public int getSlots()
 	{
-		getAt(-1);
-		return linkedBarrels.size();
+		getAt(0);
+		return 1 + linkedBarrels.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
 		ItemBarrel barrel = getAt(slot);
-		return barrel == null ? ItemStack.EMPTY : barrel.getStackInSlot(0);
+		return barrel == null ? ItemStack.EMPTY : barrel.getStackInSlot(1);
+	}
+
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack)
+	{
+		if (slot == 0)
+		{
+			return false;
+		}
+
+		getAt(0);
+
+		for (ItemBarrel barrel : linkedBarrels)
+		{
+			if (barrel.isItemValid(0, stack))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		ItemBarrel barrel = getAt(slot);
-		return barrel == null ? stack : barrel.insertItem(0, stack, simulate);
+		if (stack.isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+		else if (slot != 0)
+		{
+			return stack;
+		}
+
+		getAt(0);
+
+		for (ItemBarrel barrel : linkedBarrels)
+		{
+			if (!barrel.isEmpty())
+			{
+				stack = barrel.insertItem(0, stack, simulate);
+
+				if (stack.isEmpty())
+				{
+					return ItemStack.EMPTY;
+				}
+			}
+		}
+
+		for (ItemBarrel barrel : linkedBarrels)
+		{
+			if (barrel.isEmpty())
+			{
+				stack = barrel.insertItem(0, stack, simulate);
+
+				if (stack.isEmpty())
+				{
+					return ItemStack.EMPTY;
+				}
+			}
+		}
+
+		return stack;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
+		if (slot == 0)
+		{
+			return ItemStack.EMPTY;
+		}
+
 		ItemBarrel barrel = getAt(slot);
-		return barrel == null ? ItemStack.EMPTY : barrel.extractItem(0, amount, simulate);
+		return barrel == null ? ItemStack.EMPTY : barrel.extractItem(1, amount, simulate);
 	}
 
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		ItemBarrel barrel = getAt(slot);
-		return barrel == null ? 64 : barrel.getSlotLimit(0);
+		return Integer.MAX_VALUE;
 	}
 }

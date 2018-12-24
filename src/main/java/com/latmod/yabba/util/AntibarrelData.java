@@ -168,44 +168,35 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		if (slot < 0 || slot > items.size() || stack.isEmpty() || stack.isStackable())
+		if (slot != 0 || stack.isEmpty() || stack.isStackable())
 		{
 			return stack;
 		}
 
 		ItemEntry entry = ItemEntry.get(stack);
-		ItemEntryWithCount entryc;
-		int added = 0;
+		int added;
 
-		if (slot == 0)
+		ItemEntryWithCount entryc = items.get(entry);
+
+		if (entryc != null)
 		{
-			entryc = items.get(entry);
-
-			if (entryc != null)
-			{
-				added = Math.min(YabbaConfig.general.antibarrel_items_per_type - entryc.count, stack.getCount());
-			}
-			else if (items.size() < YabbaConfig.general.antibarrel_capacity)
-			{
-				entryc = new ItemEntryWithCount(entry, 0);
-				items.put(entry, entryc);
-				itemsArray = null;
-				totalItemCount = -1;
-				cachedNetData = null;
-				added = Math.min(YabbaConfig.general.antibarrel_items_per_type, stack.getCount());
-			}
+			added = Math.min(YabbaConfig.general.antibarrel_items_per_type - entryc.count, stack.getCount());
+		}
+		else if (items.size() < YabbaConfig.general.antibarrel_capacity)
+		{
+			entryc = new ItemEntryWithCount(entry, 0);
+			items.put(entry, entryc);
+			itemsArray = null;
+			totalItemCount = -1;
+			cachedNetData = null;
+			added = Math.min(YabbaConfig.general.antibarrel_items_per_type, stack.getCount());
 		}
 		else
 		{
-			entryc = getItemArray()[slot - 1];
-
-			if (entryc.entry.equalsEntry(entry))
-			{
-				added = Math.min(YabbaConfig.general.antibarrel_items_per_type - entryc.count, stack.getCount());
-			}
+			return stack;
 		}
 
-		if (entryc != null && added > 0)
+		if (added > 0)
 		{
 			if (!simulate)
 			{

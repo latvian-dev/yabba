@@ -30,7 +30,6 @@ public class ItemUpgradeTier extends ItemUpgrade
 		@Override
 		public void onInserted(Barrel barrel, EntityPlayerMP player)
 		{
-			barrel.setTier(tier);
 		}
 
 		@Override
@@ -45,7 +44,7 @@ public class ItemUpgradeTier extends ItemUpgrade
 		}
 	}
 
-	private final Tier tier;
+	public final Tier tier;
 
 	public ItemUpgradeTier(Tier t)
 	{

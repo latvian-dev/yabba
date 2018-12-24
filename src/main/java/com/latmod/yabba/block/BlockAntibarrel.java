@@ -66,6 +66,12 @@ public class BlockAntibarrel extends BlockSpecialDrop
 	}
 
 	@Override
+	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+	{
+		return true;
+	}
+
+	@Override
 	@Deprecated
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{

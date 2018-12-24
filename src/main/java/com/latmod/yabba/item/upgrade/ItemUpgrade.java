@@ -26,8 +26,9 @@ public class ItemUpgrade extends Item
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
+		super.addInformation(stack, world, tooltip, flag);
 		tooltip.add(I18n.format("item.yabba.upgrade.desc"));
 	}
 }
