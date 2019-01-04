@@ -10,11 +10,13 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.net.MessageOpenBarrelGui;
 import com.latmod.yabba.tile.ItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -56,7 +58,9 @@ public class GuiBarrelConnector extends GuiButtonListBase
 	{
 		for (TileItemBarrel tile : barrels)
 		{
-			Icon icon2 = ItemIcon.getItemIcon(tile.getBlockType().getItem(Minecraft.getMinecraft().world, tile.getPos(), tile.getBlockState()));
+			ItemStack barrelStack = new ItemStack(YabbaItems.ITEM_BARREL);
+			tile.writeToItem(barrelStack);
+			Icon icon2 = ItemIcon.getItemIcon(barrelStack);
 			String title;
 			Icon icon;
 			ItemBarrel barrel = (ItemBarrel) tile.barrel.content;
