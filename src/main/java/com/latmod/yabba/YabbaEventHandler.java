@@ -124,7 +124,7 @@ public class YabbaEventHandler
 		{
 			ItemStack stack = player.inventory.getStackInSlot(i);
 
-			if (BlockUtils.hasData(stack))
+			if (stack.getCount() == 1 && BlockUtils.hasData(stack))
 			{
 				Item stackItem = stack.getItem();
 

@@ -7,6 +7,7 @@ import com.latmod.yabba.tile.Barrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 
@@ -117,8 +118,8 @@ public class ItemUpgradeRedstone extends ItemUpgrade
 		@Override
 		public void getConfig(Barrel barrel, ConfigGroup config)
 		{
-			config.addEnum("mode", () -> mode, v -> mode = v, Mode.NAME_MAP);
-			config.addInt("count", () -> count, v -> count = v, 1, 0, Integer.MAX_VALUE);
+			config.addEnum("mode", () -> mode, v -> mode = v, Mode.NAME_MAP).setDisplayName(new TextComponentTranslation("barrel_config.redstone.mode"));
+			config.addInt("count", () -> count, v -> count = v, 1, 0, Integer.MAX_VALUE).setDisplayName(new TextComponentTranslation("barrel_config.redstone.count"));
 		}
 	}
 

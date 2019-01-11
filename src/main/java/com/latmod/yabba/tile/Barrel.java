@@ -101,6 +101,7 @@ public class Barrel implements IConfigCallback
 
 	public void readData(NBTTagCompound nbt)
 	{
+		locked = nbt.getBoolean("Locked");
 		content.readData(nbt);
 
 		Arrays.fill(upgrades, null);
@@ -157,7 +158,22 @@ public class Barrel implements IConfigCallback
 
 		if (nbt.hasKey("Tier"))
 		{
-			tier = Tier.NAME_MAP.get(nbt.getString("Tier"));
+			String stier = nbt.getString("Tier");
+			tier = Tier.NAME_MAP.get(stier);
+
+			if (stier.equals("creative"))
+			{
+				tier = Tier.WOOD;
+
+				int i = findFreeUpgradeSlot();
+
+				if (i != -1)
+				{
+					upgrades[i] = new ItemStack(YabbaItems.UPGRADE_CREATIVE).getCapability(UpgradeData.CAPABILITY, null);
+					locked = false;
+					content.onCreativeChange();
+				}
+			}
 
 			if (tier.tier >= Tier.IRON.tier)
 			{
@@ -201,8 +217,6 @@ public class Barrel implements IConfigCallback
 
 			tier = null;
 		}
-
-		locked = nbt.getBoolean("Locked");
 
 		look = BarrelLook.get(EnumBarrelModel.getFromNBTName(nbt.getString("Model")), nbt.getString("Skin"));
 		alwaysDisplayData = nbt.getBoolean("AlwaysDisplayData");

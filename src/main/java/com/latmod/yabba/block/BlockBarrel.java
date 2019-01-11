@@ -324,7 +324,7 @@ public class BlockBarrel extends BlockSpecialDrop
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileBarrel && side == state.getValue(FACING).getOpposite() && ((TileBarrel) tile).barrel.hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT);
+		return tile instanceof TileBarrel && side == state.getValue(FACING) && ((TileBarrel) tile).barrel.hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT);
 	}
 
 	@Override
@@ -332,7 +332,7 @@ public class BlockBarrel extends BlockSpecialDrop
 	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileBarrel && side == state.getValue(FACING).getOpposite() ? ((TileBarrel) tile).barrel.content.redstoneOutput() : 0;
+		return tile instanceof TileBarrel && side == state.getValue(FACING) ? ((TileBarrel) tile).barrel.content.redstoneOutput() : 0;
 	}
 
 	@Override

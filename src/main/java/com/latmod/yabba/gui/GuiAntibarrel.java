@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +140,13 @@ public class GuiAntibarrel extends GuiBase
 			int i1 = entry.isEmpty() ? Integer.MAX_VALUE : Item.getIdFromItem(entry.entry.item);
 			int i2 = o.entry.isEmpty() ? Integer.MAX_VALUE : Item.getIdFromItem(o.entry.entry.item);
 			return Integer.compare(i1, i2);
+		}
+
+		@Override
+		@Nullable
+		public Object getJEIFocus()
+		{
+			return entry.isEmpty() ? null : entry.getStack(false);
 		}
 	}
 

@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -54,9 +55,9 @@ public class ItemUpgradeHopper extends ItemUpgrade
 		@Override
 		public void getConfig(Barrel barrel, ConfigGroup config)
 		{
-			config.addBool("up", () -> up, v -> up = v, true);
-			config.addBool("down", () -> down, v -> down = v, true);
-			config.addBool("collect", () -> collect, v -> collect = v, false);
+			config.addBool("up", () -> up, v -> up = v, true).setDisplayName(new TextComponentTranslation("barrel_config.hopper.up"));
+			config.addBool("down", () -> down, v -> down = v, true).setDisplayName(new TextComponentTranslation("barrel_config.hopper.down"));
+			config.addBool("collect", () -> collect, v -> collect = v, false).setDisplayName(new TextComponentTranslation("barrel_config.hopper.collect"));
 		}
 
 		@Override
