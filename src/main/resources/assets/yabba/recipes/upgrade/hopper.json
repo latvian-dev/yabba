@@ -3,7 +3,7 @@
 	"group": "yabba:upgrade_hopper",
 	"result": {"item": "upgrade_hopper"},
 	"ingredients": [
-		{"item": "#blank_upgrade"},
+		{"item": "upgrade_blank"},
 		{"item": "minecraft:hopper"}
 	]
 }

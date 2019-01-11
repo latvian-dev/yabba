@@ -3,7 +3,7 @@
 	"group": "yabba:upgrade_redstone_out",
 	"result": {"item": "upgrade_redstone_out"},
 	"ingredients": [
-		{"item": "#blank_upgrade"},
+		{"item": "upgrade_blank"},
 		{"item": "minecraft:redstone_torch"}
 	]
 }

@@ -3,7 +3,7 @@
 	"group": "yabba:barrel",
 	"result": {"item": "item_barrel"},
 	"ingredients": [
-		{"item": "#blank_upgrade"},
+		{"item": "upgrade_blank"},
 		{"type": "forge:ore_dict", "ore": "chestWood"}
 	]
 }

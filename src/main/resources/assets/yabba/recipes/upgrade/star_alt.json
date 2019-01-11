@@ -8,7 +8,7 @@
 		"DDD"
 	],
 	"key": {
-		"U": {"item": "#blank_upgrade"},
+		"U": {"item": "upgrade_blank"},
 		"D": {"type": "forge:ore_dict", "ore": "gemDiamond"}
 	}
 }

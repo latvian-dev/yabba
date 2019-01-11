@@ -8,7 +8,7 @@
 		"PPP"
 	],
 	"key": {
-		"U": {"item": "#blank_upgrade"},
+		"U": {"item": "upgrade_blank"},
 		"P": {"type": "forge:ore_dict", "ore": "plankWood"}
 	}
 }

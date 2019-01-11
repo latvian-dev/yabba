@@ -3,7 +3,7 @@
 	"group": "yabba:upgrade_obsidian_shell",
 	"result": {"item": "upgrade_obsidian_shell"},
 	"ingredients": [
-		{"item": "#blank_upgrade"},
+		{"item": "upgrade_blank"},
 		{"type": "forge:ore_dict", "ore": "obsidian"}
 	]
 }

@@ -8,9 +8,9 @@
 		"QUQ"
 	],
 	"key": {
-		"U": {"item": "#blank_upgrade"},
+		"U": {"item": "upgrade_blank"},
 		"Q": {"type": "forge:ore_dict", "ore": "plankWood"},
-		"E": {"type": "forge:ore_dict", "ore": "enderpearl"},
+		"E": {"type": "forge:ore_dict", "ore": "chestWood"},
 		"D": {"type": "forge:ore_dict", "ore": "gemDiamond"}
 	}
 }

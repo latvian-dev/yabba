@@ -3,7 +3,7 @@
 	"group": "yabba:upgrade_tier",
 	"result": {"item": "upgrade_diamond_tier"},
 	"ingredients": [
-		{"item": "#blank_upgrade"},
+		{"item": "upgrade_blank"},
 		{"type": "forge:ore_dict", "ore": "gemDiamond"}
 	]
 }

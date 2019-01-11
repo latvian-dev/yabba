@@ -3,7 +3,7 @@
 	"group": "yabba:upgrade_void",
 	"result": {"item": "upgrade_void"},
 	"ingredients": [
-		{"item": "#blank_upgrade"},
-		{"type": "forge:ore_dict", "ore": "dyeBlack"}
+		{"item": "upgrade_blank"},
+		{"type": "forge:ore_dict", "ore": "cobblestone"}
 	]
 }
