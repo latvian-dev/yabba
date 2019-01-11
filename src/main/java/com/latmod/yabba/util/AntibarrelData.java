@@ -266,6 +266,12 @@ public class AntibarrelData implements ICapabilitySerializable<NBTTagCompound>, 
 		return YabbaConfig.general.antibarrel_items_per_type;
 	}
 
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack)
+	{
+		return slot == 0 && !stack.isStackable();
+	}
+
 	public int getTotalItemCount()
 	{
 		if (totalItemCount >= 0)
