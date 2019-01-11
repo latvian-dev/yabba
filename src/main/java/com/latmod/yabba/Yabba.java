@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.latmod.yabba.api.UpgradeData;
 import com.latmod.yabba.net.YabbaNetHandler;
+import com.latmod.yabba.tile.BarrelNetwork;
 import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.util.AntibarrelData;
 import net.minecraft.creativetab.CreativeTabs;
@@ -100,6 +101,21 @@ public class Yabba
 				}
 			}
 		}, () -> new AntibarrelData(null));
+
+		CapabilityManager.INSTANCE.register(BarrelNetwork.class, new Capability.IStorage<BarrelNetwork>()
+		{
+			@Nullable
+			@Override
+			public NBTBase writeNBT(Capability<BarrelNetwork> capability, BarrelNetwork instance, EnumFacing side)
+			{
+				return null;
+			}
+
+			@Override
+			public void readNBT(Capability<BarrelNetwork> capability, BarrelNetwork instance, EnumFacing side, NBTBase nbt)
+			{
+			}
+		}, () -> null);
 
 		PROXY.preInit();
 	}

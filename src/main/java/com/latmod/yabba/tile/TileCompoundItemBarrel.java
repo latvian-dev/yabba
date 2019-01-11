@@ -4,11 +4,12 @@ import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.latmod.yabba.YabbaBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 
 /**
  * @author LatvianModder
  */
-public class TileCompoundItemBarrel extends TileBarrel
+public class TileCompoundItemBarrel extends TileBarrel implements ITickable
 {
 	@Override
 	public void update()

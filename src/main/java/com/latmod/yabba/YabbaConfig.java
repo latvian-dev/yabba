@@ -1,6 +1,5 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.latmod.yabba.block.Tier;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -32,9 +31,6 @@ public class YabbaConfig
 		@Config.Comment("How many items per-type can AntiBarrel have.")
 		@Config.RangeInt(min = 1)
 		public int antibarrel_items_per_type = Integer.MAX_VALUE;
-
-		@Config.Comment("After how many ticks will be connector update it's barrels, defaults to 5 minutes.")
-		public int connector_update_ticks = (int) Ticks.MINUTE.x(5L).ticks();
 	}
 
 	public static class TierCategory

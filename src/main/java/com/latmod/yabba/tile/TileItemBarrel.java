@@ -12,26 +12,4 @@ public class TileItemBarrel extends TileBarrel
 	{
 		return BarrelContentType.ITEM;
 	}
-
-	@Override
-	public void validate()
-	{
-		super.validate();
-
-		if (world != null && !world.isRemote)
-		{
-			TileItemBarrelConnector.markAllDirty(pos, world.provider.getDimension());
-		}
-	}
-
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-
-		if (world != null && !world.isRemote)
-		{
-			TileItemBarrelConnector.markAllDirty(pos, world.provider.getDimension());
-		}
-	}
 }

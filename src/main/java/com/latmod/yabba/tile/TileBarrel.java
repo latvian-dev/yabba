@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
@@ -80,6 +81,28 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 	public void onUpdatePacket(EnumSaveType type)
 	{
 		markBarrelDirty(true);
+	}
+
+	@Override
+	public void invalidate()
+	{
+		if (hasWorld())
+		{
+			BarrelNetwork.get(getWorld()).barrelUpdated(getContentType());
+		}
+
+		super.invalidate();
+	}
+
+	@Override
+	public void setWorld(World world)
+	{
+		super.setWorld(world);
+
+		if (hasWorld())
+		{
+			BarrelNetwork.get(getWorld()).barrelUpdated(getContentType());
+		}
 	}
 
 	@Override

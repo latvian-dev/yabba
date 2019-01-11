@@ -16,6 +16,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
+import com.latmod.yabba.tile.BarrelNetwork;
 import com.latmod.yabba.tile.ItemBarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
 import com.latmod.yabba.tile.TileCompoundItemBarrel;
@@ -31,10 +32,13 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -43,6 +47,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Mod.EventBusSubscriber(modid = Yabba.MOD_ID)
 public class YabbaEventHandler
 {
+	private static final ResourceLocation WORLD_CAP_ID = new ResourceLocation(Yabba.MOD_ID, "barrel_network");
+
 	private static Block withName(Block block, String name)
 	{
 		block.setCreativeTab(Yabba.TAB);
@@ -108,6 +114,21 @@ public class YabbaEventHandler
 	public static void onFTBLibPreInitRegistry(FTBLibPreInitRegistryEvent event)
 	{
 		event.getRegistry().registerServerReloadHandler(new ResourceLocation(Yabba.MOD_ID, "config"), reloadEvent -> YabbaConfig.sync());
+	}
+
+	@SubscribeEvent
+	public static void attachWorldCap(AttachCapabilitiesEvent<World> event)
+	{
+		event.addCapability(WORLD_CAP_ID, new BarrelNetwork(event.getObject()));
+	}
+
+	@SubscribeEvent
+	public static void tickServerWorld(TickEvent.WorldTickEvent event)
+	{
+		if (event.phase == TickEvent.Phase.END)
+		{
+			BarrelNetwork.get(event.world).tick();
+		}
 	}
 
 	@SubscribeEvent

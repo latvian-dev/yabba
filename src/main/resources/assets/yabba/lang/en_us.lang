@@ -50,8 +50,6 @@ tile.yabba.quartz_chest.name=Quartz Chest
 yabba.general.sneak_left_click_extracts_stack=Sneak-Left-Click Extracts a Stack
 yabba.general.antibarrel_capacity=AntiBarrel Capacity
 yabba.general.antibarrel_items_per_type=AntiBarrel Items per Type
-yabba.general.crash_on_set_methods=Crash setStackInSlot Methods
-yabba.general.connector_update_ticks=Barrel Connector Update Ticks
 
 yabba_client.general.always_display_data=Always Display Data
 yabba_client.general.display_bar=Display Bar
