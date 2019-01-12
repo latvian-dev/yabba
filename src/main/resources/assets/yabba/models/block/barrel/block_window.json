@@ -1,14 +1,6 @@
 {
+	"parent": "yabba:block/barrel_base",
 	"credit": "Made with Blockbench",
-	"textures": {
-		"particle": "yabba:blocks/skin_n",
-		"skin_n": "yabba:blocks/skin_n",
-		"skin_e": "yabba:blocks/skin_e",
-		"skin_s": "yabba:blocks/skin_s",
-		"skin_w": "yabba:blocks/skin_w",
-		"skin_u": "yabba:blocks/skin_u",
-		"skin_d": "yabba:blocks/skin_d"
-	},
 	"elements": [
 		{
 			"name": "block",
