@@ -442,7 +442,7 @@ public class BarrelModel
 
 	public String toString()
 	{
-		return I18n.format(id.getUnlocalizedName());
+		return I18n.format(id.getTranslationKey());
 	}
 
 	public List<BakedQuad> buildModel(VertexFormat format, ModelRotation rotation, BarrelSkin skin, BlockRenderLayer layer, @Nullable EnumFacing side)

@@ -61,7 +61,7 @@ public class ItemHammer extends Item
 
 	public static String getModelTooltip(EnumBarrelModel model)
 	{
-		return I18n.format("lang.yabba.model", I18n.format(model.getUnlocalizedName()));
+		return I18n.format("lang.yabba.model", I18n.format(model.getTranslationKey()));
 	}
 
 	@Override

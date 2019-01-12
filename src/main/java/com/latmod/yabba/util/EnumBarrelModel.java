@@ -74,7 +74,7 @@ public enum EnumBarrelModel implements IStringSerializable
 	}
 
 	private final String name;
-	private final String unlocalizedName;
+	private final String translationKey;
 	private final AxisAlignedBB[] boxes;
 	private final ResourceLocation baseModel;
 	private ResourceLocation cutoutModel;
@@ -83,7 +83,7 @@ public enum EnumBarrelModel implements IStringSerializable
 	EnumBarrelModel(String n, AxisAlignedBB box)
 	{
 		name = n;
-		unlocalizedName = "yabba.yabba_model." + name;
+		translationKey = "yabba.yabba_model." + name;
 		boxes = MathUtils.getRotatedBoxes(box);
 		baseModel = new ResourceLocation(Yabba.MOD_ID, "block/barrel/" + name);
 		model = Optional.empty();
@@ -100,9 +100,9 @@ public enum EnumBarrelModel implements IStringSerializable
 		return isDefault() ? "" : getName();
 	}
 
-	public String getUnlocalizedName()
+	public String getTranslationKey()
 	{
-		return unlocalizedName;
+		return translationKey;
 	}
 
 	public AxisAlignedBB getAABB(IBlockState state)

@@ -24,8 +24,8 @@ public class YabbaClientEventHandler
 	public static void registerModels(ModelRegistryEvent event)
 	{
 		ModelLoaderRegistry.registerLoader(BarrelModelLoader.INSTANCE);
-		ModelLoader.setCustomModelResourceLocation(YabbaItems.ITEM_BARREL, 0, BarrelModelLoader.MODEL_LOCATION);
-		ModelLoader.setCustomModelResourceLocation(YabbaItems.DECORATIVE_BLOCK, 0, BarrelModelLoader.MODEL_LOCATION);
+		ModelLoader.setCustomModelResourceLocation(YabbaItems.ITEM_BARREL, 0, BarrelModelLoader.ID);
+		ModelLoader.setCustomModelResourceLocation(YabbaItems.DECORATIVE_BLOCK, 0, BarrelModelLoader.ID);
 		ModelLoader.setCustomStateMapper(YabbaBlocks.ITEM_BARREL, BarrelModelLoader.INSTANCE);
 		ModelLoader.setCustomStateMapper(YabbaBlocks.DECORATIVE_BLOCK, BarrelModelLoader.INSTANCE);
 
