@@ -1,6 +1,6 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
+import com.latmod.yabba.client.SkinMap;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -27,7 +27,7 @@ public class YabbaSkinsEvent extends YabbaEvent
 
 	public void addSkin(String id, String textures)
 	{
-		addSkin(new BarrelSkin(id, TextureSet.of(textures)));
+		addSkin(new BarrelSkin(id, SkinMap.of(textures)));
 	}
 
 	public void addSkin(String id)

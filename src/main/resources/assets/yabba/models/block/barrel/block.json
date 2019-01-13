@@ -1,5 +1,5 @@
 {
-	"parent": "yabba:block/barrel_base",
+	"parent": "yabba:block/barrel/barrel_base",
 	"credit": "Made with Blockbench",
 	"elements": [
 		{

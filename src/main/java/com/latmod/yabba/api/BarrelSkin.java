@@ -1,10 +1,8 @@
 package com.latmod.yabba.api;
 
-import com.feed_the_beast.ftblib.lib.client.SpriteSet;
-import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
+import com.latmod.yabba.client.SkinMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
@@ -15,18 +13,17 @@ import net.minecraft.util.ResourceLocation;
 public class BarrelSkin
 {
 	public final String id;
-	public final TextureSet textures;
+	public SkinMap skinMap;
 	public Icon icon = Icon.EMPTY;
-	public SpriteSet spriteSet;
 	public IBlockState state = BlockUtils.AIR_STATE;
 	public String displayName = "";
 	public BlockRenderLayer layer = BlockRenderLayer.SOLID;
-	public Color4I color = Icon.EMPTY;
+	public int color = 0xFFFFFFFF;
 
-	public BarrelSkin(String _id, TextureSet _textures)
+	public BarrelSkin(String s, SkinMap m)
 	{
-		id = new ResourceLocation(_id).toString();
-		textures = _textures;
+		id = new ResourceLocation(s).toString();
+		skinMap = m;
 	}
 
 	public int hashCode()

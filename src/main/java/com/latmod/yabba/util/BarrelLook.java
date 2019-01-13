@@ -1,7 +1,6 @@
 package com.latmod.yabba.util;
 
 import com.latmod.yabba.api.BarrelSkin;
-import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.client.YabbaClient;
 
 import javax.annotation.Nullable;
@@ -22,11 +21,6 @@ public class BarrelLook
 		}
 
 		return m.isDefault() && s.isEmpty() ? DEFAULT : new BarrelLook(m, s);
-	}
-
-	public static BarrelLook get(BarrelModel m, BarrelSkin s)
-	{
-		return get(m.id, s.id);
 	}
 
 	public final EnumBarrelModel model;
@@ -65,11 +59,6 @@ public class BarrelLook
 	public boolean isDefault()
 	{
 		return this == DEFAULT;
-	}
-
-	public BarrelModel getModel()
-	{
-		return model.getModel();
 	}
 
 	public BarrelSkin getSkin()

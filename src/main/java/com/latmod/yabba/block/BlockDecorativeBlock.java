@@ -5,9 +5,12 @@ import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.item.ItemHammer;
 import com.latmod.yabba.item.ItemPainter;
+import com.latmod.yabba.tile.IBakedModelBarrel;
 import com.latmod.yabba.tile.TileDecorativeBlock;
 import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -45,30 +48,57 @@ import java.util.List;
  */
 public class BlockDecorativeBlock extends BlockSpecialDrop
 {
+	public static final IUnlistedProperty<IBakedModelBarrel> BARREL = new IUnlistedProperty<IBakedModelBarrel>()
+	{
+		@Override
+		public String getName()
+		{
+			return "look";
+		}
+
+		@Override
+		public boolean isValid(IBakedModelBarrel value)
+		{
+			return true;
+		}
+
+		@Override
+		public Class<IBakedModelBarrel> getType()
+		{
+			return IBakedModelBarrel.class;
+		}
+
+		@Override
+		public String valueToString(IBakedModelBarrel value)
+		{
+			return value.getLook().toString();
+		}
+	};
+
 	public BlockDecorativeBlock()
 	{
 		super(Material.WOOD, MapColor.WOOD);
 		setHardness(2F);
-		setDefaultState(blockState.getBaseState().withProperty(BlockBarrel.MODEL, EnumBarrelModel.BARREL).withProperty(BlockBarrel.FACING, EnumFacing.NORTH));
+		setDefaultState(blockState.getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] {BlockBarrel.FACING, BlockBarrel.MODEL}, new IUnlistedProperty[] {BlockBarrel.SKIN});
+		return new ExtendedBlockState(this, new IProperty[] {BlockHorizontal.FACING}, new IUnlistedProperty[] {BARREL});
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(BlockBarrel.FACING, EnumFacing.byHorizontalIndex(meta));
+		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(BlockBarrel.FACING).getHorizontalIndex();
+		return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -84,7 +114,7 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	}
 
 	@Override
-	public TileDecorativeBlock createTileEntity(World world, IBlockState state)
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		return new TileDecorativeBlock();
 	}
@@ -153,43 +183,15 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 
 	@Override
 	@Deprecated
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileDecorativeBlock)
-		{
-			EnumBarrelModel model = ((TileDecorativeBlock) tileEntity).getLook().model;
-
-			if (!model.isDefault())
-			{
-				return state.withProperty(BlockBarrel.MODEL, model);
-			}
-		}
-
-		return state;
-	}
-
-	@Override
-	@Deprecated
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileDecorativeBlock)
+		if (state instanceof IExtendedBlockState)
 		{
-			BarrelLook look = ((TileDecorativeBlock) tileEntity).getLook();
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (!look.isDefault())
+			if (tileEntity instanceof IBakedModelBarrel)
 			{
-				state = state.withProperty(BlockBarrel.MODEL, look.model);
-
-				if (state instanceof IExtendedBlockState)
-				{
-					state = ((IExtendedBlockState) state).withProperty(BlockBarrel.SKIN, look.skin);
-				}
-
-				return state;
+				return ((IExtendedBlockState) state).withProperty(BARREL, (IBakedModelBarrel) tileEntity);
 			}
 		}
 
@@ -200,14 +202,14 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	@Deprecated
 	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{
-		return state.withProperty(BlockBarrel.FACING, rot.rotate(state.getValue(BlockBarrel.FACING)));
+		return state.withProperty(BlockHorizontal.FACING, rot.rotate(state.getValue(BlockHorizontal.FACING)));
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState withMirror(IBlockState state, Mirror mirror)
 	{
-		return state.withRotation(mirror.toRotation(state.getValue(BlockBarrel.FACING)));
+		return state.withRotation(mirror.toRotation(state.getValue(BlockHorizontal.FACING)));
 	}
 
 	@Override
@@ -254,7 +256,33 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 	@Deprecated
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(BlockBarrel.FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
+	}
+
+	@Override
+	@Deprecated
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof IBakedModelBarrel)
+		{
+			IBakedModelBarrel barrel = (IBakedModelBarrel) tileEntity;
+			TileEntity tileEntity1 = world.getTileEntity(pos.offset(side));
+
+			if (tileEntity1 instanceof IBakedModelBarrel)
+			{
+				IBakedModelBarrel barrel1 = (IBakedModelBarrel) tileEntity1;
+
+				if (barrel.getLook().equals(barrel1.getLook()) && (barrel.getLook().model.getAABB(EnumFacing.NORTH) == Block.FULL_BLOCK_AABB || barrel.getBarrelRotation() == barrel1.getBarrelRotation()))
+				{
+					return false;
+				}
+			}
+		}
+
+		return super.shouldSideBeRendered(state, world, pos, side);
 	}
 
 	@Override
@@ -265,7 +293,7 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 
 		if (tile instanceof TileDecorativeBlock)
 		{
-			return ((TileDecorativeBlock) tile).getAABB(state);
+			return ((TileDecorativeBlock) tile).getAABB();
 		}
 
 		return FULL_BLOCK_AABB;

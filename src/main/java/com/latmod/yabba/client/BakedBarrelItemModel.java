@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,12 +14,12 @@ import java.util.List;
  */
 public class BakedBarrelItemModel extends ModelBase
 {
-	private final List<BakedQuad> quads[];
+	public final List<List<BakedQuad>> quads;
 
-	public BakedBarrelItemModel(List<BakedQuad> q[])
+	public BakedBarrelItemModel()
 	{
 		super(null);
-		quads = q;
+		quads = new ArrayList<>(7);
 	}
 
 	@Override
@@ -30,6 +31,6 @@ public class BakedBarrelItemModel extends ModelBase
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
-		return quads[side == null ? 6 : side.getIndex()];
+		return quads.get(side == null ? 6 : side.getIndex());
 	}
 }

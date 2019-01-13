@@ -1,5 +1,5 @@
 {
-	"parent": "yabba:block/barrel_base",
+	"parent": "yabba:block/barrel/barrel_base",
 	"credit": "Made with Blockbench",
 	"elements": [
 		{
@@ -74,14 +74,6 @@
 			"faces": {
 				"north": {"uv": [0, 12, 16, 13], "texture": "#skin_n", "cullface": "north"},
 				"up": {"uv": [0, 0, 16, 1], "texture": "#skin_u", "cullface": "north"}
-			}
-		},
-		{
-			"name": "wcenter",
-			"from": [4, 4, 1],
-			"to": [12, 12, 1],
-			"faces": {
-				"north": {"uv": [4, 4, 12, 12], "texture": "#skin_n", "cullface": "north"}
 			}
 		}
 	]

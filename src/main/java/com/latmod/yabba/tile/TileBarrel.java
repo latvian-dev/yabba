@@ -8,6 +8,7 @@ import com.latmod.yabba.api.UpgradeData;
 import com.latmod.yabba.block.BlockBarrel;
 import com.latmod.yabba.net.MessageUpdateBarrelContent;
 import com.latmod.yabba.util.BarrelLook;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -202,17 +203,17 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 				return 0F;
 			}
 
-			cachedRotationY = state.getValue(BlockBarrel.FACING).getHorizontalAngle() + 180F;
+			cachedRotationY = state.getValue(BlockHorizontal.FACING).getHorizontalAngle() + 180F;
 		}
 
 		return cachedRotationY;
 	}
 
-	public AxisAlignedBB getAABB(IBlockState state)
+	public AxisAlignedBB getAABB()
 	{
 		if (cachedAABB == null)
 		{
-			cachedAABB = barrel.getLook().model.getAABB(state);
+			cachedAABB = barrel.getLook().model.getAABB(getBarrelRotation());
 		}
 
 		return cachedAABB;
@@ -238,5 +239,11 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 		{
 			stack.setTagInfo(BlockUtils.DATA_TAG, nbt);
 		}
+	}
+
+	@Override
+	public EnumFacing getBarrelRotation()
+	{
+		return getBlockState().getValue(BlockHorizontal.FACING);
 	}
 }

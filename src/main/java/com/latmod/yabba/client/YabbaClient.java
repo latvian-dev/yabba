@@ -9,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -58,7 +57,7 @@ public class YabbaClient extends YabbaCommon
 	private static final YabbaSkinsEvent.Callback REGISTER_SKIN = skin ->
 	{
 		SKINS.put(skin.id, skin);
-		TEXTURES.addAll(skin.textures.getTextures());
+		TEXTURES.addAll(skin.skinMap.getTextures());
 	};
 
 	private static String parseVariableString(String s)
@@ -82,29 +81,11 @@ public class YabbaClient extends YabbaCommon
 
 		IResourceManager manager = ClientUtils.MC.getResourceManager();
 
-		for (EnumBarrelModel id : EnumBarrelModel.NAME_MAP)
-		{
-			try
-			{
-				JsonObject modelFile = DataReader.get(manager.getResource(new ResourceLocation(Yabba.MOD_ID, "yabba_models/" + id.getName() + ".json"))).json().getAsJsonObject();
-				BarrelModel model = new BarrelModel(id, modelFile);
-				id.setModel(model);
-
-				for (TextureSet textureSet : model.textures.values())
-				{
-					TEXTURES.addAll(textureSet.getTextures());
-				}
-			}
-			catch (Exception ex1)
-			{
-			}
-		}
-
 		for (String domain : manager.getResourceDomains())
 		{
 			try
 			{
-				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_models/_skins.json")))
+				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "yabba_skins.json")))
 				{
 					parseSkinsJson(DataReader.get(resource).json().getAsJsonArray());
 					VARIABLES.clear();
@@ -123,16 +104,11 @@ public class YabbaClient extends YabbaCommon
 		{
 			FluidStack stack = new FluidStack(fluid, 1000);
 			String displayName = stack.getLocalizedName();
-			Color4I color = Color4I.rgba(fluid.getColor(stack));
-
-			if (color.equals(Color4I.WHITE))
-			{
-				color = Icon.EMPTY;
-			}
+			int color = fluid.getColor(stack);
 
 			ResourceLocation still = fluid.getStill(stack);
 
-			BarrelSkin skin = new BarrelSkin(fluid.getName() + "_still", TextureSet.of("all=" + still));
+			BarrelSkin skin = new BarrelSkin(fluid.getName() + "_still", SkinMap.of("all=" + still));
 			skin.displayName = I18n.format("lang.fluid.still", displayName);
 			skin.color = color;
 			skin.layer = BlockRenderLayer.TRANSLUCENT;
@@ -142,7 +118,7 @@ public class YabbaClient extends YabbaCommon
 
 			if (!still.equals(flowing))
 			{
-				skin = new BarrelSkin(fluid.getName() + "_flowing", TextureSet.of("up&down=" + still + ",all=" + flowing));
+				skin = new BarrelSkin(fluid.getName() + "_flowing", SkinMap.of("up&down=" + still + ",all=" + flowing));
 				skin.displayName = I18n.format("lang.fluid.flowing", displayName);
 				skin.color = color;
 				skin.layer = BlockRenderLayer.TRANSLUCENT;
@@ -198,7 +174,7 @@ public class YabbaClient extends YabbaCommon
 			tile.setLook(BarrelLook.get(id, ""));
 			ItemStack stack = new ItemStack(YabbaItems.DECORATIVE_BLOCK);
 			tile.writeToPickBlock(stack);
-			id.getModel().icon = ItemIcon.getItemIcon(stack);
+			id.icon = ItemIcon.getItemIcon(stack);
 		}
 	}
 
@@ -276,18 +252,18 @@ public class YabbaClient extends YabbaCommon
 				if (json.has("add"))
 				{
 					ResourceLocation id = new ResourceLocation(parseVariableString(json.get("add").getAsString()));
-					TextureSet textures;
+					SkinMap skinMap;
 
 					if (json.has("textures"))
 					{
-						textures = TextureSet.of(parseVariableString(json.get("textures").getAsString()));
+						skinMap = SkinMap.of(parseVariableString(json.get("textures").getAsString()));
 					}
 					else
 					{
-						textures = TextureSet.of("all=" + id.getNamespace() + ":blocks/" + id.getPath());
+						skinMap = SkinMap.of("all=" + id.getNamespace() + ":blocks/" + id.getPath());
 					}
 
-					BarrelSkin skin = new BarrelSkin(id.toString(), textures);
+					BarrelSkin skin = new BarrelSkin(id.toString(), skinMap);
 
 					if (json.has("name"))
 					{
@@ -306,7 +282,7 @@ public class YabbaClient extends YabbaCommon
 
 					if (json.has("color"))
 					{
-						skin.color = Color4I.fromJson(json.get("color"));
+						skin.color = Color4I.fromJson(json.get("color")).rgba();
 					}
 
 					skin.state = BlockUtils.getStateFromName(json.has("state") ? parseVariableString(json.get("state").getAsString()) : skin.id);

@@ -55,18 +55,18 @@ public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
 
-		BarrelModel model = barrel.getLook().getModel();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
 		if (mouseOver || YabbaClientConfig.general.always_display_data.get(barrel.alwaysDisplayData))
 		{
 			boolean isCreative = barrel.isCreative();
-			float textDistance = model.textDistance;
 			boolean infinite = isCreative || barrel.getTier().infiniteCapacity();
 
 			if (hasIcon)
 			{
+				float textDistance = barrel.getLook().model.textDistance / 16F;
+
 				if (!infinite && !isSneaking && YabbaClientConfig.general.display_bar.get(barrel.displayBar))
 				{
 					GlStateManager.pushMatrix();
@@ -124,7 +124,7 @@ public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends
 		if (hasIcon)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.5F, 0.5F, model.iconDistance);
+			GlStateManager.translate(0.5F, 0.5F, barrel.getLook().model.iconDistance / 16F);
 			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 			GlStateManager.enableRescaleNormal();

@@ -1,22 +1,21 @@
 package com.latmod.yabba.tile;
 
-import net.minecraft.tileentity.TileEntity;
-
-import javax.annotation.Nullable;
+import com.latmod.yabba.util.BarrelLook;
 
 /**
  * @author LatvianModder
  */
-public interface IBarrelBlock
+public interface IBarrelBlock extends IBakedModelBarrel
 {
-	@Nullable
-	TileEntity getBarrelTileEntity();
-
 	void clearCache();
 
 	Barrel getBarrel();
 
 	void markBarrelDirty(boolean majorChange);
 
-	boolean isBarrelInvalid();
+	@Override
+	default BarrelLook getLook()
+	{
+		return getBarrel().getLook();
+	}
 }

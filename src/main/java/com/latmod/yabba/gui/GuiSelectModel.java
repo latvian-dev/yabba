@@ -7,9 +7,9 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.latmod.yabba.client.BarrelModel;
 import com.latmod.yabba.net.MessageSelectModel;
 import com.latmod.yabba.util.EnumBarrelModel;
+import net.minecraft.client.resources.I18n;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +21,17 @@ public class GuiSelectModel extends GuiBase
 {
 	private class ButtonModel extends Button
 	{
-		private final BarrelModel model;
+		private final EnumBarrelModel model;
 
 		public ButtonModel(Panel panel, int i)
 		{
 			super(panel);
 			setPosAndSize(8 + (i % 4) * 39, 8 + (i / 4) * 39, 38, 38);
-			model = i >= EnumBarrelModel.NAME_MAP.size() ? null : EnumBarrelModel.NAME_MAP.get(i).getModel();
+			model = i >= EnumBarrelModel.NAME_MAP.size() ? null : EnumBarrelModel.NAME_MAP.get(i);
 
 			if (model != null)
 			{
-				setTitle(model.toString());
+				setTitle(I18n.format(model.getTranslationKey()));
 			}
 		}
 
@@ -41,7 +41,7 @@ public class GuiSelectModel extends GuiBase
 			if (model != null)
 			{
 				GuiHelper.playClickSound();
-				new MessageSelectModel(model.id).sendToServer();
+				new MessageSelectModel(model).sendToServer();
 				getGui().closeGui();
 			}
 		}

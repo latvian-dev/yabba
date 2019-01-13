@@ -1,10 +1,10 @@
 package com.latmod.yabba.integration;
 
 import com.feed_the_beast.ftblib.lib.OtherMods;
-import com.feed_the_beast.ftblib.lib.util.misc.TextureSet;
 import com.latmod.yabba.Yabba;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.api.YabbaSkinsEvent;
+import com.latmod.yabba.client.SkinMap;
 import forestry.api.arboriculture.EnumVanillaWoodType;
 import forestry.api.arboriculture.IWoodType;
 import forestry.api.arboriculture.TreeManager;
@@ -39,7 +39,7 @@ public class ForestryIntegration
 			{
 				try
 				{
-					BarrelSkin skin = new BarrelSkin(OtherMods.FORESTRY + ":planks_" + type.getName(), TextureSet.of("all=" + type.getPlankTexture()));
+					BarrelSkin skin = new BarrelSkin(OtherMods.FORESTRY + ":planks_" + type.getName(), SkinMap.of("all=" + type.getPlankTexture()));
 
 					try
 					{
@@ -52,7 +52,7 @@ public class ForestryIntegration
 					skin.displayName = TreeManager.woodAccess.getStack(type, WoodBlockKind.PLANKS, false).getDisplayName();
 					event.addSkin(skin);
 
-					skin = new BarrelSkin(OtherMods.FORESTRY + ":log_" + type.getName(), TextureSet.of("up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture()));
+					skin = new BarrelSkin(OtherMods.FORESTRY + ":log_" + type.getName(), SkinMap.of("up&down=" + type.getHeartTexture() + ",all=" + type.getBarkTexture()));
 
 					try
 					{

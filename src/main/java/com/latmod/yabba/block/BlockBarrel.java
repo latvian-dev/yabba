@@ -1,8 +1,6 @@
 package com.latmod.yabba.block;
 
-import com.feed_the_beast.ftblib.lib.block.BlockSpecialDrop;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.UnlistedPropertyString;
 import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.UpgradeData;
@@ -13,32 +11,20 @@ import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -49,154 +35,12 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BlockBarrel extends BlockSpecialDrop
+public class BlockBarrel extends BlockDecorativeBlock
 {
-	public static final PropertyEnum<EnumFacing> FACING = BlockHorizontal.FACING;
-	public static final PropertyEnum<EnumBarrelModel> MODEL = PropertyEnum.create("model", EnumBarrelModel.class);
-	public static final IUnlistedProperty<String> SKIN = UnlistedPropertyString.create("skin", s -> true);
-
-	public BlockBarrel()
-	{
-		super(Material.WOOD, MapColor.WOOD);
-		setHardness(2F);
-		setDefaultState(blockState.getBaseState().withProperty(MODEL, EnumBarrelModel.BARREL).withProperty(FACING, EnumFacing.NORTH));
-	}
-
 	@Override
-	protected BlockStateContainer createBlockState()
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new ExtendedBlockState(this, new IProperty[] {FACING, MODEL}, new IUnlistedProperty[] {SKIN});
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(FACING).getHorizontalIndex();
-	}
-
-	@Override
-	public int damageDropped(IBlockState state)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileBarrel)
-		{
-			EnumBarrelModel model = ((TileBarrel) tileEntity).barrel.getLook().model;
-
-			if (!model.isDefault())
-			{
-				return state.withProperty(MODEL, model);
-			}
-		}
-
-		return state;
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		if (tileEntity instanceof TileBarrel)
-		{
-			BarrelLook look = ((TileBarrel) tileEntity).barrel.getLook();
-
-			if (!look.isDefault())
-			{
-				state = state.withProperty(MODEL, look.model);
-
-				if (state instanceof IExtendedBlockState)
-				{
-					state = ((IExtendedBlockState) state).withProperty(SKIN, look.skin);
-				}
-
-				return state;
-			}
-		}
-
-		return state;
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState withRotation(IBlockState state, Rotation rot)
-	{
-		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState withMirror(IBlockState state, Mirror mirror)
-	{
-		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	@Deprecated
-	public boolean isFullCube(IBlockState state)
-	{
-		return false;
-	}
-
-	@Override
-	@Deprecated
-	public boolean isOpaqueCube(IBlockState state)
-	{
-		return false;
-	}
-
-	@Override
-	@Deprecated
-	public boolean hasCustomBreakingProgress(IBlockState state)
-	{
-		return false;
-	}
-
-	@Override
-	@Deprecated
-	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		return side != EnumFacing.DOWN;
-	}
-
-	@Override
-	public BlockRenderLayer getRenderLayer()
-	{
-		return BlockRenderLayer.CUTOUT;
-	}
-
-	@Override
-	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
-	{
-		return layer != BlockRenderLayer.CUTOUT_MIPPED;
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
-		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+		return new TileBarrel();
 	}
 
 	@Override
@@ -324,7 +168,7 @@ public class BlockBarrel extends BlockSpecialDrop
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileBarrel && side == state.getValue(FACING) && ((TileBarrel) tile).barrel.hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT);
+		return tile instanceof TileBarrel && side == state.getValue(BlockHorizontal.FACING) && ((TileBarrel) tile).barrel.hasUpgrade(YabbaItems.UPGRADE_REDSTONE_OUT);
 	}
 
 	@Override
@@ -332,7 +176,7 @@ public class BlockBarrel extends BlockSpecialDrop
 	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileBarrel && side == state.getValue(FACING) ? ((TileBarrel) tile).barrel.content.redstoneOutput() : 0;
+		return tile instanceof TileBarrel && side == state.getValue(BlockHorizontal.FACING) ? ((TileBarrel) tile).barrel.content.redstoneOutput() : 0;
 	}
 
 	@Override
@@ -343,7 +187,7 @@ public class BlockBarrel extends BlockSpecialDrop
 
 		if (tile instanceof TileBarrel)
 		{
-			return ((TileBarrel) tile).getAABB(state);
+			return ((TileBarrel) tile).getAABB();
 		}
 
 		return FULL_BLOCK_AABB;
