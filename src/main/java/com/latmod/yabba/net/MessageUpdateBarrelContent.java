@@ -1,11 +1,11 @@
 package com.latmod.yabba.net;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.tile.TileBarrel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -54,7 +54,7 @@ public class MessageUpdateBarrelContent extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		TileEntity tileEntity = ClientUtils.MC.world.getTileEntity(pos);
+		TileEntity tileEntity = Minecraft.getMinecraft().world.getTileEntity(pos);
 
 		if (tileEntity instanceof TileBarrel)
 		{

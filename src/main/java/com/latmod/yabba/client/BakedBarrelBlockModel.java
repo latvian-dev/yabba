@@ -1,6 +1,5 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftblib.lib.client.ModelBase;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.block.BlockDecorativeBlock;
@@ -39,7 +38,7 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-public class BakedBarrelBlockModel extends ModelBase
+public class BakedBarrelBlockModel extends BakedBarrelModelBase
 {
 	private final VertexFormat format;
 	private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
@@ -47,6 +46,7 @@ public class BakedBarrelBlockModel extends ModelBase
 	private final Map<EnumBarrelModel, IModel> cutoutModels;
 	private final Map<BarrelBlockModelKey, BarrelBlockModelVariant> cache;
 	private final Map<BarrelLook, BakedBarrelItemModel> itemModels;
+	private TextureAtlasSprite particle;
 
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(Collections.emptyList())
 	{
@@ -86,7 +86,7 @@ public class BakedBarrelBlockModel extends ModelBase
 
 	public BakedBarrelBlockModel(VertexFormat f, Function<ResourceLocation, TextureAtlasSprite> t)
 	{
-		super(t.apply(new ResourceLocation("blocks/planks_oak")));
+		particle = t.apply(new ResourceLocation("blocks/planks_oak"));
 		format = f;
 		bakedTextureGetter = t;
 		baseModels = new EnumMap<>(EnumBarrelModel.class);
@@ -96,19 +96,13 @@ public class BakedBarrelBlockModel extends ModelBase
 
 		for (EnumBarrelModel model : EnumBarrelModel.NAME_MAP)
 		{
-			baseModels.put(model, ModelLoaderRegistry.getModelOrMissing(model.getBaseModel()).uvlock(true).smoothLighting(true));//.smoothLighting(false);
+			baseModels.put(model, ModelLoaderRegistry.getModelOrMissing(model.getBaseModel()).uvlock(true));
 
 			if (model.getCutoutModel() != null)
 			{
-				cutoutModels.put(model, ModelLoaderRegistry.getModelOrMissing(model.getCutoutModel()).uvlock(true).smoothLighting(true));//.smoothLighting(false);
+				cutoutModels.put(model, ModelLoaderRegistry.getModelOrMissing(model.getCutoutModel()).uvlock(true));
 			}
 		}
-	}
-
-	@Override
-	public boolean isAmbientOcclusion()
-	{
-		return true;
 	}
 
 	@Override
@@ -184,6 +178,7 @@ public class BakedBarrelBlockModel extends ModelBase
 		variant = new BarrelBlockModelVariant();
 		BarrelSkin skin = key.look.getSkin();
 		IModel m = baseModels.get(key.look.model).retexture(skin.skinMap.textures);
+		IModel cm = cutoutModels.get(key.look.model);
 
 		for (int f = 0; f < 7; f++)
 		{
@@ -203,6 +198,11 @@ public class BakedBarrelBlockModel extends ModelBase
 				else if (skin.layer == BlockRenderLayer.TRANSLUCENT)
 				{
 					variant.rotations[i][f].translucentQuads.addAll(list);
+				}
+
+				if (cm != null)
+				{
+					variant.rotations[i][f].cutoutQuads.addAll(cm.bake(BarrelBlockModelKey.ROTATIONS[i], format, bakedTextureGetter).getQuads(null, f == 6 ? null : EnumFacing.VALUES[f], 0L));
 				}
 			}
 
@@ -227,5 +227,11 @@ public class BakedBarrelBlockModel extends ModelBase
 	public ItemOverrideList getOverrides()
 	{
 		return itemOverrideList;
+	}
+
+	@Override
+	public TextureAtlasSprite getParticleTexture()
+	{
+		return particle;
 	}
 }

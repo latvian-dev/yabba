@@ -1,10 +1,10 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.latmod.yabba.tile.Barrel;
 import com.latmod.yabba.tile.BarrelContent;
 import com.latmod.yabba.tile.TileBarrel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -31,8 +31,8 @@ public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends
 		Barrel barrel = tile.barrel;
 
 		boolean hasIcon = hasIcon((C) tile.barrel.content);
-		boolean isSneaking = ClientUtils.MC.player.isSneaking();
-		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
+		boolean isSneaking = Minecraft.getMinecraft().player.isSneaking();
+		RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
 		boolean mouseOver = ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK && ray.getBlockPos().equals(tile.getPos());
 
 		if (!hasIcon && !isSneaking)
@@ -125,8 +125,8 @@ public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0.5F, 0.5F, barrel.getLook().model.iconDistance / 16F);
-			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 			GlStateManager.enableRescaleNormal();
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 			GlStateManager.enableBlend();
@@ -135,8 +135,8 @@ public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends
 			renderIcon((C) tile.barrel.content);
 			GlStateManager.disableRescaleNormal();
 			GlStateManager.disableLighting();
-			ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 
 			GlStateManager.popMatrix();
 		}

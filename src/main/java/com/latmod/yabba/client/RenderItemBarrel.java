@@ -1,8 +1,8 @@
 package com.latmod.yabba.client;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.latmod.yabba.tile.ItemBarrel;
 import com.latmod.yabba.tile.TileItemBarrel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -33,9 +33,9 @@ public class RenderItemBarrel extends RenderBarrel<TileItemBarrel, ItemBarrel>
 	@Override
 	public void renderIcon(ItemBarrel b)
 	{
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(b.type, b.barrel.block.getBarrelTileEntity().getWorld(), ClientUtils.MC.player);
+		IBakedModel bakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(b.type, b.barrel.block.getBarrelTileEntity().getWorld(), Minecraft.getMinecraft().player);
 		GlStateManager.scale(0.4F, -0.4F, -0.02F);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-		ClientUtils.MC.getRenderItem().renderItem(b.type, bakedmodel);
+		Minecraft.getMinecraft().getRenderItem().renderItem(b.type, bakedmodel);
 	}
 }

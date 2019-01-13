@@ -1,6 +1,5 @@
 package com.latmod.yabba.gui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -15,6 +14,7 @@ import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.YabbaConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -107,7 +107,7 @@ public class GuiAntibarrel extends GuiBase
 		@Override
 		public boolean mousePressed(MouseButton button)
 		{
-			if (button.isLeft() && !entry.isEmpty() && isMouseOver() && ClientUtils.MC.player.inventory.getItemStack().isEmpty())
+			if (button.isLeft() && !entry.isEmpty() && isMouseOver() && Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty())
 			{
 				((GuiAntibarrel) getGui()).container.onClick(entry.entry, isShiftKeyDown());
 				return true;
@@ -208,7 +208,7 @@ public class GuiAntibarrel extends GuiBase
 				{
 					return true;
 				}
-				else if (button.isLeft() && isMouseOver() && !ClientUtils.MC.player.inventory.getItemStack().isEmpty())
+				else if (button.isLeft() && isMouseOver() && !Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty())
 				{
 					((GuiAntibarrel) getGui()).container.onClick(ItemEntry.EMPTY, isShiftKeyDown());
 					return true;

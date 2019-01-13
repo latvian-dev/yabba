@@ -1,0 +1,21 @@
+{
+	"parent": "block/block",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"band": "yabba:blocks/barrel_band",
+		"band_window": "yabba:blocks/barrel_band_window"
+	},
+	"elements": [
+		{
+			"name": "band",
+			"from": [-0.01, 0, -0.01],
+			"to": [16.02, 16, 16.02],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#band_window", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#band", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#band", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#band", "cullface": "west"}
+			}
+		}
+	]
+}

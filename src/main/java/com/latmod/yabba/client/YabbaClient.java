@@ -23,6 +23,7 @@ import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -79,7 +80,7 @@ public class YabbaClient extends YabbaCommon
 		SKINS.clear();
 		ALL_SKINS.clear();
 
-		IResourceManager manager = ClientUtils.MC.getResourceManager();
+		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 
 		for (String domain : manager.getResourceDomains())
 		{
@@ -336,8 +337,8 @@ public class YabbaClient extends YabbaCommon
 	public void postInit()
 	{
 		Block[] blocks = {YabbaBlocks.ITEM_BARREL, YabbaBlocks.DECORATIVE_BLOCK};
-		ClientUtils.MC.getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, blocks);
-		ClientUtils.MC.getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, blocks);
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, blocks);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, blocks);
 	}
 
 	public static BarrelSkin getSkin(@Nullable String id)

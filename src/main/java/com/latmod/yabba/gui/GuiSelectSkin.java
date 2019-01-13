@@ -1,6 +1,5 @@
 package com.latmod.yabba.gui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
@@ -14,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.latmod.yabba.api.BarrelSkin;
 import com.latmod.yabba.client.YabbaClient;
 import com.latmod.yabba.net.MessageSelectSkin;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class GuiSelectSkin extends GuiBase
 		{
 			super.addMouseOverText(list);
 
-			if (ClientUtils.MC.gameSettings.advancedItemTooltips)
+			if (Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
 			{
 				list.add(TextFormatting.DARK_GRAY + skin.id);
 

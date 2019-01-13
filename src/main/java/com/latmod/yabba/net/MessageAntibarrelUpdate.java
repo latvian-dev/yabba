@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.latmod.yabba.gui.GuiAntibarrel;
 import com.latmod.yabba.tile.TileAntibarrel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -55,7 +56,7 @@ public class MessageAntibarrelUpdate extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		TileEntity tileEntity = ClientUtils.MC.world.getTileEntity(pos);
+		TileEntity tileEntity = Minecraft.getMinecraft().world.getTileEntity(pos);
 
 		if (tileEntity instanceof TileAntibarrel)
 		{

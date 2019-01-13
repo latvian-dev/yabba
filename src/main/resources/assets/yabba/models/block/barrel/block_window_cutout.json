@@ -1,0 +1,17 @@
+{
+	"parent": "block/block",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"window": "yabba:blocks/barrel_solid_window"
+	},
+	"elements": [
+		{
+			"name": "window",
+			"from": [-0.01, -0.01, -0.01],
+			"to": [16.02, 16.01, 16.02],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#window", "cullface": "north"}
+			}
+		}
+	]
+}
