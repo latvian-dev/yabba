@@ -31,7 +31,7 @@
 			"from": [16, 1, 1],
 			"to": [16, 15, 15],
 			"faces": {
-				"east": {"uv": [15, 15, 1, 1], "texture": "#skin_e", "cullface": "east"}
+				"east": {"uv": [1, 1, 15, 15], "texture": "#skin_e", "cullface": "east"}
 			}
 		},
 		{
@@ -103,7 +103,7 @@
 			"from": [4, 4, 0],
 			"to": [4, 12, 1],
 			"faces": {
-				"east": {"uv": [16, 12, 15, 4], "texture": "#skin_e", "cullface": "north"}
+				"east": {"uv": [15, 4, 16, 12], "texture": "#skin_e", "cullface": "north"}
 			}
 		},
 		{
