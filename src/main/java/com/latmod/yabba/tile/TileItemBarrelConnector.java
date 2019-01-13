@@ -15,6 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -112,12 +113,18 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler, I
 	@Nullable
 	private ItemBarrel getAt(int slot)
 	{
-		if (world == null || world.isRemote)
+		if (world == null)
 		{
 			return null;
 		}
 		else if (linkedBarrels == null)
 		{
+			if (world.isRemote)
+			{
+				linkedBarrels = Collections.emptyList();
+				return null;
+			}
+
 			HashSet<ItemBarrel> scanned = new HashSet<>();
 
 			for (EnumFacing facing : EnumFacing.VALUES)
@@ -148,6 +155,11 @@ public class TileItemBarrelConnector extends TileBase implements IItemHandler, I
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
+		if (slot == 0)
+		{
+			return ItemStack.EMPTY;
+		}
+
 		ItemBarrel barrel = getAt(slot);
 		return barrel == null ? ItemStack.EMPTY : barrel.getStackInSlot(1);
 	}
