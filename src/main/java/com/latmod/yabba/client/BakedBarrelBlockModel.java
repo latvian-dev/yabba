@@ -46,7 +46,6 @@ public class BakedBarrelBlockModel extends BakedBarrelModelBase
 	private final Map<EnumBarrelModel, IModel> cutoutModels;
 	private final Map<BarrelBlockModelKey, BarrelBlockModelVariant> cache;
 	private final Map<BarrelLook, BakedBarrelItemModel> itemModels;
-	private TextureAtlasSprite particle;
 
 	private final ItemOverrideList itemOverrideList = new ItemOverrideList(Collections.emptyList())
 	{
@@ -86,7 +85,6 @@ public class BakedBarrelBlockModel extends BakedBarrelModelBase
 
 	public BakedBarrelBlockModel(VertexFormat f, Function<ResourceLocation, TextureAtlasSprite> t)
 	{
-		particle = t.apply(new ResourceLocation("blocks/planks_oak"));
 		format = f;
 		bakedTextureGetter = t;
 		baseModels = new EnumMap<>(EnumBarrelModel.class);
@@ -232,6 +230,6 @@ public class BakedBarrelBlockModel extends BakedBarrelModelBase
 	@Override
 	public TextureAtlasSprite getParticleTexture()
 	{
-		return particle;
+		return BlockDecorativeBlock.particleLook.getSkin().skinMap.get(BlockDecorativeBlock.particleFacing, bakedTextureGetter);
 	}
 }

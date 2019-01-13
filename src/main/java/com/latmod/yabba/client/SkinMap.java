@@ -2,8 +2,6 @@ package com.latmod.yabba.client;
 
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonElement;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -12,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -45,11 +44,6 @@ public class SkinMap
 		return new SkinMap(textures);
 	}
 
-	public static SkinMap of(JsonElement json)
-	{
-		return of(json.getAsString());
-	}
-
 	public final ImmutableMap<String, String> textures;
 
 	private SkinMap(Map<String, String> map)
@@ -69,8 +63,8 @@ public class SkinMap
 		return set;
 	}
 
-	public TextureAtlasSprite get(EnumFacing facing)
+	public TextureAtlasSprite get(EnumFacing facing, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(textures.get(FACE_NAMES[facing.getIndex()]));
+		return bakedTextureGetter.apply(new ResourceLocation(textures.get(FACE_NAMES[facing.getIndex()])));
 	}
 }

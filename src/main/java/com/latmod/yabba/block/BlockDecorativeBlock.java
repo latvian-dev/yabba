@@ -18,6 +18,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -32,6 +33,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -74,6 +76,9 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 			return value.getLook().toString();
 		}
 	};
+
+	public static BarrelLook particleLook = BarrelLook.DEFAULT;
+	public static EnumFacing particleFacing = EnumFacing.UP;
 
 	public BlockDecorativeBlock()
 	{
@@ -154,10 +159,6 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 		{
 			return false;
 		}
-		else if (world.isRemote)
-		{
-			return true;
-		}
 
 		if (stack.getItem() == YabbaItems.HAMMER || stack.getItem() == YabbaItems.PAINTER)
 		{
@@ -165,20 +166,25 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 
 			if (tileEntity instanceof TileDecorativeBlock)
 			{
-				TileDecorativeBlock deco = (TileDecorativeBlock) tileEntity;
+				if (!world.isRemote)
+				{
+					TileDecorativeBlock deco = (TileDecorativeBlock) tileEntity;
 
-				if (stack.getItem() == YabbaItems.HAMMER)
-				{
-					deco.setLook(BarrelLook.get(ItemHammer.getModel(stack), deco.getLook().skin));
+					if (stack.getItem() == YabbaItems.HAMMER)
+					{
+						deco.setLook(BarrelLook.get(ItemHammer.getModel(stack), deco.getLook().skin));
+					}
+					else
+					{
+						deco.setLook(BarrelLook.get(deco.getLook().model, ItemPainter.getSkin(stack)));
+					}
 				}
-				else
-				{
-					deco.setLook(BarrelLook.get(deco.getLook().model, ItemPainter.getSkin(stack)));
-				}
+
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
@@ -297,5 +303,67 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 		}
 
 		return FULL_BLOCK_AABB;
+	}
+
+	@Override
+	public boolean addLandingEffects(IBlockState state, net.minecraft.world.WorldServer world, BlockPos pos, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles)
+	{
+		particleFacing = EnumFacing.UP;
+
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof IBakedModelBarrel)
+		{
+			particleLook = ((IBakedModelBarrel) tileEntity).getLook();
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean addRunningEffects(IBlockState state, World world, BlockPos pos, Entity entity)
+	{
+		particleFacing = EnumFacing.UP;
+
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof IBakedModelBarrel)
+		{
+			particleLook = ((IBakedModelBarrel) tileEntity).getLook();
+		}
+
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, net.minecraft.client.particle.ParticleManager manager)
+	{
+		particleFacing = target.sideHit;
+
+		TileEntity tileEntity = world.getTileEntity(target.getBlockPos());
+
+		if (tileEntity instanceof IBakedModelBarrel)
+		{
+			particleLook = ((IBakedModelBarrel) tileEntity).getLook();
+		}
+
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(World world, BlockPos pos, net.minecraft.client.particle.ParticleManager manager)
+	{
+		particleFacing = EnumFacing.UP;
+
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if (tileEntity instanceof IBakedModelBarrel)
+		{
+			particleLook = ((IBakedModelBarrel) tileEntity).getLook();
+		}
+
+		return false;
 	}
 }
