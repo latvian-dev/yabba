@@ -107,6 +107,7 @@ public class BlockAntibarrel extends BlockSpecialDrop
 	{
 		AntibarrelData data = AntibarrelData.get(stack);
 		tooltip.add(I18n.format("tile.yabba.antibarrel.tooltip"));
-		tooltip.add(I18n.format("tile.yabba.antibarrel.items", data.getTotalItemCount(), data.items.size(), YabbaConfig.general.antibarrel_capacity));
+		data.getHash();
+		tooltip.add(I18n.format("tile.yabba.antibarrel.items", data.clientTypesStored, data.clientItemsStored, YabbaConfig.general.antibarrel_capacity));
 	}
 }

@@ -233,7 +233,8 @@ public class GuiAntibarrel extends GuiBase
 		add(panel);
 		add(scrollBar);
 
-		title = I18n.format("tile.yabba.antibarrel.items", container.tile.contents.getTotalItemCount(), container.tile.contents.items.size(), YabbaConfig.general.antibarrel_capacity);
+		container.tile.contents.getHash();
+		title = I18n.format("tile.yabba.antibarrel.items", container.tile.contents.clientItemsStored, container.tile.contents.clientTypesStored, YabbaConfig.general.antibarrel_capacity);
 
 		/*
 		if (Loader.isModLoaded(OtherMods.FTBGUIDES))
