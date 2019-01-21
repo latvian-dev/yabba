@@ -7,12 +7,12 @@
 			"from": [0, 0, 12],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#skin_n"},
-				"east": {"uv": [0, 0, 4, 16], "texture": "#skin_e", "cullface": "east"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#skin_s", "cullface": "south"},
-				"west": {"uv": [12, 0, 16, 16], "texture": "#skin_w", "cullface": "west"},
-				"up": {"uv": [0, 12, 16, 16], "texture": "#skin_u", "cullface": "up"},
-				"down": {"uv": [0, 0, 16, 4], "texture": "#skin_d", "cullface": "down"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#skin_n", "tintindex": 0},
+				"east": {"uv": [0, 0, 4, 16], "texture": "#skin_e", "tintindex": 0, "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#skin_s", "tintindex": 0, "cullface": "south"},
+				"west": {"uv": [12, 0, 16, 16], "texture": "#skin_w", "tintindex": 0, "cullface": "west"},
+				"up": {"uv": [0, 12, 16, 16], "texture": "#skin_u", "tintindex": 0, "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 4], "texture": "#skin_d", "tintindex": 0, "cullface": "down"}
 			}
 		}
 	]
