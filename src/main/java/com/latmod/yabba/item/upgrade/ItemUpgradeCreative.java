@@ -32,6 +32,12 @@ public class ItemUpgradeCreative extends ItemUpgrade
 			barrel.setLocked(false);
 			barrel.content.onCreativeChange();
 		}
+
+		@Override
+		public boolean canRemove(Barrel barrel, EntityPlayerMP player)
+		{
+			return player.capabilities.isCreativeMode;
+		}
 	}
 
 	@Override
