@@ -317,7 +317,7 @@ public class Barrel implements IConfigCallback
 		return getUpgradeData(upgradeItem) != null;
 	}
 
-	public void setUpgrade(int slot, UpgradeData upgrade)
+	public void setUpgrade(int slot, @Nullable UpgradeData upgrade)
 	{
 		if (slot >= 0 && slot < upgrades.length)
 		{

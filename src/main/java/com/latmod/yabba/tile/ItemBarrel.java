@@ -1,11 +1,13 @@
 package com.latmod.yabba.tile;
 
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import com.latmod.yabba.YabbaConfig;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelContentType;
 import com.latmod.yabba.api.UpgradeData;
 import com.latmod.yabba.block.Tier;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -139,7 +141,7 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 			return ItemStack.EMPTY;
 		}
 
-		type.setCount(count);
+		type.setCount(barrel.isCreative() ? Tier.MAX_ITEMS / 2 : count);
 		return type;
 	}
 
@@ -191,6 +193,33 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 					count += size;
 					barrel.block.markBarrelDirty(false);
 				}
+
+				if (count >= capacity && YabbaConfig.general.transform_star_to_creative && !barrel.isCreative() && barrel.getTier().tier >= Tier.STAR.tier)
+				{
+					for (int i = 0; i < barrel.getUpgradeCount(); i++)
+					{
+						if (barrel.getUpgrade(i) instanceof ItemUpgradeTier.TierUpgradeData)
+						{
+							barrel.setUpgrade(i, null);
+						}
+					}
+
+					ItemStack upgradeStack = new ItemStack(YabbaItems.UPGRADE_CREATIVE);
+					UpgradeData data = upgradeStack.getCapability(UpgradeData.CAPABILITY, null);
+
+					if (data != null)
+					{
+						int i = barrel.findFreeUpgradeSlot();
+
+						if (i != -1)
+						{
+							barrel.setLocked(false);
+							onCreativeChange();
+							barrel.setUpgrade(i, data);
+							barrel.block.markBarrelDirty(true);
+						}
+					}
+				}
 			}
 		}
 
@@ -232,7 +261,7 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return Integer.MAX_VALUE;
+		return Tier.MAX_ITEMS;
 	}
 
 	public int getMaxItems(ItemStack stack)

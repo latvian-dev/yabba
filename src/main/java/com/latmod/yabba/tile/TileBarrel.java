@@ -171,13 +171,14 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 
 		if (updateLevel > 0)
 		{
+			if (!world.isRemote)
+			{
+				new MessageUpdateBarrelContent(this).sendToAllTracking(world.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+			}
+
 			if (updateLevel >= 2)
 			{
 				sendDirtyUpdate();
-			}
-			else if (!world.isRemote)
-			{
-				new MessageUpdateBarrelContent(this).sendToAllTracking(world.provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 			}
 
 			updateLevel = 0;

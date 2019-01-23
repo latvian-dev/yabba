@@ -138,16 +138,14 @@ public class BlockBarrel extends BlockDecorativeBlock
 
 					if (data != null && data.canInsert(barrel.barrel, (EntityPlayerMP) player))
 					{
-						for (int i = 0; i < barrel.barrel.getUpgradeCount(); i++)
+						int i = barrel.barrel.findFreeUpgradeSlot();
+
+						if (i != -1)
 						{
-							if (barrel.barrel.getUpgrade(i) == null)
-							{
-								data.onInserted(barrel.barrel, (EntityPlayerMP) player);
-								heldItem.shrink(1);
-								barrel.barrel.setUpgrade(i, data);
-								barrel.markBarrelDirty(true);
-								break;
-							}
+							data.onInserted(barrel.barrel, (EntityPlayerMP) player);
+							heldItem.shrink(1);
+							barrel.barrel.setUpgrade(i, data);
+							barrel.markBarrelDirty(true);
 						}
 					}
 				}

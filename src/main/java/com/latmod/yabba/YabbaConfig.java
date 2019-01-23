@@ -31,6 +31,9 @@ public class YabbaConfig
 		@Config.Comment("How many items per-type can AntiBarrel have.")
 		@Config.RangeInt(min = 1)
 		public int antibarrel_items_per_type = Integer.MAX_VALUE;
+
+		@Config.Comment("When you fill up a barrel with Star/Infinite Capacity tier (2 billion items), it becomes a creative barrel.")
+		public boolean transform_star_to_creative = false;
 	}
 
 	public static class TierCategory

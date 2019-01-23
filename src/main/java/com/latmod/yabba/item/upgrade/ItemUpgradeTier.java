@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ItemUpgradeTier extends ItemUpgrade
 {
-	private class TierUpgradeData extends UpgradeData
+	public class TierUpgradeData extends UpgradeData
 	{
 		public TierUpgradeData(ItemStack is)
 		{
