@@ -170,12 +170,6 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 
 		if (count >= capacity && !type.isEmpty())
 		{
-			if (!barrel.isCreative() && barrel.getTier().tier >= Tier.STAR.tier)
-			{
-				onCreativeChange();
-				int i = barrel.findFreeUpgradeSlot();
-			}
-
 			return barrel.hasUpgrade(YabbaItems.UPGRADE_VOID) ? ItemStack.EMPTY : stack;
 		}
 
