@@ -134,7 +134,7 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		if (slot == 0)
+		if (slot == 0 || count <= 0)
 		{
 			return ItemStack.EMPTY;
 		}
@@ -146,65 +146,61 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		if (stack.isEmpty())
+		if (slot != 0)
+		{
+			return stack;
+		}
+		else if (stack.isEmpty())
 		{
 			return ItemStack.EMPTY;
 		}
-		else if (slot != 0)
+
+		boolean isItemValid = isItemValid(slot, stack);
+
+		if (barrel.isCreative())
+		{
+			return isItemValid ? ItemStack.EMPTY : stack;
+		}
+		else if (!isItemValid)
 		{
 			return stack;
 		}
 
-		boolean storedIsEmpty = type.isEmpty();
-		boolean canInsert = storedIsEmpty || isItemValid(slot, stack);
-		if (!storedIsEmpty && barrel.isCreative())
+		int capacity = getMaxItems(stack);
+
+		if (count >= capacity && !type.isEmpty())
 		{
-			return canInsert ? ItemStack.EMPTY : stack;
-		}
-
-		int capacity;
-
-		if (count > 0)
-		{
-			capacity = getMaxItems(type);
-
-			if (count >= capacity)
+			if (!barrel.isCreative() && barrel.getTier().tier >= Tier.STAR.tier)
 			{
-				return (canInsert && barrel.hasUpgrade(YabbaItems.UPGRADE_VOID)) ? ItemStack.EMPTY : stack;
+				onCreativeChange();
+				int i = barrel.findFreeUpgradeSlot();
 			}
-		}
-		else
-		{
-			capacity = getMaxItems(stack);
+
+			return barrel.hasUpgrade(YabbaItems.UPGRADE_VOID) ? ItemStack.EMPTY : stack;
 		}
 
-		if (canInsert)
-		{
-			int size = Math.min(stack.getCount(), capacity - count);
+		int size = Math.min(stack.getCount(), capacity - count);
 
-			if (size > 0)
+		if (size > 0)
+		{
+			if (!simulate)
 			{
-				if (!simulate)
+				if (type.isEmpty())
 				{
-					if (type.isEmpty())
-					{
-						type = stack.copy();
-						type.setCount(size);
-						count = size;
-						barrel.block.markBarrelDirty(true);
-					}
-					else
-					{
-						count += size;
-						barrel.block.markBarrelDirty(false);
-					}
+					type = stack.copy();
+					type.setCount(size);
+					count = size;
+					barrel.block.markBarrelDirty(true);
+				}
+				else
+				{
+					count += size;
+					barrel.block.markBarrelDirty(false);
 				}
 			}
-
-			return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - size);
 		}
 
-		return stack;
+		return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - size);
 	}
 
 	@Override
@@ -458,11 +454,12 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 			}
 		}
 
-		boolean firstUpgrade = false;
+		boolean firstUpgrade = true;
 
 		for (int i = 0; i < barrel.getUpgradeCount(); i++)
 		{
-			if (barrel.getUpgrade(i) != null)
+			UpgradeData upgradeData = barrel.getUpgrade(i);
+			if (upgradeData != null)
 			{
 				if (firstUpgrade)
 				{
@@ -470,7 +467,7 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 					firstUpgrade = false;
 				}
 
-				tooltip.add("> " + barrel.getUpgrade(i).stack.getDisplayName());
+				tooltip.add("> " + upgradeData.stack.getDisplayName());
 			}
 		}
 	}
