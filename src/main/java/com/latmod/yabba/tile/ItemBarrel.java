@@ -449,16 +449,16 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 	@SideOnly(Side.CLIENT)
 	public void addInformation(List<String> tooltip, ITooltipFlag flag)
 	{
+		if (!type.isEmpty())
+		{
+			tooltip.add(I18n.format("lang.yabba.item", TextFormatting.YELLOW + type.getDisplayName()));
+		}
+
 		tooltip.add(I18n.format("yabba.tier") + ": " + I18n.format(barrel.getTier().getLangKey()));
 
 		if (barrel.isLocked())
 		{
 			tooltip.add(I18n.format("barrel_config.locked"));
-		}
-
-		if (!type.isEmpty())
-		{
-			tooltip.add(I18n.format("lang.yabba.item", type.getDisplayName()));
 		}
 
 		if (!barrel.isCreative())
