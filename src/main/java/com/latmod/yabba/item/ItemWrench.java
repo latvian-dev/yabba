@@ -1,12 +1,8 @@
 package com.latmod.yabba.item;
 
-import com.feed_the_beast.ftblib.lib.tile.IItemWritableTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import com.latmod.yabba.block.BlockDecorativeBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -24,29 +20,18 @@ public class ItemWrench extends Item
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		if (player.isSneaking())
 		{
-			TileEntity tileEntity = world.getTileEntity(pos);
-
-			if (tileEntity instanceof IItemWritableTile && ((IItemWritableTile) tileEntity).canBeWrenched(player))
+			if (world.getBlockState(pos).getBlock() instanceof BlockDecorativeBlock)
 			{
-				IBlockState state = world.getBlockState(pos);
-				ItemStack drop = state.getBlock().getItem(world, pos, state);
-
-				if (!drop.isEmpty())
+				if (!world.isRemote)
 				{
-					if (!world.isRemote)
-					{
-						((IItemWritableTile) tileEntity).writeToItem(drop);
-						world.setBlockToAir(pos);
-						Block.spawnAsEntity(world, pos, drop);
-					}
-
-					return EnumActionResult.SUCCESS;
+					world.setBlockToAir(pos);
 				}
+
+				return EnumActionResult.SUCCESS;
 			}
 		}
 		else

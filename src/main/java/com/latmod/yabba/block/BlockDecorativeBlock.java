@@ -11,6 +11,7 @@ import com.latmod.yabba.util.BarrelLook;
 import com.latmod.yabba.util.EnumBarrelModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -85,6 +86,7 @@ public class BlockDecorativeBlock extends BlockSpecialDrop
 		super(Material.WOOD, MapColor.WOOD);
 		setHardness(2F);
 		setDefaultState(blockState.getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));
+		setSoundType(SoundType.WOOD);
 	}
 
 	@Override

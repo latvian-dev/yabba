@@ -8,8 +8,4 @@ public class YabbaCommon
 	public void preInit()
 	{
 	}
-
-	public void postInit()
-	{
-	}
 }

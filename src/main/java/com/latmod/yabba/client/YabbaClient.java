@@ -13,7 +13,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.yabba.Yabba;
-import com.latmod.yabba.YabbaBlocks;
 import com.latmod.yabba.YabbaCommon;
 import com.latmod.yabba.YabbaItems;
 import com.latmod.yabba.api.BarrelSkin;
@@ -331,14 +330,6 @@ public class YabbaClient extends YabbaCommon
 	public void preInit()
 	{
 		YabbaClientConfig.sync();
-	}
-
-	@Override
-	public void postInit()
-	{
-		Block[] blocks = {YabbaBlocks.ITEM_BARREL, YabbaBlocks.DECORATIVE_BLOCK};
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(BarrelModelLoader.INSTANCE, blocks);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(BarrelModelLoader.INSTANCE, blocks);
 	}
 
 	public static BarrelSkin getSkin(@Nullable String id)

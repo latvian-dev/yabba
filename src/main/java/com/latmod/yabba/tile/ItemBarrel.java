@@ -490,7 +490,7 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 					firstUpgrade = false;
 				}
 
-				tooltip.add("> " + upgradeData.stack.getDisplayName());
+				tooltip.add("> " + TextFormatting.YELLOW + upgradeData.stack.getDisplayName());
 			}
 		}
 	}
