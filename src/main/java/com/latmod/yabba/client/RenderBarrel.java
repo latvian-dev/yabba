@@ -67,7 +67,7 @@ public class RenderBarrel<T extends TileBarrel, C extends BarrelContent> extends
 			{
 				float textDistance = barrel.getLook().model.textDistance / 16F;
 
-				if (!infinite && !isSneaking && YabbaClientConfig.general.display_bar.get(barrel.displayBar))
+				if (!isCreative && !isSneaking && YabbaClientConfig.general.display_bar.get(barrel.displayBar))
 				{
 					GlStateManager.pushMatrix();
 					GlStateManager.disableTexture2D();
