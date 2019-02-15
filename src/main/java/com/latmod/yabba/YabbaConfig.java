@@ -26,7 +26,7 @@ public class YabbaConfig
 
 		@Config.Comment("How many slots can AntiBarrel have.")
 		@Config.RangeInt(min = 1, max = 32768)
-		public int antibarrel_capacity = 8192;
+		public int antibarrel_capacity = 1024;
 
 		@Config.Comment("How many items per-type can AntiBarrel have.")
 		@Config.RangeInt(min = 1)
