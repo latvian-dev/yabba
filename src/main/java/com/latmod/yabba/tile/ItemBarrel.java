@@ -283,9 +283,9 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 		}
 		else if (type.isEmpty())
 		{
-			return true;
+			return !YabbaConfig.general.isItemBlacklisted(stack.getItem());
 		}
-		else if (type.getItem() != stack.getItem() || type.getMetadata() != stack.getMetadata() || type.getItemDamage() != stack.getItemDamage())
+		else if (YabbaConfig.general.isItemBlacklisted(stack.getItem()) || type.getItem() != stack.getItem() || type.getMetadata() != stack.getMetadata() || type.getItemDamage() != stack.getItemDamage())
 		{
 			return false;
 		}

@@ -1,11 +1,15 @@
 package com.latmod.yabba;
 
 import com.latmod.yabba.block.Tier;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.HashSet;
 
 /**
  * @author LatvianModder
@@ -34,6 +38,31 @@ public class YabbaConfig
 
 		@Config.Comment("When you fill up a barrel with Star/Infinite Capacity tier (2 billion items), it becomes a creative barrel.")
 		public boolean transform_star_to_creative = false;
+
+		@Config.Comment("Item IDs that are blacklisted from insertion in barrels.")
+		public String[] barrel_blacklist = {"yabba:upgrade_creative", "ftbquests:lootcrate"};
+
+		private HashSet<Item> blacklistedItems = null;
+
+		public boolean isItemBlacklisted(Item item)
+		{
+			if (blacklistedItems == null)
+			{
+				blacklistedItems = new HashSet<>();
+
+				for (String s : barrel_blacklist)
+				{
+					Item item1 = Item.getByNameOrId(s);
+
+					if (item1 != null && item1 != Items.AIR)
+					{
+						blacklistedItems.add(item1);
+					}
+				}
+			}
+
+			return blacklistedItems.contains(item);
+		}
 	}
 
 	public static class TierCategory
@@ -68,6 +97,7 @@ public class YabbaConfig
 		tier.iron.syncWith(Tier.IRON);
 		tier.gold.syncWith(Tier.GOLD);
 		tier.diamond.syncWith(Tier.DIAMOND);
+		general.blacklistedItems = null;
 		return true;
 	}
 
