@@ -90,4 +90,9 @@ public abstract class BarrelContent implements ICapabilityProvider
 	public void onCreativeChange()
 	{
 	}
+
+	public boolean isValidForCreativeUpgrade()
+	{
+		return true;
+	}
 }

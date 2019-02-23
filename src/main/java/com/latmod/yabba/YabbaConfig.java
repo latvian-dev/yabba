@@ -40,28 +40,52 @@ public class YabbaConfig
 		public boolean transform_star_to_creative = false;
 
 		@Config.Comment("Item IDs that are blacklisted from insertion in barrels.")
-		public String[] barrel_blacklist = {"yabba:upgrade_creative", "ftbquests:lootcrate"};
+		public String[] barrel_input_blacklist = { };
 
-		private HashSet<Item> blacklistedItems = null;
+		@Config.Comment("Item IDs that are blacklisted from using with creative upgrade by players in barrels.")
+		public String[] barrel_creative_blacklist = {"yabba:upgrade_creative", "ftbquests:lootcrate"};
 
-		public boolean isItemBlacklisted(Item item)
+		private HashSet<Item> blacklistedInputItems = null;
+		private HashSet<Item> blacklistedCreativeItems = null;
+
+		public boolean isItemBlacklistedInput(Item item)
 		{
-			if (blacklistedItems == null)
+			if (blacklistedInputItems == null)
 			{
-				blacklistedItems = new HashSet<>();
+				blacklistedInputItems = new HashSet<>();
 
-				for (String s : barrel_blacklist)
+				for (String s : barrel_input_blacklist)
 				{
 					Item item1 = Item.getByNameOrId(s);
 
 					if (item1 != null && item1 != Items.AIR)
 					{
-						blacklistedItems.add(item1);
+						blacklistedInputItems.add(item1);
 					}
 				}
 			}
 
-			return blacklistedItems.contains(item);
+			return !blacklistedInputItems.isEmpty() && blacklistedInputItems.contains(item);
+		}
+
+		public boolean isItemBlacklistedCreative(Item item)
+		{
+			if (blacklistedCreativeItems == null)
+			{
+				blacklistedCreativeItems = new HashSet<>();
+
+				for (String s : barrel_creative_blacklist)
+				{
+					Item item1 = Item.getByNameOrId(s);
+
+					if (item1 != null && item1 != Items.AIR)
+					{
+						blacklistedCreativeItems.add(item1);
+					}
+				}
+			}
+
+			return !blacklistedCreativeItems.isEmpty() && blacklistedCreativeItems.contains(item);
 		}
 	}
 
@@ -97,7 +121,8 @@ public class YabbaConfig
 		tier.iron.syncWith(Tier.IRON);
 		tier.gold.syncWith(Tier.GOLD);
 		tier.diamond.syncWith(Tier.DIAMOND);
-		general.blacklistedItems = null;
+		general.blacklistedInputItems = null;
+		general.blacklistedCreativeItems = null;
 		return true;
 	}
 

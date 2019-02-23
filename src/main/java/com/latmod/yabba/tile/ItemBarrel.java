@@ -283,9 +283,9 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 		}
 		else if (type.isEmpty())
 		{
-			return !YabbaConfig.general.isItemBlacklisted(stack.getItem());
+			return !YabbaConfig.general.isItemBlacklistedInput(stack.getItem());
 		}
-		else if (YabbaConfig.general.isItemBlacklisted(stack.getItem()) || type.getItem() != stack.getItem() || type.getMetadata() != stack.getMetadata() || type.getItemDamage() != stack.getItemDamage())
+		else if (YabbaConfig.general.isItemBlacklistedInput(stack.getItem()) || type.getItem() != stack.getItem() || type.getMetadata() != stack.getMetadata() || type.getItemDamage() != stack.getItemDamage())
 		{
 			return false;
 		}
@@ -443,6 +443,12 @@ public class ItemBarrel extends BarrelContent implements IItemHandler
 	public void onCreativeChange()
 	{
 		count = 1;
+	}
+
+	@Override
+	public boolean isValidForCreativeUpgrade()
+	{
+		return !YabbaConfig.general.isItemBlacklistedCreative(type.getItem());
 	}
 
 	@Override

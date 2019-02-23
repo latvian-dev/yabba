@@ -23,7 +23,7 @@ public class ItemUpgradeCreative extends ItemUpgrade
 		@Override
 		public boolean canInsert(Barrel barrel, EntityPlayerMP player)
 		{
-			return !barrel.isCreative() && !barrel.content.isEmpty();
+			return !barrel.isCreative() && !barrel.content.isEmpty() && (player.capabilities.isCreativeMode || barrel.content.isValidForCreativeUpgrade());
 		}
 
 		@Override
