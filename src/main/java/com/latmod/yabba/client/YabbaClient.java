@@ -108,6 +108,11 @@ public class YabbaClient extends YabbaCommon
 
 			ResourceLocation still = fluid.getStill(stack);
 
+			if (still == null)
+			{
+				continue;
+			}
+
 			BarrelSkin skin = new BarrelSkin(fluid.getName() + "_still", SkinMap.of("all=" + still));
 			skin.displayName = I18n.format("lang.fluid.still", displayName);
 			skin.color = color;
