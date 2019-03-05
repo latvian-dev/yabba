@@ -1,32 +1,89 @@
 # Creative Tabs
 itemGroup.yabba=YABBA
-itemGroup.yabba.all_models=Все Бочки YABBA
 
 # Items
-item.yabba.upgrade.desc=Улучшение Бочки
-item.yabba.upgrade_blank.name=Пустой
-item.yabba.upgrade_iron_tier.name=Деревянная - в Железную
-item.yabba.upgrade_gold_tier.name=Железная - в Золотую
-item.yabba.upgrade_diamond_tier.name=Золотая - в Алмазную
-item.yabba.upgrade_star_tier.name=Бесконечное хранилище
-item.yabba.upgrade_creative.name=Креативная Бочка
-item.yabba.upgrade_obsidian_shell.name=Обсидиановая прослойка
-item.yabba.upgrade_redstone_out.name=Вывод Редстоун-сигнала
+item.yabba.upgrade.desc=Обновление для бочки
+item.yabba.upgrade_blank.name=Чистое обновление для бочки
+item.yabba.upgrade_iron_tier.name=Железный уровень
+item.yabba.upgrade_gold_tier.name=Золотой уровень
+item.yabba.upgrade_diamond_tier.name=Алмазный уровень
+item.yabba.upgrade_star_tier.name=Бесконечная ёмкость
+item.yabba.upgrade_creative.name=Творческая бочка
+item.yabba.upgrade_obsidian_shell.name=Обсидиановая оболочка
+item.yabba.upgrade_redstone_out.name=Выход красного камня
 item.yabba.upgrade_hopper.name=Воронка
-item.yabba.upgrade_void.name=Уничтожить Предметы
+item.yabba.upgrade_void.name=Опустошитель предметов
+item.yabba.upgrade_pickup.name=Сборщик поднятого
 
-item.yabba.painter.name=Окрашиватель Бочек
-item.yabba.hammer.name=Молот для Бочек
+item.yabba.painter.name=Окрашиватель для бочек
+item.yabba.hammer.name=Молот для бочек
+item.yabba.wrench.name=Гаечный ключ для бочек
+
+lang.yabba.model=Модель: %s
+lang.yabba.skin=Оболочка: %s
+lang.yabba.item=Предмет: %s
+lang.yabba.upgrades=Обновления:
+lang.yabba.item_count=%d / %d предметов
+lang.yabba.item_count_inf=%d предметов
+lang.yabba.item_count_max=Макс. %d стаков
+
+lang.fluid.still=Неподвижная %s
+lang.fluid.flowing=Текущая %s
+tile.yabba.machine.name=Машина
 
 # Blocks
-tile.yabba.barrel.name=Бочка-предмет
-tile.yabba.antibarrel.name=АнтиБочка
+tile.yabba.item_barrel.name=Предметная бочка
+tile.yabba.item_barrel_connector.name=Разъём предметной бочки
+tile.yabba.item_barrel_connector.connected=Соединено бочек: %d
+tile.yabba.fluid_barrel.name=Жидкостная бочка
+tile.yabba.energy_barrel.name=Энергетическая бочка
+tile.yabba.decorative_block.name=Декоративный блок
+tile.yabba.antibarrel.name=Антибочка
+tile.yabba.antibarrel.tooltip=Хранит много не стакуемых предметов.
+tile.yabba.antibarrel.items=%d предметов, %d/%d типов
+tile.yabba.antibarrel.items_only=%d предметов
+tile.yabba.antibarrel.types=%d типов
+tile.yabba.antibarrel.pick_up=Подбирать
+tile.yabba.quartz_chest.name=Кварцевый сундук
 
-# Guide
-yabba.guide=YABBA
+# Config
+yabba.general.sneak_left_click_extracts_stack=Сидя+ЛКМ для извлечения стака
+yabba.general.antibarrel_capacity=Ёмкость антибочки
+yabba.general.antibarrel_items_per_type=Предметы антиброчки за тип
+yabba.general.transform_star_to_creative=Полная бесконечная крышка бочки в творческий
+yabba.general.barrel_input_blacklist=Входной черный список бочки
+yabba.general.barrel_creative_blacklist=Черный список творческого обновления бочки
+
+yabba_client.general.always_display_data=Всегда отображать данные
+yabba_client.general.display_bar=Отображать полоску
+
+yabba_client.bar_color=Цвет полоски
+yabba_client.bar_color.border=Обрамление
+yabba_client.bar_color.free=Свободное место
+yabba_client.bar_color.filled=Заполненное место
+yabba_client.bar_color.alpha=Альфа
+
+yabba.tier=Уровень
+yabba.tier.wood=Дерево
+yabba.tier.iron=Железо
+yabba.tier.gold=Золото
+yabba.tier.diamond=Алмаз
+yabba.tier.star=Звезда
+yabba.tier.max_item_stacks=Макс. стаков предмета
+
+barrel_config.locked=Заблокировано
+barrel_config.redstone.mode=Режим
+barrel_config.redstone.count=Количество
+barrel_config.hopper.up=Верх
+barrel_config.hopper.down=Вниз
+barrel_config.hopper.collect=Собирать
 
 # Models
-yabba.model.barrel=Бочка
-yabba.model.crate=Ящик
-yabba.model.solid=Полный Блок
-yabba.model.solid_borders=Полный Блок с Ободом
+yabba.yabba_model.barrel=Бочка
+yabba.yabba_model.cover=Крышка
+yabba.yabba_model.panel=Панель
+yabba.yabba_model.slab=Плита
+yabba.yabba_model.block=Блок
+yabba.yabba_model.block_window=Блок с окном
+yabba.yabba_model.block_borders=Обрамленный блок с окном
+yabba.yabba_model.crate=Ящик
