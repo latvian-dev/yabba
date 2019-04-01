@@ -45,5 +45,9 @@ public class ItemBlockAntibarrel extends ItemBlock
 		{
 			AntibarrelData.get(stack).deserializeNBTFromNet(nbt);
 		}
+		else
+		{
+			AntibarrelData.get(stack).clear();
+		}
 	}
 }
