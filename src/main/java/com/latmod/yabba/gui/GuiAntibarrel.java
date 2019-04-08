@@ -146,7 +146,7 @@ public class GuiAntibarrel extends GuiBase
 		@Nullable
 		public Object getJEIFocus()
 		{
-			return entry.isEmpty() ? null : entry.getStack(false);
+			return icon.getJEIFocus();
 		}
 	}
 
