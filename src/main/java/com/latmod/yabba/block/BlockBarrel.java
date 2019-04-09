@@ -24,6 +24,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -52,9 +54,22 @@ public class BlockBarrel extends BlockDecorativeBlock
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player)
 	{
 		if (world.isRemote || player.capabilities.isCreativeMode)
+		{
+			return;
+		}
+
+		double dist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+		Vec3d start = player.getPositionEyes(1F);
+		Vec3d look = player.getLookVec();
+		Vec3d end = start.add(look.x * dist, look.y * dist, look.z * dist);
+		IBlockState state = world.getBlockState(pos);
+		RayTraceResult ray = collisionRayTrace(state, world, pos, start, end);
+
+		if (ray == null || ray.sideHit != state.getValue(BlockHorizontal.FACING))
 		{
 			return;
 		}
