@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "yabba:upgrade_smelting",
+	"result": {"item": "upgrade_smelting"},
+	"ingredients": [
+		{"item": "upgrade_blank"},
+		{"item": "minecraft:furnace"},
+		{"item": "minecraft:fire_charge"}
+	]
+}

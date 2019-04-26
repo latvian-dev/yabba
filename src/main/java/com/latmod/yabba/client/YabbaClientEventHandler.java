@@ -49,6 +49,7 @@ public class YabbaClientEventHandler
 		addModel(YabbaItems.UPGRADE_HOPPER, "inventory");
 		addModel(YabbaItems.UPGRADE_VOID, "inventory");
 		addModel(YabbaItems.UPGRADE_PICKUP, "inventory");
+		addModel(YabbaItems.UPGRADE_SMELTING, "inventory");
 
 		addModel(YabbaItems.HAMMER, "inventory");
 		addModel(YabbaItems.PAINTER, "inventory");

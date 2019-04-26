@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -80,6 +81,11 @@ public class UpgradeData implements ICapabilitySerializable<NBTTagCompound>
 
 	public void onRemoved(Barrel barrel, EntityPlayerMP player)
 	{
+	}
+
+	public boolean isTicking(World world)
+	{
+		return false;
 	}
 
 	public void onTick(Barrel barrel)

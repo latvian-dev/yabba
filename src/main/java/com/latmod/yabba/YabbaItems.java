@@ -28,6 +28,7 @@ public class YabbaItems
 	public static final Item UPGRADE_HOPPER = Items.AIR;
 	public static final Item UPGRADE_VOID = Items.AIR;
 	public static final Item UPGRADE_PICKUP = Items.AIR;
+	public static final Item UPGRADE_SMELTING = Items.AIR;
 
 	//Tools
 	public static final Item HAMMER = Items.AIR;

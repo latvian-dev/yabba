@@ -15,6 +15,7 @@ import com.latmod.yabba.item.upgrade.ItemUpgrade;
 import com.latmod.yabba.item.upgrade.ItemUpgradeCreative;
 import com.latmod.yabba.item.upgrade.ItemUpgradeHopper;
 import com.latmod.yabba.item.upgrade.ItemUpgradeRedstone;
+import com.latmod.yabba.item.upgrade.ItemUpgradeSmelting;
 import com.latmod.yabba.item.upgrade.ItemUpgradeTier;
 import com.latmod.yabba.tile.BarrelNetwork;
 import com.latmod.yabba.tile.ItemBarrel;
@@ -104,6 +105,7 @@ public class YabbaEventHandler
 				withName(new ItemUpgradeHopper(), "upgrade_hopper"),
 				withName(new ItemUpgrade(), "upgrade_void"),
 				withName(new ItemUpgrade(), "upgrade_pickup"),
+				withName(new ItemUpgradeSmelting(), "upgrade_smelting"),
 				withName(new ItemHammer(), "hammer"),
 				withName(new ItemPainter(), "painter"),
 				withName(new ItemWrench(), "wrench")

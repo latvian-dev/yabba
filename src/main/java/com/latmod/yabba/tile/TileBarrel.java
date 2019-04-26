@@ -162,7 +162,7 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 			{
 				UpgradeData data = barrel.getUpgrade(i);
 
-				if (data != null)
+				if (data != null && data.isTicking(world))
 				{
 					data.onTick(barrel);
 				}

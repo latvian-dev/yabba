@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -35,6 +36,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author LatvianModder
@@ -244,6 +246,35 @@ public class BlockBarrel extends BlockDecorativeBlock
 		{
 			tooltip.add(ItemHammer.getModelTooltip(EnumBarrelModel.BARREL));
 			tooltip.add(ItemPainter.getSkinTooltip(""));
+		}
+	}
+
+	@Override
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random r)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+
+		if (tile instanceof TileBarrel && ((TileBarrel) tile).barrel.hasUpgrade(YabbaItems.UPGRADE_SMELTING))
+		{
+			AxisAlignedBB aabb = ((TileBarrel) tile).barrel.getLook().model.getAABB(state.getValue(BlockHorizontal.FACING)).offset(pos);
+			double w = aabb.maxX - aabb.minX;
+			double h = aabb.maxY - aabb.minY;
+			double d = aabb.maxZ - aabb.minZ;
+
+			for (int i = 0; i < 2; i++)
+			{
+				world.spawnParticle(EnumParticleTypes.FLAME, aabb.minX + r.nextFloat() * w, aabb.minY + r.nextFloat() * h, aabb.minZ, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.FLAME, aabb.minX + r.nextFloat() * w, aabb.minY + r.nextFloat() * h, aabb.maxZ, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.FLAME, aabb.minX, aabb.minY + r.nextFloat() * h, aabb.minZ + r.nextFloat() * d, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.FLAME, aabb.maxX, aabb.minY + r.nextFloat() * h, aabb.minZ + r.nextFloat() * d, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.FLAME, aabb.minX + r.nextFloat() * w, aabb.maxY + r.nextFloat() * 0.2D, aabb.minZ + r.nextFloat() * d, 0D, 0D, 0D);
+
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, aabb.minX + r.nextFloat() * w, aabb.minY + r.nextFloat() * h * 0.3D, aabb.minZ, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, aabb.minX + r.nextFloat() * w, aabb.minY + r.nextFloat() * h * 0.3D, aabb.maxZ, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, aabb.minX, aabb.minY + r.nextFloat() * h * 0.3D, aabb.minZ + r.nextFloat() * d, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, aabb.maxX, aabb.minY + r.nextFloat() * h * 0.3D, aabb.minZ + r.nextFloat() * d, 0D, 0D, 0D);
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, aabb.minX + r.nextFloat() * w, aabb.maxY, aabb.minZ + r.nextFloat() * d, 0D, 0D, 0D);
+			}
 		}
 	}
 }

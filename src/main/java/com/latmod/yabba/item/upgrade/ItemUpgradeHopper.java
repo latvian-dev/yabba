@@ -28,6 +28,7 @@ public class ItemUpgradeHopper extends ItemUpgrade
 		public boolean down = true;
 		public boolean up = true;
 		public boolean collect = false;
+		public int progress = 0;
 
 		public HopperUpgradeData(ItemStack is)
 		{
@@ -41,6 +42,7 @@ public class ItemUpgradeHopper extends ItemUpgrade
 			nbt.setBoolean("Down", down);
 			nbt.setBoolean("Up", up);
 			nbt.setBoolean("Collect", collect);
+			nbt.setByte("Progress", (byte) progress);
 			return nbt;
 		}
 
@@ -50,6 +52,7 @@ public class ItemUpgradeHopper extends ItemUpgrade
 			down = nbt.getBoolean("Down");
 			up = nbt.getBoolean("Up");
 			collect = nbt.getBoolean("Collect");
+			progress = nbt.getByte("Progress");
 		}
 
 		@Override
@@ -75,6 +78,12 @@ public class ItemUpgradeHopper extends ItemUpgrade
 		}
 
 		@Override
+		public boolean isTicking(World world)
+		{
+			return !world.isRemote;
+		}
+
+		@Override
 		public void onTick(Barrel barrel)
 		{
 			TileEntity tileEntity = barrel.block.getBarrelTileEntity();
@@ -87,7 +96,9 @@ public class ItemUpgradeHopper extends ItemUpgrade
 			World world = tileEntity.getWorld();
 			BlockPos pos = tileEntity.getPos();
 
-			if ((world.getTotalWorldTime() % 8L) == (pos.hashCode() & 7))
+			progress++;
+
+			if (progress > 8)
 			{
 				if (barrel.content instanceof ItemBarrel)
 				{
@@ -133,6 +144,8 @@ public class ItemUpgradeHopper extends ItemUpgrade
 						}
 					}
 				}
+
+				progress = 0;
 			}
 		}
 	}
