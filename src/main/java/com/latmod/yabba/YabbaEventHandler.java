@@ -129,7 +129,12 @@ public class YabbaEventHandler
 	{
 		if (event.phase == TickEvent.Phase.END)
 		{
-			BarrelNetwork.get(event.world).tick();
+			BarrelNetwork network = BarrelNetwork.get(event.world);
+
+			if (network != null)
+			{
+				network.tick();
+			}
 		}
 	}
 

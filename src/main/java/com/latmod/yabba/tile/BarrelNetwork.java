@@ -20,9 +20,10 @@ public class BarrelNetwork implements ICapabilityProvider
 	@CapabilityInject(BarrelNetwork.class)
 	public static Capability<BarrelNetwork> CAP;
 
-	public static BarrelNetwork get(World world)
+	@Nullable
+	public static BarrelNetwork get(@Nullable World world)
 	{
-		return world.getCapability(CAP, null);
+		return world == null ? null : world.getCapability(CAP, null);
 	}
 
 	public final World world;
