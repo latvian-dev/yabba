@@ -87,9 +87,11 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 	@Override
 	public void invalidate()
 	{
-		if (hasWorld())
+		BarrelNetwork net = BarrelNetwork.get(getWorld());
+
+		if (net != null)
 		{
-			BarrelNetwork.get(getWorld()).barrelUpdated(getContentType());
+			net.barrelUpdated(getContentType());
 		}
 
 		super.invalidate();
@@ -99,10 +101,11 @@ public class TileBarrel extends TileBase implements IBarrelBlock, ITickable
 	public void setWorld(World world)
 	{
 		super.setWorld(world);
+		BarrelNetwork net = BarrelNetwork.get(getWorld());
 
-		if (hasWorld())
+		if (net != null)
 		{
-			BarrelNetwork.get(getWorld()).barrelUpdated(getContentType());
+			net.barrelUpdated(getContentType());
 		}
 	}
 
