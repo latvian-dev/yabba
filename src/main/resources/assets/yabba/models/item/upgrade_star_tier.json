@@ -1,1 +1,1 @@
-{"parent": "yabba:item/upgrade_base", "textures": {"tex": "minecraft:items/nether_star"}}
+{"parent": "yabba:item/upgrade_base", "textures": {"tex": "yabba:items/upgrade/star"}}
