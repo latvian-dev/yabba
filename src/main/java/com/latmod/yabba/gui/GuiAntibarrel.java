@@ -144,7 +144,7 @@ public class GuiAntibarrel extends GuiBase
 
 		@Override
 		@Nullable
-		public Object getJEIFocus()
+		public Object getIngredientUnderMouse()
 		{
 			return icon == null ? null : icon.getJEIFocus();
 		}
