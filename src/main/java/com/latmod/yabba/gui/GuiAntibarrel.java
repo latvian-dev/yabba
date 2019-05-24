@@ -2,12 +2,12 @@ package com.latmod.yabba.gui;
 
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
-import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
+import com.feed_the_beast.ftblib.lib.gui.WrappedIngredient;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
@@ -21,11 +21,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +37,6 @@ public class GuiAntibarrel extends GuiBase
 		private static final DecimalFormat FORMATTER_2 = new DecimalFormat("#0.0");
 
 		public final ItemEntryWithCount entry;
-		private List<String> tooltip;
 		private Icon icon;
 		private String countString;
 
@@ -91,17 +88,11 @@ public class GuiAntibarrel extends GuiBase
 			}
 
 			icon = ItemIcon.getItemIcon(stack);
-			tooltip = new ArrayList<>();
-			GuiHelper.addStackTooltip(stack, tooltip, TextFormatting.GRAY + (entry.count > 1 ? entry.count + "x " : ""));
 		}
 
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			if (!entry.isEmpty())
-			{
-				list.addAll(tooltip);
-			}
 		}
 
 		@Override
@@ -146,7 +137,7 @@ public class GuiAntibarrel extends GuiBase
 		@Nullable
 		public Object getIngredientUnderMouse()
 		{
-			return icon == null ? null : icon.getJEIFocus();
+			return icon == null ? null : new WrappedIngredient(icon.getIngredient()).tooltip();
 		}
 	}
 
