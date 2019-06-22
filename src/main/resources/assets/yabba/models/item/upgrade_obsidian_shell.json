@@ -1,1 +1,1 @@
-{"parent": "yabba:item/upgrade_base", "textures": {"tex": "yabba:items/upgrade/obsidian_shell"}}
+{"parent": "yabba:item/upgrade_base", "textures": {"layer1": "yabba:items/upgrade/obsidian_shell"}}

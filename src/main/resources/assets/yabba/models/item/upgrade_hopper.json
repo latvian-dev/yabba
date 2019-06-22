@@ -1,1 +1,1 @@
-{"parent": "yabba:item/upgrade_base", "textures": {"tex": "minecraft:items/hopper"}}
+{"parent": "yabba:item/upgrade_base", "textures": {"layer1": "minecraft:items/hopper"}}
