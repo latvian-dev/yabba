@@ -1,1 +1,1 @@
-# YABBA [![](http://cf.way2muchnoise.eu/yabba.svg)](https://minecraft.curseforge.com/projects/yabba) [![](http://cf.way2muchnoise.eu/versions/yabba.svg)](https://minecraft.curseforge.com/projects/yabba)
+# YABBA [![](http://cf.way2muchnoise.eu/yabba.svg) ![](https://cf.way2muchnoise.eu/packs/yabba.svg) ![](http://cf.way2muchnoise.eu/versions/yabba.svg)](https://www.curseforge.com/minecraft/mc-mods/yabba)
