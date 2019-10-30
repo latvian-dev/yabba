@@ -1,6 +1,5 @@
 package com.latmod.yabba;
 
-import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.latmod.yabba.block.BlockAntibarrel;
 import com.latmod.yabba.block.BlockDecorativeBlock;
@@ -110,12 +109,6 @@ public class YabbaEventHandler
 				withName(new ItemPainter(), "painter"),
 				withName(new ItemWrench(), "wrench")
 		);
-	}
-
-	@SubscribeEvent
-	public static void onFTBLibPreInitRegistry(FTBLibPreInitRegistryEvent event)
-	{
-		event.getRegistry().registerServerReloadHandler(new ResourceLocation(Yabba.MOD_ID, "config"), reloadEvent -> YabbaConfig.sync());
 	}
 
 	@SubscribeEvent
